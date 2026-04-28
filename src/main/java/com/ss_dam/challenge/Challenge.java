@@ -1,15 +1,15 @@
 package com.ss_dam.challenge;
 
 public class Challenge {
-	private int code;
-	private String empId;
-	private String title;
-	private String text;
-	private String startDate;
-	private String endDate;
-	private String status;
-	private String createdAt;
-	private String updateAt;
+	private int code;  //챌린지 번호
+	private String empId;  //관리자 아이디
+	private String title; //제목
+	private String text;  //내용
+	private String startDate;  //시작일
+	private String endDate;  //마감일
+	private String status;  //운영상태
+	private String createdAt;  //등록일
+	private String updateAt;  //수정일
 	public int getCode() {
 		return code;
 	}

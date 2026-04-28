@@ -1,15 +1,15 @@
 package com.ss_dam.admin;
 
 public class adminAccount {
-	private String empId;
-	private String password;
-	private String name;
-	private int phone;
-	private String dept;
-	private int role;
-	private String createdAt;
-	private String updatedAt;
-	private String loggedAt;
+	private String empId; //아이디
+	private String password; //비밀번호
+	private String name; //이름
+	private int phone;  //연락처
+	private String dept;   //소속
+	private int role;  //등급
+	private String createdAt;  //가입일
+	private String updatedAt;  //수정일
+	private String loggedAt;  //마지막 로그인
 	public String getEmpId() {
 		return empId;
 	}
