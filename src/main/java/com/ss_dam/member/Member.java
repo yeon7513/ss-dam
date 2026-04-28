@@ -1,19 +1,19 @@
 package com.ss_dam.member;
 
 public class Member {
-  private String id; //아이디
-  private String password;  //비밀번호
-  private String name; //이름
-  private String phone; //연락처
-  private String address; //주소
-  private String profileImg; //프로필 사진
-  private int rating; //등급
-  private int ranking; //랭킹
-  private int point; //보유 포인트
-  private String status; //상태
-  private String createdAt;  //가입일
-  private String updatedAt; //수정일
-   private String loggedAt; //마지막 로그인
+  private String id; // 아이디
+  private String password; // 비밀번호
+  private String name; // 이름
+  private String phone; // 연락처
+  private String address; // 주소
+  private String profileImg; // 프로필 사진
+  private int rating; // 등급
+  private int ranking; // 랭킹
+  private int point; // 보유 포인트
+  private String status; // 상태
+  private String createdAt; // 가입일
+  private String updatedAt; // 수정일
+  private String loggedAt; // 마지막 로그인
 
   public String getId() {
     return id;
