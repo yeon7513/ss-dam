@@ -1,4 +1,4 @@
-package com.ss_dam.admin;
+package com.ss_dam.auth.admin;
 
 public class Admin {
   private String empId; // 아이디

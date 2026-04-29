@@ -1,4 +1,4 @@
-package com.ss_dam.admin.log;
+package com.ss_dam.auth.admin.log;
 
 public class ActivityLog {
   private int code; // 로그번호

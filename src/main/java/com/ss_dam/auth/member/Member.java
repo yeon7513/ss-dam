@@ -1,4 +1,4 @@
-package com.ss_dam.member;
+package com.ss_dam.auth.member;
 
 public class Member {
   private String id; // 아이디

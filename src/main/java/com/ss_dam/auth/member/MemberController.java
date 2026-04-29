@@ -1,4 +1,4 @@
-package com.ss_dam.member;
+package com.ss_dam.auth.member;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
