@@ -1,0 +1,67 @@
+package com.ss_dam.comment;
+
+public class Comment {
+  private Long code;
+  private Long feedCode;
+  private String memberId;
+  private String text;
+  private String status;
+  private String createdAt;
+  private String updatedAt;
+
+  public Long getCode() {
+    return code;
+  }
+
+  public void setCode(Long code) {
+    this.code = code;
+  }
+
+  public Long getFeedCode() {
+    return feedCode;
+  }
+
+  public void setFeedCode(Long feedCode) {
+    this.feedCode = feedCode;
+  }
+
+  public String getMemberId() {
+    return memberId;
+  }
+
+  public void setMemberId(String memberId) {
+    this.memberId = memberId;
+  }
+
+  public String getText() {
+    return text;
+  }
+
+  public void setText(String text) {
+    this.text = text;
+  }
+
+  public String getStatus() {
+    return status;
+  }
+
+  public void setStatus(String status) {
+    this.status = status;
+  }
+
+  public String getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(String createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  public String getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public void setUpdatedAt(String updatedAt) {
+    this.updatedAt = updatedAt;
+  }
+}
