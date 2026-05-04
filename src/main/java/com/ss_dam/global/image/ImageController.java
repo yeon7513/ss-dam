@@ -1,4 +1,4 @@
-package com.ss_dam.common.image;
+package com.ss_dam.global.image;
 
 import java.net.MalformedURLException;
 import org.springframework.core.io.Resource;

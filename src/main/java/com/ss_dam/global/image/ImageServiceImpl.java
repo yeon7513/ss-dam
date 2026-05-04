@@ -1,4 +1,4 @@
-package com.ss_dam.common.image;
+package com.ss_dam.global.image;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import com.ss_dam.common.constants.BaseUrl;
+import com.ss_dam.global.constants.BaseUrl;
 
 @Service
 public class ImageServiceImpl implements ImageService {

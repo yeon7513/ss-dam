@@ -1,4 +1,4 @@
-package com.ss_dam.common.constants;
+package com.ss_dam.global.constants;
 
 public class BaseUrl {
   private static final String IMG_URL = "http://localhost:9090/images";

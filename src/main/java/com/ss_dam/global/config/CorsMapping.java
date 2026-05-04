@@ -1,4 +1,4 @@
-package com.ss_dam.common.config;
+package com.ss_dam.global.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
