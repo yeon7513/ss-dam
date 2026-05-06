@@ -4,5 +4,67 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="feed">
-	
+	<!-- 
+		참고
+		https://velog.io/@jiu_lee/MyBatis-resultMap-collection-association-%EC%82%AC%EC%9A%A9%EB%B2%95
+	 -->
+
+	<!-- 현재 불필요한 컬럼들도 다 JSON으로 전송중... 해결방법?! -->
+	<resultMap type="Feed" id="FeedMap" autoMapping="true">
+		<id column="code" property="code" />
+		
+		<!-- 이미지 리스트 매핑 -->
+		<collection property="images" column="code" javaType="ArrayList" ofType="Images" autoMapping="true">
+	        <id property="code" column="icode"/>
+	        <result column="target_code" property="targetCode" />
+	        <result column="image_url" property="imageURL" />
+	    </collection>
+	    
+	    <!-- 해시태그 리스트 매핑 -->
+	    <collection property="hashtags" column="feed_code" javaType="ArrayList" ofType="FeedHashtag">
+	    	<result column="fh_code" property="feedCode" />
+	        <result column="tag_name"  property="tagName" />
+	    </collection>
+	</resultMap>
+
+	<select id="searchAllFeeds" resultMap="FeedMap">
+		SELECT
+			ma.profile_img,
+			ma.ranking,
+			f.member_id,
+			ch.title AS chal_title,
+			f.code,
+			f.title,
+			f.text,
+			fh.feed_code AS fh_code,
+			fh.tag_name,
+			f.hitcount,
+			f.status,
+			f.created_at,
+			i.code AS icode,
+			i.target_code,
+			CONCAT('/images/', i.type, '/', i.path, '/', i.filename) AS image_url,
+			(
+				SELECT count(feed_code)
+				FROM comments c
+				WHERE c.feed_code = f.code
+			) AS count_comment,
+			(
+				SELECT count(feed_code)
+				FROM feed_like fl
+				WHERE fl.feed_code = f.code
+			) AS count_like
+		FROM feed f
+		LEFT JOIN images i 
+			ON f.code = i.target_code AND i.type = 'feed'
+		JOIN challenge ch 
+			ON f.chal_code = ch.code
+		JOIN member_account ma 
+			ON f.member_id = ma.id
+		LEFT JOIN feed_hashtag fh 
+			ON f.code = fh.feed_code
+		WHERE f.status = 'active'
+		ORDER BY f.created_at DESC
+	</select>
+
 </mapper>
