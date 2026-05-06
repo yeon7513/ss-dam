@@ -4,11 +4,35 @@ $font-logo: "Mulbit", cursive;
 $color-white: #ffffff;
 $color-black: #111111;
 
-$primary-50: #118b50;
-$secondary-50: #e3f0af;
+$primary-50: #118b50; // 버튼 호버
+$primary-5: #cfe8dc; // 배경에서 쓸수도 있음
+$primary-20: #88c5a7; // border 색
+$primary-40: #399e6d; // 버튼 CTA 색상
+
+$secondary-50: #e3f0af; // 버튼 서브 CTA 색상
+$secondary-5: #f9fcef; // 배경에서 쓸수도 있음
+$secondary-20: #f1f7d7; // border 색
+$secondary-60: #bdc892; // 버튼 호버
+
 $background-50: #fbf6e9;
-$grayscale-50: #bfc5c4;
+$background-5: #fefdfb;
+$background-10: #fefcf8;
+$background-20: #fdfaf4; // border 색
+$background-40: #fcf8ed;
+$background-80: #7d7b74; // 어두운 배경
+
+$grayscale-50: #bfc5c4; // 비활성
+$grayscale-5: #f2f3f3; // 배경에서 쓸수도 있음
+$grayscale-10: #dfe2e1; // 그림자
+$grayscale-20: #eaeceb; // border 색
+$graysclae-90: #404241; // 본문 바디 텍스트
+$graysclae-100: #262727; // 본문 제목 텍스트
+
 $point-50: #5db996;
+$point-5: #dff1ea; // 배경에서 쓸수도 있음
+$point-20: #aedcca; // border 색
+$point-60: #4d9a7d; // 로고 강조
+$point-70: #3e7b64; // 로고 강조
 
 $warn-color: #fbc02d;
 $dan-color: #e53835;
