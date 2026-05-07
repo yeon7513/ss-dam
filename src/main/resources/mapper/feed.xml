@@ -29,18 +29,12 @@
 
 	<select id="searchAllFeeds" resultMap="FeedMap">
 		SELECT
+			f.*,
 			ma.profile_img,
 			ma.ranking,
-			f.member_id,
 			ch.title AS chal_title,
-			f.code,
-			f.title,
-			f.text,
 			fh.feed_code AS fh_code,
 			fh.tag_name,
-			f.hitcount,
-			f.status,
-			f.created_at,
 			i.code AS icode,
 			i.target_code,
 			CONCAT('/images/', i.type, '/', i.path, '/', i.filename) AS image_url,
@@ -57,12 +51,12 @@
 		FROM feed f
 		LEFT JOIN images i 
 			ON f.code = i.target_code AND i.type = 'feed'
+		LEFT JOIN feed_hashtag fh 
+			ON f.code = fh.feed_code
 		JOIN challenge ch 
 			ON f.chal_code = ch.code
 		JOIN member_account ma 
 			ON f.member_id = ma.id
-		LEFT JOIN feed_hashtag fh 
-			ON f.code = fh.feed_code
 		WHERE f.status = 'active'
 		ORDER BY f.created_at DESC
 	</select>
