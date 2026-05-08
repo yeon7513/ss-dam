@@ -13,8 +13,8 @@ public class FeedDaoImpl implements FeedDao {
   SqlSession sql;
 
   @Override
-  public List<Feed> searchAllFeeds() {
-    return sql.selectList("feed.searchAllFeeds");
+  public List<Feed> searchFeeds() {
+    return sql.selectList("feed.searchFeeds");
   }
 
   @Override

@@ -28,7 +28,7 @@
 	</resultMap>
 
 	<!-- 전체 피드 조회 -->
-	<select id="searchAllFeeds" resultMap="FeedMap">
+	<select id="searchFeeds" resultMap="FeedMap">
 		SELECT
 			f.*,
 			ma.profile_img,
