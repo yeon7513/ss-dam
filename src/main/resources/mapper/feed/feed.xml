@@ -14,7 +14,9 @@
 		<id column="code" property="code" />
 		
 		<!-- 회원 프로필카드 리스트 매핑 -->
-		<collection property="memberProfiles"></collection>
+		<collection property="memberProfiles" javaType="ArrayList" ofType="MemberProfile" autoMapping="true" columnPrefix="mp_">
+			<id column="code" property="code" />
+		</collection>
 		
 		<!-- 이미지 리스트 매핑 -->
 		<collection property="images" javaType="ArrayList" ofType="Images" autoMapping="true">
@@ -34,8 +36,11 @@
 	<select id="searchFeeds" resultMap="FeedMap">
 		SELECT
 			f.*,
-			ma.profile_img,
-			ma.ranking,
+			mp.code as mp_code, 
+			mp.id as mp_id, 
+			mp.PATH as mp_path, 
+			mp.ranking as mp_ranking, 
+			mp.rating as mp_rating,
 			ch.title AS chal_title,
 			fh.feed_code AS fh_code,
 			fh.tag_name,
@@ -69,9 +74,16 @@
 		JOIN challenge ch 
 			ON f.chal_code = ch.code
 		<!-- 작성자 정보 -->
-		JOIN member_account ma 
-			ON f.mem_code = ma.code
-		WHERE f.status = 'active'
+		JOIN (
+			SELECT m.code, m.id, i.PATH, m.ranking, m.rating
+			FROM member_account m
+			LEFT JOIN images i
+				ON m.code = i.target_code 
+					AND i.delete_yn = 0 
+					AND i.TYPE = 'profile'
+		) AS mp
+			ON mp.code = f.mem_code
+		WHERE f.status = 'active' 
 		ORDER BY f.created_at DESC
 	</select>
 	

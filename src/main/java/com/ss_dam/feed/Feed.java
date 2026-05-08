@@ -28,11 +28,12 @@ public class Feed {
   private int countFeedLike;
 
   // 전체 조회용 리스트
+  private List<MemberProfile> memberProfiles;
   private List<Comment> comments;
   private List<Images> images;
   private List<FeedHashtag> hashtags;
-  private List<MemberProfile> memberProfiles;
 
+  
   public Long getCode() {
     return code;
   }
@@ -113,14 +114,6 @@ public class Feed {
     this.deleteYn = deleteYn;
   }
 
-  public MemberProfile getMemberProfile() {
-    return memberProfile;
-  }
-
-  public void setMemberProfile(MemberProfile memberProfile) {
-    this.memberProfile = memberProfile;
-  }
-
   public String getChalTitle() {
     return chalTitle;
   }
@@ -175,6 +168,14 @@ public class Feed {
 
   public void setMemberProfiles(List<MemberProfile> memberProfiles) {
     this.memberProfiles = memberProfiles;
+  }
+
+  public MemberProfile getMemberProfile() {
+    return memberProfile;
+  }
+
+  public void setMemberProfile(MemberProfile memberProfile) {
+    this.memberProfile = memberProfile;
   }
 
 }

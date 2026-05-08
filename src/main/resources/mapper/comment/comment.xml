@@ -5,6 +5,8 @@
   
 <mapper namespace="comment">
 
+	
+
 	<select id="countComment" resultType="Integer">
 		SELECT IFNULL(count(*), 0)
 		FROM comments
@@ -12,13 +14,13 @@
 	</select>
 
 	<select id="searchCommentsByFeedCode" resultType="Comment">
-		SELECT ifnull(count(cl.cmt_code), 0) AS count_like, c.*, profile_img, ranking
+		SELECT ifnull(count(cl.cmt_code), 0) AS count_like, c.*, ma.id
 		FROM comments c
 		JOIN member_account ma
-			ON c.member_id = ma.id
+			ON c.mem_code = ma.code
 		LEFT JOIN comment_like cl
 			ON cl.cmt_code = c.code
-		WHERE feed_code = 3
-		GROUP BY c.member_id
+		WHERE feed_code = #{feedCode}
+		GROUP BY c.code
 	</select>
 </mapper>
