@@ -7,4 +7,6 @@ public interface FeedDao {
 
   List<Feed> searchAllFeeds();
 
+  Feed searchDetail(Long code);
+
 }

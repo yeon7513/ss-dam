@@ -1,6 +1,7 @@
 package com.ss_dam.feed;
 
 import java.util.List;
+import com.ss_dam.comment.Comment;
 import com.ss_dam.global.image.Images;
 
 public class Feed {
@@ -21,10 +22,11 @@ public class Feed {
   // 챌린지 정보
   private String chalTitle;
 
-  // 좋아요 & 댓글 개수
+  // 좋아요 개수
   private int countComment;
-  private int countLike;
+  private int countFeedLike;
 
+  private List<Comment> comments;
   private List<Images> images;
   private List<FeedHashtag> hashtags;
 
@@ -52,12 +54,12 @@ public class Feed {
     this.countComment = countComment;
   }
 
-  public int getCountLike() {
-    return countLike;
+  public int getCountFeedLike() {
+    return countFeedLike;
   }
 
-  public void setCountLike(int countLike) {
-    this.countLike = countLike;
+  public void setCountFeedLike(int countFeedLike) {
+    this.countFeedLike = countFeedLike;
   }
 
   public List<Images> getImages() {
@@ -154,6 +156,14 @@ public class Feed {
 
   public void setChalTitle(String chalTitle) {
     this.chalTitle = chalTitle;
+  }
+
+  public List<Comment> getComments() {
+    return comments;
+  }
+
+  public void setComments(List<Comment> comments) {
+    this.comments = comments;
   }
 
 }

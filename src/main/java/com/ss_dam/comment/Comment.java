@@ -9,6 +9,11 @@ public class Comment {
   private String createdAt;
   private String updatedAt;
 
+  // 조인용 필드
+  private String profileImg;
+  private int ranking;
+  private int countLike;
+
   public Long getCode() {
     return code;
   }
@@ -64,4 +69,29 @@ public class Comment {
   public void setUpdatedAt(String updatedAt) {
     this.updatedAt = updatedAt;
   }
+
+  public String getProfileImg() {
+    return profileImg;
+  }
+
+  public void setProfileImg(String profileImg) {
+    this.profileImg = profileImg;
+  }
+
+  public int getRanking() {
+    return ranking;
+  }
+
+  public void setRanking(int ranking) {
+    this.ranking = ranking;
+  }
+
+  public int getCountLike() {
+    return countLike;
+  }
+
+  public void setCountLike(int countLike) {
+    this.countLike = countLike;
+  }
+
 }

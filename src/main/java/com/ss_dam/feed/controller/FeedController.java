@@ -3,10 +3,12 @@ package com.ss_dam.feed.controller;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ss_dam.feed.Feed;
 import com.ss_dam.feed.service.FeedService;
+
 
 // @RestController 어노테이션 붙이면
 // 각 메소드에 @ResponseBody 안붙여도 됩니다! (자동으로 JSON 변환)
@@ -25,6 +27,12 @@ public class FeedController {
   @GetMapping
   List<Feed> searchAllFeeds() {
     return feedService.searchAllFeeds();
+  }
+
+  // 피드 상세 조회
+  @GetMapping("/{code}")
+  Feed searchDetail(@PathVariable Long code) {
+    return feedService.searchDetail(code);
   }
 
 
