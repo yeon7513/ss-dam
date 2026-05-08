@@ -1,19 +1,25 @@
-package com.ss_dam.global.image;
+package com.ss_dam.global.image.service;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.ss_dam.global.constants.BaseUrl;
+import com.ss_dam.global.image.Images;
+import com.ss_dam.global.image.dao.ImageDao;
 
 @Service
 public class ImageServiceImpl implements ImageService {
+  @Autowired
+  ImageDao imageDao;
 
   // 이미지 업로드 메소드
   public String uploadImage(MultipartFile file, String folder) throws IOException {
@@ -52,6 +58,11 @@ public class ImageServiceImpl implements ImageService {
       return null; // 이미지가 없거나 읽을 수 없다면 null 반환
 
     return resource;
+  }
+
+  @Override
+  public List<Images> searchFeedImagesByFeedCode(Long feedCode) {
+    return imageDao.searchFeedImagesByFeedCode(feedCode);
   }
 
 }

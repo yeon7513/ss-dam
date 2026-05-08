@@ -14,8 +14,10 @@
 		<id column="code" property="code" />
 		
 		<!-- 이미지 리스트 매핑 -->
-		<collection property="images" column="code" javaType="ArrayList" ofType="Images" autoMapping="true">
-	        <id column="i_code" property="code"/>
+		<collection property="images" javaType="ArrayList" ofType="Images" autoMapping="true">
+	        <result column="target_code" property="targetCode" />
+	        <result column="type" property="type" />
+	        <result column="path" property="path" />
 	    </collection>
 	    
 	    <!-- 해시태그 리스트 매핑 -->
@@ -34,10 +36,9 @@
 			ch.title AS chal_title,
 			fh.feed_code AS fh_code,
 			fh.tag_name,
-			i.code AS i_code,
 			i.target_code,
-			<!-- DB 변경 후 나중에 수정할 것 -->
-			CONCAT('/images/', i.type, '/', i.path, '/', i.filename) AS image_url,
+			i.type,
+			i.path,
 			IFNULL(cnt_comment.cnt, 0) AS count_comment,
 			IFNULL(cnt_like.cnt, 0) AS count_feed_like
 		FROM feed f
