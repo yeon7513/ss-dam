@@ -4,9 +4,13 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="member">
-	<select id="searchProfileById" resultType="Member">
-		SELECT id, profile_img, ranking, rating
-		FROM member_account
-		WHERE id = #{id} 
+	<select id="searchProfileByMemberCode" resultType="MemberProfile">
+		SELECT m.code, m.id, i.path, m.rating, m.ranking
+		FROM member_account m
+		LEFT JOIN images i
+		ON i.target_code = m.code 
+			AND i.type= 'profile' 
+			AND i.delete_yn = 0
+		WHERE code = #{code};
 	</select>
 </mapper>

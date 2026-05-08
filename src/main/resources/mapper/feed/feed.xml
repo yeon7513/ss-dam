@@ -13,6 +13,9 @@
 	<resultMap type="Feed" id="FeedMap" autoMapping="true">
 		<id column="code" property="code" />
 		
+		<!-- 회원 프로필카드 리스트 매핑 -->
+		<collection property="memberProfiles"></collection>
+		
 		<!-- 이미지 리스트 매핑 -->
 		<collection property="images" javaType="ArrayList" ofType="Images" autoMapping="true">
 	        <result column="target_code" property="targetCode" />
@@ -67,7 +70,7 @@
 			ON f.chal_code = ch.code
 		<!-- 작성자 정보 -->
 		JOIN member_account ma 
-			ON f.member_id = ma.id
+			ON f.mem_code = ma.code
 		WHERE f.status = 'active'
 		ORDER BY f.created_at DESC
 	</select>

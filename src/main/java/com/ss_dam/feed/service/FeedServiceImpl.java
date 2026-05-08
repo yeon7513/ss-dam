@@ -3,7 +3,7 @@ package com.ss_dam.feed.service;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ss_dam.auth.member.Member;
+import com.ss_dam.auth.member.MemberProfile;
 import com.ss_dam.auth.member.service.MemberService;
 import com.ss_dam.comment.service.CommentService;
 import com.ss_dam.feed.Feed;
@@ -41,11 +41,10 @@ public class FeedServiceImpl implements FeedService {
       return null;
     }
 
-    Member member = memberService.searchProfileById(feed.getMemberId());
 
-    // 작성자 정보
-    feed.setProfileImg(member.getProfileImg());
-    feed.setRanking(member.getRanking());
+    // 작성자 프로필 정보
+    MemberProfile member = memberService.searchProfileByMemberCode(feed.getMemCode());
+    feed.setMemberProfile(member);
 
     // 이미지 리스트
     feed.setImages(imageService.searchFeedImagesByFeedCode(code));

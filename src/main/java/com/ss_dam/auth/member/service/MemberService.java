@@ -1,9 +1,9 @@
 package com.ss_dam.auth.member.service;
 
-import com.ss_dam.auth.member.Member;
+import com.ss_dam.auth.member.MemberProfile;
 
 public interface MemberService {
 
-  Member searchProfileById(String id);
+  MemberProfile searchProfileByMemberCode(Long code);
 
 }
