@@ -5,7 +5,7 @@ import com.ss_dam.feed.Feed;
 
 public interface FeedDao {
 
-  List<Feed> searchAllFeeds();
+  List<Feed> searchFeeds();
 
   Feed searchDetail(Long code);
 

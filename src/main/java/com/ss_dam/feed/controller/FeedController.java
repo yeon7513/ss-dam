@@ -25,8 +25,8 @@ public class FeedController {
 
   // 전체 피드 조회
   @GetMapping
-  List<Feed> searchAllFeeds() {
-    return feedService.searchAllFeeds();
+  List<Feed> searchFeeds() {
+    return feedService.searchFeeds();
   }
 
   // 피드 상세 조회
