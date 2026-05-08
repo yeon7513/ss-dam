@@ -1,0 +1,65 @@
+@use "../../scss/variables.scss" as *;
+
+.container {
+  width: 100%;
+  border-bottom: 2px solid $primary-20;
+  padding: 20px 40px;
+  background-color: $color-white;
+  box-sizing: border-box;
+
+  .inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+
+    .logoText {
+      font-family: $font-logo;
+      font-size: 28px;
+      font-weight: 800;
+      color: $point-60;
+      margin: 0;
+      cursor: pointer;
+    }
+
+    .menuArea {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 15px;
+
+      .utilityNav {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        color: $grayscale-50;
+
+        .navItem {
+          cursor: pointer;
+        }
+
+        .divider {
+          color: $grayscale-20;
+        }
+      }
+
+      .mainNav {
+        .navList {
+          display: flex;
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          gap: 30px;
+
+          li {
+            font-family: $font-main;
+            font-size: 17px;
+            font-weight: 600;
+            color: $grayscale-90;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+}
