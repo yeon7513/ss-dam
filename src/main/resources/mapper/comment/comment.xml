@@ -4,8 +4,13 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="comment">
-
-	
+	<resultMap type="Comment" id="CommentMap" autoMapping="true">
+		<id column="code" property="code" />
+		
+		<collection property="memberProfiles" javaType="ArrayList" ofType="MemberProfile" autoMapping="true" columnPrefix="m_">
+			<id column="code" property="code" />
+		</collection>
+	</resultMap>
 
 	<select id="countComment" resultType="Integer">
 		SELECT IFNULL(count(*), 0)
@@ -14,13 +19,22 @@
 	</select>
 
 	<select id="searchCommentsByFeedCode" resultType="Comment">
-		SELECT ifnull(count(cl.cmt_code), 0) AS count_like, c.*, ma.id
+		SELECT 
+			m.code as m_code, 
+			m.id as m_id, 
+			m.ranking as m_ranking, 
+			m.rating as m_rating,
+			i.path, 
+			ifnull(count(cl.cmt_code), 0) AS count_like, 
+			c.*
 		FROM comments c
-		JOIN member_account ma
-			ON c.mem_code = ma.code
+		JOIN member_account m
+			ON c.mem_code = m.code
 		LEFT JOIN comment_like cl
 			ON cl.cmt_code = c.code
-		WHERE feed_code = #{feedCode}
+		LEFT JOIN images i
+			ON i.target_code = m.code AND i.delete_yn = 0 AND type = 'profile'
+		WHERE feed_code = #{code}
 		GROUP BY c.code
 	</select>
 </mapper>

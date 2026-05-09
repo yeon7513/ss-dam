@@ -16,9 +16,9 @@ public class Feed {
   private String createdAt; // 작성일
   private String updatedAt; // 수정일
   private boolean deleteYn; // 삭제 여부
-
-  // 작성자 정보
-  private MemberProfile memberProfile;
+  
+  // 작성자 프로필 정보
+  private List<MemberProfile> memberProfiles;
 
   // 챌린지 정보
   private String chalTitle;
@@ -28,7 +28,6 @@ public class Feed {
   private int countFeedLike;
 
   // 전체 조회용 리스트
-  private List<MemberProfile> memberProfiles;
   private List<Comment> comments;
   private List<Images> images;
   private List<FeedHashtag> hashtags;
@@ -168,14 +167,6 @@ public class Feed {
 
   public void setMemberProfiles(List<MemberProfile> memberProfiles) {
     this.memberProfiles = memberProfiles;
-  }
-
-  public MemberProfile getMemberProfile() {
-    return memberProfile;
-  }
-
-  public void setMemberProfile(MemberProfile memberProfile) {
-    this.memberProfile = memberProfile;
   }
 
 }

@@ -1,5 +1,8 @@
 package com.ss_dam.comment;
 
+import java.util.List;
+import com.ss_dam.auth.member.MemberProfile;
+
 public class Comment {
   private Long code;
   private Long feedCode;
@@ -10,8 +13,7 @@ public class Comment {
   private String updatedAt;
 
   // 조인용 필드
-  private String profileImg;
-  private int ranking;
+  private List<MemberProfile> memberProfiles;
   private int countLike;
 
   public Long getCode() {
@@ -69,29 +71,21 @@ public class Comment {
   public void setUpdatedAt(String updatedAt) {
     this.updatedAt = updatedAt;
   }
-
-  public String getProfileImg() {
-    return profileImg;
-  }
-
-  public void setProfileImg(String profileImg) {
-    this.profileImg = profileImg;
-  }
-
-  public int getRanking() {
-    return ranking;
-  }
-
-  public void setRanking(int ranking) {
-    this.ranking = ranking;
-  }
-
+  
   public int getCountLike() {
     return countLike;
   }
 
   public void setCountLike(int countLike) {
     this.countLike = countLike;
+  }
+
+  public List<MemberProfile> getMemberProfiles() {
+    return memberProfiles;
+  }
+
+  public void setMemberProfiles(List<MemberProfile> memberProfiles) {
+    this.memberProfiles = memberProfiles;
   }
 
 }

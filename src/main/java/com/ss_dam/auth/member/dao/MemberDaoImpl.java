@@ -1,5 +1,6 @@
 package com.ss_dam.auth.member.dao;
 
+import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -12,7 +13,7 @@ public class MemberDaoImpl implements MemberDao {
   SqlSession sql;
 
   @Override
-  public MemberProfile searchProfileByMemberCode(Long code) {
+  public List<MemberProfile> searchProfileByMemberCode(Long code) {
     return sql.selectOne("member.searchProfileByMemberCode", code);
   }
 

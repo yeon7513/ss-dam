@@ -5,6 +5,9 @@ public class MemberProfile {
   private String id;
   private int rating;
   private int ranking;
+  
+  // 조인용 필드
+  private String path;
 
   public Long getCode() {
     return code;
@@ -36,5 +39,13 @@ public class MemberProfile {
 
   public void setRanking(int ranking) {
     this.ranking = ranking;
+  }
+
+  public String getPath() {
+    return path;
+  }
+
+  public void setPath(String path) {
+    this.path = path;
   }
 }

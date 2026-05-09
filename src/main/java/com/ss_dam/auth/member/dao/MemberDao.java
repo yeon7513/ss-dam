@@ -1,9 +1,10 @@
 package com.ss_dam.auth.member.dao;
 
+import java.util.List;
 import com.ss_dam.auth.member.MemberProfile;
 
 public interface MemberDao {
 
-  MemberProfile searchProfileByMemberCode(Long code);
+  List<MemberProfile> searchProfileByMemberCode(Long code);
 
 }
