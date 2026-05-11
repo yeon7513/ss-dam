@@ -4,13 +4,14 @@ import java.util.List;
 import com.ss_dam.auth.member.MemberProfile;
 
 public class Comment {
-  private Long code;
-  private Long feedCode;
-  private Long memCode;
-  private String content;
-  private String status;
-  private String createdAt;
-  private String updatedAt;
+  private Long code; // 댓글 고유 번호
+  private Long feedCode; // 피드 고유 번호
+  private Long memCode; // 회원 고유 번호
+  private String content; // 내용
+  private String status; // 활성 상태
+  private String createdAt; // 댓글 등록일
+  private String updatedAt; // 댓글 수정일
+  private boolean deleteYn; // 삭제 여부
 
   // 조인용 필드
   private List<MemberProfile> memberProfiles;
@@ -87,5 +88,14 @@ public class Comment {
   public void setMemberProfiles(List<MemberProfile> memberProfiles) {
     this.memberProfiles = memberProfiles;
   }
+
+  public boolean isDeleteYn() {
+    return deleteYn;
+  }
+
+  public void setDeleteYn(boolean deleteYn) {
+    this.deleteYn = deleteYn;
+  }
+
 
 }

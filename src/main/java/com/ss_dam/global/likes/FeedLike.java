@@ -1,9 +1,10 @@
 package com.ss_dam.global.likes;
 
 public class FeedLike {
-  private Long feedCode;
-  private String memberId;
-  private String createdAt;
+  private Long feedCode; // 피드 고유 번호
+  private String memCode; // 회원 고유 번호
+  private String createdAt; // 좋아요 등록일
+  private boolean deleteYn; // 삭제 여부
 
   public Long getFeedCode() {
     return feedCode;
@@ -13,12 +14,12 @@ public class FeedLike {
     this.feedCode = feedCode;
   }
 
-  public String getMemberId() {
-    return memberId;
+  public String getMemCode() {
+    return memCode;
   }
 
-  public void setMemberId(String memberId) {
-    this.memberId = memberId;
+  public void setMemCode(String memCode) {
+    this.memCode = memCode;
   }
 
   public String getCreatedAt() {
@@ -29,4 +30,11 @@ public class FeedLike {
     this.createdAt = createdAt;
   }
 
+  public boolean isDeleteYn() {
+    return deleteYn;
+  }
+
+  public void setDeleteYn(boolean deleteYn) {
+    this.deleteYn = deleteYn;
+  }
 }

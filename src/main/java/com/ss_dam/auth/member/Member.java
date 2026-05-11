@@ -14,6 +14,7 @@ public class Member {
   private String createdAt; // 가입일
   private String updatedAt; // 수정일
   private String loggedAt; // 마지막 로그인
+  private boolean deleteYn; // 회원 탈퇴(삭제) 여부
 
   public String getId() {
     return id;
@@ -117,5 +118,13 @@ public class Member {
 
   public void setLoggedAt(String loggedAt) {
     this.loggedAt = loggedAt;
+  }
+
+  public boolean isDeleteYn() {
+    return deleteYn;
+  }
+
+  public void setDeleteYn(boolean deleteYn) {
+    this.deleteYn = deleteYn;
   }
 }

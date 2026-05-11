@@ -1,10 +1,10 @@
 package com.ss_dam.global.likes;
 
 public class CommentLike {
-  // UPSERT 적용하면 필드 변경할 것!
-  private Long cmtCode;
-  private String memberId;
-  private String createdAt;
+  private Long cmtCode; // 댓글 고유 번호
+  private String memCode; // 회원 고유 번호
+  private String createdAt; // 좋아요 등록일
+  private boolean deleteYn; // 삭제 여부
 
   public Long getCmtCode() {
     return cmtCode;
@@ -14,12 +14,12 @@ public class CommentLike {
     this.cmtCode = cmtCode;
   }
 
-  public String getMemberId() {
-    return memberId;
+  public String getMemCode() {
+    return memCode;
   }
 
-  public void setMemberId(String memberId) {
-    this.memberId = memberId;
+  public void setMemCode(String memCode) {
+    this.memCode = memCode;
   }
 
   public String getCreatedAt() {
@@ -30,4 +30,11 @@ public class CommentLike {
     this.createdAt = createdAt;
   }
 
+  public boolean isDeleteYn() {
+    return deleteYn;
+  }
+
+  public void setDeleteYn(boolean deleteYn) {
+    this.deleteYn = deleteYn;
+  }
 }

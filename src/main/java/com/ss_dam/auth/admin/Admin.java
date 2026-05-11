@@ -10,6 +10,7 @@ public class Admin {
   private String createdAt; // 가입일
   private String updatedAt; // 수정일
   private String loggedAt; // 마지막 로그인
+  private boolean deleteYn; // 삭제 여부
 
   public String getEmpId() {
     return empId;
@@ -81,6 +82,14 @@ public class Admin {
 
   public void setLoggedAt(String loggedAt) {
     this.loggedAt = loggedAt;
+  }
+
+  public boolean isDeleteYn() {
+    return deleteYn;
+  }
+
+  public void setDeleteYn(boolean deleteYn) {
+    this.deleteYn = deleteYn;
   }
 
 }
