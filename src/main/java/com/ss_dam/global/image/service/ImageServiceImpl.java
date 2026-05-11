@@ -14,7 +14,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import com.ss_dam.global.constants.BaseUrl;
+import com.ss_dam.global.constants.BaseURL;
 import com.ss_dam.global.image.Images;
 import com.ss_dam.global.image.dao.ImageDao;
 
@@ -32,7 +32,7 @@ public class ImageServiceImpl implements ImageService {
 
     // 폴더 경로 설정
     // -> BASE_UPLOAD_PATH/폴더명/
-    String uploadDir = Paths.get(BaseUrl.getBaseUploadPath(), folder).toString();
+    String uploadDir = Paths.get(BaseURL.getBaseUploadPath(), folder).toString();
     File dir = new File(uploadDir);
 
     // 폴더가 존재하지 않을 경우 새로운 폴더 생성
@@ -52,7 +52,7 @@ public class ImageServiceImpl implements ImageService {
   public Resource loadImage(String folder, String fileName) throws MalformedURLException {
 
     // 이미지 경로
-    Path path = Paths.get(BaseUrl.getBaseUploadPath(), folder, fileName);
+    Path path = Paths.get(BaseURL.getBaseUploadPath(), folder, fileName);
     // 파일 경로 읽어서 resource에 저장
     Resource resource = new UrlResource(path.toUri());
 
