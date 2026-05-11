@@ -13,7 +13,7 @@ import com.ss_dam.feed.service.FeedService;
 // @RestController 어노테이션 붙이면
 // 각 메소드에 @ResponseBody 안붙여도 됩니다! (자동으로 JSON 변환)
 @RestController
-@RequestMapping("/feeds")
+@RequestMapping("/feed")
 // 또한 RESTful 방식이니, 엔드포인트는 하나만 해놔도 작동합니다~
 // RESTful API란?
 // -> 사용자가 요청하는 HTTP 메소드(GET, POST, PUT, DELETE 등)에 따라

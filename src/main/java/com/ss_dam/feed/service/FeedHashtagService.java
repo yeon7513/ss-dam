@@ -5,6 +5,6 @@ import com.ss_dam.feed.FeedHashtag;
 
 public interface FeedHashtagService {
 
-  List<FeedHashtag> seacrchHashtagByFeedCode(Long feedCode);
+  List<FeedHashtag> searchHashtagByFeedCode(Long feedCode);
 
 }

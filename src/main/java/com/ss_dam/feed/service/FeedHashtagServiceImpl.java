@@ -13,8 +13,8 @@ public class FeedHashtagServiceImpl implements FeedHashtagService {
   FeedHashtagDao feedHashtagDao;
 
   @Override
-  public List<FeedHashtag> seacrchHashtagByFeedCode(Long feedCode) {
-    return feedHashtagDao.seacrchHashtagByFeedCode(feedCode);
+  public List<FeedHashtag> searchHashtagByFeedCode(Long feedCode) {
+    return feedHashtagDao.searchHashtagByFeedCode(feedCode);
   }
 
 }

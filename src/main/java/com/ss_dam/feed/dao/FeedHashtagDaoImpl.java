@@ -13,8 +13,8 @@ public class FeedHashtagDaoImpl implements FeedHashtagDao {
   SqlSession sql;
 
   @Override
-  public List<FeedHashtag> seacrchHashtagByFeedCode(Long feedCode) {
-    return sql.selectList("feedHashtag.seacrchHashtagByFeedCode", feedCode);
+  public List<FeedHashtag> searchHashtagByFeedCode(Long feedCode) {
+    return sql.selectList("feedHashtag.searchHashtagByFeedCode", feedCode);
   }
 
 }

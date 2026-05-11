@@ -53,7 +53,7 @@ public class FeedServiceImpl implements FeedService {
     feed.setImages(images);
 
     // 해시태그 리스트
-    List<FeedHashtag> feedHashtags = feedHashtagService.seacrchHashtagByFeedCode(code);
+    List<FeedHashtag> feedHashtags = feedHashtagService.searchHashtagByFeedCode(code);
     feed.setHashtags(feedHashtags);
 
     // 댓글 리스트

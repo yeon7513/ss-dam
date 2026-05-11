@@ -4,7 +4,7 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="feedHashtag">
-	<select id="seacrchHashtagByFeedCode" resultType="FeedHashtag">
+	<select id="searchHashtagByFeedCode" resultType="FeedHashtag">
 		SELECT *
 		FROM feed_hashtag
 		WHERE feed_code = #{feedCode}
