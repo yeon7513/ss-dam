@@ -4,13 +4,14 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="comment">
+
 	<resultMap type="Comment" id="CommentMap" autoMapping="true">
 		<id column="code" property="code" />
-		
+	
 		<collection property="memberProfiles" javaType="ArrayList" ofType="MemberProfile" autoMapping="true" columnPrefix="m_">
 			<id column="code" property="code" />
 		</collection>
-	</resultMap>
+	</resultMap>	
 
 	<select id="countComment" resultType="Integer">
 		SELECT IFNULL(count(*), 0)
@@ -18,23 +19,26 @@
 		WHERE feed_code = #{feedCode}
 	</select>
 
-	<select id="searchCommentsByFeedCode" resultType="Comment">
+	<select id="searchCommentsByFeedCode" resultMap="CommentMap">
 		SELECT 
-			m.code as m_code, 
-			m.id as m_id, 
-			m.ranking as m_ranking, 
-			m.rating as m_rating,
-			i.path, 
-			ifnull(count(cl.cmt_code), 0) AS count_like, 
-			c.*
+			mp.code AS m_code, 
+			mp.id AS m_id, 
+			mp.path AS m_path, 
+			mp.rating AS m_rating, 
+			mp.ranking AS m_ranking,
+			c.*,
+			ifnull(count(cl.cmt_code), 0) AS count_like
 		FROM comments c
-		JOIN member_account m
-			ON c.mem_code = m.code
+		JOIN (
+			SELECT m.code, m.id, i.path, m.rating, m.ranking
+			FROM member_account m
+			LEFT JOIN images i
+				ON i.target_code = m.code AND i.type= 'profile' AND i.delete_yn = 0
+		) AS mp
+			ON c.mem_code = mp.code
 		LEFT JOIN comment_like cl
 			ON cl.cmt_code = c.code
-		LEFT JOIN images i
-			ON i.target_code = m.code AND i.delete_yn = 0 AND type = 'profile'
-		WHERE feed_code = #{code}
+		WHERE c.feed_code = #{feedCode}
 		GROUP BY c.code
 	</select>
 </mapper>

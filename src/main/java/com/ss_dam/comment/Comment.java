@@ -6,8 +6,8 @@ import com.ss_dam.auth.member.MemberProfile;
 public class Comment {
   private Long code;
   private Long feedCode;
-  private String memberId;
-  private String text;
+  private Long memCode;
+  private String content;
   private String status;
   private String createdAt;
   private String updatedAt;
@@ -32,20 +32,20 @@ public class Comment {
     this.feedCode = feedCode;
   }
 
-  public String getMemberId() {
-    return memberId;
+  public Long getMemCode() {
+    return memCode;
   }
 
-  public void setMemberId(String memberId) {
-    this.memberId = memberId;
+  public void setMemCode(Long memCode) {
+    this.memCode = memCode;
   }
 
-  public String getText() {
-    return text;
+  public String getContent() {
+    return content;
   }
 
-  public void setText(String text) {
-    this.text = text;
+  public void setContent(String content) {
+    this.content = content;
   }
 
   public String getStatus() {
@@ -71,7 +71,7 @@ public class Comment {
   public void setUpdatedAt(String updatedAt) {
     this.updatedAt = updatedAt;
   }
-  
+
   public int getCountLike() {
     return countLike;
   }

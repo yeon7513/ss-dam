@@ -14,7 +14,7 @@ public class MemberDaoImpl implements MemberDao {
 
   @Override
   public List<MemberProfile> searchProfileByMemberCode(Long code) {
-    return sql.selectOne("member.searchProfileByMemberCode", code);
+    return sql.selectList("member.searchProfileByMemberCode", code);
   }
 
 }

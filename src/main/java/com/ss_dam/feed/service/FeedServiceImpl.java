@@ -5,9 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ss_dam.auth.member.MemberProfile;
 import com.ss_dam.auth.member.service.MemberService;
+import com.ss_dam.comment.Comment;
 import com.ss_dam.comment.service.CommentService;
 import com.ss_dam.feed.Feed;
+import com.ss_dam.feed.FeedHashtag;
 import com.ss_dam.feed.dao.FeedDao;
+import com.ss_dam.global.image.Images;
 import com.ss_dam.global.image.service.ImageService;
 import com.ss_dam.global.likes.service.LikeService;
 
@@ -42,21 +45,26 @@ public class FeedServiceImpl implements FeedService {
     }
 
     // 작성자 프로필 정보
-    List<MemberProfile> memberProfiles = memberService.searchProfileByMemberCode(feed.getMemCode());
-    feed.setMemberProfiles(memberProfiles);
+    List<MemberProfile> memberProfile = memberService.searchProfileByMemberCode(feed.getMemCode());
+    feed.setMemberProfiles(memberProfile);
 
     // 이미지 리스트
-    feed.setImages(imageService.searchFeedImagesByFeedCode(code));
+    List<Images> images = imageService.searchFeedImagesByFeedCode(code);
+    feed.setImages(images);
 
     // 해시태그 리스트
-    feed.setHashtags(feedHashtagService.seacrchHashtagByFeedCode(code));
+    List<FeedHashtag> feedHashtags = feedHashtagService.seacrchHashtagByFeedCode(code);
+    feed.setHashtags(feedHashtags);
 
     // 댓글 리스트
-    feed.setComments(commentService.searchCommentsByFeedCode(code));
+    List<Comment> comments = commentService.searchCommentsByFeedCode(code);
+    feed.setComments(comments);
 
     // 좋아요 & 댓글 개수
-    feed.setCountFeedLike(likeService.countFeedLike(code));
-    feed.setCountComment(commentService.countComment(code));
+    int countFeedLike = likeService.countFeedLike(code);
+    int countComment = commentService.countComment(code);
+    feed.setCountFeedLike(countFeedLike);
+    feed.setCountComment(countComment);
 
     return feed;
   }

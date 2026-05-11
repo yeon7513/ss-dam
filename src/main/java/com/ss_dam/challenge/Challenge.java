@@ -4,12 +4,13 @@ public class Challenge {
   private int code; // 챌린지 번호
   private String empId; // 관리자 아이디
   private String title; // 제목
-  private String text; // 내용
+  private String content; // 내용
   private String startDate; // 시작일
   private String endDate; // 마감일
   private String status; // 운영상태
   private String createdAt; // 등록일
   private String updateAt; // 수정일
+  private boolean deleteYn; // 삭제 여부
 
   public int getCode() {
     return code;
@@ -35,12 +36,12 @@ public class Challenge {
     this.title = title;
   }
 
-  public String getText() {
-    return text;
+  public String getContent() {
+    return content;
   }
 
-  public void setText(String text) {
-    this.text = text;
+  public void setContent(String content) {
+    this.content = content;
   }
 
   public String getStartDate() {
@@ -82,4 +83,13 @@ public class Challenge {
   public void setUpdateAt(String updateAt) {
     this.updateAt = updateAt;
   }
+
+  public boolean isDeleteYn() {
+    return deleteYn;
+  }
+
+  public void setDeleteYn(boolean deleteYn) {
+    this.deleteYn = deleteYn;
+  }
+
 }
