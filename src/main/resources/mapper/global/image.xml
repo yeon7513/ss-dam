@@ -10,5 +10,11 @@
 		FROM images
 		WHERE type = #{type} AND target_code = #{code}
 	</select>
+	
+	<insert id="registerImages">
+		INSERT INTO images 
+		(target_code, type, path, delete_yn)
+		VALUES (#{targetCode}, #{type}, #{path}, #{deleteYn})
+	</insert>
 
 </mapper>

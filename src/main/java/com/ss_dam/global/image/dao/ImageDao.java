@@ -8,5 +8,8 @@ public interface ImageDao {
 
   List<Images> searchImagesByCode(Map<String, Object> params);
 
+  void registerImages(Images image);
+
+
 
 }
