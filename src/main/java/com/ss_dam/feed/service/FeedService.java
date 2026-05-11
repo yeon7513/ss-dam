@@ -7,6 +7,6 @@ public interface FeedService {
 
   List<Feed> searchFeeds();
 
-  Feed searchDetail(Long code);
+  Feed searchFeedByCode(Long code);
 
 }

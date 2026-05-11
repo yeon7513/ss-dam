@@ -31,8 +31,8 @@ public class FeedController {
 
   // 피드 상세 조회
   @GetMapping("/{code}")
-  Feed searchDetail(@PathVariable Long code) {
-    return feedService.searchDetail(code);
+  Feed searchFeedByCode(@PathVariable Long code) {
+    return feedService.searchFeedByCode(code);
   }
 
 

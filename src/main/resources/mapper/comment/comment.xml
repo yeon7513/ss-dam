@@ -33,7 +33,7 @@
 			SELECT m.code, m.id, i.path, m.rating, m.ranking
 			FROM member_account m
 			LEFT JOIN images i
-				ON i.target_code = m.code AND i.type= 'profile' AND i.delete_yn = 0
+				ON i.target_code = m.code AND i.type= 'profile'
 		) AS mp
 			ON c.mem_code = mp.code
 		LEFT JOIN comment_like cl

@@ -37,8 +37,8 @@ public class FeedServiceImpl implements FeedService {
   }
 
   @Override
-  public Feed searchDetail(Long code) {
-    Feed feed = feedDao.searchDetail(code);
+  public Feed searchFeedByCode(Long code) {
+    Feed feed = feedDao.searchFeedByCode(code);
 
     if (feed == null) {
       return null;
@@ -49,7 +49,7 @@ public class FeedServiceImpl implements FeedService {
     feed.setMemberProfiles(memberProfile);
 
     // 이미지 리스트
-    List<Images> images = imageService.searchFeedImagesByFeedCode(code);
+    List<Images> images = imageService.searchImagesByCode("feed", code);
     feed.setImages(images);
 
     // 해시태그 리스트

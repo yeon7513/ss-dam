@@ -9,7 +9,6 @@
 		https://velog.io/@jiu_lee/MyBatis-resultMap-collection-association-%EC%82%AC%EC%9A%A9%EB%B2%95
 	 -->
 
-	<!-- 현재 불필요한 컬럼들도 다 JSON으로 전송중... 해결방법?! -->
 	<resultMap type="Feed" id="FeedMap" autoMapping="true">
 		<id column="code" property="code" />
 		
@@ -19,7 +18,7 @@
 		</collection>
 		
 		<!-- 이미지 리스트 매핑 -->
-		<collection property="images" javaType="ArrayList" ofType="Images" autoMapping="true">
+		<collection property="images" javaType="ArrayList" ofType="Images" notNullColumn="path">
 	        <result column="target_code" property="targetCode" />
 	        <result column="type" property="type" />
 	        <result column="path" property="path" />
@@ -38,7 +37,7 @@
 			f.*,
 			mp.code as m_code, 
 			mp.id as m_id, 
-			mp.PATH as m_path, 
+			mp.path as m_path, 
 			mp.ranking as m_ranking, 
 			mp.rating as m_rating,
 			ch.title AS chal_title,
@@ -78,9 +77,7 @@
 			SELECT m.code, m.id, i.PATH, m.ranking, m.rating
 			FROM member_account m
 			LEFT JOIN images i
-				ON m.code = i.target_code 
-					AND i.delete_yn = 0 
-					AND i.TYPE = 'profile'
+				ON m.code = i.target_code AND i.TYPE = 'profile'
 		) AS mp
 			ON mp.code = f.mem_code
 		WHERE f.status = 'active' 
@@ -88,7 +85,7 @@
 	</select>
 	
 	<!-- 피드 상세 조회 -->
-	<select id="searchDetail" resultType="Feed">
+	<select id="searchFeedByCode" resultType="Feed">
 		SELECT
 			f.*,
 			ch.title AS chal_title

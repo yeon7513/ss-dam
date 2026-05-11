@@ -18,8 +18,8 @@ public class FeedDaoImpl implements FeedDao {
   }
 
   @Override
-  public Feed searchDetail(Long code) {
-    return sql.selectOne("feed.searchDetail", code);
+  public Feed searchFeedByCode(Long code) {
+    return sql.selectOne("feed.searchFeedByCode", code);
   }
 
 

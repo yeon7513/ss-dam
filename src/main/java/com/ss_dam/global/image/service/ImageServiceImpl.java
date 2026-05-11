@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -61,8 +63,15 @@ public class ImageServiceImpl implements ImageService {
   }
 
   @Override
-  public List<Images> searchFeedImagesByFeedCode(Long feedCode) {
-    return imageDao.searchFeedImagesByFeedCode(feedCode);
+  public List<Images> searchImagesByCode(String type, Long code) {
+    Map<String, Object> params = new HashMap<>();
+
+    params.put("type", type);
+    params.put("code", code);
+
+    List<Images> images = imageDao.searchImagesByCode(params);
+
+    return images;
   }
 
 }

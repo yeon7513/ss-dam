@@ -16,8 +16,8 @@ public class MarketCategoryController {
   MarketCategoryService categoryService;
 
   @GetMapping
-  List<MarketCategory> searchCategorys() {
-    return null;
+  List<MarketCategory> searchCategories() {
+    return categoryService.searchCategories();
   }
 
 }

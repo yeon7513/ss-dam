@@ -1,6 +1,7 @@
 package com.ss_dam.global.image.dao;
 
 import java.util.List;
+import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -13,8 +14,9 @@ public class ImageDaoImpl implements ImageDao {
   SqlSession sql;
 
   @Override
-  public List<Images> searchFeedImagesByFeedCode(Long feedCode) {
-    return sql.selectList("image.searchFeedImagesByFeedCode", feedCode);
+  public List<Images> searchImagesByCode(Map<String, Object> params) {
+    return sql.selectList("image.searchImagesByCode", params);
   }
+
 
 }

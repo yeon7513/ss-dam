@@ -13,6 +13,6 @@ public interface ImageService {
 
   Resource loadImage(String folder, String fileName) throws MalformedURLException;
 
-  List<Images> searchFeedImagesByFeedCode(Long feedCode);
+  List<Images> searchImagesByCode(String type, Long code);
 
 }
