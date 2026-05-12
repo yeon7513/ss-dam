@@ -6,7 +6,7 @@ function FileInput({ id, isMultiple = true, onFileChange, ref }) {
       type="file"
       name="files"
       accept="image/*"
-      onChange={(e) => onFileChange(e.target.files)}
+      onChange={onFileChange}
       multiple={isMultiple}
       // style={{ display: 'none' }}
     />

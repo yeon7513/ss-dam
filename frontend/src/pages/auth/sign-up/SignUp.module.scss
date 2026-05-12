@@ -1,0 +1,46 @@
+.signUp {
+  padding: 32px;
+  width: fit-content;
+  border: 1px solid #000;
+}
+
+.idGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.passwordGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.basicInfoGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  input {
+    width: 100%;
+  }
+}
+
+.phoneGroup {
+  input {
+    width: 100%;
+  }
+}
+
+.profileImgGroup {
+  width: fit-content;
+}
+
+.submitButton {
+}
+
+.ctaLogin {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

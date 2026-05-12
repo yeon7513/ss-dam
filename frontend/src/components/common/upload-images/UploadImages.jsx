@@ -1,7 +1,7 @@
 import cn from 'classnames';
 import { useState } from 'react';
 import placeholder from '../../assets/images/placeholder.png';
-import FileInput from '../forms/file-input/FileInput';
+import FileInput from '../../forms/file-input/FileInput';
 import styles from './UploadImages.module.scss';
 
 function UploadImage({ className }) {
