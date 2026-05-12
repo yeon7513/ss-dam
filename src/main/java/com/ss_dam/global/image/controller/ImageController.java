@@ -20,6 +20,7 @@ public class ImageController {
   @Autowired
   ImageService imageService;
 
+  // 이미지 전체 리스트 (테스트용)
   @GetMapping
   List<Images> searchImages() {
     return imageService.searchImages();
