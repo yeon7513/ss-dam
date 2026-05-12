@@ -5,7 +5,7 @@ function TextInput({
   className,
   id,
   label = '',
-  type,
+  type = 'text',
   name,
   onChange,
   ...props
