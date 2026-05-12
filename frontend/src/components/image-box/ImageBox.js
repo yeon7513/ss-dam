@@ -1,9 +1,9 @@
-import cn from "classnames";
-import style from "./imageBox.module.scss";
+import cn from 'classnames';
+import styles from './imageBox.module.scss';
 
 const ImageBox = ({ className, src, alt, ...props }) => (
   <img
-    className={cn(style.ImageBox, className)}
+    className={cn(styles.ImageBox, className)}
     src={src}
     alt={alt}
     {...props}
