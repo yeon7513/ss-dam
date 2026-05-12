@@ -10,6 +10,8 @@ public interface ImageDao {
 
   void registerImages(Images image);
 
+  List<Images> searchImages();
+
 
 
 }

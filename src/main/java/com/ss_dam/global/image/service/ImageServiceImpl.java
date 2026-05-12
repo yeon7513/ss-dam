@@ -36,6 +36,12 @@ public class ImageServiceImpl implements ImageService {
     return images;
   }
 
+  // 전체 이미지 불러오기 (테스트용)
+  @Override
+  public List<Images> searchImages() {
+    return imageDao.searchImages();
+  }
+
   // 참고
   // https://velog.io/@lehdqlsl/Spring-boot-HTTP-API-%EB%A7%8C%EB%93%A4%EA%B8%B0-%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8-Request-%EC%B2%98%EB%A6%AC-RequestParam-%ED%8E%B8
   // https://velog.io/@mypalebluedot29/React-Spring-Boot-%ED%8C%8C%EC%9D%BC-%EC%97%85%EB%A1%9C%EB%93%9C-%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C-%EA%B8%B0%EB%8A%A5

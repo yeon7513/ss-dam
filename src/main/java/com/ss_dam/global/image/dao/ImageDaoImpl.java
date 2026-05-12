@@ -23,5 +23,10 @@ public class ImageDaoImpl implements ImageDao {
     sql.insert("image.registerImages", image);
   }
 
+  @Override
+  public List<Images> searchImages() {
+    return sql.selectList("image.searchImages");
+  }
+
 
 }

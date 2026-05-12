@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,10 +20,15 @@ public class ImageController {
   @Autowired
   ImageService imageService;
 
+  @GetMapping
+  List<Images> searchImages() {
+    return imageService.searchImages();
+  }
+
   // 이미지 업로드 (테스트용)
   @PostMapping
-  public ResponseEntity<?> uploadImages(@RequestParam List<MultipartFile> files,
-      @RequestParam String type, @RequestParam Long targetCode) {
+  ResponseEntity<?> uploadImages(@RequestParam List<MultipartFile> files, @RequestParam String type,
+      @RequestParam Long targetCode) {
 
     try {
       List<Images> images = imageService.uploadImages(files, type, targetCode);

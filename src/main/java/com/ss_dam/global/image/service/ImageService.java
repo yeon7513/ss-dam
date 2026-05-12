@@ -17,4 +17,6 @@ public interface ImageService {
   // 업로드 (테스트중!)
   List<Images> uploadImages(List<MultipartFile> files, String type, Long targetCode);
 
+  List<Images> searchImages();
+
 }
