@@ -1,11 +1,15 @@
-import React from 'react';
+import React from "react";
+import styles from "./Footer.module.scss";
 
-const Footer = () => {
+function Footer() {
   return (
-    <div>
-      <h2>Footer</h2>
-    </div>
+    <footer className={styles.container}>
+      <p className={styles.copyright}>
+        © 2026. RETURN ZERO All rights reserved.
+      </p>
+      <span className={styles.logoText}>쓰담쓰담</span>
+    </footer>
   );
-};
+}
 
 export default Footer;
