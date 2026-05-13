@@ -1,0 +1,28 @@
+.editor {
+  padding: 48px;
+  outline: 1px dotted red;
+
+  > h3 {
+    margin-bottom: 24px;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+}
+
+.title {
+  display: flex;
+  gap: 8px;
+}
+
+.content {
+  outline: 1px dotted blue;
+
+  > textarea {
+    padding: 8px;
+    border: 1px solid #000;
+  }
+}

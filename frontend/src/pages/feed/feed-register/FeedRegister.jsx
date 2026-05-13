@@ -1,10 +1,9 @@
-import React from "react";
+import Editor from '../../../components/common/editor/Editor';
 
 const FeedRegister = () => {
   return (
     <div>
-      <h2>FeedRegister</h2>
-      <p>백엔드에서 가지고온 FeedRegister 정보</p>
+      <Editor title="피드 등록" />
     </div>
   );
 };

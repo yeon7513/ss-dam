@@ -21,4 +21,9 @@ public class MemberController {
     return memberService.searchProfileByMemberCode(memCode);
   }
 
+  // @PostMapping
+  // ResponseEntity<?> registerMember() {
+  //
+  // }
+
 }
