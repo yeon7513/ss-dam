@@ -1,25 +1,25 @@
-import { Route, Routes } from "react-router-dom";
-import Layout from "./layout/Layout";
-import SignUp from "./pages/auth/sign-up/SignUp";
-import Challenge from "./pages/challenge/Challenge";
-import Comment from "./components/feed/comment/Comment";
-import Feed from "./pages/feed/Feed";
-import FeedRegister from "./pages/feed/feed-register/FeedRegister";
-import Home from "./pages/home/Home";
-import Market from "./pages/market/Market";
-import ProductRegister from "./pages/market/product-register/ProductRegister";
-import MyPage from "./pages/myPage/MyPage";
-import FindId from "./pages/auth/find/FindId";
-import FindPassword from "./pages/auth/find/FindPassword";
-import LogIn from "./pages/auth/log-in/LogIn";
-import Terms from "./pages/auth/sign-up/Terms";
-import Verify from "./pages/auth/sign-up/Verify";
-import Info from "./pages/auth/sign-up/Info";
-import Done from "./pages/auth/sign-up/Done";
-import ChallengeGuide from "./pages/about/ChallengeGuide";
-import About from "./pages/about/About";
-import MarketGuide from "./pages/about/MarketGuide";
-import FeedDetail from "./pages/feed/feed-detail/FeedDetail";
+import { Navigate, Route, Routes } from 'react-router-dom';
+import Comment from './components/feed/comment/Comment';
+import Layout from './layout/Layout';
+import About from './pages/about/About';
+import ChallengeGuide from './pages/about/ChallengeGuide';
+import MarketGuide from './pages/about/MarketGuide';
+import FindId from './pages/auth/find/FindId';
+import FindPassword from './pages/auth/find/FindPassword';
+import LogIn from './pages/auth/log-in/LogIn';
+import Done from './pages/auth/sign-up/Done';
+import Info from './pages/auth/sign-up/Info';
+import SignUp from './pages/auth/sign-up/SignUp';
+import Terms from './pages/auth/sign-up/Terms';
+import Verify from './pages/auth/sign-up/Verify';
+import Challenge from './pages/challenge/Challenge';
+import Feed from './pages/feed/Feed';
+import FeedDetail from './pages/feed/feed-detail/FeedDetail';
+import FeedRegister from './pages/feed/feed-register/FeedRegister';
+import Home from './pages/home/Home';
+import Market from './pages/market/Market';
+import ProductRegister from './pages/market/product-register/ProductRegister';
+import MyPage from './pages/myPage/MyPage';
 
 function App() {
   return (
@@ -45,15 +45,16 @@ function App() {
           <Route index element={<Comment />} />
         </Route>
         <Route path="/auth">
-          <Route index element={<LogIn />} />
-          <Route path="signUp" element={<SignUp />}>
-            <Route index element={<Terms />} />
-            <Route path="verify" element={<Verify />} />
-            <Route path="info" element={<Info />} />
-            <Route path="done" element={<Done />} />
-          </Route>
+          <Route index element={<Navigate to="findId" replace />} />
           <Route path="findId" element={<FindId />} />
           <Route path="findPassword" element={<FindPassword />} />
+        </Route>
+        <Route path="login" element={<LogIn />} />
+        <Route path="signUp" element={<SignUp />}>
+          <Route index element={<Terms />} />
+          <Route path="verify" element={<Verify />} />
+          <Route path="info" element={<Info />} />
+          <Route path="done" element={<Done />} />
         </Route>
         <Route path="/about">
           <Route index element={<About />} />

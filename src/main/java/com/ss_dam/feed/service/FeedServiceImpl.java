@@ -3,6 +3,7 @@ package com.ss_dam.feed.service;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.ss_dam.auth.member.MemberProfile;
 import com.ss_dam.auth.member.service.MemberService;
 import com.ss_dam.comment.Comment;
@@ -67,6 +68,25 @@ public class FeedServiceImpl implements FeedService {
     feed.setCountComment(countComment);
 
     return feed;
+  }
+
+  @Transactional
+  @Override
+  public Long registerFeed(Feed feed) {
+    Long registerFeed = feedDao.registerFeed(feed);
+
+    Long newCode = feed.getCode();
+
+    List<FeedHashtag> hashtags = feed.getHashtags();
+
+    if (hashtags != null && !hashtags.isEmpty()) {
+      for (FeedHashtag tag : hashtags) {
+        tag.setFeedCode(newCode);
+        feedHashtagService.registerHashtag(tag.getTagName());
+      }
+    }
+
+    return newCode;
   }
 
 }

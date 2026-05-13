@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Address from '../../../components/common/address/Address';
 import Button from '../../../components/common/button/Button';
 import { handleSetField } from '../../../utils/changeHandler';
@@ -15,7 +15,7 @@ const SignUp = () => {
     phone: '',
   });
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   // 이미지 전용
   const handleChangeProfileImg = (file) => {

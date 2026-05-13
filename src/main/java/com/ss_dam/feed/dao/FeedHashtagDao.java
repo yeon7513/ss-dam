@@ -7,4 +7,6 @@ public interface FeedHashtagDao {
 
   List<FeedHashtag> searchHashtagByFeedCode(Long feedCode);
 
+  void registerHashtag(String tagName);
+
 }

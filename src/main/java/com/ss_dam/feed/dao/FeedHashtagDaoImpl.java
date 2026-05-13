@@ -17,4 +17,9 @@ public class FeedHashtagDaoImpl implements FeedHashtagDao {
     return sql.selectList("feedHashtag.searchHashtagByFeedCode", feedCode);
   }
 
+  @Override
+  public void registerHashtag(String tagName) {
+    sql.insert("feedHashtag.registerHashtag", tagName);
+  }
+
 }

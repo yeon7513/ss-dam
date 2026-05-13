@@ -94,4 +94,17 @@
 			ON f.chal_code = ch.code
 		WHERE f.status = 'active' AND f.code = #{code}
 	</select>
+	
+	
+	<!-- 피드 등록 -->
+	<insert id="registerFeed" parameterType="Feed">
+    	INSERT INTO feed (chal_code, mem_code, title, content, hitcount, status, created_at, delete_yn)
+    	VALUES (#{chalCode}, #{memCode}, #{title}, #{content}, 0, 'ACTIVE', NOW(), 0)
+    	
+    	<selectKey keyProperty="code" resultType="long" order="AFTER">
+    		SELECT LAST_INSERT_ID()
+  		</selectKey>
+	</insert>
+	
+	
 </mapper>
