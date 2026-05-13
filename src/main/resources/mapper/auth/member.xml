@@ -11,6 +11,6 @@
 		ON i.target_code = m.code 
 			AND i.type= 'profile' 
 			AND i.delete_yn = 0
-		WHERE code = #{code};
+		WHERE code = #{code}
 	</select>
 </mapper>
