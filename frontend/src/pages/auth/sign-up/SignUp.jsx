@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Address from '../../../components/common/address/Address';
 import Button from '../../../components/common/button/Button';
+import { handleSetField } from '../../../utils/changeHandler';
 import ProfileImage from './../../../components/common/profile-image/ProfileImage';
 import TextInput from './../../../components/forms/text-input/TextInput';
 import styles from './SignUp.module.scss';
@@ -15,16 +16,6 @@ const SignUp = () => {
   });
 
   const navigate = useNavigate();
-
-  // 일반 입력 필드
-  const handleChangeField = (e) => {
-    const { name, value } = e.target;
-
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
 
   // 이미지 전용
   const handleChangeProfileImg = (file) => {
@@ -58,7 +49,7 @@ const SignUp = () => {
             name="id"
             label="아이디"
             placeholder="아이디 입력"
-            onChange={handleChangeField}
+            onChange={(e) => handleSetField(e, setForm)}
           />
           <Button>중복확인</Button>
         </div>
@@ -68,7 +59,7 @@ const SignUp = () => {
             name="password"
             label="비밀번호"
             placeholder="비밀번호 입력"
-            onChange={handleChangeField}
+            onChange={(e) => handleSetField(e, setForm)}
           />
           <TextInput
             type="password"
@@ -78,14 +69,18 @@ const SignUp = () => {
           />
         </div>
         <div className={styles.basicInfoGroup}>
-          <TextInput name="name" label="이름" onChange={handleChangeField} />
+          <TextInput
+            name="name"
+            label="이름"
+            onChange={(e) => handleSetField(e, setForm)}
+          />
           <TextInput type="date" name="birth" label="생년월일" />
         </div>
         <div className={styles.phoneGroup}>
           <TextInput
             name="phone"
             label="전화번호"
-            onChange={handleChangeField}
+            onChange={(e) => handleSetField(e, setForm)}
           />
         </div>
         <div>
