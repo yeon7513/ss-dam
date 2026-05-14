@@ -20,6 +20,7 @@ function Editor({
   typeName = 'chalCode', // 분류 코드 (FK)
   categories = feedCategory, // 카테고리명 (임시로 넣음)
   title,
+  children,
   onSubmit, // AJAX 전송 핸들러
 }) {
   const [post, setPost] = useState(initPost);
@@ -74,7 +75,6 @@ function Editor({
     // 임시로 회원 번호 넣음
     setPost((prev) => ({
       ...prev,
-      memCode: 1,
       files: selectedImages,
     }));
 
@@ -110,6 +110,7 @@ function Editor({
             onChange={(e) => handleSetField(e, setPost)}
           />
         </div>
+        {children} {/* 여기로 해시태그 컴포넌트 넣을 예정임 */}
         {/* 
           이 부분을 다 해시태그로 옮겨서 값들을 props로 전달 받을 것!! 
           피드로 들어왔을 경우에만 해시태그 섹션 열림

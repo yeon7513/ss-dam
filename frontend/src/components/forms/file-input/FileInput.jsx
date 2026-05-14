@@ -8,7 +8,7 @@ function FileInput({ id, isMultiple = true, onFileChange, ref }) {
       accept="image/*"
       onChange={(e) => onFileChange(e.target.files)}
       multiple={isMultiple}
-      // style={{ display: 'none' }}
+      style={{ display: 'none' }}
     />
   );
 }

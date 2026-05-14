@@ -1,11 +1,13 @@
 import cn from 'classnames';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import placeholder from '../../../assets/images/placeholder.png';
 import FileInput from '../../forms/file-input/FileInput';
+import Button from '../button/Button';
 import styles from './UploadImages.module.scss';
 
 function UploadImage({ className, selectedImages, setSelectedImages }) {
   const [previews, setPreviews] = useState([]);
+  const fileInputRef = useRef();
 
   const MAX_COUNT = 10;
   const isMaxCount = selectedImages.length === MAX_COUNT;
@@ -54,7 +56,14 @@ function UploadImage({ className, selectedImages, setSelectedImages }) {
       ) : (
         <div>등록된 이미지가 없습니다.</div>
       )}
-      {!isMaxCount && <FileInput onFileChange={handleChangeImage} />}
+      {!isMaxCount && (
+        <div>
+          <Button onClick={() => fileInputRef.current.click()}>
+            이미지 등록
+          </Button>
+          <FileInput ref={fileInputRef} onFileChange={handleChangeImage} />
+        </div>
+      )}
     </div>
   );
 }

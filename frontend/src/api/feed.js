@@ -3,8 +3,6 @@ import { HOST } from '../lib/url';
 export const sendToFeed = async (data, navigate) => {
   const formData = new FormData();
 
-  console.log(data.hashtags);
-
   formData.append('chalCode', data.chalCode);
   formData.append('title', data.title);
   formData.append('content', data.content);
