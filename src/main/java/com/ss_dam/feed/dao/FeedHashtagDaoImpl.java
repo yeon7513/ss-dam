@@ -18,8 +18,8 @@ public class FeedHashtagDaoImpl implements FeedHashtagDao {
   }
 
   @Override
-  public void registerHashtag(String tagName) {
-    sql.insert("feedHashtag.registerHashtag", tagName);
+  public void registerHashtag(FeedHashtag tag) {
+    sql.insert("feedHashtag.registerHashtag", tag);
   }
 
 }

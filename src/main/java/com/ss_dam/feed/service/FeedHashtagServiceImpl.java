@@ -18,8 +18,8 @@ public class FeedHashtagServiceImpl implements FeedHashtagService {
   }
 
   @Override
-  public void registerHashtag(String tagName) {
-    feedHashtagDao.registerHashtag(tagName);
+  public void registerHashtag(FeedHashtag tag) {
+    feedHashtagDao.registerHashtag(tag);
   }
 
 }

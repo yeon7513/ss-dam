@@ -1,23 +1,30 @@
 import cn from 'classnames';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { sendToFeed } from '../../../api/feed';
 import { feedCategory } from '../../../lib/categoryTest';
 import { handleSetField } from '../../../utils/changeHandler';
 import TextInput from '../../forms/text-input/TextInput';
+import CancelButton from '../button/CancelButton';
 import SelectBox from './../../forms/select-box/SelectBox';
 import Button from './../button/Button';
+import UploadImage from './../upload-images/UploadImages';
 import styles from './Editor.module.scss';
 
-function Editor({ type = 'chalCode', categories = feedCategory, title }) {
-  const [post, setPost] = useState({
-    memCode: '',
-    title: '',
-    content: '',
-  });
-  const [hashs, setHashs] = useState([]);
+// 초기값
+const initPost = {
+  memCode: '',
+  title: '',
+  content: '',
+};
 
-  const navigate = useNavigate();
+function Editor({
+  typeName = 'chalCode', // 분류 코드 (FK)
+  categories = feedCategory, // 카테고리명 (임시로 넣음)
+  title,
+  onSubmit, // AJAX 전송 핸들러
+}) {
+  const [post, setPost] = useState(initPost);
+  const [hashs, setHashs] = useState([]);
+  const [selectedImages, setSelectedImages] = useState([]);
 
   // ** 해시태그 관련 핸들러 및 코드들은 해시태그 컴포넌트로 옮길 예정임.
 
@@ -25,9 +32,6 @@ function Editor({ type = 'chalCode', categories = feedCategory, title }) {
   const handleRegisterHashs = (e) => {
     // 앞뒤 공백 제거, 중간 공백 제거
     const value = e.target.value.trim().replace(/\s+/g, '');
-    const tag = {
-      tagName: value, // DTO 이름에 맞게 먼저 설정
-    };
 
     if (e.code === 'Enter' && value !== '') {
       // 중복 비허용
@@ -43,7 +47,12 @@ function Editor({ type = 'chalCode', categories = feedCategory, title }) {
       // 서버 전송용
       setPost((prev) => ({
         ...prev,
-        hashtags: [...(prev.hashtags || []), tag],
+        hashtags: [
+          ...(prev.hashtags || []),
+          {
+            tagName: value,
+          },
+        ],
       }));
 
       e.target.value = '';
@@ -59,7 +68,6 @@ function Editor({ type = 'chalCode', categories = feedCategory, title }) {
     }));
   };
 
-  // 서브밋 핸들러
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -67,29 +75,19 @@ function Editor({ type = 'chalCode', categories = feedCategory, title }) {
     setPost((prev) => ({
       ...prev,
       memCode: 1,
+      files: selectedImages,
     }));
 
-    sendToFeed(post, navigate);
-  };
-
-  // 취소 버튼 핸들러
-  const handleNavigateBack = () => {
-    if (
-      confirm(
-        `작성을 취소하시겠습니까?\n취소하면 작성한 내용은 저장되지 않습니다.`,
-      )
-    ) {
-      navigate(-1);
-    }
+    onSubmit(post);
   };
 
   return (
     <div className={cn(styles.editor)}>
       <h3>{title}</h3>
-      <form className={styles.container}>
+      <div className={styles.container}>
         <div className={styles.title}>
           <SelectBox
-            name={type}
+            name={typeName}
             options={categories}
             onChange={(e) => handleSetField(e, setPost)}
           />
@@ -99,6 +97,12 @@ function Editor({ type = 'chalCode', categories = feedCategory, title }) {
             onChange={(e) => handleSetField(e, setPost)}
           />
         </div>
+        <div className={styles.images}>
+          <UploadImage
+            selectedImages={selectedImages}
+            setSelectedImages={setSelectedImages}
+          />
+        </div>
         <div className={styles.content}>
           {/* 텍스트 에디터 라이브러리로 바꿀 것... */}
           <textarea
@@ -106,6 +110,10 @@ function Editor({ type = 'chalCode', categories = feedCategory, title }) {
             onChange={(e) => handleSetField(e, setPost)}
           />
         </div>
+        {/* 
+          이 부분을 다 해시태그로 옮겨서 값들을 props로 전달 받을 것!! 
+          피드로 들어왔을 경우에만 해시태그 섹션 열림
+        */}
         <div className={styles.hash}>
           <div className={styles.regHashs}>
             {hashs.length === 0 ? (
@@ -129,9 +137,9 @@ function Editor({ type = 'chalCode', categories = feedCategory, title }) {
         </div>
         <div className={styles.submit}>
           <Button onClick={handleSubmit}>피드 등록</Button>
-          <Button onClick={handleNavigateBack}>취소</Button>
+          <CancelButton targetUrl="/feed">취소</CancelButton>
         </div>
-      </form>
+      </div>
     </div>
   );
 }

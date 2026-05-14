@@ -50,7 +50,6 @@ public class ImageServiceImpl implements ImageService {
   // 업로드 테스트!!
   @Override
   public List<Images> uploadImages(List<MultipartFile> files, String type, Long targetCode) {
-    // 테스트용 images -> 나중에 삭제할 것!!
     List<Images> images = new ArrayList<Images>();
 
     // 날짜 객체 생성 -> 문자열 포맷

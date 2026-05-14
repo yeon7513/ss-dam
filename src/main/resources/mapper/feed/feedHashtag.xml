@@ -12,8 +12,8 @@
 	
 	
 	<insert id="registerHashtag">
-		INSERT INTO feed_hashtag (tag_name)
-		VALUES (#{tagName})
+		INSERT INTO feed_hashtag (feed_code, tag_name)
+		VALUES (#{feedCode}, #{tagName})
 	</insert>
 </mapper>
   

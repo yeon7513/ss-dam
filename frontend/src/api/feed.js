@@ -1,11 +1,25 @@
+import { HOST } from '../lib/url';
+
 export const sendToFeed = async (data, navigate) => {
+  const formData = new FormData();
+
+  console.log(data.hashtags);
+
+  formData.append('chalCode', data.chalCode);
+  formData.append('title', data.title);
+  formData.append('content', data.content);
+
+  // formData 전송 시 배열은 꺼내서 append 해야한다고함..
+  // 어렵다 어려워
+  data.hashtags.forEach((tag, idx) => {
+    formData.append(`hashtags[${idx}].tagName`, tag.tagName);
+  });
+  data.files.forEach((file) => formData.append('files', file));
+
   try {
-    const res = await fetch('/feed', {
+    const res = await fetch(`${HOST}/feed`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
+      body: formData,
     });
 
     if (res.ok) {
@@ -14,6 +28,8 @@ export const sendToFeed = async (data, navigate) => {
       alert('등록되었습니다.');
 
       navigate(`/feed/${code}`);
+
+      console.log(code);
     } else {
       alert('등록에 실패했습니다.');
     }

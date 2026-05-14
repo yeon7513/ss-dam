@@ -81,7 +81,7 @@
 		) AS mp
 			ON mp.code = f.mem_code
 		WHERE f.status = 'active' 
-		ORDER BY f.created_at DESC
+		ORDER BY f.created_at DESC, f.code DESC
 	</select>
 	
 	<!-- 피드 상세 조회 -->

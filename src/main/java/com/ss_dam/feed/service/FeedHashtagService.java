@@ -7,6 +7,6 @@ public interface FeedHashtagService {
 
   List<FeedHashtag> searchHashtagByFeedCode(Long feedCode);
 
-  void registerHashtag(String tagName);
+  void registerHashtag(FeedHashtag tag);
 
 }
