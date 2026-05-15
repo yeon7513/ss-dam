@@ -23,6 +23,8 @@ const ChallengeGuide = () => {
           </nav>
         </div>
       </header>
+
+      <div className="breadcrumb"></div>
     </div>
   );
 };
