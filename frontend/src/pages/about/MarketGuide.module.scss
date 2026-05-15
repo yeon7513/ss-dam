@@ -1,0 +1,62 @@
+@use "/src/scss/variables.scss" as *;
+
+.marketguide {
+  width: 100%;
+  padding: 80px 360px;
+}
+
+.marketintro {
+  //작업중인 영역을 배경색으로 확인하는 용도.
+  //background-color: rgb(241, 241, 241);
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 70px;
+}
+
+.title {
+  font-family: $font-logo;
+  font-size: 50px;
+  font-weight: 500;
+  color: $grayscale-100;
+
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.grid {
+  flex: 1;
+
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 26px;
+}
+
+.card {
+  //반복되는 내용은 큰 뎁스의 하위로 구분.
+  padding: 20px 40px;
+  border-radius: 6px;
+  background-color: $background-80;
+  border: 1px solid $grayscale-20;
+
+  .cardtitle {
+    font-family: $font-main;
+    font-size: 22px;
+    font-weight: 600;
+    color: $color-white;
+
+    margin-bottom: 14px;
+  }
+
+  .cardtext {
+    font-family: $font-main;
+    font-size: 16px;
+    font-weight: 400;
+    color: $color-white;
+
+    line-height: 1.6;
+  }
+}
