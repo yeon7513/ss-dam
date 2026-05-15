@@ -1,40 +1,8 @@
 import React from "react";
 import styles from "./ChallengeGuide.module.scss";
+import { steps } from "../../lib/guideLine";
 
 const ChallengeGuide = () => {
-  const steps = [
-    {
-      num: 1,
-      icon: "📄",
-      title: "챌린지 선택",
-      desc: "참여하고 싶은 챌린지를\n선택하고 내용을 확인해요.",
-    },
-    {
-      num: 2,
-      icon: "📋",
-      title: "참여하기",
-      desc: "챌린지 상세 페이지에서\n‘참여하기’ 버튼을 눌러요.",
-    },
-    {
-      num: 3,
-      icon: "📷",
-      title: "미션 실천 & 인증하기",
-      desc: "미션을 실천하고 인증 사진과\n내용을 업로드해요.",
-    },
-    {
-      num: 4,
-      icon: "☆",
-      title: "인증 완료",
-      desc: "관리자가 인증을 확인하면\n‘인증 완료’ 상태가 돼요.",
-    },
-    {
-      num: 5,
-      icon: "🎁",
-      title: "포인트 & 보상 받기",
-      desc: "챌린지 완료 시 포인트와\n뱃지를 받을 수 있어요.",
-    },
-  ];
-
   return (
     <main className={styles.page}>
       <div className={styles.breadcrumb}>소개 &gt; 챌린지 이용 가이드</div>

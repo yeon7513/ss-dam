@@ -1,42 +1,46 @@
 .page {
   width: 100%;
   min-height: 100vh;
-  padding: 22px 0 40px;
+  padding: clamp(18px, 2vw, 22px) 0 clamp(32px, 4vw, 40px);
   background: #fff;
   color: #111;
 }
 
-.breadcrumb {
-  width: 1180px;
+.breadcrumb,
+.stepSection {
+  width: min(92%, 1180px);
   margin: 0 auto 18px;
-  font-size: 13px;
+}
+
+.breadcrumb {
+  font-size: clamp(12px, 1vw, 13px);
   color: #999;
 }
 
 .titleBox {
   text-align: center;
-  margin-bottom: 34px;
+  margin-bottom: clamp(26px, 3vw, 34px);
+  padding: 0 20px;
 
   h1 {
     margin: 0 0 14px;
-    font-size: 34px;
+    font-size: clamp(26px, 3vw, 34px);
     font-weight: 800;
   }
 
   p {
     margin: 6px 0;
-    font-size: 16px;
+    font-size: clamp(14px, 1.4vw, 16px);
     color: #222;
   }
 }
 
 .stepSection {
-  width: 1180px;
-  margin: 0 auto 28px;
+  margin-bottom: clamp(24px, 3vw, 28px);
 
   h2 {
     margin-bottom: 14px;
-    font-size: 22px;
+    font-size: clamp(18px, 2vw, 22px);
     font-weight: 800;
   }
 }
@@ -45,23 +49,25 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  gap: clamp(10px, 2vw, 24px);
 }
 
 .stepItem {
   position: relative;
-  width: 170px;
+  flex: 1;
+  min-width: 120px;
   text-align: center;
 
   h3 {
     margin: 12px 0 8px;
-    font-size: 17px;
+    font-size: clamp(14px, 1.3vw, 17px);
     font-weight: 800;
   }
 
   p {
     margin: 0;
     white-space: pre-line;
-    font-size: 13px;
+    font-size: clamp(11px, 1vw, 13px);
     line-height: 1.7;
     color: #333;
   }
@@ -70,20 +76,20 @@
 .stepNum {
   position: absolute;
   top: -5px;
-  left: 38px;
-  width: 28px;
-  height: 28px;
+  left: calc(50% - 46px);
+  width: clamp(24px, 2.2vw, 28px);
+  height: clamp(24px, 2.2vw, 28px);
   border-radius: 50%;
   background: #2f742f;
   color: #fff;
-  font-size: 15px;
+  font-size: clamp(13px, 1.2vw, 15px);
   font-weight: 800;
-  line-height: 28px;
+  line-height: clamp(24px, 2.2vw, 28px);
 }
 
 .stepIcon {
-  width: 92px;
-  height: 92px;
+  width: clamp(70px, 8vw, 92px);
+  height: clamp(70px, 8vw, 92px);
   margin: 0 auto;
   border-radius: 50%;
   background: #eef3ee;
@@ -91,24 +97,26 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 38px;
+  font-size: clamp(28px, 3.5vw, 38px);
 }
 
 .arrow {
-  margin-top: 37px;
-  font-size: 44px;
+  margin-top: clamp(28px, 3.5vw, 37px);
+  font-size: clamp(30px, 4vw, 44px);
   font-weight: 200;
   color: #222;
 }
 
-.infoList {
-  width: 1060px;
-  margin: 0 auto;
+.infoList,
+.notice {
+  width: min(88%, 1060px);
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .infoCard {
   display: grid;
-  grid-template-columns: 240px 1fr;
+  grid-template-columns: minmax(190px, 24%) 1fr;
   min-height: 128px;
   margin-bottom: 12px;
   border: 1px solid #e1e5e1;
@@ -120,38 +128,40 @@
 .cardTitle {
   display: flex;
   align-items: center;
-  gap: 22px;
-  padding: 28px 36px;
+  gap: clamp(14px, 2vw, 22px);
+  padding: clamp(22px, 3vw, 28px) clamp(24px, 3vw, 36px);
   border-right: 1px solid #e1e5e1;
 
   h2 {
     margin: 0;
-    font-size: 22px;
+    font-size: clamp(18px, 2vw, 22px);
     font-weight: 800;
     white-space: nowrap;
   }
 }
 
 .bigIcon {
-  width: 58px;
-  height: 58px;
+  width: clamp(48px, 5vw, 58px);
+  height: clamp(48px, 5vw, 58px);
   border-radius: 50%;
   background: #edf4ed;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 30px;
+  font-size: clamp(24px, 3vw, 30px);
+  flex-shrink: 0;
 }
 
 .cardContent {
-  padding: 22px 36px;
+  padding: clamp(18px, 2.5vw, 22px) clamp(24px, 3vw, 36px);
 }
 
 .row {
   display: grid;
-  grid-template-columns: 34px 110px 1fr;
+  grid-template-columns: 34px minmax(80px, 110px) 1fr;
   align-items: start;
   margin-bottom: 14px;
+  gap: 0 10px;
 
   span {
     width: 26px;
@@ -165,12 +175,12 @@
   }
 
   strong {
-    font-size: 15px;
+    font-size: clamp(14px, 1.2vw, 15px);
   }
 
   p {
     margin: 0;
-    font-size: 14px;
+    font-size: clamp(13px, 1.2vw, 14px);
     line-height: 1.6;
   }
 }
@@ -184,7 +194,7 @@
     position: relative;
     margin-bottom: 9px;
     padding-left: 28px;
-    font-size: 14px;
+    font-size: clamp(13px, 1.2vw, 14px);
 
     &::before {
       content: "✓";
@@ -204,12 +214,12 @@
 }
 
 .tipBox {
-  width: 560px;
+  width: min(100%, 560px);
   margin-top: 16px;
   padding: 12px 18px;
   border-radius: 6px;
   background: #eef5ee;
-  font-size: 13px;
+  font-size: clamp(12px, 1.1vw, 13px);
 
   strong {
     margin-right: 14px;
@@ -218,73 +228,73 @@
 
 .exampleContent {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 34px;
-  padding: 24px 36px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(20px, 3vw, 34px);
+  padding: clamp(20px, 3vw, 24px) clamp(24px, 3vw, 36px);
 }
 
 .exampleBox {
-  padding: 20px 24px;
+  padding: clamp(18px, 2.5vw, 20px) clamp(20px, 3vw, 24px);
   border-radius: 8px;
   background: #f1f6f1;
 
   h3 {
     margin: 0 0 16px;
-    font-size: 16px;
+    font-size: clamp(15px, 1.3vw, 16px);
   }
 
   p {
     margin: 8px 0;
-    font-size: 14px;
+    font-size: clamp(13px, 1.2vw, 14px);
   }
 
   strong {
     display: inline-block;
-    width: 82px;
+    width: clamp(70px, 7vw, 82px);
   }
 }
 
 .photoBox {
   display: grid;
-  grid-template-columns: 130px 1fr;
-  column-gap: 24px;
+  grid-template-columns: clamp(110px, 12vw, 130px) 1fr;
+  column-gap: clamp(16px, 2vw, 24px);
   align-items: center;
 
   h3 {
     grid-column: 1 / -1;
     margin: 0 0 12px;
-    font-size: 18px;
+    font-size: clamp(16px, 1.5vw, 18px);
   }
 
   p {
     margin: 0;
-    font-size: 14px;
+    font-size: clamp(13px, 1.2vw, 14px);
     line-height: 1.7;
   }
 }
 
 .photoArea {
-  width: 130px;
-  height: 90px;
+  width: 100%;
+  aspect-ratio: 13 / 9;
   border-radius: 6px;
   background: linear-gradient(135deg, #d9d9d9, #f0f0f0);
 }
 
 .notice {
-  width: 1060px;
-  height: 54px;
-  margin: 14px auto 0;
-  padding: 0 24px;
+  min-height: 54px;
+  margin-top: 14px;
+  padding: 12px clamp(18px, 2vw, 24px);
   border: 1px solid #e1e5e1;
   border-radius: 8px;
   display: flex;
   align-items: center;
   gap: 18px;
-  font-size: 14px;
+  font-size: clamp(13px, 1.2vw, 14px);
 
   strong {
     width: 30px;
     height: 30px;
+    flex-shrink: 0;
     border-radius: 50%;
     background: #2f742f;
     color: #fff;
@@ -294,10 +304,48 @@
   }
 
   b {
-    font-size: 17px;
+    font-size: clamp(15px, 1.4vw, 17px);
+    white-space: nowrap;
   }
 
   span {
     color: #333;
+  }
+}
+
+@media (max-width: 900px) {
+  .steps {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .arrow {
+    transform: rotate(90deg);
+    margin: 0;
+  }
+
+  .stepItem {
+    width: 100%;
+  }
+
+  .stepNum {
+    left: calc(50% - 42px);
+  }
+
+  .infoCard {
+    grid-template-columns: 1fr;
+  }
+
+  .cardTitle {
+    border-right: none;
+    border-bottom: 1px solid #e1e5e1;
+  }
+
+  .exampleContent {
+    grid-template-columns: 1fr;
+  }
+
+  .notice {
+    align-items: flex-start;
   }
 }
