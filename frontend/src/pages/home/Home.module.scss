@@ -2,4 +2,22 @@
 
 .home {
   background-color: yellow;
+
+  .content {
+    color: red;
+  }
+}
+
+.box {
+  width: 300px;
+  height: 300px;
+  border: 1px solid #000;
+
+  .date {
+    font-size: 32px;
+
+    .text {
+      color: blue;
+    }
+  }
 }

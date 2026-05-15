@@ -38,10 +38,7 @@ function ProfileImage({ className, onChange }) {
         width={300}
         onClick={handleClickImage}
       />
-      <FileInput
-        ref={fileInputRef}
-        onFileChange={(e) => handleChangeProfileImage(e.target.files)}
-      />
+      <FileInput ref={fileInputRef} onFileChange={handleChangeProfileImage} />
       {preview !== null && (
         <button type="button" onClick={handleRemoveImage}>
           삭제
