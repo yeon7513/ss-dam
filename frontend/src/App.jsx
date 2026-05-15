@@ -45,8 +45,8 @@ function App() {
         <Route index element={<Home />} />
         <Route path="/feed">
           <Route index element={<Feed />} />
-          <Route path=":code" element={<FeedDetail />} />
           <Route path="feedRegister" element={<FeedRegister />} />
+          <Route path=":code" element={<FeedDetail />} />
         </Route>
         <Route path="/challenge">
           <Route index element={<Challenge />} />
