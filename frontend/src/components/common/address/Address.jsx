@@ -7,11 +7,8 @@ import styles from './Address.module.scss';
 function Address({ onChange }) {
   const [post, setPost] = useState('');
   const [basic, setBasic] = useState('');
-  const [detail, setDetail] = useState('');
 
-  const handleFormatAddress = (e) => {
-    setDetail(e.target.value);
-
+  const handleFormatAddress = (detail) => {
     if (post && basic && detail) {
       const formatAddress = `${basic} ${detail}`;
       onChange(formatAddress);
@@ -24,23 +21,23 @@ function Address({ onChange }) {
         <TextInput
           name="post_number"
           placeholder="우편 번호"
+          // disabled={post !== ''} -> 주소 API 등록 후 주석 해제할 것!!
           onChange={(e) => setPost(e.target.value)}
         />
         <Button>주소 검색</Button>
       </div>
-      <div>
-        <TextInput
-          name="basic_address"
-          placeholder="주소"
-          onChange={(e) => setBasic(e.target.value)}
-        />
-        <TextInput
-          name="detaile_address"
-          placeholder="상세 주소"
-          onChange={handleFormatAddress}
-          disabled={!post || !basic}
-        />
-      </div>
+      <TextInput
+        name="basic_address"
+        placeholder="주소"
+        // disabled={basic !== ''} -> 주소 API 등록 후 주석 해제할 것!!
+        onChange={(e) => setBasic(e.target.value)}
+      />
+      <TextInput
+        name="detaile_address"
+        placeholder="상세 주소"
+        onChange={(e) => handleFormatAddress(e.target.value)}
+        disabled={!post || !basic}
+      />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 package com.ss_dam.feed;
 
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 import com.ss_dam.auth.member.MemberProfile;
 import com.ss_dam.comment.Comment;
 import com.ss_dam.global.image.Images;
@@ -16,7 +17,7 @@ public class Feed {
   private String createdAt; // 작성일
   private String updatedAt; // 수정일
   private boolean deleteYn; // 삭제 여부
-  
+
   // 작성자 프로필 정보
   private List<MemberProfile> memberProfiles;
 
@@ -32,7 +33,9 @@ public class Feed {
   private List<Images> images;
   private List<FeedHashtag> hashtags;
 
-  
+  // 이미지 업로드용 필드 (임시 저장소 같은 느낌)
+  private List<MultipartFile> files;
+
   public Long getCode() {
     return code;
   }
@@ -169,4 +172,11 @@ public class Feed {
     this.memberProfiles = memberProfiles;
   }
 
+  public List<MultipartFile> getFiles() {
+    return files;
+  }
+
+  public void setFiles(List<MultipartFile> files) {
+    this.files = files;
+  }
 }

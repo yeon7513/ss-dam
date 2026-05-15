@@ -9,4 +9,6 @@ public interface FeedDao {
 
   Feed searchFeedByCode(Long code);
 
+  Long registerFeed(Feed feed);
+
 }

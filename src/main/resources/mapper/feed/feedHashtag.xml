@@ -9,5 +9,11 @@
 		FROM feed_hashtag
 		WHERE feed_code = #{feedCode}
 	</select>
+	
+	
+	<insert id="registerHashtag">
+		INSERT INTO feed_hashtag (feed_code, tag_name)
+		VALUES (#{feedCode}, #{tagName})
+	</insert>
 </mapper>
   
