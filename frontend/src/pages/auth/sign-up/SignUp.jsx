@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { sendToSignup } from '../../../api/member';
 import Address from '../../../components/common/address/Address';
 import Button from '../../../components/common/button/Button';
 import { handleSetField } from '../../../utils/changeHandler';
@@ -15,18 +16,19 @@ const SignUp = () => {
     phone: '',
   });
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   // 이미지 전용
   const handleChangeProfileImg = (file) => {
     if (file) {
       setForm((prev) => ({
         ...prev,
-        files: file,
+        file: file,
       }));
     }
   };
 
+  // 주소 추가
   const handleTakeAddress = (address) => {
     setForm((prev) => ({
       ...prev,
@@ -38,6 +40,8 @@ const SignUp = () => {
     e.preventDefault();
 
     console.log(form);
+
+    sendToSignup(form, navigate);
   };
 
   return (

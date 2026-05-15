@@ -9,10 +9,15 @@ export const sendToFeed = async (data, navigate) => {
 
   // formData 전송 시 배열은 꺼내서 append 해야한다고함..
   // 어렵다 어려워
-  data.hashtags.forEach((tag, idx) => {
-    formData.append(`hashtags[${idx}].tagName`, tag.tagName);
-  });
-  data.files.forEach((file) => formData.append('files', file));
+  if (data.hashtags) {
+    data.hashtags.forEach((tag, idx) => {
+      formData.append(`hashtags[${idx}].tagName`, tag.tagName);
+    });
+  }
+
+  if (data.files) {
+    data.files.forEach((file) => formData.append('files', file));
+  }
 
   try {
     const res = await fetch(`${HOST}/feed`, {
