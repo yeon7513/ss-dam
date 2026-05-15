@@ -1,5 +1,3 @@
-import React from "react";
-
 const ChallengeGuide = () => {
   return (
     <div className="challenge-guide-page">
