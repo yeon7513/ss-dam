@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { sendToSignup } from '../../../api/member';
 import Address from '../../../components/common/address/Address';
 import Button from '../../../components/common/button/Button';
 import { handleSetField } from '../../../utils/changeHandler';
@@ -22,11 +23,12 @@ const SignUp = () => {
     if (file) {
       setForm((prev) => ({
         ...prev,
-        files: file,
+        file: file,
       }));
     }
   };
 
+  // 주소 추가
   const handleTakeAddress = (address) => {
     setForm((prev) => ({
       ...prev,
@@ -38,6 +40,8 @@ const SignUp = () => {
     e.preventDefault();
 
     console.log(form);
+
+    sendToSignup(form, navigate);
   };
 
   return (

@@ -1,13 +1,21 @@
 import cn from 'classnames';
 import styles from './SelectBox.module.scss';
 
-function SelectBox({ className, name, options }) {
+function SelectBox({ className, name, options, onChange }) {
   return (
-    <select className={cn(styles.select, className)} name={name}>
-      <option value="">카테고리 선택</option>
+    <select
+      className={cn(styles.select, className)}
+      name={name}
+      onChange={onChange}
+    >
+      <option key="default" value="">
+        카테고리 선택
+      </option>
       {options &&
-        options.map((option) => (
-          <option value={option.value}>{option.label}</option>
+        options.map((option, idx) => (
+          <option key={idx} value={option.code}>
+            {option.label}
+          </option>
         ))}
     </select>
   );

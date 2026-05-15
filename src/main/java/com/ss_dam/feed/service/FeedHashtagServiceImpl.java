@@ -17,4 +17,9 @@ public class FeedHashtagServiceImpl implements FeedHashtagService {
     return feedHashtagDao.searchHashtagByFeedCode(feedCode);
   }
 
+  @Override
+  public void registerHashtag(FeedHashtag tag) {
+    feedHashtagDao.registerHashtag(tag);
+  }
+
 }

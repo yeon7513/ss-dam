@@ -6,7 +6,6 @@ import styles from './ProfileImage.module.scss';
 
 function ProfileImage({ className, onChange }) {
   const [preview, setPreview] = useState(null);
-  // const [selectedFile, setSelectedFile] = useState(null);
   const fileInputRef = useRef();
 
   const handleClickImage = () => {
@@ -15,8 +14,6 @@ function ProfileImage({ className, onChange }) {
 
   const handleChangeProfileImage = (files) => {
     const file = files[0];
-
-    console.log(files);
 
     if (file) {
       // 이미지 미리보기
@@ -28,7 +25,6 @@ function ProfileImage({ className, onChange }) {
   const handleRemoveImage = () => {
     setPreview(null);
     onChange(null);
-    console.log(preview);
   };
 
   return (
@@ -38,10 +34,7 @@ function ProfileImage({ className, onChange }) {
         width={300}
         onClick={handleClickImage}
       />
-      <FileInput
-        ref={fileInputRef}
-        onFileChange={(e) => handleChangeProfileImage(e.target.files)}
-      />
+      <FileInput ref={fileInputRef} onFileChange={handleChangeProfileImage} />
       {preview !== null && (
         <button type="button" onClick={handleRemoveImage}>
           삭제

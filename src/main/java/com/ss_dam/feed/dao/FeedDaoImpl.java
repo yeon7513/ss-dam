@@ -22,6 +22,13 @@ public class FeedDaoImpl implements FeedDao {
     return sql.selectOne("feed.searchFeedByCode", code);
   }
 
+  @Override
+  public Long registerFeed(Feed feed) {
+    sql.insert("feed.registerFeed", feed);
+
+    return feed.getCode();
+  }
+
 
 
 }

@@ -9,4 +9,6 @@ public interface FeedService {
 
   Feed searchFeedByCode(Long code);
 
+  Long registerFeed(Feed feed);
+
 }
