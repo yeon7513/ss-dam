@@ -72,7 +72,8 @@ public class ImageServiceImpl implements ImageService {
     String date = now.format(DateTimeFormatter.ofPattern("yyyy.MM"));
 
     // 경로 조합
-    String path = BaseURL.getUploadPath() + File.separator + type + File.separator + date;
+    String path =
+        BaseURL.getUploadPath() + File.separator + type + File.separator + date + File.separator;
 
     // 폴더가 없으면 생성
     File folder = new File(path);
@@ -84,7 +85,7 @@ public class ImageServiceImpl implements ImageService {
     String uuid = UUID.randomUUID().toString();
 
     // DB 저장용 PATH
-    String imageURL = "/images/" + type + "/" + date + "/" + uuid + "/" + filename;
+    String imageURL = "/images/" + type + "/" + date + "/" + uuid + "_" + filename;
 
     try {
       file.transferTo(new File(path + uuid + "_" + filename));

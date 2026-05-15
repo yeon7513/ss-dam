@@ -22,7 +22,6 @@ export const imageUpload = (files, type, targetCode) => {
     .then((result) => {
       if (result) {
         alert('업로드 성공');
-        console.log(result);
       } else {
         alert('업로드 실패');
       }
