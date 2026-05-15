@@ -1,38 +1,44 @@
 @use "/src/scss/variables.scss" as *;
 
-.marketguide {
+.main {
+  display: flex; //왼쪽 고정제목 영역과 오른쪽 콘텐츠 영역 나란히 배치
+  align-items: flex-start; //!!! sticky 작동 필수 설정!!!
   width: 100%;
   padding: 80px 360px;
-}
+  gap: 50px; // 제목과 콘텐츠 사이 간격
 
-.marketintro {
-  //작업중인 영역을 배경색으로 확인하는 용도.
-  //background-color: rgb(241, 241, 241);
-}
+  .movingTitle {
+    min-width: 200px; //고정제목 최소너비 설정
+    position: sticky; //제목 고정하기
+    top: 80px; //스크롤 시 브라우저 상단에서 100px 떨어진 곳에 고정
 
-.content {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 70px;
-}
+    .mainTitle {
+      font-family: $font-logo;
+      font-size: 50px;
+      font-weight: 500;
+      color: $grayscale-100;
 
-.title {
-  font-family: $font-logo;
-  font-size: 50px;
-  font-weight: 500;
-  color: $grayscale-100;
+      margin-bottom: 30px;
+      text-align: left;
+    }
+  }
+  .content {
+    display: flex;
+    flex-direction: column; //!!!아티클 세로 정렬!!!
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 70px;
 
-  margin-bottom: 30px;
-  text-align: left;
-}
+    .intro {
+    }
+  }
+  .grid {
+    flex: 1;
 
-.grid {
-  flex: 1;
-
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 26px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 26px;
+  }
 }
 
 .card {
