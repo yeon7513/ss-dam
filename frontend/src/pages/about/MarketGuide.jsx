@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 
 const MarketGuide = () => {
-    return (
-        <div>
-            <h2>MarketGuide</h2>
-        </div>
-    );
+  return (
+    <div>
+      <h2>마켓가이드</h2>
+    </div>
+  );
 };
 
 export default MarketGuide;
