@@ -1,0 +1,68 @@
+@use "/src/scss/variables.scss" as *;
+
+.main {
+  display: flex; //왼쪽 고정제목 영역과 오른쪽 콘텐츠 영역 나란히 배치
+  align-items: flex-start; //!!! sticky 작동 필수 설정!!!
+  width: 100%;
+  padding: 80px 360px;
+  gap: 50px; // 제목과 콘텐츠 사이 간격
+
+  .movingTitle {
+    min-width: 200px; //고정제목 최소너비 설정
+    position: sticky; //제목 고정하기
+    top: 80px; //스크롤 시 브라우저 상단에서 100px 떨어진 곳에 고정
+
+    .mainTitle {
+      font-family: $font-logo;
+      font-size: 50px;
+      font-weight: 500;
+      color: $grayscale-100;
+
+      margin-bottom: 30px;
+      text-align: left;
+    }
+  }
+  .content {
+    display: flex;
+    flex-direction: column; //!!!아티클 세로 정렬!!!
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 70px;
+
+    .intro {
+    }
+  }
+  .grid {
+    flex: 1;
+
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 26px;
+  }
+}
+
+.card {
+  //반복되는 내용은 큰 뎁스의 하위로 구분.
+  padding: 20px 40px;
+  border-radius: 6px;
+  background-color: $background-80;
+  border: 1px solid $grayscale-20;
+
+  .cardtitle {
+    font-family: $font-main;
+    font-size: 22px;
+    font-weight: 600;
+    color: $color-white;
+
+    margin-bottom: 14px;
+  }
+
+  .cardtext {
+    font-family: $font-main;
+    font-size: 16px;
+    font-weight: 400;
+    color: $color-white;
+
+    line-height: 1.6;
+  }
+}

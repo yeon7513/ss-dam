@@ -1,4 +1,4 @@
-@use '/src/scss/variables.scss' as *;
+@use "/src/scss/variables.scss" as *;
 
 .container {
   width: 100%;
@@ -53,7 +53,7 @@
 
           li {
             font-family: $font-main;
-            font-size: 17px;
+            font-size: 18px;
             font-weight: 600;
             color: $grayscale-90;
             cursor: pointer;
