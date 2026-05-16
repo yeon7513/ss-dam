@@ -75,7 +75,7 @@ function App() {
           <Route path="findId" element={<FindId />} />
           <Route path="findPassword" element={<FindPassword />} />
         </Route>
-        <Route path="login" element={<LogIn />} />
+        <Route path="logIn" element={<LogIn />} />
         <Route path="signUp" element={<SignUp />}>
           <Route index element={<Terms />} />
           <Route path="verify" element={<Verify />} />
