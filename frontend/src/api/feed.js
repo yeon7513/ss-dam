@@ -1,5 +1,6 @@
 import { HOST } from '../lib/url';
 
+// 피드 등록
 export const sendToFeed = async (data, navigate) => {
   const formData = new FormData();
 
@@ -20,24 +21,52 @@ export const sendToFeed = async (data, navigate) => {
   }
 
   try {
-    const res = await fetch(`${HOST}/feed`, {
+    await fetch(`${HOST}/feed`, {
       method: 'POST',
       body: formData,
+    }).then((res) => {
+      if (res.ok) {
+        const code = res.text();
+
+        alert('등록되었습니다.');
+
+        navigate(`/feed/${code}`);
+      } else {
+        alert('등록에 실패했습니다.');
+      }
     });
-
-    if (res.ok) {
-      const code = await res.text();
-
-      alert('등록되었습니다.');
-
-      navigate(`/feed/${code}`);
-
-      console.log(code);
-    } else {
-      alert('등록에 실패했습니다.');
-    }
   } catch (error) {
     console.error('통신 에러:', error);
     alert('서버 연결에 실패했습니다.');
+  }
+};
+
+// 피드 조회
+export const searchFeedByCode = (code) => {
+  try {
+    const detail = fetch(`${HOST}/feed/${code}`, {
+      method: 'GET',
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+      })
+      .then((result) => {
+        if (result) {
+          return result;
+        } else {
+          return null;
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        return null;
+      });
+
+    return detail;
+  } catch (error) {
+    console.error('통신 에러: ', error);
+    return null;
   }
 };

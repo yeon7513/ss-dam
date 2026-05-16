@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./Header.module.scss";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
@@ -7,24 +8,40 @@ const Header = () => {
       <div className={styles.inner}>
         {/* 왼쪽 로고 영역 : '쓰담쓰담' 부분 */}
         <div className="logoArea">
-          <h1 className={styles.logoText}>쓰담쓰담</h1>
+          <h1 className={styles.logoText}>
+            <Link to="/">쓰담쓰담</Link>
+          </h1>
         </div>
 
         {/* 오른쪽 영역 : 유틸리티 메뉴 + 메인 네비게이션 */}
         <div className={styles.menuArea}>
           <div className={styles.utilityNav}>
-            <span className={styles.navItem}>마이페이지</span>
+            <span className={styles.navItem}>
+              <Link to="/myPage">마이페이지</Link>
+            </span>
             <span className={styles.divider}> | </span>
-            <span className={styles.navItem}>로그아웃</span>
+            <span className={styles.navItem}>
+              <Link to="/loginIn">로그아웃</Link>
+            </span>
           </div>
 
           <nav className={styles.mainNav}>
             <ul className={styles.navList}>
-              <li>소개</li>
-              <li>다시쓰담</li>
-              <li>피드</li>
-              <li>챌린지</li>
-              <li>고객센터</li>
+              <li>
+                <Link to="/about">소개</Link>
+              </li>
+              <li>
+                <Link to="/market">다시쓰담</Link>
+              </li>
+              <li>
+                <Link to="/feed">피드</Link>
+              </li>
+              <li>
+                <Link to="challenge">챌린지</Link>
+              </li>
+              <li>
+                <Link to="supports">고객센터</Link>
+              </li>
             </ul>
           </nav>
         </div>

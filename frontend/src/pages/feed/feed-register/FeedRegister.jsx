@@ -1,7 +1,8 @@
-import { useNavigate } from 'react-router-dom';
-import { sendToFeed } from '../../../api/feed';
-import Editor from '../../../components/common/editor/Editor';
+import { useNavigate } from "react-router-dom";
+import { sendToFeed } from "../../../api/feed";
+import Editor from "../../../components/common/editor/Editor";
 
+/* 피드 등록 */
 const FeedRegister = () => {
   const navigate = useNavigate();
 
