@@ -37,10 +37,10 @@ const Header = () => {
                 <Link to="/feed">피드</Link>
               </li>
               <li>
-                <Link to="challenge">챌린지</Link>
+                <Link to="/challenge">챌린지</Link>
               </li>
               <li>
-                <Link to="supports">고객센터</Link>
+                <Link to="/supports">고객센터</Link>
               </li>
             </ul>
           </nav>
