@@ -1,0 +1,6 @@
+@use '/src/scss/variables.scss' as *;
+
+.card {
+  width: 100%;
+  box-shadow: $box-shadow;
+}
