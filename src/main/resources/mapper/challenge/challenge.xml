@@ -4,9 +4,64 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="challenge">
-	<select id="findAll" resultType="Challenge">
-		select * from challenge order by
-		challenge.CREATED_AT desc
-	</select>
+
+    <!-- 전체 조회 -->
+    <select id="findAll" resultType="Challenge">
+        SELECT *
+        FROM challenge
+        WHERE DELETE_YN = false
+        ORDER BY CREATED_AT DESC
+    </select>
+
+    <!-- 상세 조회 -->
+    <select id="findByCode" parameterType="int" resultType="Challenge">
+        SELECT *
+        FROM challenge
+        WHERE CODE = #{code}
+          AND DELETE_YN = false
+    </select>
+
+    <!-- 등록 -->
+    <insert id="add" parameterType="Challenge">
+        INSERT INTO challenge (
+            EMP_ID,
+            TITLE,
+            CONTENT,
+            START_DATE,
+            END_DATE,
+            STATUS,
+            CREATED_AT,
+            DELETE_YN
+        ) VALUES (
+            #{empId},
+            #{title},
+            #{content},
+            #{startDate},
+            #{endDate},
+            #{status},
+            NOW(),
+            false
+        )
+    </insert>
+
+    <!-- 수정 -->
+    <update id="update" parameterType="Challenge">
+        UPDATE challenge
+        SET
+            TITLE = #{title},
+            CONTENT = #{content},
+            START_DATE = #{startDate},
+            END_DATE = #{endDate},
+            STATUS = #{status},
+            UPDATED_AT = NOW()
+        WHERE CODE = #{code}
+    </update>
+
+    <!-- 삭제 -->
+    <update id="delete" parameterType="int">
+        UPDATE challenge
+        SET DELETE_YN = true
+        WHERE CODE = #{code}
+    </update>
 
 </mapper>
