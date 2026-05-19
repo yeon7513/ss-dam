@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { SwiperSlide } from 'swiper/react';
 import { searchFeeds } from '../../api/feed';
 import Card from '../../components/common/card/Card';
 import ImageBox from '../../components/common/image-box/ImageBox';
+import Slide from '../../components/common/slide/Slide';
 import { HOST } from '../../lib/url';
 import styles from './Feed.module.scss';
 
@@ -32,9 +34,13 @@ const Feed = () => {
       {feeds.map((feed) => (
         <Card key={feed.code}>
           <div>
-            {feed.images.map((image, idx) => (
-              <ImageBox key={idx} src={`${HOST}${image.path}`} width="300" />
-            ))}
+            <Slide>
+              {feed.images.map((image, idx) => (
+                <SwiperSlide key={idx}>
+                  <ImageBox src={`${HOST}${image.path}`} width="300" />
+                </SwiperSlide>
+              ))}
+            </Slide>
           </div>
           <div className={styles.title}>
             <span>{feed.chalTitle}</span>
