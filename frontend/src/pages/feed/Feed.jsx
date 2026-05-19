@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { SwiperSlide } from 'swiper/react';
 import { searchFeeds } from '../../api/feed';
 import Card from '../../components/common/card/Card';
-import ImageBox from '../../components/common/image-box/ImageBox';
+import Thumbnail from '../../components/common/card/thumbnail/Thumbnail';
 import Slide from '../../components/common/slide/Slide';
-import { HOST } from '../../lib/url';
+import ProfileCard from '../../components/profile-card/ProfileCard';
 import styles from './Feed.module.scss';
 
 const Feed = () => {
@@ -33,19 +32,23 @@ const Feed = () => {
     <div>
       {feeds.map((feed) => (
         <Card key={feed.code}>
+          {/* 프로필 카드 */}
+          <ProfileCard memberProfile={feed.memberProfiles[0]} />
+
+          {/* 이미지 슬라이드 */}
           <div>
             <Slide>
-              {feed.images.map((image, idx) => (
-                <SwiperSlide key={idx}>
-                  <ImageBox src={`${HOST}${image.path}`} width="300" />
-                </SwiperSlide>
-              ))}
+              <Thumbnail images={feed.images.length > 0 ? feed.images : []} />
             </Slide>
           </div>
+
+          {/* 제목 */}
           <div className={styles.title}>
             <span>{feed.chalTitle}</span>
             <h3>{feed.title}</h3>
           </div>
+
+          {/* 콘텐츠 (내용) */}
           <div className={styles.content}>
             <p>{feed.content}</p>
             <div>
@@ -53,6 +56,8 @@ const Feed = () => {
                 <span key={idx}>#{tag.tagName}</span>
               ))}
             </div>
+
+            {/* 좋아요 & 댓글 & 작성일(시간) */}
             <div className={styles.info}>
               <div className={styles.count}>
                 <span>{feed.countFeedLike}</span>
