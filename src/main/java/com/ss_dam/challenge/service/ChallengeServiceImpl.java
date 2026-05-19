@@ -15,27 +15,27 @@ public class ChallengeServiceImpl implements ChallengeService {
     ChallengeDao challengeDao;
 
     @Override
-    public List<Challenge> findAll() {
-        return challengeDao.findAll();
+    public List<Challenge> searchChallenges() {
+        return challengeDao.searchChallenges();
     }
 
     @Override
-    public Challenge findByCode(int code) {
-        return challengeDao.findByCode(code);
+    public Challenge searchChallengeByCode(int code) {
+        return challengeDao.searchChallengeByCode(code);
     }
 
     @Override
-    public void add(Challenge item) {
-        challengeDao.add(item);
+    public void registerChallenge(Challenge challenge) {
+        challengeDao.registerChallenge(challenge);
     }
 
     @Override
-    public void update(Challenge item) {
-        challengeDao.update(item);
+    public void updateChallenge(Challenge challenge) {
+        challengeDao.updateChallenge(challenge);
     }
 
     @Override
-    public void delete(int code) {
-        challengeDao.delete(code);
+    public void deleteChallenge(int code) {
+        challengeDao.deleteChallenge(code);
     }
 }
