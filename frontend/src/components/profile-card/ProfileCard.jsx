@@ -1,4 +1,6 @@
+import { HiDotsHorizontal } from 'react-icons/hi';
 import placeholder from '../../assets/images/placeholder.png';
+import ImageBox from '../common/image-box/ImageBox';
 import styles from './ProfileCard.module.scss';
 
 function ProfileCard({ memberProfile }) {
@@ -6,20 +8,22 @@ function ProfileCard({ memberProfile }) {
 
   return (
     <div className={styles.profileCard}>
-      <div className={styles.profileImageBox}>
-        <img
-          className={styles.profileImage}
-          src={memberProfile.path || placeholder}
-          alt="프로필 이미지"
-        />
+      <div className={styles.profileImage}>
+        <ImageBox src={memberProfile.path || placeholder} alt="프로필 이미지" />
       </div>
 
-      <div className={styles.profileInfo}>
-        <p className={styles.profileName}>{memberProfile.id}</p>
-        <div className={styles.profileMeta}>
+      <div className={styles.info}>
+        <p className={styles.memberId}>{memberProfile.id}</p>
+        <div className={styles.meta}>
           <span>등급 {memberProfile.rating}</span>
           <span>랭킹 {memberProfile.ranking}</span>
         </div>
+      </div>
+
+      <div className={styles.more}>
+        <button>
+          <HiDotsHorizontal />
+        </button>
       </div>
     </div>
   );

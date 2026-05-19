@@ -1,0 +1,137 @@
+@use '/src/scss/variables.scss' as *;
+@use '/src/scss/mixin.scss' as mix;
+
+.container {
+  display: flex;
+  padding: 5rem 0;
+
+  .sideNav {
+    position: fixed;
+    width: 16%;
+    background-color: #ccc;
+
+    /* media - tablet */
+    @media screen and (max-width: 1300px) {
+      width: 20%;
+    }
+
+    /* media - mobile */
+    @media screen and (max-width: 767px) {
+      position: absolute;
+      width: 100%;
+    }
+  }
+
+  /* media - mobile */
+  @media screen and (max-width: 767px) {
+    padding: 3rem 0;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+}
+
+.list {
+  margin-left: auto;
+  width: 80%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+
+  .item {
+    // 슬라이드 크기 줄이기 위해 사용!
+    min-width: 0;
+  }
+
+  /* media - tablet */
+  @media screen and (max-width: 1300px) {
+    width: 75%;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* media - mobile */
+  @media screen and (max-width: 767px) {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 0;
+  }
+}
+
+.thumbnails {
+  width: 100%;
+  height: 20rem;
+  border-top: 1px solid $grayscale-20;
+  border-bottom: 1px solid $grayscale-20;
+}
+
+.contents {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  height: fit-content;
+
+  .title {
+    span,
+    h3 {
+      @include mix.textLine(1);
+    }
+
+    span {
+      color: $point-70;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    h3 {
+      margin-top: 0.3rem;
+    }
+  }
+
+  .detail {
+    display: flex;
+    flex-direction: column;
+    min-height: 7rem;
+
+    p {
+      @include mix.textLine(3);
+    }
+
+    .hashtags {
+      margin-top: auto;
+    }
+  }
+
+  .info {
+    @include mix.flex($jc: space-between);
+    padding-top: 1rem;
+    border-top: 1px solid $grayscale-20;
+    font-size: 0.875rem;
+    font-weight: 300;
+    color: $grayscale-50;
+
+    .count {
+      @include mix.flex($jc: space-between);
+      gap: 0.5rem;
+
+      .icon {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+
+        > span {
+          @include mix.flex;
+          font-size: 1rem;
+
+          &.like {
+            color: $point-20;
+          }
+
+          &.comment {
+            color: $point-20;
+          }
+        }
+      }
+    }
+  }
+}

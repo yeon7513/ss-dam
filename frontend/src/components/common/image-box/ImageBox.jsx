@@ -5,7 +5,7 @@ import styles from './imageBox.module.scss';
 const ImageBox = ({ className, src, alt, ...props }) => {
   return (
     <img
-      className={cn(styles.ImageBox, className)}
+      className={cn(styles.imageBox, className)}
       src={src || placeholder}
       alt={alt}
       {...props}
