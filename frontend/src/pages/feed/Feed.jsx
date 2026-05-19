@@ -1,10 +1,64 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { searchFeeds } from '../../api/feed';
+import Card from '../../components/common/card/Card';
+import ImageBox from '../../components/common/image-box/ImageBox';
+import { HOST } from '../../lib/url';
+import styles from './Feed.module.scss';
 
 const Feed = () => {
+  const [feeds, setFeeds] = useState([]);
+
+  useEffect(() => {
+    const handleLoadFeedDetail = async () => {
+      const feeds = await searchFeeds();
+
+      if (feeds) {
+        setFeeds(feeds);
+      }
+    };
+
+    handleLoadFeedDetail();
+  }, []);
+
+  console.log('feeds: ', feeds);
+
+  if (feeds.length < 0) {
+    return <div>피드 정보를 불러오고 있습니다.</div>;
+  }
+
   return (
     <div>
-      <h2>피드 페이지</h2>
-      <p>여기에 백엔드에서 가져온 피드 목록이 보일 거예요!</p>
+      {feeds.map((feed) => (
+        <Card key={feed.code}>
+          <div>
+            {feed.images.map((image, idx) => (
+              <ImageBox key={idx} src={`${HOST}${image.path}`} width="300" />
+            ))}
+          </div>
+          <div className={styles.title}>
+            <span>{feed.chalTitle}</span>
+            <h3>{feed.title}</h3>
+          </div>
+          <div className={styles.content}>
+            <p>{feed.content}</p>
+            <div>
+              {feed.hashtags.map((tag, idx) => (
+                <span key={idx}>#{tag.tagName}</span>
+              ))}
+            </div>
+            <div className={styles.info}>
+              <div className={styles.count}>
+                <span>{feed.countFeedLike}</span>
+                <span>{feed.countComment}</span>
+              </div>
+              <div>
+                <span>{feed.createdAt}</span>
+              </div>
+            </div>
+          </div>
+        </Card>
+      ))}
 
       <hr />
       <Link to="/feed/feedRegister">피드 등록</Link>

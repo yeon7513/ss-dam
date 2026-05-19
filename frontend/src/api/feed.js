@@ -41,7 +41,37 @@ export const sendToFeed = async (data, navigate) => {
   }
 };
 
-// 피드 조회
+// 피드 전체 조회
+export const searchFeeds = () => {
+  try {
+    const detail = fetch(`${HOST}/feed`, {
+      method: 'GET',
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+      })
+      .then((result) => {
+        if (result) {
+          return result;
+        } else {
+          return null;
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        return null;
+      });
+
+    return detail;
+  } catch (error) {
+    console.error('통신 에러: ', error);
+    return null;
+  }
+};
+
+// 피드 단일 조회
 export const searchFeedByCode = (code) => {
   try {
     const detail = fetch(`${HOST}/feed/${code}`, {
