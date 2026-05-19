@@ -1,4 +1,60 @@
-@use '/src/scss/variables.scss' as *;
+@use "/src/scss/variables.scss" as *;
 
 .profileCard {
+  width: 100%;
+  padding: 5%;
+  border: 1px solid $grayscale-20;
+  border-radius: 5%;
+  background-color: $color-white;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  gap: 5%;
+
+  .profileImageBox {
+    width: 22%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: $grayscale-10;
+    flex-shrink: 0;
+
+    .profileImage {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .profileInfo {
+    width: 73%;
+
+    .profileName {
+      margin: 0;
+      font-family: $font-main;
+      font-size: 120%;
+      font-weight: 700;
+      color: $grayscale-90;
+    }
+
+    .profileIntro {
+      margin: 3% 0;
+      font-family: $font-main;
+      font-size: 85%;
+      color: $grayscale-50;
+
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .profileMeta {
+      display: flex;
+      gap: 5%;
+      font-family: $font-main;
+      font-size: 80%;
+      color: $point-60;
+    }
+  }
 }
