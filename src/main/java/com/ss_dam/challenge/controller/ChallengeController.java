@@ -15,58 +15,10 @@ public class ChallengeController {
     @Autowired
     ChallengeService challengeService;
 
-<<<<<<< Updated upstream
-    // 전체 조회
-    @GetMapping
-    public List<Challenge> getAllChallenges() {
-        return challengeService.findAll();
-    }
-=======
-<<<<<<< Updated upstream
-  // 전체 조회
-  @GetMapping
-  public List<Challenge> getAllChallenges() {
-    return challengeService.findAll();
-  }
->>>>>>> Stashed changes
 
-    // 상세 조회
-    @GetMapping("/{code}")
-    public Challenge getChallenge(@PathVariable int code) {
-        return challengeService.findByCode(code);
-    }
+  
 
-    // 등록
-    @PostMapping
-    public void add(@RequestBody Challenge item) {
-        challengeService.add(item);
-    }
 
-    // 수정
-    @PutMapping("/{code}")
-    public void update(@PathVariable int code,
-                       @RequestBody Challenge item) {
-
-        item.setCode(code);
-
-        challengeService.update(item);
-    }
-
-<<<<<<< Updated upstream
-    // 삭제
-    @DeleteMapping("/{code}")
-    public void delete(@PathVariable int code) {
-        challengeService.delete(code);
-    }
-}
-=======
-  // 삭제
-  @DeleteMapping("/{code}")
-  public void delete(@PathVariable int code) {
-    challengeService.delete(code);
-  }
-}
-=======
     // 전체 챌린지 조회
     @GetMapping
     public List<Challenge> searchChallenges() {
@@ -101,5 +53,5 @@ public class ChallengeController {
         challengeService.deleteChallenge(code);
     }
 }
->>>>>>> Stashed changes
->>>>>>> Stashed changes
+
+
