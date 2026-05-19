@@ -20,36 +20,37 @@ public class ChallengeController {
   @Autowired
   ChallengeService challengeService;
 
-  // 전체 조회
-  @GetMapping
-  public List<Challenge> getAllChallenges() {
-    return challengeService.findAll();
-  }
+    // 전체 챌린지 조회
+    @GetMapping
+    public List<Challenge> searchChallenges() {
+        return challengeService.searchChallenges();
+    }
 
-  // 상세 조회
-  @GetMapping("/{code}")
-  public Challenge getChallenge(@PathVariable int code) {
-    return challengeService.findByCode(code);
-  }
+    // 챌린지 상세 조회
+    @GetMapping("/{code}")
+    public Challenge searchChallengeByCode(@PathVariable int code) {
+        return challengeService.searchChallengeByCode(code);
+    }
 
-  // 등록
-  @PostMapping
-  public void add(@RequestBody Challenge item) {
-    challengeService.add(item);
-  }
+    // 챌린지 등록
+    @PostMapping
+    public void registerChallenge(@RequestBody Challenge challenge) {
+        challengeService.registerChallenge(challenge);
+    }
 
-  // 수정
-  @PutMapping("/{code}")
-  public void update(@PathVariable int code, @RequestBody Challenge item) {
+    // 챌린지 수정
+    @PutMapping("/{code}")
+    public void updateChallenge(@PathVariable int code,
+                                @RequestBody Challenge challenge) {
 
-    item.setCode(code);
+        challenge.setCode(code);
 
-    challengeService.update(item);
-  }
+        challengeService.updateChallenge(challenge);
+    }
 
-  // 삭제
-  @DeleteMapping("/{code}")
-  public void delete(@PathVariable int code) {
-    challengeService.delete(code);
-  }
+    // 챌린지 삭제
+    @DeleteMapping("/{code}")
+    public void deleteChallenge(@PathVariable int code) {
+        challengeService.deleteChallenge(code);
+    }
 }

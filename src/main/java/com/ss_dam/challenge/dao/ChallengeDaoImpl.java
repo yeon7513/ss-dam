@@ -15,27 +15,27 @@ public class ChallengeDaoImpl implements ChallengeDao {
     SqlSession sql;
 
     @Override
-    public List<Challenge> findAll() {
-        return sql.selectList("challenge.findAll");
+    public List<Challenge> searchChallenges() {
+        return sql.selectList("challenge.searchChallenges");
     }
 
     @Override
-    public Challenge findByCode(int code) {
-        return sql.selectOne("challenge.findByCode", code);
+    public Challenge searchChallengeByCode(int code) {
+        return sql.selectOne("challenge.searchChallengeByCode", code);
     }
 
     @Override
-    public void add(Challenge item) {
-        sql.insert("challenge.add", item);
+    public void registerChallenge(Challenge challenge) {
+        sql.insert("challenge.registerChallenge", challenge);
     }
 
     @Override
-    public void update(Challenge item) {
-        sql.update("challenge.update", item);
+    public void updateChallenge(Challenge challenge) {
+        sql.update("challenge.updateChallenge", challenge);
     }
 
     @Override
-    public void delete(int code) {
-        sql.delete("challenge.delete", code);
+    public void deleteChallenge(int code) {
+        sql.update("challenge.deleteChallenge", code);
     }
 }
