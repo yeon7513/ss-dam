@@ -1,5 +1,3 @@
-import { HOST } from "../lib/url";
-
 // 피드 등록
 export const sendToFeed = async (data, navigate) => {
   const formData = new FormData();
@@ -21,7 +19,7 @@ export const sendToFeed = async (data, navigate) => {
   }
 
   try {
-    await fetch(`${HOST}/feed`, {
+    await fetch("/api/user/feeds", {
       method: "POST",
       body: formData,
     }).then((res) => {
@@ -44,7 +42,7 @@ export const sendToFeed = async (data, navigate) => {
 // 피드 전체 조회
 export const searchFeeds = () => {
   try {
-    const detail = fetch(`${HOST}/feed`, {
+    const detail = fetch("/api/user/feeds", {
       method: "GET",
     })
       .then((res) => {
@@ -74,7 +72,7 @@ export const searchFeeds = () => {
 // 피드 단일 조회
 export const searchFeedByCode = (code) => {
   try {
-    const detail = fetch(`${HOST}/feed/${code}`, {
+    const detail = fetch(`/api/user/feeds/${code}`, {
       method: "GET",
     })
       .then((res) => {
