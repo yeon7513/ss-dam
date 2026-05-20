@@ -1,6 +1,6 @@
-import cn from 'classnames';
-import placeholder from '../../../assets/images/placeholder.png';
-import styles from './imageBox.module.scss';
+import cn from "classnames";
+import placeholder from "../../../assets/images/placeholder.png";
+import styles from "./imageBox.module.scss";
 
 const ImageBox = ({ className, src, alt, ...props }) => {
   return (

@@ -1,23 +1,23 @@
-import cn from 'classnames';
-import { useState } from 'react';
-import { feedCategory } from '../../../lib/categoryTest';
-import { handleSetField } from '../../../utils/changeHandler';
-import TextInput from '../../forms/text-input/TextInput';
-import CancelButton from '../button/CancelButton';
-import SelectBox from './../../forms/select-box/SelectBox';
-import Button from './../button/Button';
-import UploadImage from './../upload-images/UploadImages';
-import styles from './Editor.module.scss';
+import cn from "classnames";
+import { useState } from "react";
+import { feedCategory } from "../../../lib/categoryTest";
+import { handleSetField } from "../../../utils/changeHandler";
+import TextInput from "../../forms/text-input/TextInput";
+import CancelButton from "../button/CancelButton";
+import SelectBox from "./../../forms/select-box/SelectBox";
+import Button from "./../button/Button";
+import UploadImage from "./../upload-images/UploadImages";
+import styles from "./Editor.module.scss";
 
 // 초기값
 const initPost = {
-  memCode: '',
-  title: '',
-  content: '',
+  memCode: "",
+  title: "",
+  content: "",
 };
 
 function Editor({
-  typeName = 'chalCode', // 분류 코드 (FK)
+  typeName = "chalCode", // 분류 코드 (FK)
   categories = feedCategory, // 카테고리명 (임시로 넣음)
   title,
   children,
@@ -32,13 +32,13 @@ function Editor({
   // 해시태그 등록 핸들러
   const handleRegisterHashs = (e) => {
     // 앞뒤 공백 제거, 중간 공백 제거
-    const value = e.target.value.trim().replace(/\s+/g, '');
+    const value = e.target.value.trim().replace(/\s+/g, "");
 
-    if (e.code === 'Enter' && value !== '') {
+    if (e.code === "Enter" && value !== "") {
       // 중복 비허용
       if (hashs.includes(value)) {
         // 이 부분에 해당 input에 중복관련 경고 띄우면 좋을 것 같음.
-        e.target.value = '';
+        e.target.value = "";
         return;
       }
 
@@ -56,7 +56,7 @@ function Editor({
         ],
       }));
 
-      e.target.value = '';
+      e.target.value = "";
     }
   };
 

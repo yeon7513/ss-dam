@@ -6,14 +6,14 @@
   justify-content: space-between;
   align-items: center;
   gap: 0.75rem;
-  padding: 1rem;
+  padding: 0.875rem;
   width: 100%;
   height: fit-content;
   background-color: $color-white;
 
   .profileImage {
-    width: 3.75rem;
-    height: 3.75rem;
+    width: 3rem;
+    height: 3rem;
     border-radius: 50%;
     overflow: hidden;
     background-color: $grayscale-10;
@@ -26,15 +26,15 @@
     height: 100%;
 
     .memberId {
-      font-size: 1.125rem;
-      font-weight: 700;
+      font-size: 1rem;
+      font-weight: 500;
       color: $grayscale-90;
     }
 
     .meta {
       display: flex;
       gap: 0.5rem;
-      font-size: 0.875rem;
+      font-size: 0.75rem;
       color: $point-60;
     }
   }

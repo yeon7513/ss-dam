@@ -1,10 +1,10 @@
-import { SwiperSlide } from 'swiper/react';
-import { HOST } from '../../../../lib/url';
-import styles from '../../../../pages/feed/Feed.module.scss';
-import ImageBox from './../../image-box/ImageBox';
+import { SwiperSlide } from "swiper/react";
+import { HOST } from "../../../../lib/url";
+import styles from "../../../../pages/feed/Feed.module.scss";
+import ImageBox from "./../../image-box/ImageBox";
 
-import 'swiper/css';
-import Slide from '../../slide/Slide';
+import "swiper/css";
+import Slide from "../../slide/Slide";
 
 function Thumbnail({ images = [] }) {
   const renderSlides = () => {

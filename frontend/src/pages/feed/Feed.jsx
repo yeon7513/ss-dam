@@ -1,14 +1,17 @@
-import { useEffect, useState } from 'react';
-import { IoChatbubbleEllipses, IoHeartSharp } from 'react-icons/io5';
-import { Link } from 'react-router-dom';
-import { searchFeeds } from '../../api/feed';
-import Card from '../../components/common/card/Card';
-import Thumbnail from '../../components/common/card/thumbnail/Thumbnail';
-import ProfileCard from '../../components/profile-card/ProfileCard';
-import styles from './Feed.module.scss';
+import { useEffect, useState } from "react";
+import { IoChatbubbleEllipses, IoHeartSharp } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
+import { searchFeeds } from "../../api/feed";
+import Card from "../../components/common/card/Card";
+import Thumbnail from "../../components/common/card/thumbnail/Thumbnail";
+import SideNav from "../../components/feed/side-nav/FeedSideNav";
+import ProfileCard from "../../components/profile-card/ProfileCard";
+import styles from "./Feed.module.scss";
 
 const Feed = () => {
   const [feeds, setFeeds] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleLoadFeedDetail = async () => {
@@ -22,18 +25,24 @@ const Feed = () => {
     handleLoadFeedDetail();
   }, []);
 
+  const handleClickDetail = (code) => {
+    navigate(`/feed/${code}`);
+  };
+
   if (feeds.length < 0) {
     return <div>피드 정보를 불러오고 있습니다.</div>;
   }
 
   return (
     <div className={styles.container}>
-      <div className={styles.sideNav}>
-        <Link to="/feed/feedRegister">피드 등록</Link>
-      </div>
+      <SideNav />
       <div className={styles.list}>
         {feeds.map((feed) => (
-          <Card key={feed.code} className={styles.item}>
+          <Card
+            key={feed.code}
+            className={styles.item}
+            onClick={() => handleClickDetail(feed.code)}
+          >
             {/* 프로필 카드 */}
             <ProfileCard memberProfile={feed.memberProfiles[0]} />
 

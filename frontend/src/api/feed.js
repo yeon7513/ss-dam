@@ -1,12 +1,12 @@
-import { HOST } from '../lib/url';
+import { HOST } from "../lib/url";
 
 // 피드 등록
 export const sendToFeed = async (data, navigate) => {
   const formData = new FormData();
 
-  formData.append('chalCode', data.chalCode);
-  formData.append('title', data.title);
-  formData.append('content', data.content);
+  formData.append("chalCode", data.chalCode);
+  formData.append("title", data.title);
+  formData.append("content", data.content);
 
   // formData 전송 시 배열은 꺼내서 append 해야한다고함..
   // 어렵다 어려워
@@ -17,27 +17,27 @@ export const sendToFeed = async (data, navigate) => {
   }
 
   if (data.files) {
-    data.files.forEach((file) => formData.append('files', file));
+    data.files.forEach((file) => formData.append("files", file));
   }
 
   try {
     await fetch(`${HOST}/feed`, {
-      method: 'POST',
+      method: "POST",
       body: formData,
     }).then((res) => {
       if (res.ok) {
         const code = res.text();
 
-        alert('등록되었습니다.');
+        alert("등록되었습니다.");
 
         navigate(`/feed/${code}`);
       } else {
-        alert('등록에 실패했습니다.');
+        alert("등록에 실패했습니다.");
       }
     });
   } catch (error) {
-    console.error('통신 에러:', error);
-    alert('서버 연결에 실패했습니다.');
+    console.error("통신 에러:", error);
+    alert("서버 연결에 실패했습니다.");
   }
 };
 
@@ -45,7 +45,7 @@ export const sendToFeed = async (data, navigate) => {
 export const searchFeeds = () => {
   try {
     const detail = fetch(`${HOST}/feed`, {
-      method: 'GET',
+      method: "GET",
     })
       .then((res) => {
         if (res.ok) {
@@ -66,7 +66,7 @@ export const searchFeeds = () => {
 
     return detail;
   } catch (error) {
-    console.error('통신 에러: ', error);
+    console.error("통신 에러: ", error);
     return null;
   }
 };
@@ -75,7 +75,7 @@ export const searchFeeds = () => {
 export const searchFeedByCode = (code) => {
   try {
     const detail = fetch(`${HOST}/feed/${code}`, {
-      method: 'GET',
+      method: "GET",
     })
       .then((res) => {
         if (res.ok) {
@@ -96,7 +96,7 @@ export const searchFeedByCode = (code) => {
 
     return detail;
   } catch (error) {
-    console.error('통신 에러: ', error);
+    console.error("통신 에러: ", error);
     return null;
   }
 };
