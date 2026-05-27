@@ -48,35 +48,35 @@
 			i.path,
 			IFNULL(cnt_comment.cnt, 0) AS count_comment,
 			IFNULL(cnt_like.cnt, 0) AS count_feed_like
-		FROM feed f
+		FROM FEED f
 		<!-- 좋아요 개수 -->
 		LEFT JOIN (
 			SELECT fl.feed_code, count(*) AS cnt
-			FROM feed_like fl
+			FROM FEED_LIKE fl
 			GROUP BY fl.feed_code
 		) AS cnt_like
 			ON cnt_like.feed_code = f.code
 		<!-- 댓글 개수 -->
 		LEFT JOIN (
 			SELECT c.feed_code, count(*) AS cnt
-			FROM comments c
+			FROM COMMENTS c
 			GROUP BY c.feed_code
 		) AS cnt_comment
 			ON cnt_comment.feed_code = f.code
     	<!-- 이미지 -->
-		LEFT JOIN images i
+		LEFT JOIN IMAGES i
 			ON f.code = i.target_code AND i.type = 'feed'
 		<!-- 해시태그 -->
-		LEFT JOIN feed_hashtag fh 
+		LEFT JOIN FEED_HASHTAG fh 
 			ON f.code = fh.feed_code
 		<!-- 챌린지 정보-->
-		JOIN challenge ch 
+		JOIN CHALLENGE ch 
 			ON f.chal_code = ch.code
 		<!-- 작성자 정보 -->
 		JOIN (
 			SELECT m.code, m.id, i.PATH, m.ranking, m.rating
-			FROM member_account m
-			LEFT JOIN images i
+			FROM MEMBER_ACCOUNT m
+			LEFT JOIN IMAGES i
 				ON m.code = i.target_code AND i.TYPE = 'profile'
 		) AS mp
 			ON mp.code = f.mem_code
@@ -89,8 +89,8 @@
 		SELECT
 			f.*,
 			ch.title AS chal_title
-		FROM feed f
-		JOIN challenge ch 
+		FROM FEED f
+		JOIN CHALLENGE ch 
 			ON f.chal_code = ch.code
 		WHERE f.status = 'active' AND f.code = #{code}
 	</select>
@@ -98,7 +98,7 @@
 	
 	<!-- 피드 등록 -->
 	<insert id="registerFeed" parameterType="Feed">
-    	INSERT INTO feed (chal_code, mem_code, title, content, hitcount, status, created_at, delete_yn)
+    	INSERT INTO FEED (chal_code, mem_code, title, content, hitcount, status, created_at, delete_yn)
     	VALUES (#{chalCode}, #{memCode}, #{title}, #{content}, 0, 'ACTIVE', NOW(), 0)
     	
     	<selectKey keyProperty="code" resultType="long" order="AFTER">

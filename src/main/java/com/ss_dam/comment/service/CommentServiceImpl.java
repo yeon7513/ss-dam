@@ -26,4 +26,9 @@ public class CommentServiceImpl implements CommentService {
     return commentDao.searchCommentsByFeedCode(feedCode);
   }
 
+  @Override
+  public Long registerComment(Comment comment) {
+    return null;
+  }
+
 }

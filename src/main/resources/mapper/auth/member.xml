@@ -6,8 +6,8 @@
 <mapper namespace="member">
 	<select id="searchProfileByMemberCode" resultType="MemberProfile">
 		SELECT m.code, m.id, i.path, m.rating, m.ranking
-		FROM member_account m
-		LEFT JOIN images i
+		FROM MEMBER_ACCOUNT m
+		LEFT JOIN IMAGES i
 			ON i.target_code = m.code 
 				AND i.type= 'profile' 
 				AND i.delete_yn = 0
@@ -16,8 +16,8 @@
 	
 	<select id="searchMemberByCode" resultType="Member">
 		SELECT m.*, i.path
-		FROM member_account m
-		LEFT JOIN images i
+		FROM MEMBER_ACCOUNT m
+		LEFT JOIN IMAGES i
 			ON i.target_code = m.code 
 				AND i.type= 'profile' 
 				AND i.delete_yn = 0
@@ -25,7 +25,7 @@
 	</select>
 	
 	<insert id="registerMember">
-		INSERT INTO member_account
+		INSERT INTO MEMBER_ACCOUNT
 		(id, password, name, phone, address, rating, ranking, point, status, created_at, delete_yn)
 		VALUES 
 		(#{id}, #{password}, #{name}, #{phone}, #{address}, 0, 0, 0, 'ACTIVE', now(), 0)

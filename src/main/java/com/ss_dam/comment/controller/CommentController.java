@@ -18,11 +18,11 @@ public class CommentController {
   @Autowired
   CommentService commentService;
 
+  // 댓글 등록
   @PostMapping
   Long registerComment(@ModelAttribute Comment comment) {
     return commentService.registerComment(comment);
   }
-
 
   // 피드별 댓글
   @GetMapping("/{feedCode}")

@@ -5,6 +5,8 @@
   
 <mapper namespace="chal_entry">
 	<select id="findAll" resultType="ChallengeEntry">
-	select * from challenge_entry ce order by JOINED_AT desc
+	SELECT * 
+	FROM CHALLENGE_ENTRY ce 
+	ORDER BY joined_at DESC
 	</select>
 </mapper>

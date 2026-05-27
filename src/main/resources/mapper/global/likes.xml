@@ -8,14 +8,14 @@
 	<!-- 피드 좋아요 개수 -->
 	<select id="countFeedLike" resultType="Integer">
 		SELECT IFNULL(count(*), 0)
-		FROM feed_like
+		FROM FEED_LIKE
 		WHERE feed_code = #{feedCode}
 	</select>
 	
 	<!-- 댓글 좋아요 개수 -->
 	<select id="countCommetLike" resultType="Integer">
 		SELECT IFNULL(count(*), 0)
-		FROM comment_like
+		FROM COMMENT_LIKE
 		WHERE cmt_code = #{cmtCode}
 	</select>
 	

@@ -7,17 +7,17 @@
 
 	<select id="searchImages" resultType="Images">
 		SELECT *
-		FROM images
+		FROM IMAGES
 	</select>
 	
 	<select id="searchImagesByCode" resultType="Images">
 		SELECT *
-		FROM images
+		FROM IMAGES
 		WHERE type = #{type} AND target_code = #{code}
 	</select>
 	
 	<insert id="registerImages">
-		INSERT INTO images 
+		INSERT INTO IMAGES 
 		(target_code, type, path, delete_yn)
 		VALUES (#{targetCode}, #{type}, #{path}, #{deleteYn})
 	</insert>

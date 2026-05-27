@@ -15,7 +15,7 @@
 
 	<select id="countComment" resultType="Integer">
 		SELECT IFNULL(count(*), 0)
-		FROM comments
+		FROM COMMENTS
 		WHERE feed_code = #{feedCode}
 	</select>
 
@@ -27,16 +27,16 @@
 			mp.rating AS m_rating, 
 			mp.ranking AS m_ranking,
 			c.*,
-			ifnull(count(cl.cmt_code), 0) AS count_like
-		FROM comments c
+			IFNULL(count(cl.cmt_code), 0) AS count_like
+		FROM COMMENTS c
 		JOIN (
 			SELECT m.code, m.id, i.path, m.rating, m.ranking
-			FROM member_account m
-			LEFT JOIN images i
+			FROM MEMBER_ACCOUNT m
+			LEFT JOIN IMAGES i
 				ON i.target_code = m.code AND i.type= 'profile'
 		) AS mp
 			ON c.mem_code = mp.code
-		LEFT JOIN comment_like cl
+		LEFT JOIN COMMENT_LIKE cl
 			ON cl.cmt_code = c.code
 		WHERE c.feed_code = #{feedCode}
 		GROUP BY c.code
