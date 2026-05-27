@@ -15,10 +15,6 @@ public class ChallengeController {
     @Autowired
     ChallengeService challengeService;
 
-
-  
-
-
     // 전체 챌린지 조회
     @GetMapping
     public List<Challenge> searchChallenges() {
