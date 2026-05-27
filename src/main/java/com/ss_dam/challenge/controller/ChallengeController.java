@@ -17,8 +17,8 @@ import com.ss_dam.challenge.service.ChallengeService;
 @RequestMapping("/challenge")
 public class ChallengeController {
 
-  @Autowired
-  ChallengeService challengeService;
+    @Autowired
+    ChallengeService challengeService;
 
     // 전체 챌린지 조회
     @GetMapping
