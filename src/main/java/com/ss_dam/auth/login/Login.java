@@ -1,6 +1,6 @@
 package com.ss_dam.auth.login;
 
-public class LogIn {
+public class Login {
 
 	private String memberId;
 	private String password;

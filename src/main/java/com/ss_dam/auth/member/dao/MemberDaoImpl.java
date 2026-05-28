@@ -30,4 +30,10 @@ public class MemberDaoImpl implements MemberDao {
     return sql.selectOne("member.searchMemberByCode", code);
   }
 
+  @Override
+  public Member findById(String memberId) {
+	
+	return sql.selectOne("com.ss_dam.auth.member.MemberDao.findById", memberId);
+  }
+
 }

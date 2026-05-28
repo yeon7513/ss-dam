@@ -12,4 +12,6 @@ public interface MemberDao {
 
   Member searchMemberByCode(Long code);
 
+  Member findById(String memberId);
+
 }
