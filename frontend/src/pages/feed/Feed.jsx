@@ -1,13 +1,98 @@
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { IoChatbubbleEllipses, IoHeartSharp } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
+import { searchFeeds } from "../../api/feed";
+import Card from "../../components/common/card/Card";
+import Thumbnail from "../../components/common/card/thumbnail/Thumbnail";
+import SideNav from "../../components/feed/side-nav/FeedSideNav";
+import ProfileCard from "../../components/profile-card/ProfileCard";
+import styles from "./Feed.module.scss";
 
 const Feed = () => {
-  return (
-    <div>
-      <h2>피드 페이지</h2>
-      <p>여기에 백엔드에서 가져온 피드 목록이 보일 거예요!</p>
+  const [feeds, setFeeds] = useState([]);
 
-      <hr />
-      <Link to="/feed/feedRegister">피드 등록</Link>
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleLoadFeedDetail = async () => {
+      const feeds = await searchFeeds();
+
+      if (feeds) {
+        setFeeds(feeds);
+      }
+    };
+
+    handleLoadFeedDetail();
+  }, []);
+
+  const handleClickDetail = (code) => {
+    navigate(`/feed/${code}`);
+  };
+
+  if (feeds.length < 0) {
+    return <div>피드 정보를 불러오고 있습니다.</div>;
+  }
+
+  return (
+    <div className={styles.container}>
+      <SideNav />
+      <div className={styles.list}>
+        {feeds.map((feed) => (
+          <Card
+            key={feed.code}
+            className={styles.item}
+            onClick={() => handleClickDetail(feed.code)}
+          >
+            {/* 프로필 카드 */}
+            <ProfileCard memberProfile={feed.memberProfiles[0]} />
+
+            {/* 이미지 슬라이드 */}
+            <div className={styles.thumbnails}>
+              <Thumbnail images={feed.images} />
+            </div>
+
+            {/* 본문 */}
+            <div className={styles.contents}>
+              {/* 제목 */}
+              <div className={styles.title}>
+                <span>{feed.chalTitle}</span>
+                <h3>{feed.title}</h3>
+              </div>
+
+              {/* 콘텐츠 (내용) */}
+              <div className={styles.detail}>
+                <p>{feed.content}</p>
+                <div className={styles.hashtags}>
+                  {feed.hashtags.map((tag, idx) => (
+                    <span key={idx}>#{tag.tagName}</span>
+                  ))}
+                </div>
+              </div>
+
+              {/* 좋아요 & 댓글 & 작성일(시간) */}
+              <div className={styles.info}>
+                <div className={styles.count}>
+                  <div className={styles.icon}>
+                    <span className={styles.like}>
+                      <IoHeartSharp />
+                    </span>
+                    {feed.countFeedLike}
+                  </div>
+                  <div className={styles.icon}>
+                    <span className={styles.comment}>
+                      <IoChatbubbleEllipses />
+                    </span>
+                    {feed.countComment}
+                  </div>
+                </div>
+                <div>
+                  <span>{feed.createdAt}</span>
+                </div>
+              </div>
+            </div>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 };

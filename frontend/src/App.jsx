@@ -1,9 +1,15 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import Comment from "./components/feed/comment/Comment";
+import AdminLayout from "./layout/AdminLayout";
 import Layout from "./layout/Layout";
 import About from "./pages/about/About";
 import ChallengeGuide from "./pages/about/ChallengeGuide";
 import MarketGuide from "./pages/about/MarketGuide";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import ChallengeManage from "./pages/admin/ChallengeManage";
+import FeedManage from "./pages/admin/FeedManage";
+import MarketManage from "./pages/admin/MarketManage";
+import UserManage from "./pages/admin/UserManage";
 import FindId from "./pages/auth/find/FindId";
 import FindPassword from "./pages/auth/find/FindPassword";
 import LogIn from "./pages/auth/log-in/LogIn";
@@ -13,30 +19,24 @@ import SignUp from "./pages/auth/sign-up/SignUp";
 import Terms from "./pages/auth/sign-up/Terms";
 import Verify from "./pages/auth/sign-up/Verify";
 import Challenge from "./pages/challenge/Challenge";
+import ChallengeDetail from "./pages/challenge/ChallengeDetail";
+import ChallengeRanking from "./pages/challenge/ChallengeRanking";
 import Feed from "./pages/feed/Feed";
 import FeedDetail from "./pages/feed/feed-detail/FeedDetail";
 import FeedRegister from "./pages/feed/feed-register/FeedRegister";
 import Home from "./pages/home/Home";
 import Market from "./pages/market/Market";
-import ProductRegister from "./pages/market/product-register/ProductRegister";
-import MyPage from "./pages/myPage/MyPage";
 import MarketDetail from "./pages/market/market-detail/MarketDetail";
 import MarketPayment from "./pages/market/market-payment/MarketPayment";
-import ChallengeDetail from "./pages/challenge/ChallengeDetail";
-import ChallengeRanking from "./pages/challenge/ChallengeRanking";
-import Supports from "./pages/support/Supports";
-import SupportDetail from "./pages/support/SupportDetail";
-import Dashboard from "./pages/myPage/dashboard/Dashboard";
-import EditProfile from "./pages/myPage/edit_profile/EditProfile";
+import ProductRegister from "./pages/market/product-register/ProductRegister";
 import Activities from "./pages/myPage/activities/Activities";
+import Dashboard from "./pages/myPage/dashboard/Dashboard";
 import Deal from "./pages/myPage/deal/Deal";
+import EditProfile from "./pages/myPage/edit_profile/EditProfile";
+import MyPage from "./pages/myPage/MyPage";
 import Points from "./pages/myPage/points/Points";
-import AdminLayout from "./layout/AdminLayout";
-import AdminDashboard from "./pages/admin/AdminDashboard";
-import UserManage from "./pages/admin/UserManage";
-import FeedManage from "./pages/admin/FeedManage";
-import MarketManage from "./pages/admin/MarketManage";
-import ChallengeManage from "./pages/admin/ChallengeManage";
+import SupportDetail from "./pages/support/SupportDetail";
+import Supports from "./pages/support/Supports";
 
 function App() {
   return (
@@ -45,7 +45,7 @@ function App() {
         <Route index element={<Home />} />
         <Route path="/feed">
           <Route index element={<Feed />} />
-          <Route path="feedRegister" element={<FeedRegister />} />
+          <Route path="register" element={<FeedRegister />} />
           <Route path=":code" element={<FeedDetail />} />
         </Route>
         <Route path="/challenge">

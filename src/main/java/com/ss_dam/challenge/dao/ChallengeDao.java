@@ -6,18 +6,18 @@ import com.ss_dam.challenge.Challenge;
 
 public interface ChallengeDao {
 
-    // 전체 조회
-    List<Challenge> findAll();
+    // 전체 챌린지 조회
+    List<Challenge> searchChallenges();
 
-    // 상세 조회
-    Challenge findByCode(int code);
+    // 챌린지 상세 조회
+    Challenge searchChallengeByCode(int code);
 
-    // 등록
-    void add(Challenge item);
+    // 챌린지 등록
+    void registerChallenge(Challenge challenge);
 
-    // 수정
-    void update(Challenge item);
+    // 챌린지 수정
+    void updateChallenge(Challenge challenge);
 
-    // 삭제
-    void delete(int code);
+    // 챌린지 삭제
+    void deleteChallenge(int code);
 }

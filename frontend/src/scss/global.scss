@@ -1,11 +1,13 @@
 @charset "utf-8";
 
+@use './variables.scss' as *;
+
 /* reset */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Pretendard", "Noto Sans KR", sans-serif;
+  font-family: 'Pretendard', sans-serif;
 }
 
 a {
@@ -18,7 +20,16 @@ li {
 }
 
 body {
-  color: #333;
+  color: $grayscale-90;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: $grayscale-100;
 }
 
 button {

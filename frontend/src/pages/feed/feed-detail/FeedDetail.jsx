@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { searchFeedByCode } from '../../../api/feed';
-import { HOST } from '../../../lib/url';
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { searchFeedByCode } from "../../../api/feed";
+import Thumbnail from "../../../components/common/card/thumbnail/Thumbnail";
+import styles from "./FeedDetail.module.scss";
 
 const FeedDetail = () => {
   const [detail, setDetail] = useState(null);
@@ -21,19 +22,20 @@ const FeedDetail = () => {
     handleLoadFeedDetail();
   }, [code]);
 
-  console.log('detail: ', detail);
+  console.log("detail: ", detail);
 
   if (detail === null) {
     return <div>데이터를 불러오는 중입니다.</div>;
   }
 
   return (
-    <div>
+    <div className={styles.feedDetail}>
       <h2>FeedDetail</h2>
 
-      {detail.images.map((image) => (
-        <img src={HOST + image.path} alt="" width="300" />
-      ))}
+      {/* 이미지 슬라이드 */}
+      <div className={styles.thumbnails}>
+        <Thumbnail images={detail.images} />
+      </div>
     </div>
   );
 };

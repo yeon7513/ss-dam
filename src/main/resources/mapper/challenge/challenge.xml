@@ -6,7 +6,7 @@
 <mapper namespace="challenge">
 
     <!-- 전체 조회 -->
-    <select id="findAll" resultType="Challenge">
+    <select id="searchChallenges" resultType="Challenge">
         SELECT *
         FROM challenge
         WHERE DELETE_YN = false
@@ -14,7 +14,10 @@
     </select>
 
     <!-- 상세 조회 -->
-    <select id="findByCode" parameterType="int" resultType="Challenge">
+    <select id="searchChallengeByCode"
+            parameterType="int"
+            resultType="Challenge">
+
         SELECT *
         FROM challenge
         WHERE CODE = #{code}
@@ -22,7 +25,9 @@
     </select>
 
     <!-- 등록 -->
-    <insert id="add" parameterType="Challenge">
+    <insert id="registerChallenge"
+            parameterType="Challenge">
+
         INSERT INTO challenge (
             EMP_ID,
             TITLE,
@@ -45,7 +50,9 @@
     </insert>
 
     <!-- 수정 -->
-    <update id="update" parameterType="Challenge">
+    <update id="updateChallenge"
+            parameterType="Challenge">
+
         UPDATE challenge
         SET
             TITLE = #{title},
@@ -59,7 +66,9 @@
     </update>
 
     <!-- 삭제 -->
-    <update id="delete" parameterType="int">
+    <update id="deleteChallenge"
+            parameterType="int">
+
         UPDATE challenge
         SET DELETE_YN = true
         WHERE CODE = #{code}
