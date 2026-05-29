@@ -35,7 +35,7 @@
   		</selectKey>
 	</insert>
 	
-	<select id="findMemberForLogin" parameterType="map" resultType="com.ss_dam.auth.login.Login">
+	<select id="findMemberForLogin" parameterType="map" resultType="Login">
 	    SELECT 
 	        ID AS memberId,
 	        PASSWORD AS password,
@@ -47,7 +47,7 @@
 	      AND DELETE_YN = 0
 	</select>
 
-	<select id="findAdminForLogin" parameterType="map" resultType="com.ss_dam.auth.login.Login">
+	<select id="findAdminForLogin" parameterType="map" resultType="Login">
 	    SELECT 
 	        EMP_ID AS memberId,
 	        PASSWORD AS password,
