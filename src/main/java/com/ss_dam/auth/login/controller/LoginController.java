@@ -1,8 +1,5 @@
 package com.ss_dam.auth.login.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ss_dam.auth.login.Login;
 import com.ss_dam.auth.login.service.LoginService;
+import com.ss_dam.common.ApiResponse;
+
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/auth")
@@ -22,22 +22,24 @@ public class LoginController {
 	private LoginService loginService;
 
 	@PostMapping("/login")
-	public ResponseEntity<Map<String, Object>> login(@RequestBody Login loginForm){
-		
-		Map<String, Object> response = new HashMap<>();
-		boolean isSuccess = loginService.login(loginForm);
-		
-		if(isSuccess) {
-			response.put("success", true);
-			response.put("message", "로그인 성공");
-			
+	public ResponseEntity<ApiResponse<Login>> login(@RequestBody Login loginForm, HttpSession session) {
+
+		Login loggedInUser = loginService.login(loginForm);
+
+		if (loggedInUser != null) {
+			session.setAttribute("loginUser", loggedInUser);
+
+			loggedInUser.setPassword(null);
+
+			ApiResponse<Login> response = ApiResponse.success("성공", loggedInUser);
+
 			return ResponseEntity.ok(response);
-		}else {
-			response.put("success", false);
-			response.put("message", "아이디나 비밀번호가 틀렸거나 없는 회원");
-			
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+		} else {
+
+			ApiResponse<Login> errorResponse = ApiResponse.fail("실패");
+
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
 		}
 	}
-		
+
 }

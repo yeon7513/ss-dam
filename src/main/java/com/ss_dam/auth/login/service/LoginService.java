@@ -4,6 +4,6 @@ import com.ss_dam.auth.login.Login;
 
 public interface LoginService {
 
-	boolean login(Login loginForm);
+	Login login(Login loginForm);
 
 }

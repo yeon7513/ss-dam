@@ -10,30 +10,24 @@ import com.ss_dam.auth.member.MemberProfile;
 @Repository
 public class MemberDaoImpl implements MemberDao {
 
-  @Autowired
-  SqlSession sql;
+	@Autowired
+	SqlSession sql;
 
-  @Override
-  public List<MemberProfile> searchProfileByMemberCode(Long code) {
-    return sql.selectList("member.searchProfileByMemberCode", code);
-  }
+	@Override
+	public List<MemberProfile> searchProfileByMemberCode(Long code) {
+		return sql.selectList("member.searchProfileByMemberCode", code);
+	}
 
-  @Override
-  public Long registerMember(Member member) {
-    sql.insert("member.registerMember", member);
+	@Override
+	public Long registerMember(Member member) {
+		sql.insert("member.registerMember", member);
 
-    return member.getCode();
-  }
+		return member.getCode();
+	}
 
-  @Override
-  public Member searchMemberByCode(Long code) {
-    return sql.selectOne("member.searchMemberByCode", code);
-  }
-
-  @Override
-  public Member findById(String memberId) {
-	
-	return sql.selectOne("com.ss_dam.auth.member.MemberDao.findById", memberId);
-  }
+	@Override
+	public Member searchMemberByCode(Long code) {
+		return sql.selectOne("member.searchMemberByCode", code);
+	}
 
 }

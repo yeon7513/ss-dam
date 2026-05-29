@@ -1,16 +1,54 @@
 import React, { useState } from "react";
 import TextInput from "../../../components/forms/text-input/TextInput";
 import Button from "../../../components/common/button/Button";
+import { useNavigate } from "react-router-dom";
 
 const LogIn = () => {
   const [memberId, setMemberId] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-  };
 
-  console.log({ memberId, password });
+    try {
+      const response = await fetch("http://localhost:9090/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          memberId: memberId,
+          password: password,
+        }),
+        credentials: "include",
+      });
+
+      const result = await response.json();
+      console.log("백엔드가 준 결과물:", result);
+
+      if (result.success) {
+        const userRole = result.data.role;
+        const userName = result.data.name;
+
+        localStorage.setItem("userRole", userRole);
+        localStorage.setItem("userName", userName);
+
+        if (userRole === "ADMIN") {
+          alert("관리자 계정으로 로그인");
+          navigate("/admin");
+        } else {
+          alert(`${userName}님 환영`);
+          navigate("/");
+        }
+      } else {
+        alert(result.message);
+      }
+    } catch (error) {
+      console.error("로그인 중 서버 통신 에러:", error);
+      alert("서버와 통신하는 중 문제가 발생했습니다.");
+    }
+  };
 
   return (
     <div>

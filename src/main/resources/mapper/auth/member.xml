@@ -34,4 +34,27 @@
     		SELECT LAST_INSERT_ID()
   		</selectKey>
 	</insert>
+	
+	<select id="findMemberForLogin" parameterType="map" resultType="com.ss_dam.auth.login.Login">
+	    SELECT 
+	        ID AS memberId,
+	        PASSWORD AS password,
+	        NAME AS name,
+	        'MEMBER' AS role
+	    FROM MEMBER_ACCOUNT
+	    WHERE ID = #{id} 
+	      AND PASSWORD = #{password}
+	      AND DELETE_YN = 0
+	</select>
+
+	<select id="findAdminForLogin" parameterType="map" resultType="com.ss_dam.auth.login.Login">
+	    SELECT 
+	        EMP_ID AS memberId,
+	        PASSWORD AS password,
+	        NAME AS name,
+	        ROLE AS role
+	    FROM ADMIN_ACCOUNT
+	    WHERE EMP_ID = #{id} 
+	      AND PASSWORD = #{password}
+	</select>
 </mapper>
