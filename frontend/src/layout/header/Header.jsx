@@ -21,7 +21,7 @@ const Header = () => {
             </span>
             <span className={styles.divider}> | </span>
             <span className={styles.navItem}>
-              <Link to="/loginIn">로그아웃</Link>
+              <Link to="/logIn">로그아웃</Link>
             </span>
           </div>
 

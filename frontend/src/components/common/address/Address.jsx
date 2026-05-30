@@ -9,7 +9,7 @@ function Address({ onChange }) {
   const [post, setPost] = useState("");
   const [basic, setBasic] = useState("");
   const [detail, setDetail] = useState("");
-  const [isOpen, setIsOpen] = useState("false"); // 주소창 열림/닫힘 상태
+  const [isOpen, setIsOpen] = useState(false); // 주소창 열림/닫힘 상태
 
   // 주소 선택이 완료됐을 때 실행되는 함수
   const handleComplete = (data) => {
