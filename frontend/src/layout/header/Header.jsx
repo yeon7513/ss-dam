@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import styles from "./Header.module.scss";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import styles from "./Header.module.scss";
 
 const Header = () => {
   const navigate = useNavigate();

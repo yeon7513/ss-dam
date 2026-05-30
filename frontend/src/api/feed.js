@@ -22,17 +22,23 @@ export const sendToFeed = async (data, navigate) => {
     await fetch("/api/user/feeds", {
       method: "POST",
       body: formData,
-    }).then((res) => {
-      if (res.ok) {
-        const code = res.text();
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.text();
+        } else {
+          alert("등록에 실패했습니다.");
+        }
+      })
+      .then((result) => {
+        if (result) {
+          const newCode = result;
 
-        alert("등록되었습니다.");
+          alert("등록되었습니다.");
 
-        navigate(`/feed/${code}`);
-      } else {
-        alert("등록에 실패했습니다.");
-      }
-    });
+          navigate(`/feed/${newCode}`);
+        }
+      });
   } catch (error) {
     console.error("통신 에러:", error);
     alert("서버 연결에 실패했습니다.");

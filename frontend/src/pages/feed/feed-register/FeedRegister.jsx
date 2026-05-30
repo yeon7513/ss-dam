@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { sendToFeed } from "../../../api/feed";
 import Editor from "../../../components/common/editor/Editor";
+import Hashtag from "../../../components/feed/hashtag/Hashtag";
 import styles from "./FeedRegister.module.scss";
 
 // 초기값

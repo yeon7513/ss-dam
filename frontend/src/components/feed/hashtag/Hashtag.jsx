@@ -1,9 +1,9 @@
 import cn from "classnames";
 import styles from "./Hashtag.module.scss";
 
-function Hashtag({ key, children, className, handleClick = null }) {
+function Hashtag({ children, className, handleClick = null }) {
   return (
-    <div key={key} className={cn(styles.hashtags, className)}>
+    <div className={cn(styles.hashtags, className)}>
       <button type="button" onClick={handleClick}>
         {children}
       </button>

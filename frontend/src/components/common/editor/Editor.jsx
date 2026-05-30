@@ -20,18 +20,18 @@ function Editor({
 }) {
   const [selectedImages, setSelectedImages] = useState([]);
 
-  // ** 해시태그 관련 핸들러 및 코드들은 해시태그 컴포넌트로 옮길 예정임.
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // 임시로 회원 번호 넣음
-    setPost((prev) => ({
-      ...prev,
+    const resultData = {
+      ...post,
       files: selectedImages,
-    }));
+    };
 
-    onSubmit(post);
+    // 임시로 회원 번호 넣음
+    setPost(resultData);
+
+    onSubmit(resultData);
   };
 
   return (
@@ -63,6 +63,7 @@ function Editor({
             onChange={(e) => handleSetField(e, setPost)}
           />
         </div>
+        {/* children 부분에 해시태그 등록 섹션이 들어옴 -> 피드에서만 사용, 마켓은 사용 X  */}
         {children}
         <div className={styles.submit}>
           <Button onClick={handleSubmit}>
