@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Header.module.scss";
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Header = () => {
-  const nevigate = useNavigate();
+  const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -46,8 +46,8 @@ const Header = () => {
                   <Link to="/myPage">마이페이지</Link>
                 </span>
                 <span className={styles.divider}> | </span>
-                <span className={styles.navItem}>
-                  <Link to="/">로그아웃</Link>
+                <span className={styles.navItem} onClick={handleLogOut}>
+                  로그아웃
                 </span>
               </>
             ) : (
