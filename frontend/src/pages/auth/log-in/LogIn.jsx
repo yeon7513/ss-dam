@@ -31,8 +31,8 @@ const LogIn = () => {
         const userRole = result.data.role;
         const userName = result.data.name;
 
-        localStorage.setItem("userRole", userRole);
-        localStorage.setItem("userName", userName);
+        sessionStorage.setItem("userRole", userRole);
+        sessionStorage.setItem("userName", userName);
 
         if (userRole === "ADMIN") {
           alert("관리자 계정으로 로그인");
