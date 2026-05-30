@@ -1,11 +1,10 @@
-import React from "react";
+import Editor from "../../../components/common/editor/Editor";
 
 const ProductRegister = () => {
   return (
-    <div>
-      <h2>ProductRegister</h2>
-      <p>백엔드에서 가져온 ProductRegister 정보</p>
-    </div>
+    <form>
+      <Editor title="물품 등록" typeName="cateCode" onSubmit={null} />
+    </form>
   );
 };
 

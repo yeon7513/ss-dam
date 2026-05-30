@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { FaArrowLeft } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { searchFeedByCode } from "../../../api/feed";
 import Thumbnail from "../../../components/common/card/thumbnail/Thumbnail";
+import ProfileCard from "../../../components/profile-card/ProfileCard";
 import styles from "./FeedDetail.module.scss";
 
 const FeedDetail = () => {
@@ -30,11 +32,25 @@ const FeedDetail = () => {
 
   return (
     <div className={styles.feedDetail}>
-      <h2>FeedDetail</h2>
+      <div className={styles.title}>
+        <button>
+          <FaArrowLeft />
+        </button>
+        <div>
+          <span>{detail.chalTitle}</span>
+          <h2>{detail.title}</h2>
+        </div>
+      </div>
 
-      {/* 이미지 슬라이드 */}
-      <div className={styles.thumbnails}>
-        <Thumbnail images={detail.images || null} />
+      <div className={styles.container}>
+        {/* 이미지 슬라이드 */}
+        <div className={styles.thumbnails}>
+          <Thumbnail images={detail.images || null} />
+        </div>
+        <div className={styles.contents}>
+          <ProfileCard memberProfile={detail.memberProfiles[0]} />
+          <p>{detail.content}</p>
+        </div>
       </div>
     </div>
   );
