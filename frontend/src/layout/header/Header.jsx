@@ -1,8 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./Header.module.scss";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 const Header = () => {
+  const nevigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const userSession = sessionStorage.getItem("user");
+    if (userSession) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  const handleLogOut = () => {
+    sessionStorage.removeItem("user");
+    setIsLoggedIn(false);
+    alert("로그아웃 되었습니다");
+    navigate("/");
+  };
+
   return (
     <header className={styles.container}>
       <div className={styles.inner}>
@@ -16,13 +33,27 @@ const Header = () => {
         {/* 오른쪽 영역 : 유틸리티 메뉴 + 메인 네비게이션 */}
         <div className={styles.menuArea}>
           <div className={styles.utilityNav}>
-            <span className={styles.navItem}>
-              <Link to="/myPage">마이페이지</Link>
-            </span>
-            <span className={styles.divider}> | </span>
-            <span className={styles.navItem}>
-              <Link to="/loginIn">로그아웃</Link>
-            </span>
+            {isLoggedIn ? (
+              <>
+                <span className={styles.navItem}>
+                  <Link to="/myPage">마이페이지</Link>
+                </span>
+                <span className={styles.divider}> | </span>
+                <span className={styles.navItem}>
+                  <Link to="/">로그아웃</Link>
+                </span>
+              </>
+            ) : (
+              <>
+                <span className={styles.navItem}>
+                  <Link to="/myPage">마이페이지</Link>
+                </span>
+                <span className={styles.divider}> | </span>
+                <span className={styles.navItem}>
+                  <Link to="/logIn">로그인</Link>
+                </span>
+              </>
+            )}
           </div>
 
           <nav className={styles.mainNav}>
