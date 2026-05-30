@@ -48,7 +48,7 @@ const Feed = () => {
 
             {/* 이미지 슬라이드 */}
             <div className={styles.thumbnails}>
-              <Thumbnail images={feed.images} />
+              <Thumbnail images={feed.images || null} />
             </div>
 
             {/* 본문 */}
