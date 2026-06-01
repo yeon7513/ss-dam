@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { searchFeeds } from "../../api/feed";
 import Card from "../../components/common/card/Card";
 import Thumbnail from "../../components/common/card/thumbnail/Thumbnail";
+import Hashtag from "../../components/feed/hashtag/Hashtag";
 import SideNav from "../../components/feed/side-nav/FeedSideNav";
 import ProfileCard from "../../components/profile-card/ProfileCard";
 import styles from "./Feed.module.scss";
@@ -29,7 +30,7 @@ const Feed = () => {
     navigate(`/feed/${code}`);
   };
 
-  if (feeds.length < 0) {
+  if (feeds.length === 0) {
     return <div>피드 정보를 불러오고 있습니다.</div>;
   }
 
@@ -64,7 +65,9 @@ const Feed = () => {
                 <p>{feed.content}</p>
                 <div className={styles.hashtags}>
                   {feed.hashtags.map((tag, idx) => (
-                    <span key={idx}>#{tag.tagName}</span>
+                    <Hashtag key={idx}>
+                      <span>#{tag.tagName}</span>
+                    </Hashtag>
                   ))}
                 </div>
               </div>

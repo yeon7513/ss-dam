@@ -78,8 +78,10 @@ const FeedRegister = () => {
               <p>등록된 태그가 없습니다.</p>
             ) : (
               hashs.map((hash, idx) => (
-                <Hashtag key={idx} handleClick={() => handleDeleteHash(hash)}>
-                  # {hash} X
+                <Hashtag key={idx}>
+                  <button type="button" onClick={() => handleDeleteHash(hash)}>
+                    # {hash} X
+                  </button>
                 </Hashtag>
               ))
             )}

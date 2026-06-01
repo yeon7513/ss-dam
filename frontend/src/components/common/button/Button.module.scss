@@ -1,4 +1,8 @@
 .button {
   padding: 1rem 1.5rem;
   background-color: #ccc;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
 }
