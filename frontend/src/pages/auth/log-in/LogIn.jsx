@@ -34,6 +34,8 @@ const LogIn = () => {
         sessionStorage.setItem("userRole", userRole);
         sessionStorage.setItem("userName", userName);
 
+        window.dispatchEvent(new Event("loginStateChanged"));
+
         if (userRole === "ADMIN") {
           alert("관리자 계정으로 로그인");
           navigate("/admin");

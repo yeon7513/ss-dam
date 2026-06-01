@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./Header.module.scss";
 
@@ -6,22 +6,30 @@ const Header = () => {
   const navigate = useNavigate();
 
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    const isLogged = sessionStorage.getItem("userName");
-
-    return isLogged ? true : false;
+    return !!sessionStorage.getItem("userName");
   });
 
-  // useEffect(() => {
-  //   const userSession = sessionStorage.getItem("user");
-  //   if (userSession) {
-  //     setIsLoggedIn(true);
-  //   }
-  // }, []);
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const isLogged = sessionStorage.getItem("userName");
+
+      setIsLoggedIn(!!isLogged);
+    };
+
+    window.addEventListener("loginStateChanged", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("loginStateChanged", handleStorageChange);
+    };
+  }, []);
 
   const handleLogOut = () => {
     sessionStorage.removeItem("userName");
     sessionStorage.removeItem("userRole");
-    setIsLoggedIn(false);
+
+    window.dispatchEvent(new Event("loginStateChanged"));
+    // setIsLoggedIn(false);
+
     alert("로그아웃 되었습니다");
     navigate("/");
   };
@@ -51,10 +59,10 @@ const Header = () => {
               </>
             ) : (
               <>
-                <span className={styles.navItem}>
+                {/* <span className={styles.navItem}>
                   <Link to="/myPage">마이페이지</Link>
                 </span>
-                <span className={styles.divider}> | </span>
+                <span className={styles.divider}> | </span> */}
                 <span className={styles.navItem}>
                   <Link to="/logIn">로그인</Link>
                 </span>
