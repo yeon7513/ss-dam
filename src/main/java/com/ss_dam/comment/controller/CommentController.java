@@ -17,11 +17,17 @@ public class CommentController {
 
   @Autowired
   CommentService commentService;
+  
+  // 댓글 전체 조회 (테스트용?)
+  @GetMapping
+  List<Comment> searchComments() {
+    return commentService.searchComments();
+  }
 
   // 댓글 등록
   @PostMapping
-  Long registerComment(@ModelAttribute Comment comment) {
-    return commentService.registerComment(comment);
+  Comment registerCommemnt(Comment comment) {
+    return commentService.registerCommemnt(comment);
   }
 
   // 피드별 댓글

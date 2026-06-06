@@ -30,8 +30,15 @@
 	        <result column="tag_name"  property="tagName" />
 	    </collection>
 	</resultMap>
+	
+	<!-- 전체 피드 개수 조회 (사용자용) -->
+	<select id="searchFeedTotalCount" resultType="Integer">
+		SELECT count(*)
+		FROM FEED
+		WEHRE status = 'ACTIVE'
+	</select>
 
-	<!-- 전체 피드 조회 -->
+	<!-- 전체 피드 조회 (사용자용) -->
 	<select id="searchFeeds" resultMap="FeedMap">
 		SELECT
 			f.*,
