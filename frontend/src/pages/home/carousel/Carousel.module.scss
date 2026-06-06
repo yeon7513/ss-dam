@@ -1,0 +1,34 @@
+@use "/src/scss/variables.scss" as *;
+@use "/src/scss/mixin.scss" as mix;
+
+.carousel {
+  height: 600px;
+
+  .item {
+    position: relative;
+
+    > img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: -10;
+      filter: brightness(80%);
+    }
+
+    .content {
+      position: relative;
+      top: 50%;
+      left: 50%;
+      width: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+
+      > h2,
+      p {
+        color: #fff;
+      }
+    }
+  }
+}

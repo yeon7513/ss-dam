@@ -4,7 +4,10 @@
 .wrap {
   display: flex;
   gap: 32px;
+  margin: 0 auto;
   padding: 5rem 0;
+  width: 100%;
+  max-width: 80vw;
 
   .sideNav {
     position: fixed;

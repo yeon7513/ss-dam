@@ -1,23 +1,13 @@
-@use '/src/scss/variables.scss' as *;
+@use "/src/scss/variables.scss" as *;
 
-.home {
-  background-color: yellow;
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
 
-  .content {
-    color: red;
-  }
-}
-
-.box {
-  width: 300px;
-  height: 300px;
-  border: 1px solid #000;
-
-  .date {
-    font-size: 32px;
-
-    .text {
-      color: blue;
-    }
+  .container {
+    margin: 0 auto;
+    width: 100%;
+    max-width: 80vw;
   }
 }

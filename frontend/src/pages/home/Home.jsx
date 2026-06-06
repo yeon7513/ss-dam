@@ -1,23 +1,19 @@
-import styles from './Home.module.scss';
+import Carousel from "./carousel/Carousel";
+import ChallengeQuickMenu from "./challenge-quick-menu/ChallengeQuickMenu";
+import styles from "./Home.module.scss";
+import LatestMarketProducts from "./lastest-market-products/LatestMarketProducts";
+import TrendingFeeds from "./trending-feeds/TrendingFeeds";
 
 function Home() {
   return (
-    <div className={styles.home}>
-      <div>메인페이지</div>
-      <div className={styles.content}>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus autem
-        perspiciatis, nulla in incidunt ipsa dolor corrupti beatae quas possimus
-        error reprehenderit quod, eveniet iste magni voluptas. Fugit, molestias
-        veniam.
-        <div className={styles.box}>
-          BOX
-          <p className={styles.date}>
-            date
-            <span className={styles.text}>text</span>
-          </p>
-        </div>
+    <main className={styles.wrap}>
+      <Carousel />
+      <div className={styles.container}>
+        <ChallengeQuickMenu />
+        <LatestMarketProducts />
+        <TrendingFeeds />
       </div>
-    </div>
+    </main>
   );
 }
 

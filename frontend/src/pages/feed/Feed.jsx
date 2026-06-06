@@ -50,7 +50,7 @@ const Feed = () => {
   }
 
   return (
-    <div className={styles.wrap}>
+    <main className={styles.wrap}>
       <SideNav />
       <div className={styles.container}>
         <SearchBox
@@ -120,7 +120,7 @@ const Feed = () => {
         </div>
         <Pagination page={currentPage} />
       </div>
-    </div>
+    </main>
   );
 };
 

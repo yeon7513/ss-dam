@@ -1,0 +1,22 @@
+@use "/src/scss/variables.scss" as *;
+@use "/src/scss/mixin.scss" as mix;
+
+.container {
+  > .quickMenus {
+    display: flex;
+    gap: 24px;
+  }
+
+  .menu {
+    padding: 1.5rem;
+    width: 25%;
+
+    &.popular {
+      background-color: #ddd;
+    }
+
+    &.new {
+      background-color: #ccc;
+    }
+  }
+}
