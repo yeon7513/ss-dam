@@ -19,7 +19,8 @@ const MarketGuide = () => {
       <section className={styles.content}>
         {/* 다시쓰담 소개 */}
         <article className={styles.intro}>
-          <h3 className={styles.subTitle}>🍀다시쓰담 소개</h3>
+          {/* ▣ : 추후 아이콘 대체할 위치표기 */}
+          <h3 className={styles.subTitle}>▣ 다시쓰담 소개</h3>
 
           <div className={styles.grid}>
             <div className={cn(styles.card, styles.leftTop)}>
@@ -70,7 +71,7 @@ const MarketGuide = () => {
 
         {/* 다시쓰담 이용가이드 */}
         <article className={styles.guide}>
-          <h3 className={styles.subTitle}>📖다시쓰담 이용가이드</h3>
+          <h3 className={styles.subTitle}>▣ 다시쓰담 이용가이드</h3>
 
           {/* 거래 진행 과정 */}
           <div className={styles.stepProcess}>
@@ -121,11 +122,76 @@ const MarketGuide = () => {
               </div>
             </div>
           </div>
+
+          {/* 거래 페이지 설명 */}
+          <div className={styles.stepProcess}>
+            <h4 className={styles.contentTitle}>거래 페이지 설명</h4>
+            <div>
+              <div className={styles.stepTitle}>
+                <h5 className={styles.stepText}>
+                  <span className={styles.stepBox}>STEP 01</span> 구매자가
+                  거래글의 [채팅하기] 버튼을 눌러 거래를 요청한다.
+                </h5>
+              </div>
+            </div>
+          </div>
+
+          {/* 거래 방법 - 판매 가이드 */}
+          <div className={styles.stepProcess}>
+            <h4 className={styles.contentTitle}>거래 방법 - 판매 가이드</h4>
+            <div>
+              <div className={styles.stepTitle}>
+                <h5 className={styles.stepText}>
+                  <span className={styles.stepBox}>STEP 01</span> 구매자가
+                  거래글의 [채팅하기] 버튼을 눌러 거래를 요청한다.
+                </h5>
+              </div>
+            </div>
+          </div>
+
+          {/* 거래 방법 - 구매 가이드 */}
+          <div className={styles.stepProcess}>
+            <h4 className={styles.contentTitle}>거래 방법 - 구매 가이드</h4>
+            <div>
+              <div className={styles.stepTitle}>
+                <h5 className={styles.stepText}>
+                  <span className={styles.stepBox}>STEP 01</span> 구매자가
+                  거래글의 [채팅하기] 버튼을 눌러 거래를 요청한다.
+                </h5>
+              </div>
+            </div>
+          </div>
+
+          {/* 거래 방법 - 나눔 가이드 */}
+          <div className={styles.stepProcess}>
+            <h4 className={styles.contentTitle}>거래 방법 - 나눔 가이드</h4>
+            <div>
+              <div className={styles.stepTitle}>
+                <h5 className={styles.stepText}>
+                  <span className={styles.stepBox}>STEP 01</span> 구매자가
+                  거래글의 [채팅하기] 버튼을 눌러 거래를 요청한다.
+                </h5>
+              </div>
+            </div>
+          </div>
+
+          {/* 출금 방법 */}
+          <div className={styles.stepProcess}>
+            <h4 className={styles.contentTitle}>거래 방법 - 출금 방법</h4>
+            <div>
+              <div className={styles.stepTitle}>
+                <h5 className={styles.stepText}>
+                  <span className={styles.stepBox}>STEP 01</span> 구매자가
+                  거래글의 [채팅하기] 버튼을 눌러 거래를 요청한다.
+                </h5>
+              </div>
+            </div>
+          </div>
         </article>
 
         {/* 이용 시 유의사항 */}
         <article className={styles.notice}>
-          <h3 className={styles.subTitle}>🚨이용 시 유의사항</h3>
+          <h3 className={styles.subTitle}>▣ 이용 시 유의사항</h3>
 
           <div>
             <h4 className={styles.contentTitle}>우리 모두 안전하게 거래해요</h4>
