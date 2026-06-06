@@ -9,6 +9,8 @@ public interface CommentService {
 
   List<Comment> searchCommentsByFeedCode(Long feedCode);
 
-  Long registerComment(Comment comment);
+  Comment registerCommemnt(Comment comment);
+
+  List<Comment> searchComments();
 
 }

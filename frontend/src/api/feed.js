@@ -46,9 +46,11 @@ export const sendToFeed = async (data, navigate) => {
 };
 
 // 피드 전체 조회
-export const searchFeeds = () => {
+export const searchFeeds = (pager) => {
+  const query = new URLSearchParams(pager).toString();
+
   try {
-    const detail = fetch("/api/user/feeds", {
+    const detail = fetch(`/api/user/feeds?${query}`, {
       method: "GET",
     })
       .then((res) => {
