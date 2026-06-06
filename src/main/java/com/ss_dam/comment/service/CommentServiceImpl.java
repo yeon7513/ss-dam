@@ -27,8 +27,16 @@ public class CommentServiceImpl implements CommentService {
   }
 
   @Override
-  public Long registerComment(Comment comment) {
+  public Comment registerCommemnt(Comment comment) {
+    // TODO Auto-generated method stub
     return null;
   }
+
+  @Override
+  public List<Comment> searchComments() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
 
 }

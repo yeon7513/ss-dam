@@ -1,13 +1,14 @@
 @use "/src/scss/variables.scss" as *;
 @use "/src/scss/mixin.scss" as mix;
 
-.container {
+.wrap {
   display: flex;
+  gap: 32px;
   padding: 5rem 0;
 
   .sideNav {
     position: fixed;
-    width: 14%;
+    width: 25%;
     background-color: #ccc;
 
     /* media - tablet */
@@ -22,6 +23,11 @@
     }
   }
 
+  .container {
+    width: 75%;
+    outline: 1px dotted red;
+  }
+
   /* media - mobile */
   @media screen and (max-width: 767px) {
     padding: 3rem 0;
@@ -32,7 +38,6 @@
 
 .list {
   margin-left: auto;
-  width: 75%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
