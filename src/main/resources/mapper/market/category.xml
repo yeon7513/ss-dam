@@ -7,7 +7,7 @@
 
 	<select id="searchCategories" resultType="MarketCategory">
 		SELECT *
-		FROM market_category
+		FROM MARKET_CATEGORY
 		ORDER BY code
 	</select>
 

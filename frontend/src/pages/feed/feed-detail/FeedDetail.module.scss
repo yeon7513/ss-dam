@@ -1,0 +1,23 @@
+@use "/src/scss/variables.scss" as *;
+@use "/src/scss/mixin.scss" as mix;
+
+.feedDetail {
+  padding: 32px 0;
+
+  .title {
+    display: flex;
+    margin-bottom: 24px;
+  }
+
+  .container {
+    display: flex;
+    gap: 24px;
+  }
+}
+
+.container {
+  .thumbnails {
+    width: 50%;
+    height: 600px;
+  }
+}

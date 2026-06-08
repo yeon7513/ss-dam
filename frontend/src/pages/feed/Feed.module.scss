@@ -1,0 +1,61 @@
+@use "/src/scss/variables.scss" as *;
+@use "/src/scss/mixin.scss" as mix;
+
+.wrap {
+  display: flex;
+  gap: 32px;
+  margin: 0 auto;
+  padding: 5rem 0;
+  width: 100%;
+  max-width: 80vw;
+
+  .sideNav {
+    position: fixed;
+    width: 25%;
+    background-color: #ccc;
+
+    /* media - tablet */
+    @media screen and (max-width: 1300px) {
+      width: 20%;
+    }
+
+    /* media - mobile */
+    @media screen and (max-width: 767px) {
+      position: absolute;
+      width: 100%;
+    }
+  }
+
+  .container {
+    width: 75%;
+    outline: 1px dotted red;
+  }
+
+  /* media - mobile */
+  @media screen and (max-width: 767px) {
+    padding: 3rem 0;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+}
+
+.list {
+  margin-left: auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+
+  /* media - tablet */
+  @media screen and (max-width: 1300px) {
+    width: 75%;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* media - mobile */
+  @media screen and (max-width: 767px) {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 0;
+  }
+}

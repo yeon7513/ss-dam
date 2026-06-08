@@ -1,0 +1,181 @@
+@use "/src/scss/variables.scss" as *;
+
+//rem : 상대크기로 설정. 웬만하면 margin, padding도 rem으로 설정.
+//border : 무조건 px로 설정.
+
+.main {
+  display: flex; //왼쪽 고정제목 영역과 오른쪽 콘텐츠 영역 나란히 배치
+  align-items: flex-start; //!!! sticky 작동 필수 설정!!!
+  max-width: 75rem;
+  width: 100%;
+  margin: 0 auto;
+  padding: 5rem 0;
+  gap: 3rem; // 제목과 콘텐츠 사이 가로 간격
+
+  //왼쪽 고정제목 영역
+  .movingTitle {
+    min-width: 12.5rem; //고정제목 최소너비 설정
+    position: sticky; //제목 고정하기
+    top: 5rem; //스크롤 시 브라우저 상단에서 100px 떨어진 곳에 고정
+
+    .mainTitle {
+      font-family: $font-logo;
+      font-size: 3.125rem;
+      font-weight: 500;
+      color: $grayscale-100;
+
+      margin-bottom: 1.875rem;
+      text-align: left;
+    }
+  }
+  .content {
+    display: flex;
+    flex-direction: column; //!!!아티클 세로 정렬!!!
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 4.375rem;
+
+    //공통 스타일
+    .subTitle {
+      font-family: $font-main;
+      font-size: 1.875rem;
+      font-weight: 600;
+      color: $grayscale-100;
+
+      margin-bottom: 1.25rem;
+    }
+
+    .contentTitle {
+      font-family: $font-main;
+      font-size: 1.375rem;
+      font-weight: 600;
+      color: $grayscale-100;
+
+      margin-bottom: 0.4rem;
+    }
+
+    .contentText {
+      font-family: $font-main;
+      font-size: 1.125rem;
+      font-weight: 400;
+      color: $grayscale-100;
+
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    .pointText {
+      font-family: $font-logo;
+      font-size: 1.375rem;
+      font-weight: 400;
+      color: $primary-50;
+
+      line-height: 1.6;
+    }
+
+    .grid {
+      flex: 1;
+
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+  }
+}
+
+.card {
+  //반복되는 내용은 큰 뎁스의 하위로 구분.
+  padding: 1.25rem 2.5rem;
+  //border-radius: 6px 6px 6px 0px; //border-radius 방향 다르게 하기 위해 따로 뺌.
+  background-color: $background-50;
+  border: 2px solid $primary-20;
+
+  .cardTitle {
+    font-family: $font-main;
+    font-size: 1.375rem;
+    font-weight: 600;
+    color: $grayscale-100;
+
+    margin-bottom: 0.875rem;
+  }
+
+  .cardText {
+    font-family: $font-main;
+    font-size: 1rem;
+    font-weight: 400;
+    color: $grayscale-100;
+
+    line-height: 1.6;
+  }
+
+  &.leftTop {
+    border-radius: 1rem 1rem 0 1rem;
+  }
+
+  &.rightTop {
+    border-radius: 1rem 1rem 1rem 0;
+  }
+
+  &.leftBottom {
+    border-radius: 1rem 0 1rem 1rem;
+  }
+
+  &.rightBottom {
+    border-radius: 0 1rem 1rem 1rem;
+  }
+}
+
+.noticeList {
+  font-family: $font-main;
+  font-size: 1.125rem;
+  font-weight: 400;
+  color: $grayscale-100;
+
+  line-height: 1.6;
+  padding-left: 1.4rem;
+
+  margin-bottom: 2rem;
+}
+
+.noticeList li {
+  list-style: disc;
+}
+
+.stepProcess {
+  font-family: $font-main;
+  font-size: 1rem;
+  font-weight: 400;
+  color: $grayscale-100;
+
+  line-height: 1.6;
+
+  margin-bottom: 2rem;
+}
+
+.stepTitle {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  line-height: 2;
+
+  .stepText {
+    font-family: $font-main;
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: $grayscale-100;
+  }
+
+  .stepBox {
+    display: column;
+    padding: 2px 8px;
+
+    border-radius: 1.5rem;
+    border: 2px solid $primary-20;
+
+    font-family: $font-main;
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: $primary-50;
+  }
+}

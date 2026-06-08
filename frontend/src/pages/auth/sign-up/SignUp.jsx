@@ -1,19 +1,19 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { sendToSignup } from '../../../api/member';
-import Address from '../../../components/common/address/Address';
-import Button from '../../../components/common/button/Button';
-import { handleSetField } from '../../../utils/changeHandler';
-import ProfileImage from './../../../components/common/profile-image/ProfileImage';
-import TextInput from './../../../components/forms/text-input/TextInput';
-import styles from './SignUp.module.scss';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { sendToSignup } from "../../../api/member";
+import Address from "../../../components/common/address/Address";
+import Button from "../../../components/common/button/Button";
+import { handleSetField } from "../../../utils/changeHandler";
+import ProfileImage from "./../../../components/common/profile-image/ProfileImage";
+import TextInput from "./../../../components/forms/text-input/TextInput";
+import styles from "./SignUp.module.scss";
 
 const SignUp = () => {
   const [form, setForm] = useState({
-    id: '',
-    password: '',
-    name: '',
-    phone: '',
+    id: "",
+    password: "",
+    name: "",
+    phone: "",
   });
 
   const navigate = useNavigate();

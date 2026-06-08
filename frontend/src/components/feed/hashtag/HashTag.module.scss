@@ -1,4 +1,9 @@
-@use '/src/scss/variables.scss' as *;
+@use "/src/scss/variables.scss" as *;
 
-.hashTag {
+.hashtags {
+  > button {
+  }
+
+  > span {
+  }
 }

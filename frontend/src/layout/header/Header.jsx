@@ -1,30 +1,91 @@
-import React from "react";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./Header.module.scss";
 
 const Header = () => {
+  const navigate = useNavigate();
+
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return !!sessionStorage.getItem("userName");
+  });
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const isLogged = sessionStorage.getItem("userName");
+
+      setIsLoggedIn(!!isLogged);
+    };
+
+    window.addEventListener("loginStateChanged", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("loginStateChanged", handleStorageChange);
+    };
+  }, []);
+
+  const handleLogOut = () => {
+    sessionStorage.removeItem("userName");
+    sessionStorage.removeItem("userRole");
+
+    window.dispatchEvent(new Event("loginStateChanged"));
+    // setIsLoggedIn(false);
+
+    alert("로그아웃 되었습니다");
+    navigate("/");
+  };
+
   return (
     <header className={styles.container}>
       <div className={styles.inner}>
         {/* 왼쪽 로고 영역 : '쓰담쓰담' 부분 */}
         <div className="logoArea">
-          <h1 className={styles.logoText}>쓰담쓰담</h1>
+          <h1 className={styles.logoText}>
+            <Link to="/">쓰담쓰담</Link>
+          </h1>
         </div>
 
         {/* 오른쪽 영역 : 유틸리티 메뉴 + 메인 네비게이션 */}
         <div className={styles.menuArea}>
           <div className={styles.utilityNav}>
-            <span className={styles.navItem}>마이페이지</span>
-            <span className={styles.divider}> | </span>
-            <span className={styles.navItem}>로그아웃</span>
+            {isLoggedIn ? (
+              <>
+                <span className={styles.navItem}>
+                  <Link to="/myPage">마이페이지</Link>
+                </span>
+                <span className={styles.divider}> | </span>
+                <span className={styles.navItem} onClick={handleLogOut}>
+                  로그아웃
+                </span>
+              </>
+            ) : (
+              <>
+                {/* <span className={styles.navItem}>
+                  <Link to="/myPage">마이페이지</Link>
+                </span>
+                <span className={styles.divider}> | </span> */}
+                <span className={styles.navItem}>
+                  <Link to="/logIn">로그인</Link>
+                </span>
+              </>
+            )}
           </div>
-
           <nav className={styles.mainNav}>
             <ul className={styles.navList}>
-              <li>소개</li>
-              <li>다시쓰담</li>
-              <li>피드</li>
-              <li>챌린지</li>
-              <li>고객센터</li>
+              <li>
+                <Link to="/about">소개</Link>
+              </li>
+              <li>
+                <Link to="/market">다시쓰담</Link>
+              </li>
+              <li>
+                <Link to="/feed">피드</Link>
+              </li>
+              <li>
+                <Link to="/challenge">챌린지</Link>
+              </li>
+              <li>
+                <Link to="/supports">고객센터</Link>
+              </li>
             </ul>
           </nav>
         </div>

@@ -1,7 +1,7 @@
 @use './font.scss';
 
-$font-main: 'Pretandard', sans-serif;
-$font-logo: 'Mulbit', cursive;
+$font-main: 'Pretendard', sans-serif;
+$font-logo: 'Mulbit', sans-serif;
 
 $color-white: #ffffff;
 $color-black: #111111;
@@ -39,3 +39,5 @@ $point-70: #3e7b64; // 로고 강조
 $warn-color: #fbc02d;
 $dan-color: #e53835;
 $succ-color: #0066ff;
+
+$box-shadow: 0px 0px 3px rgba($grayscale-50, 0.5);

@@ -26,4 +26,17 @@ public class CommentServiceImpl implements CommentService {
     return commentDao.searchCommentsByFeedCode(feedCode);
   }
 
+  @Override
+  public Comment registerCommemnt(Comment comment) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public List<Comment> searchComments() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+
 }

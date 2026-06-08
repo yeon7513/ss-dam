@@ -8,7 +8,7 @@
 		<version>4.0.6</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.e-o-dream</groupId>
+	<groupId>com.ss-dam</groupId>
 	<artifactId>ss-dam</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>ss-dam</name>

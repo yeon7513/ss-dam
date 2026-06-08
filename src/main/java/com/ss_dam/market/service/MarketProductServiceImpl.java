@@ -38,9 +38,8 @@ public class MarketProductServiceImpl implements MarketProductService {
     }
 
     // 작성자 프로필 정보
-    List<MemberProfile> memberProfile =
-        memberService.searchProfileByMemberCode(product.getMemCode());
-    product.setMemberProfiles(memberProfile);
+    MemberProfile memberProfile = memberService.searchProfileByMemberCode(product.getMemCode());
+    product.setMemberProfile(memberProfile);
 
     // 이미지 리스트
     List<Images> images = imageService.searchImagesByCode("market", product.getCode());

@@ -1,12 +1,13 @@
-import cn from 'classnames';
-import styles from './Button.module.scss';
+import cn from "classnames";
+import styles from "./Button.module.scss";
 
-function Button({ className, children, onClick, type = 'button' }) {
+function Button({ className, children, onClick, type = "button", ...props }) {
   return (
     <button
       className={cn(styles.button, className)}
       type={type}
       onClick={onClick}
+      {...props}
     >
       {children}
     </button>

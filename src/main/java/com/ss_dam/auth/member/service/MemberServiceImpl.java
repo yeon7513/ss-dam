@@ -1,6 +1,5 @@
 package com.ss_dam.auth.member.service;
 
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ss_dam.auth.member.Member;
@@ -18,7 +17,7 @@ public class MemberServiceImpl implements MemberService {
   MemberDao memberDao;
 
   @Override
-  public List<MemberProfile> searchProfileByMemberCode(Long code) {
+  public MemberProfile searchProfileByMemberCode(Long code) {
     return memberDao.searchProfileByMemberCode(code);
   }
 

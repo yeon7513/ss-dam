@@ -1,1 +1,5 @@
-@use '/src/scss/variables.scss' as *;
+@use "/src/scss/variables.scss" as *;
+
+.wrapper {
+  height: fit-content;
+}

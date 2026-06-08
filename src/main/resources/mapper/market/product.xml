@@ -9,7 +9,7 @@
 		<id column="code" property="code" />
 		
 		<!-- 회원 프로필 카드 -->
-		<collection property="memberProfiles" javaType="ArrayList" ofType="MemberProfile" autoMapping="true" columnPrefix="writer_">
+		<collection property="memberProfile" javaType="MemberProfile" ofType="MemberProfile" autoMapping="true" columnPrefix="writer_">
 			<id column="code" property="code" />
 		</collection>
 		
@@ -35,23 +35,23 @@
 			prod_img.type,
 			prod_img.path,
 			ifnull(cnt_pick.cnt, 0) AS count_pick
-		FROM market_product AS prod
-		JOIN market_category AS category
+		FROM MARKET_PRODUCT AS prod
+		JOIN MARKET_CATEGORY AS category
 			ON category.code = prod.cate_code
 		JOIN (
 			SELECT m.code, m.id, profile_img.path, m.rating, m.ranking
-			FROM member_account AS m
-			LEFT JOIN images AS profile_img
+			FROM MEMBER_ACCOUNT AS m
+			LEFT JOIN IMAGES AS profile_img
 				ON profile_img.target_code = m.code AND profile_img.type= 'profile'
 		) AS writer
 			ON prod.mem_code = writer.code
 		LEFT JOIN (
 			SELECT pick.prod_code, count(*) AS cnt
-			FROM market_prod_pick AS  pick
+			FROM MARKET_PROD_PICK AS  pick
 			GROUP BY pick.prod_code
 		) AS cnt_pick
 			ON cnt_pick.prod_code = prod.code
-		LEFT JOIN images AS prod_img
+		LEFT JOIN IMAGES AS prod_img
 			ON prod.code = prod_img.target_code AND prod_img.type = 'market'
 		ORDER BY prod.created_at DESC
 	</select>
@@ -60,8 +60,8 @@
 		SELECT 
 			prod.*,
 			category.name AS category_name
-		FROM market_product AS prod
-		JOIN market_category AS category
+		FROM MARKET_PRODUCT AS prod
+		JOIN MARKET_CATEGORY AS category
 			ON prod.cate_code = category.code
 		WHERE prod.code = #{code}
 	</select>

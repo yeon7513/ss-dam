@@ -1,0 +1,14 @@
+@use "/src/scss/variables.scss" as *;
+@use "/src/scss/mixin.scss" as mix;
+
+.lastestProduct {
+  .title {
+    margin-bottom: 48px;
+    text-align: center;
+  }
+
+  .contents {
+    display: flex;
+    gap: 24px;
+  }
+}

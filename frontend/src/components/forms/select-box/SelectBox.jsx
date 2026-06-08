@@ -1,5 +1,5 @@
-import cn from 'classnames';
-import styles from './SelectBox.module.scss';
+import cn from "classnames";
+import styles from "./SelectBox.module.scss";
 
 function SelectBox({ className, name, options, onChange }) {
   return (

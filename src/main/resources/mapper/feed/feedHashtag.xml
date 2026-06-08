@@ -6,13 +6,13 @@
 <mapper namespace="feedHashtag">
 	<select id="searchHashtagByFeedCode" resultType="FeedHashtag">
 		SELECT *
-		FROM feed_hashtag
+		FROM FEED_HASHTAG
 		WHERE feed_code = #{feedCode}
 	</select>
 	
 	
 	<insert id="registerHashtag">
-		INSERT INTO feed_hashtag (feed_code, tag_name)
+		INSERT INTO FEED_HASHTAG (feed_code, tag_name)
 		VALUES (#{feedCode}, #{tagName})
 	</insert>
 </mapper>
