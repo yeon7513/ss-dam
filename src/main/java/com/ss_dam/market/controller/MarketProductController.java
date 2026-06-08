@@ -10,7 +10,7 @@ import com.ss_dam.market.MarketProduct;
 import com.ss_dam.market.service.MarketProductService;
 
 @RestController
-@RequestMapping("/market_product")
+@RequestMapping("/api/user/market_product")
 public class MarketProductController {
 
   @Autowired

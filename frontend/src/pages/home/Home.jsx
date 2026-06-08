@@ -10,8 +10,8 @@ function Home() {
       <Carousel />
       <div className={styles.container}>
         <ChallengeQuickMenu />
-        <LatestMarketProducts />
         <TrendingFeeds />
+        <LatestMarketProducts />
       </div>
     </main>
   );

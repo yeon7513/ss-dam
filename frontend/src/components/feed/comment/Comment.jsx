@@ -16,7 +16,7 @@ const Comment = ({ comments }) => {
       {comments.map((comment) => (
         <div key={comment.code}>
           <div>
-            <ProfileCard memberProfile={comment.memberProfiles[0]} />
+            <ProfileCard memberProfile={comment.memberProfile} />
           </div>
           <div>
             <p>{comment.content}</p>

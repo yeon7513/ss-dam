@@ -46,8 +46,8 @@ public class FeedServiceImpl implements FeedService {
     }
 
     // 작성자 프로필 정보
-    List<MemberProfile> memberProfile = memberService.searchProfileByMemberCode(feed.getMemCode());
-    feed.setMemberProfiles(memberProfile);
+    MemberProfile memberProfile = memberService.searchProfileByMemberCode(feed.getMemCode());
+    feed.setMemberProfile(memberProfile);
 
     // 이미지 리스트
     List<Images> images = imageService.searchImagesByCode("feed", code);

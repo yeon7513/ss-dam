@@ -9,7 +9,7 @@
 		<id column="code" property="code" />
 		
 		<!-- 회원 프로필 카드 -->
-		<collection property="memberProfiles" javaType="ArrayList" ofType="MemberProfile" autoMapping="true" columnPrefix="writer_">
+		<collection property="memberProfile" javaType="MemberProfile" ofType="MemberProfile" autoMapping="true" columnPrefix="writer_">
 			<id column="code" property="code" />
 		</collection>
 		

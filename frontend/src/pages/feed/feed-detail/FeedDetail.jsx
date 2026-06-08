@@ -56,7 +56,7 @@ const FeedDetail = () => {
         </div>
         <div className={styles.contents}>
           {/* 작성자 프로필 */}
-          <ProfileCard memberProfile={detail.memberProfiles[0]} />
+          <ProfileCard memberProfile={detail.memberProfile} />
 
           {/* 본문 내용 */}
           <p>{detail.content}</p>
