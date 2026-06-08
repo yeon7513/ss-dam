@@ -20,4 +20,10 @@ public interface ChallengeDao {
 
     // 챌린지 삭제
     void deleteChallenge(int code);
+
+    // 인기 챌린지 TOP 3
+    List<Challenge> searchPopularChallenges();
+
+    // 최신 등록 챌린지 1개
+    Challenge searchLatestChallenge();
 }
