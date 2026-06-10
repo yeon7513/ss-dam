@@ -32,6 +32,18 @@ public class ChallengeController {
         return challengeService.searchChallengeByCode(code);
     }
 
+    // 인기 챌린지 TOP 3
+    @GetMapping("/popular")
+    public List<Challenge> searchPopularChallenges() {
+        return challengeService.searchPopularChallenges();
+    }
+
+    // 최신 등록 챌린지 1개
+    @GetMapping("/latest")
+    public Challenge searchLatestChallenge() {
+        return challengeService.searchLatestChallenge();
+    }
+
     // 챌린지 등록
     @PostMapping
     public void registerChallenge(@RequestBody Challenge challenge) {

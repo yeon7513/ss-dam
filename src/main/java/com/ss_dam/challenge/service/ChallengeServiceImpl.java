@@ -38,4 +38,14 @@ public class ChallengeServiceImpl implements ChallengeService {
     public void deleteChallenge(int code) {
         challengeDao.deleteChallenge(code);
     }
+
+    @Override
+    public List<Challenge> searchPopularChallenges() {
+        return challengeDao.searchPopularChallenges();
+    }
+
+    @Override
+    public Challenge searchLatestChallenge() {
+        return challengeDao.searchLatestChallenge();
+    }
 }
