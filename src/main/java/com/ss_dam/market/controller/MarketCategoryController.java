@@ -9,7 +9,7 @@ import com.ss_dam.market.MarketCategory;
 import com.ss_dam.market.service.MarketCategoryService;
 
 @RestController
-@RequestMapping("/market_category")
+@RequestMapping("/api/admin/market_category")
 public class MarketCategoryController {
 
   @Autowired

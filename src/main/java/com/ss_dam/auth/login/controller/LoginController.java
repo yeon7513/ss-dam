@@ -15,7 +15,7 @@ import com.ss_dam.common.ApiResponse;
 import jakarta.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class LoginController {
 
 	@Autowired

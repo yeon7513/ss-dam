@@ -14,7 +14,7 @@ import com.ss_dam.challenge.Challenge;
 import com.ss_dam.challenge.service.ChallengeService;
 
 @RestController
-@RequestMapping("/challenge")
+@RequestMapping("/api/admin/challenge")
 public class ChallengeController {
 
     @Autowired
