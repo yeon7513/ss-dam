@@ -22,7 +22,7 @@ public class MemberController {
   MemberService memberService;
 
   @GetMapping("/{memCode}")
-  List<MemberProfile> searchProfileByMemberCode(@PathVariable Long memCode) {
+  MemberProfile searchProfileByMemberCode(@PathVariable Long memCode) {
     return memberService.searchProfileByMemberCode(memCode);
   }
 
