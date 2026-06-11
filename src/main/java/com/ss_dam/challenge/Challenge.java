@@ -11,6 +11,7 @@ public class Challenge {
   private String createdAt; // 등록일
   private String updateAt; // 수정일
   private boolean deleteYn; // 삭제 여부
+  private int participantCount; // 참여자 수
 
   public int getCode() {
     return code;
@@ -90,6 +91,14 @@ public class Challenge {
 
   public void setDeleteYn(boolean deleteYn) {
     this.deleteYn = deleteYn;
+  }
+
+  public int getParticipantCount() {
+    return participantCount;
+  }
+
+  public void setParticipantCount(int participantCount) {
+    this.participantCount = participantCount;
   }
 
 }

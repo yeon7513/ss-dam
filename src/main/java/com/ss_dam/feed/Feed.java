@@ -19,7 +19,7 @@ public class Feed {
   private boolean deleteYn; // 삭제 여부
 
   // 작성자 프로필 정보
-  private List<MemberProfile> memberProfiles;
+  private MemberProfile memberProfile;
 
   // 챌린지 정보
   private String chalTitle;
@@ -164,12 +164,12 @@ public class Feed {
     this.hashtags = hashtags;
   }
 
-  public List<MemberProfile> getMemberProfiles() {
-    return memberProfiles;
+  public MemberProfile getMemberProfile() {
+    return memberProfile;
   }
 
-  public void setMemberProfiles(List<MemberProfile> memberProfiles) {
-    this.memberProfiles = memberProfiles;
+  public void setMemberProfile(MemberProfile memberProfile) {
+    this.memberProfile = memberProfile;
   }
 
   public List<MultipartFile> getFiles() {

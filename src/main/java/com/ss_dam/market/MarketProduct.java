@@ -22,7 +22,7 @@ public class MarketProduct {
   private int countPick;
 
   // 작성자 프로필 정보
-  private List<MemberProfile> memberProfiles;
+  private MemberProfile memberProfile;
 
   // 전체 조회용 리스트
   private List<Images> images;
@@ -115,12 +115,12 @@ public class MarketProduct {
     this.deleteYn = deleteYn;
   }
 
-  public List<MemberProfile> getMemberProfiles() {
-    return memberProfiles;
+  public MemberProfile getMemberProfile() {
+    return memberProfile;
   }
 
-  public void setMemberProfiles(List<MemberProfile> memberProfiles) {
-    this.memberProfiles = memberProfiles;
+  public void setMemberProfile(MemberProfile memberProfile) {
+    this.memberProfile = memberProfile;
   }
 
   public int getCountPick() {

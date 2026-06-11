@@ -7,9 +7,7 @@ function Layout() {
   return (
     <div className={styles.wrapper}>
       <Header />
-      <main className={styles.wrap}>
-        <Outlet />
-      </main>
+      <Outlet />
       <Footer />
     </div>
   );

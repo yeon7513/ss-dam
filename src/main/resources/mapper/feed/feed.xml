@@ -13,7 +13,7 @@
 		<id column="code" property="code" />
 		
 		<!-- 회원 프로필카드 리스트 매핑 -->
-		<collection property="memberProfiles" javaType="ArrayList" ofType="MemberProfile" autoMapping="true" columnPrefix="m_">
+		<collection property="memberProfile" javaType="MemberProfile" ofType="MemberProfile" autoMapping="true" columnPrefix="m_">
 			<id column="code" property="code" />
 		</collection>
 		

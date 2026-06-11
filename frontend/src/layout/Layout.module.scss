@@ -2,15 +2,4 @@
 
 .wrapper {
   height: fit-content;
-
-  .wrap {
-    margin: 0 auto;
-    width: 100%;
-    max-width: 80vw;
-
-    /* media - mobile */
-    @media screen and (max-width: 767px) {
-      max-width: 75%;
-    }
-  }
 }

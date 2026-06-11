@@ -74,4 +74,72 @@
         WHERE CODE = #{code}
     </update>
 
+    <!-- 인기 챌린지 TOP 3 -->
+    <select id="searchPopularChallenges" resultType="Challenge">
+        SELECT
+            c.CODE,
+            c.EMP_ID,
+            c.TITLE,
+            c.CONTENT,
+            c.START_DATE,
+            c.END_DATE,
+            c.STATUS,
+            c.CREATED_AT,
+            c.UPDATED_AT,
+            c.DELETE_YN,
+            COUNT(ce.MEM_CODE) AS participantCount
+        FROM challenge c
+        LEFT JOIN challenge_entry ce
+            ON c.CODE = ce.CHAL_CODE
+           AND ce.DELETE_YN = false
+        WHERE c.DELETE_YN = false
+        GROUP BY
+            c.CODE,
+            c.EMP_ID,
+            c.TITLE,
+            c.CONTENT,
+            c.START_DATE,
+            c.END_DATE,
+            c.STATUS,
+            c.CREATED_AT,
+            c.UPDATED_AT,
+            c.DELETE_YN
+        ORDER BY participantCount DESC, c.CREATED_AT DESC
+        LIMIT 3
+    </select>
+
+    <!-- 최신 등록 챌린지 1개 -->
+    <select id="searchLatestChallenge" resultType="Challenge">
+        SELECT
+            c.CODE,
+            c.EMP_ID,
+            c.TITLE,
+            c.CONTENT,
+            c.START_DATE,
+            c.END_DATE,
+            c.STATUS,
+            c.CREATED_AT,
+            c.UPDATED_AT,
+            c.DELETE_YN,
+            COUNT(ce.MEM_CODE) AS participantCount
+        FROM challenge c
+        LEFT JOIN challenge_entry ce
+            ON c.CODE = ce.CHAL_CODE
+           AND ce.DELETE_YN = false
+        WHERE c.DELETE_YN = false
+        GROUP BY
+            c.CODE,
+            c.EMP_ID,
+            c.TITLE,
+            c.CONTENT,
+            c.START_DATE,
+            c.END_DATE,
+            c.STATUS,
+            c.CREATED_AT,
+            c.UPDATED_AT,
+            c.DELETE_YN
+        ORDER BY c.CREATED_AT DESC
+        LIMIT 1
+    </select>
+
 </mapper>

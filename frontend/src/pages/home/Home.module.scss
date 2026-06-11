@@ -1,23 +1,21 @@
-@use '/src/scss/variables.scss' as *;
+@use "/src/scss/variables.scss" as *;
 
-.home {
-  background-color: yellow;
+.wrap {
+  display: flex;
+  flex-direction: column;
 
-  .content {
-    color: red;
-  }
-}
+  .container {
+    margin: 0 auto;
+    width: 100%;
+    max-width: 80vw;
 
-.box {
-  width: 300px;
-  height: 300px;
-  border: 1px solid #000;
+    h2 {
+      font-family: $font-logo;
+      font-weight: 400;
+    }
 
-  .date {
-    font-size: 32px;
-
-    .text {
-      color: blue;
+    > section {
+      padding: 80px 0 48px;
     }
   }
 }

@@ -1,5 +1,4 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import Comment from "./components/feed/comment/Comment";
 import AdminLayout from "./layout/AdminLayout";
 import Layout from "./layout/Layout";
 import About from "./pages/about/About";
@@ -42,23 +41,61 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
+        {/* 메인(index) */}
         <Route index element={<Home />} />
+
+        {/* 피드 */}
         <Route path="/feed">
           <Route index element={<Feed />} />
           <Route path="register" element={<FeedRegister />} />
           <Route path=":code" element={<FeedDetail />} />
         </Route>
+
+        {/* 챌린지 */}
         <Route path="/challenge">
           <Route index element={<Challenge />} />
-          <Route path="challengeDetail" element={<ChallengeDetail />} />
+          <Route path=":code" element={<ChallengeDetail />} />
           <Route path="challengeRanking" element={<ChallengeRanking />} />
         </Route>
+
+        {/* 마켓 - 다시쓰담 */}
         <Route path="/market">
           <Route index element={<Market />} />
           <Route path="productRegister" element={<ProductRegister />} />
           <Route path="marketDetail" element={<MarketDetail />} />
           <Route path="marketPayment" element={<MarketPayment />} />
         </Route>
+
+        {/* 아이디 및 비밀번호 찾기 */}
+        <Route path="/auth">
+          <Route index element={<Navigate to="findId" replace />} />
+          <Route path="findId" element={<FindId />} />
+          <Route path="findPassword" element={<FindPassword />} />
+        </Route>
+
+        {/* 로그인 */}
+        <Route path="logIn" element={<LogIn />} />
+
+        {/* 회원가입 */}
+        <Route path="signUp" element={<SignUp />}>
+          <Route index element={<Terms />} />
+          <Route path="verify" element={<Verify />} />
+          <Route path="info" element={<Info />} />
+          <Route path="done" element={<Done />} />
+        </Route>
+
+        {/* 소개 */}
+        <Route path="/about">
+          <Route index element={<About />} />
+          <Route path="challengeGuide" element={<ChallengeGuide />} />
+          <Route path="marketGuide" element={<MarketGuide />} />
+        </Route>
+
+        {/* 고객센터 */}
+        <Route path="supports" element={<Supports />} />
+        <Route path=":code" element={<SupportDetail />} />
+
+        {/* 일반회원 - 마이페이지 */}
         <Route path="/myPage">
           <Route index element={<MyPage />} />
           <Route path="dashboard" element={<Dashboard />} />
@@ -67,29 +104,9 @@ function App() {
           <Route path="deal" element={<Deal />} />
           <Route path="points" element={<Points />} />
         </Route>
-        <Route path="/comment">
-          <Route index element={<Comment />} />
-        </Route>
-        <Route path="/auth">
-          <Route index element={<Navigate to="findId" replace />} />
-          <Route path="findId" element={<FindId />} />
-          <Route path="findPassword" element={<FindPassword />} />
-        </Route>
-        <Route path="logIn" element={<LogIn />} />
-        <Route path="signUp" element={<SignUp />}>
-          <Route index element={<Terms />} />
-          <Route path="verify" element={<Verify />} />
-          <Route path="info" element={<Info />} />
-          <Route path="done" element={<Done />} />
-        </Route>
-        <Route path="/about">
-          <Route index element={<About />} />
-          <Route path="challengeGuide" element={<ChallengeGuide />} />
-          <Route path="marketGuide" element={<MarketGuide />} />
-        </Route>
-        <Route path="supports" element={<Supports />} />
-        <Route path="supportDetail" element={<SupportDetail />} />
       </Route>
+
+      {/* 관리자 - 대시보드 */}
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<AdminDashboard />} />
         <Route path="userManage" element={<UserManage />} />

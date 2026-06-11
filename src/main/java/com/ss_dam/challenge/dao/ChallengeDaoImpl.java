@@ -38,4 +38,14 @@ public class ChallengeDaoImpl implements ChallengeDao {
     public void deleteChallenge(int code) {
         sql.update("challenge.deleteChallenge", code);
     }
+
+    @Override
+    public List<Challenge> searchPopularChallenges() {
+        return sql.selectList("challenge.searchPopularChallenges");
+    }
+
+    @Override
+    public Challenge searchLatestChallenge() {
+        return sql.selectOne("challenge.searchLatestChallenge");
+    }
 }
