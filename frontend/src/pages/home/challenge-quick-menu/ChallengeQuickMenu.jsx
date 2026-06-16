@@ -54,7 +54,7 @@ const ChallengeQuickMenu = () => {
               })}
               onMouseEnter={() => setSelected(item)}
             >
-              <Link className={styles.menuLink} to={`/challenge/${item.code}`}>
+              <div className={styles.menuContent}>
                 <div className={styles.menuText}>
                   <span className={styles.rank}>
                     {index === 3 ? "NEW" : `TOP ${index + 1}`}
@@ -62,8 +62,10 @@ const ChallengeQuickMenu = () => {
                   <strong>{item.title}</strong>
                 </div>
 
-                <span className={styles.moreBtn}>더 보기</span>
-              </Link>
+                <Link className={styles.moreBtn} to={`/challenge/${item.code}`}>
+                  더 보기
+                </Link>
+              </div>
             </li>
           ))}
         </ul>
