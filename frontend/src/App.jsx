@@ -36,6 +36,7 @@ import MyPage from "./pages/myPage/MyPage";
 import Points from "./pages/myPage/points/Points";
 import SupportDetail from "./pages/support/SupportDetail";
 import Supports from "./pages/support/Supports";
+import AdminRoute from "./components/common/admin/AdminRoute";
 
 function App() {
   return (
@@ -107,12 +108,14 @@ function App() {
       </Route>
 
       {/* 관리자 - 대시보드 */}
-      <Route path="/admin" element={<AdminLayout />}>
-        <Route index element={<AdminDashboard />} />
-        <Route path="userManage" element={<UserManage />} />
-        <Route path="feedManage" element={<FeedManage />} />
-        <Route path="marketManage" element={<MarketManage />} />
-        <Route path="challengeManage" element={<ChallengeManage />} />
+      <Route element={<AdminRoute />}>
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="userManage" element={<UserManage />} />
+          <Route path="feedManage" element={<FeedManage />} />
+          <Route path="marketManage" element={<MarketManage />} />
+          <Route path="challengeManage" element={<ChallengeManage />} />
+        </Route>
       </Route>
     </Routes>
   );

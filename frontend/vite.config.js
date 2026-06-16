@@ -16,6 +16,11 @@ export default defineConfig({
         target: "http://localhost:9090",
         changeOrigin: true,
       },
+      //로그인 테스트
+      "/api/auth": {
+        target: "http://localhost:9090",
+        changeOrigin: true,
+      },
     },
   },
 });
