@@ -3,8 +3,8 @@ package com.ss_dam.auth.member;
 import org.springframework.web.multipart.MultipartFile;
 
 public class Member {
-	private Long code;
-	private String id; // 아이디
+  private Long code;
+  private String id; // 아이디
 	private String password; // 비밀번호
 	private String name; // 이름
 	private String phone; // 연락처

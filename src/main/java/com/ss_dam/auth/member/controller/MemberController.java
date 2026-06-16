@@ -15,14 +15,14 @@ import com.ss_dam.auth.member.MemberProfile;
 import com.ss_dam.auth.member.service.MemberService;
 
 @RestController
-@RequestMapping("/member")
+@RequestMapping("/api/admin/member")
 public class MemberController {
 
   @Autowired
   MemberService memberService;
 
   @GetMapping("/{memCode}")
-  List<MemberProfile> searchProfileByMemberCode(@PathVariable Long memCode) {
+  MemberProfile searchProfileByMemberCode(@PathVariable Long memCode) {
     return memberService.searchProfileByMemberCode(memCode);
   }
 
