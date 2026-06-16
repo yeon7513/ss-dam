@@ -1,6 +1,6 @@
 import cn from "classnames";
-import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import {Link} from "react-router-dom";
+import {useEffect, useState} from "react";
 import styles from "./ChallengeQuickMenu.module.scss";
 
 const ChallengeQuickMenu = () => {
@@ -9,17 +9,19 @@ const ChallengeQuickMenu = () => {
   const [selected, setSelected] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:9090/challenge")
-      .then((res) => res.json())
-      .then((data) => {
-        const popularList = data.slice(0, 3);
-        const latestItem = data[data.length - 1];
+    fetch("/api/user/challenge/popular", {
+      method: "GET",
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      const popularList = data.slice(0, 3);
+      const latestItem = data[data.length - 1];
 
-        setPopular(popularList);
-        setLatest(latestItem);
-        setSelected(popularList[0]);
-      })
-      .catch((err) => console.error(err));
+      setPopular(popularList);
+      setLatest(latestItem);
+      setSelected(popularList[0]);
+    })
+    .catch((err) => console.error("챌린지 퀵 메뉴 로드 실패: ", err));
   }, []);
 
   const challengeList = latest ? [...popular, latest] : popular;
@@ -48,7 +50,8 @@ const ChallengeQuickMenu = () => {
         <ul className={styles.contents}>
           {challengeList.map((item, index) => (
             <li
-              key={item.code}
+              // 키값은 중복 사용 X, 콘솔에 오류 납니다.
+              key={index}
               className={cn(styles.menu, {
                 [styles.active]: selected?.code === item.code,
               })}

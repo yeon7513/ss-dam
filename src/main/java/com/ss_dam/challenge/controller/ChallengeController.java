@@ -1,68 +1,61 @@
 package com.ss_dam.challenge.controller;
 
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.ss_dam.challenge.Challenge;
 import com.ss_dam.challenge.service.ChallengeService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin/challenge")
+@RequestMapping("/api/user/challenge")
 public class ChallengeController {
 
-    @Autowired
-    ChallengeService challengeService;
+  @Autowired
+  ChallengeService challengeService;
 
-    // 전체 챌린지 조회
-    @GetMapping
-    public List<Challenge> searchChallenges() {
-        return challengeService.searchChallenges();
-    }
+  // 전체 챌린지 조회
+  @GetMapping
+  public List<Challenge> searchChallenges() {
+    return challengeService.searchChallenges();
+  }
 
-    // 챌린지 상세 조회
-    @GetMapping("/{code}")
-    public Challenge searchChallengeByCode(@PathVariable int code) {
-        return challengeService.searchChallengeByCode(code);
-    }
+  // 챌린지 상세 조회
+  @GetMapping("/{code}")
+  public Challenge searchChallengeByCode(@PathVariable int code) {
+    return challengeService.searchChallengeByCode(code);
+  }
 
-    // 인기 챌린지 TOP 3
-    @GetMapping("/popular")
-    public List<Challenge> searchPopularChallenges() {
-        return challengeService.searchPopularChallenges();
-    }
+  // 인기 챌린지 TOP 3
+  @GetMapping("/popular")
+  public List<Challenge> searchPopularChallenges() {
+    return challengeService.searchPopularChallenges();
+  }
 
-    // 최신 등록 챌린지 1개
-    @GetMapping("/latest")
-    public Challenge searchLatestChallenge() {
-        return challengeService.searchLatestChallenge();
-    }
+  // 최신 등록 챌린지 1개
+  @GetMapping("/latest")
+  public Challenge searchLatestChallenge() {
+    return challengeService.searchLatestChallenge();
+  }
 
-    // 챌린지 등록
-    @PostMapping
-    public void registerChallenge(@RequestBody Challenge challenge) {
-        challengeService.registerChallenge(challenge);
-    }
+  // 챌린지 등록
+  @PostMapping
+  public void registerChallenge(@RequestBody Challenge challenge) {
+    challengeService.registerChallenge(challenge);
+  }
 
-    // 챌린지 수정
-    @PutMapping("/{code}")
-    public void updateChallenge(@PathVariable int code,
-                                @RequestBody Challenge challenge) {
+  // 챌린지 수정
+  @PutMapping("/{code}")
+  public void updateChallenge(@PathVariable int code, @RequestBody Challenge challenge) {
 
-        challenge.setCode(code);
+    challenge.setCode(code);
 
-        challengeService.updateChallenge(challenge);
-    }
+    challengeService.updateChallenge(challenge);
+  }
 
-    // 챌린지 삭제
-    @DeleteMapping("/{code}")
-    public void deleteChallenge(@PathVariable int code) {
-        challengeService.deleteChallenge(code);
-    }
+  // 챌린지 삭제
+  @DeleteMapping("/{code}")
+  public void deleteChallenge(@PathVariable int code) {
+    challengeService.deleteChallenge(code);
+  }
 }
