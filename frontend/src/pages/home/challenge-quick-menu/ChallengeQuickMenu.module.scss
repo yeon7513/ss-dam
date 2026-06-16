@@ -36,17 +36,11 @@
   .thumbnail {
     height: 100%;
     min-height: 430px;
-
     padding: 48px;
-
     border-radius: 28px;
-
     background: linear-gradient(135deg, #eaf8ed 0%, #d7f0dc 100%);
-
     border: 1px solid #c9e8cf;
-
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-
     transition: all 0.25s ease;
 
     display: flex;
@@ -55,7 +49,6 @@
 
     &:hover {
       transform: translateY(-4px);
-
       box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
     }
 
@@ -66,13 +59,10 @@
 
     strong {
       margin-bottom: 16px;
-
       font-size: 28px;
       font-weight: 800;
       line-height: 1.4;
-
       color: #111;
-
       word-break: keep-all;
     }
 
@@ -84,79 +74,53 @@
 
   .contents {
     width: 55%;
-
     display: flex;
     flex-direction: column;
-
     gap: 16px;
   }
 
   .menu {
     min-height: 96px;
-
     border-radius: 20px;
-
     background: #fff;
-
     border: 1px solid #e3eee5;
-
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-
     transition: all 0.2s ease;
-
     overflow: hidden;
 
     &:hover,
     &.active {
       transform: translateX(8px);
-
       background: linear-gradient(135deg, #f4fbf5 0%, #e4f5e6 100%);
-
       border-color: #bfe3c6;
-
       box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
     }
   }
 
-  .menuLink {
+  .menuContent {
     width: 100%;
     min-height: 96px;
-
     padding: 22px 26px;
 
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     gap: 20px;
-
-    text-decoration: none;
-
-    color: #111;
-
-    cursor: pointer;
   }
 
   .menuText {
     display: flex;
     align-items: center;
-
     gap: 16px;
-
     min-width: 0;
   }
 
   .rank {
     flex: 0 0 auto;
-
     padding: 7px 12px;
-
     border-radius: 999px;
-
     background: #3f8f55;
-
     color: #fff;
-
     font-size: 13px;
     font-weight: 800;
   }
@@ -165,7 +129,6 @@
     font-size: 20px;
     font-weight: 800;
     line-height: 1.4;
-
     word-break: keep-all;
 
     overflow: hidden;
@@ -175,11 +138,8 @@
 
   .moreBtn {
     flex: 0 0 auto;
-
     padding: 12px 20px;
-
     border-radius: 999px;
-
     background: #e9ecef;
     color: #495057;
 
@@ -187,34 +147,15 @@
     align-items: center;
     justify-content: center;
 
+    text-decoration: none;
     font-size: 14px;
     font-weight: 700;
-
-    transition: all 0.2s ease;
-  }
-
-  .moreBtn {
-    flex: 0 0 auto;
-
-    padding: 12px 20px;
-
-    border-radius: 999px;
-
-    background: #e9ecef;
-    color: #495057;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 14px;
-    font-weight: 700;
-
     transition: all 0.2s ease;
 
     &:hover {
       background: #3f8f55;
       color: #fff;
+      transform: translateY(-2px);
     }
   }
 }
