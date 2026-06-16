@@ -36,7 +36,7 @@ const LogIn = () => {
 
         window.dispatchEvent(new Event("loginStateChanged"));
 
-        if (userRole === "MEMBER") {
+        if (userRole !== "MEMBER") {
           alert("관리자 계정으로 로그인");
           navigate("/admin");
         } else {
