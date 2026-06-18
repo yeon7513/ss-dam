@@ -1,25 +1,25 @@
 package com.ss_dam.global.image.service;
 
+import com.ss_dam.global.image.Images;
+import com.ss_dam.global.image.dao.ImageDao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import com.ss_dam.global.constants.BaseURL;
-import com.ss_dam.global.image.Images;
-import com.ss_dam.global.image.dao.ImageDao;
+import java.util.*;
 
 @Service
 public class ImageServiceImpl implements ImageService {
 
   @Autowired
   ImageDao imageDao;
+
+  @Value("${kopo.upload.path}")
+  private String uploadPath;
 
   // DB에서 이미지 경로 반환하기
   @Override
@@ -47,7 +47,7 @@ public class ImageServiceImpl implements ImageService {
 
   @Override
   public List<Images> uploadImages(List<MultipartFile> files, String type, Long targetCode) {
-    List<Images> images = new ArrayList<Images>();
+    List<Images> images = new ArrayList<>();
 
     // 이미지 업로드 시작
     if (files != null && !files.isEmpty()) {
@@ -72,8 +72,7 @@ public class ImageServiceImpl implements ImageService {
     String date = now.format(DateTimeFormatter.ofPattern("yyyy.MM"));
 
     // 경로 조합
-    String path =
-        BaseURL.getUploadPath() + File.separator + type + File.separator + date + File.separator;
+    String path = uploadPath + File.separator + type + File.separator + date + File.separator;
 
     // 폴더가 없으면 생성
     File folder = new File(path);

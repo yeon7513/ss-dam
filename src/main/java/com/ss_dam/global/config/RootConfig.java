@@ -22,8 +22,7 @@ public class RootConfig implements WebMvcConfigurer {
   // 로컬 경로 매핑 (이 코드는 수정X, 똑같은 위치에 만들어주세요!)
   @Override
   public void addResourceHandlers(ResourceHandlerRegistry registry) {
-    registry.addResourceHandler("/images/**")
-        .addResourceLocations("file:///d:/project_ssdam/uploads/");
+    registry.addResourceHandler("/images/**").addResourceLocations("${kopo.upload.url}");
   }
 
 }
