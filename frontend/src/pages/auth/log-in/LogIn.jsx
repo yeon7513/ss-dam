@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import TextInput from "../../../components/forms/text-input/TextInput";
 import Button from "../../../components/common/button/Button";
 import { useNavigate } from "react-router-dom";
+import styles from "./LogIn.module.scss"; // 로그인 페이지 전용 scss모듈
 
 const LogIn = () => {
   const [memberId, setMemberId] = useState("");
@@ -52,29 +53,37 @@ const LogIn = () => {
     }
   };
 
+  // 이 아래로만 손댈 것. 퍼블리싱 시작.
   return (
-    <div>
-      <h2>로그인</h2>
-      <form method="post" onSubmit={handleSubmit}>
-        <div>
-          <TextInput
-            name="id"
-            label="아이디"
-            placeholder="아이디 입력"
-            value={memberId}
-            onChange={(e) => setMemberId(e.target.value)}
-          />
-          <TextInput
-            type="password"
-            name="password"
-            label="비밀번호"
-            placeholder="비밀번호 입력"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <Button type="submit">로그인</Button>
-      </form>
+    <div className={styles.loginPage}>
+      <div className={styles.loginContainer}>
+        <h2>로그인</h2>
+        <p className={styles.subTitle}>
+          더 나은 순환을 위해 다시 만나 반가워요!
+        </p>
+        <form method="post" onSubmit={handleSubmit}>
+          <div className={styles.inputGroup}>
+            <TextInput
+              className={styles.loginInput}
+              name="id"
+              label="아이디"
+              placeholder="아이디 입력"
+              value={memberId}
+              onChange={(e) => setMemberId(e.target.value)}
+            />
+            <TextInput
+              className={styles.loginInput}
+              type="password"
+              name="password"
+              label="비밀번호"
+              placeholder="비밀번호 입력"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <Button type="submit">로그인</Button>
+        </form>
+      </div>
     </div>
   );
 };
