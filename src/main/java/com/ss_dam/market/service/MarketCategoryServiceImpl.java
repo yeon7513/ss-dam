@@ -1,10 +1,11 @@
 package com.ss_dam.market.service;
 
-import java.util.List;
+import com.ss_dam.market.dao.MarketCategoryDao;
+import com.ss_dam.market.model.MarketCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ss_dam.market.MarketCategory;
-import com.ss_dam.market.dao.MarketCategoryDao;
+
+import java.util.List;
 
 @Service
 public class MarketCategoryServiceImpl implements MarketCategoryService {

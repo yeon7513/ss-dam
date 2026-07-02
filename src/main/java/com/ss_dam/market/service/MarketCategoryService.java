@@ -1,7 +1,8 @@
 package com.ss_dam.market.service;
 
+import com.ss_dam.market.model.MarketCategory;
+
 import java.util.List;
-import com.ss_dam.market.MarketCategory;
 
 public interface MarketCategoryService {
 

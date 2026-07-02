@@ -1,7 +1,8 @@
 package com.ss_dam.market.dao;
 
+import com.ss_dam.market.model.MarketProduct;
+
 import java.util.List;
-import com.ss_dam.market.MarketProduct;
 
 public interface MarketProductDao {
 

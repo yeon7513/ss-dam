@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 이 매퍼는 insert, update용 -->
+<mapper namespace="feedCommand">
+
+  <!-- 피드 등록 -->
+  <insert id="registerFeed">
+    INSERT INTO FEED (chal_code, mem_code, title, content, hitcount, status, created_at, delete_yn)
+    VALUES (#{chalCode}, #{memCode}, #{title}, #{content}, 0, 'ACTIVE', NOW(), 0)
+
+    <selectKey keyProperty="code" resultType="long" order="AFTER">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+  </insert>
+
+  <!-- 해시태그 등록 -->
+
+
+  <!-- 피드 수정 (피드 작성자) -->
+
+
+  <!-- 피드 수정 (관리자) -->
+
+</mapper>
+
