@@ -1,10 +1,13 @@
 package com.ss_dam.feed.dao;
 
-import com.ss_dam.common.pager.Pager;
+import com.ss_dam.feed.model.response.FeedDetail;
 import com.ss_dam.feed.model.response.UserFeedView;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserFeedDao {
-  List<UserFeedView> searchFeeds(Pager pager);
+  List<UserFeedView> loadFeeds(Map<String, Object> params);
+
+  FeedDetail findFeedDetailByFeedCode(Map<String, Object> params);
 }

@@ -5,9 +5,9 @@ import java.util.List;
 
 public class Pager {
   private float total;
-  private int page = 1;
-  private int perPage;
-  private int perGroup = 5;
+  private int page = 1; // 기본 세팅
+  private int perPage = 10; // 기본 세팅
+  private int perGroup = 5; // 기본 세팅
 
   // 검색용 키워드
   private String search;

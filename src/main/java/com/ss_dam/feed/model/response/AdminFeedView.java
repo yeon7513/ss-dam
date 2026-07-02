@@ -2,9 +2,8 @@ package com.ss_dam.feed.model.response;
 
 import com.ss_dam.admin.log.response.AdminActivitySummary;
 
-public class AdminFeedView {
-  // 일반 사용자용 조회 DTO 포함
-  private UserFeedView userFeedView;
+// 일반 사용자용 조회 DTO 상속
+public class AdminFeedView extends UserFeedView {
 
   // 관리자가 추가로 조회할 내용
   private String status; // 상태
@@ -18,14 +17,6 @@ public class AdminFeedView {
   private AdminActivitySummary adminActivitySummary;
 
   // GETTER, SETTER
-  public UserFeedView getUserFeedView() {
-    return userFeedView;
-  }
-
-  public void setUserFeedView(UserFeedView userFeedView) {
-    this.userFeedView = userFeedView;
-  }
-
   public String getStatus() {
     return status;
   }

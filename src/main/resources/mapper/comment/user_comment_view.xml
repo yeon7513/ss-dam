@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="userCommentView">
+
+  <resultMap type="UserCommentView" id="UserCommentViewMap" autoMapping="true">
+    <id column="code" property="code" />
+
+    <!-- 회원 프로필카드 리스트 매핑 -->
+    <collection property="memberProfile" javaType="MemberProfile" ofType="MemberProfile" autoMapping="true"
+                columnPrefix="m_">
+      <id column="code" property="code" />
+    </collection>
+  </resultMap>
+
+  <select id="countComment" resultType="Integer">
+    SELECT IFNULL(count(*), 0)
+    FROM COMMENTS
+    WHERE feed_code = #{feedCode}
+  </select>
+
+  <select id="findCommentsByFeedCode" resultMap="UserCommentViewMap">
+    SELECT
+    c.code,
+    c.content,
+    c.created_at,
+    c.updated_at,
+    mp.code AS m_code,
+    mp.id AS m_id,
+    mp.ranking AS m_ranking,
+    mp.rating AS m_rating,
+    mp.path AS m_profile_image,
+    IFNULL(cnt_like.cnt, 0) AS count_comment_like,
+    IF(my_like.cmt_code IS NOT NULL, 1, 0) AS liked_yn
+    FROM COMMENTS c
+    <!-- 댓글 작성자 정보 -->
+    JOIN (
+    SELECT m.code, m.id, i.path, m.ranking, m.rating
+    FROM MEMBER_ACCOUNT m
+    LEFT JOIN IMAGES i
+    ON m.code = i.target_code AND i.TYPE = 'profile'
+    ) AS mp
+    ON mp.code = c.mem_code
+    <!-- 댓글 좋아요 수 -->
+    LEFT JOIN (
+    SELECT cl.cmt_code, count(*) AS cnt
+    FROM COMMENT_LIKE cl
+    GROUP BY cl.cmt_code
+    ) AS cnt_like
+    ON cnt_like.cmt_code = c.code
+    <!-- 로그인한 사용자의 좋아요 여부 -->
+    LEFT JOIN COMMENT_LIKE my_like
+    ON my_like.cmt_code = c.code AND my_like.mem_code = #{memberCode}
+    <!-- 조건 & 정렬 -->
+    WHERE c.feed_code = #{feedCode} AND c.status = 'active' AND c.delete_yn = 0
+    ORDER BY c.created_at DESC, c.code DESC
+    <!-- 페이지네이션 -->
+    LIMIT #{offset}, #{perPage}
+  </select>
+</mapper>

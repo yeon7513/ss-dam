@@ -19,26 +19,26 @@ export const sendToFeed = async (data, navigate) => {
   }
 
   try {
-    await fetch("/api/user/feeds", {
+    await fetch("/api/feed", {
       method: "POST",
       body: formData,
     })
-      .then((res) => {
-        if (res.ok) {
-          return res.text();
-        } else {
-          alert("등록에 실패했습니다.");
-        }
-      })
-      .then((result) => {
-        if (result) {
-          const newCode = result;
+    .then((res) => {
+      if (res.ok) {
+        return res.text();
+      } else {
+        alert("등록에 실패했습니다.");
+      }
+    })
+    .then((result) => {
+      if (result) {
+        const newCode = result;
 
-          alert("등록되었습니다.");
+        alert("등록되었습니다.");
 
-          navigate(`/feed/${newCode}`);
-        }
-      });
+        navigate(`/feed/${newCode}`);
+      }
+    });
   } catch (error) {
     console.error("통신 에러:", error);
     alert("서버 연결에 실패했습니다.");
@@ -46,59 +46,50 @@ export const sendToFeed = async (data, navigate) => {
 };
 
 // 피드 전체 조회
-export const searchFeeds = (pager) => {
-  const query = new URLSearchParams(pager).toString();
-
+export const handleLoadFeeds = () => {
   try {
-    const detail = fetch(`/api/user/feeds?${query}`, {
+    const feeds = fetch("/api/feed", {
       method: "GET",
     })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-      })
-      .then((result) => {
-        if (result) {
-          return result;
-        } else {
-          return null;
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        return null;
-      });
-
-    return detail;
-  } catch (error) {
-    console.error("통신 에러: ", error);
-    return null;
+    .then((res) => {
+      if (res.ok) {
+        return res.json();
+      }
+    })
+    .then((result) => {
+      if (result) {
+        console.log("result: ", result);
+        return result;
+      }
+    })
+  } catch (err) {
+    console.log("서버 통신 오류: ", err);
   }
+
 };
 
 // 피드 단일 조회
-export const searchFeedByCode = (code) => {
+export const handleFindFeedDetailByFeedCode = (code) => {
   try {
-    const detail = fetch(`/api/user/feeds/${code}`, {
+    const detail = fetch(`/api/feed/${code}`, {
       method: "GET",
     })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-      })
-      .then((result) => {
-        if (result) {
-          return result;
-        } else {
-          return null;
-        }
-      })
-      .catch((err) => {
-        console.error(err);
+    .then((res) => {
+      if (res.ok) {
+        return res.json();
+      }
+    })
+    .then((result) => {
+      if (result) {
+        return result;
+      } else {
         return null;
-      });
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      return null;
+    });
 
     return detail;
   } catch (error) {
