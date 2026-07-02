@@ -81,7 +81,17 @@ const LogIn = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <Button type="submit">로그인</Button>
+          <Button className={styles.loginButton} type="submit">
+            로그인
+          </Button>
+
+          <Button
+            className={styles.signupButton}
+            type="button"
+            onClick={() => navigate("/signup")}
+          >
+            회원가입
+          </Button>
         </form>
       </div>
     </div>
