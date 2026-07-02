@@ -1,0 +1,110 @@
+@use "/src/scss/variables.scss" as *;
+
+.loginPage {
+  min-height: 30rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loginContainer {
+  width: 100%;
+  max-width: 20rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+  }
+
+  form {
+    width: 100%;
+  }
+}
+
+.subTitle {
+  font-size: 1rem;
+  font-weight: 400;
+
+  margin-top: -1.5rem;
+  margin-bottom: 2rem;
+
+  text-align: center;
+  color: $grayscale-90;
+}
+
+.inputGroup {
+  width: 100%;
+
+  .textInput {
+    width: 100%;
+  }
+}
+
+.loginInput {
+  width: 100%;
+  margin-bottom: 1.5rem;
+
+  // 인풋박스 위에 있는 아이디, 비밀번호
+  label {
+    font-size: 1rem;
+    font-weight: 400;
+
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  // 아이디, 비밀번호 인풋박스
+  input {
+    width: 100%;
+    height: 3.4rem; // 인풋 높이
+    padding: 0 1rem; // 좌우 여백
+
+    font-size: 0.9rem;
+    font-weight: 500;
+
+    box-sizing: border-box;
+    border: 1.5px solid $point-20;
+
+    // 모션을 서서히 나타나도록 함
+    transition: background-color 0.5s ease;
+
+    // "아이디 입력", "비밀번호 입력" 속성
+    &::placeholder {
+      color: $grayscale-50; // 선택 전 옅은 회색 글자
+      font-weight: 400;
+      font-size: 0.9rem;
+    }
+
+    // 인풋박스 클릭 시
+    &:focus {
+      border: 1.5px solid $point-20;
+      background-color: $point-5;
+      outline: none;
+
+      &::placeholder {
+        font-size: 1rem;
+        font-weight: 400;
+        color: $grayscale-90; // 선택 시 회색 글자 더 진하게
+      }
+    }
+  }
+}
+
+button {
+  width: 100%;
+  height: 3.4rem;
+  box-sizing: border-box;
+
+  border: 1.5px solid $point-20;
+  background-color: $grayscale-5;
+
+  font-size: 1rem;
+  font-weight: 500;
+
+  cursor: pointer;
+}
