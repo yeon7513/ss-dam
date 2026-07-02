@@ -46,9 +46,9 @@ export const sendToFeed = async (data, navigate) => {
 };
 
 // 피드 전체 조회
-export const handleLoadFeeds = () => {
+export const handleLoadFeeds = async () => {
   try {
-    const feeds = fetch("/api/feed", {
+    return await fetch("/api/feed", {
       method: "GET",
     })
     .then((res) => {
@@ -58,12 +58,12 @@ export const handleLoadFeeds = () => {
     })
     .then((result) => {
       if (result) {
-        console.log("result: ", result);
+        console.log(result);
         return result;
       }
-    })
+    });
   } catch (err) {
-    console.log("서버 통신 오류: ", err);
+    console.error(err);
   }
 
 };

@@ -1,45 +1,35 @@
 import {useEffect, useState} from "react";
-import {handleLoadFeeds} from "../../api/feed";
-import FeedCard from "../../components/feed/feed-card/FeedCard";
 import SideNav from "../../components/feed/side-nav/FeedSideNav";
 import styles from "./Feed.module.scss";
+import {handleLoadFeeds} from "../../api/feed.js";
+import FeedCard from "../../components/feed/feed-card/FeedCard.jsx";
 
 const Feed = () => {
   const [feeds, setFeeds] = useState([]);
 
-  console.log(feeds);
+  // 페이지네이션 관련 state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchCode, setSearchCode] = useState(null);
+  const [keyword, setKeyword] = useState(null);
 
   useEffect(() => {
     const fetchFeeds = async () => {
-      const result = await handleLoadFeeds();
-    }
+      const pager = {
+        page: currentPage,
+        perPage: 12,
+        search: searchCode,
+        keyword: keyword,
+      };
+
+      const feeds = await handleLoadFeeds(pager);
+
+      if (feeds) {
+        setFeeds(feeds);
+      }
+    };
 
     fetchFeeds();
-  }, [])
-
-  // 페이지네이션 관련 state
-  // const [currentPage, setCurrentPage] = useState(1);
-  // const [searchCode, setSearchCode] = useState(0);
-  // const [keyword, setKeyword] = useState(null);
-
-  // useEffect(() => {
-  //   const handleLoadFeedDetail = async () => {
-  //     // const pager = {
-  //     //   page: currentPage,
-  //     //   perPage: 12,
-  //     //   search: searchCode,
-  //     //   keyword: keyword,
-  //     // };
-  //
-  //     const feeds = await handleLoadFeeds(pager);
-  //
-  //     // if (feeds) {
-  //     //   setFeeds(feeds);
-  //     // }
-  //   };
-
-  // handleLoadFeedDetail();
-  // }, []);
+  }, [currentPage, searchCode, keyword]);
 
   if (feeds.length === 0) {
     return <div>피드 정보를 불러오고 있습니다.</div>;

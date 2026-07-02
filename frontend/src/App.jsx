@@ -56,29 +56,29 @@ function App() {
         <Route path="/challenge">
           <Route index element={<Challenge />} />
           <Route path=":code" element={<ChallengeDetail />} />
-          <Route path="challengeRanking" element={<ChallengeRanking />} />
+          <Route path="ranking" element={<ChallengeRanking />} />
         </Route>
 
         {/* 마켓 - 다시쓰담 */}
         <Route path="/market">
           <Route index element={<Market />} />
-          <Route path="productRegister" element={<ProductRegister />} />
-          <Route path="marketDetail" element={<MarketDetail />} />
-          <Route path="marketPayment" element={<MarketPayment />} />
+          <Route path="register" element={<ProductRegister />} />
+          <Route path=":code" element={<MarketDetail />} />
+          <Route path="payment" element={<MarketPayment />} />
         </Route>
 
         {/* 아이디 및 비밀번호 찾기 */}
         <Route path="/auth">
           <Route index element={<Navigate to="findId" replace />} />
-          <Route path="findId" element={<FindId />} />
-          <Route path="findPassword" element={<FindPassword />} />
+          <Route path="find_id" element={<FindId />} />
+          <Route path="find_password" element={<FindPassword />} />
         </Route>
 
         {/* 로그인 */}
-        <Route path="logIn" element={<LogIn />} />
+        <Route path="login" element={<LogIn />} />
 
         {/* 회원가입 */}
-        <Route path="signUp" element={<SignUp />}>
+        <Route path="signup" element={<SignUp />}>
           <Route index element={<Terms />} />
           <Route path="verify" element={<Verify />} />
           <Route path="info" element={<Info />} />
@@ -88,8 +88,8 @@ function App() {
         {/* 소개 */}
         <Route path="/about">
           <Route index element={<About />} />
-          <Route path="challengeGuide" element={<ChallengeGuide />} />
-          <Route path="marketGuide" element={<MarketGuide />} />
+          <Route path="challenge_guide" element={<ChallengeGuide />} />
+          <Route path="market_guide" element={<MarketGuide />} />
         </Route>
 
         {/* 고객센터 */}
@@ -97,10 +97,10 @@ function App() {
         <Route path=":code" element={<SupportDetail />} />
 
         {/* 일반회원 - 마이페이지 */}
-        <Route path="/myPage">
+        <Route path="/mypage">
           <Route index element={<MyPage />} />
           <Route path="dashboard" element={<Dashboard />} />
-          <Route path="editProfile" element={<EditProfile />} />
+          <Route path="edit_profile" element={<EditProfile />} />
           <Route path="activities" element={<Activities />} />
           <Route path="deal" element={<Deal />} />
           <Route path="points" element={<Points />} />
@@ -111,10 +111,10 @@ function App() {
       <Route element={<AdminRoute />}>
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
-          <Route path="userManage" element={<UserManage />} />
-          <Route path="feedManage" element={<FeedManage />} />
-          <Route path="marketManage" element={<MarketManage />} />
-          <Route path="challengeManage" element={<ChallengeManage />} />
+          <Route path="user_manage" element={<UserManage />} />
+          <Route path="feed_manage" element={<FeedManage />} />
+          <Route path="market_manage" element={<MarketManage />} />
+          <Route path="challenge_manage" element={<ChallengeManage />} />
         </Route>
       </Route>
     </Routes>

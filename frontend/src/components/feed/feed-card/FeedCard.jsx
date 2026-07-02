@@ -1,10 +1,10 @@
 import { IoChatbubbleEllipses, IoHeartSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import Card from "../../common/card/Card";
-import Thumbnail from "../../common/card/thumbnail/Thumbnail";
 import ProfileCard from "../../profile-card/ProfileCard";
 import Hashtag from "../hashtag/Hashtag";
 import styles from "./FeedCard.module.scss";
+import ImageBox from "../../common/image-box/ImageBox.jsx";
 
 function FeedCard({ feed }) {
   const navigate = useNavigate();
@@ -18,26 +18,25 @@ function FeedCard({ feed }) {
       {/* 프로필 카드 */}
       <ProfileCard memberProfile={feed.memberProfile} />
 
-      {/* 이미지 슬라이드 */}
-      <div className={styles.thumbnails}>
-        <Thumbnail images={feed.images || null} />
+      {/* 썸네일 */}
+      <div className={styles.thumbnail}>
+        <ImageBox src={feed.thumbnail} alt="피드 대표 이미지" />
       </div>
 
       {/* 본문 */}
       <div className={styles.contents}>
         {/* 제목 */}
         <div className={styles.title}>
-          <span>{feed.chalTitle}</span>
+          <span>{feed.challengeName}</span>
           <h3>{feed.title}</h3>
         </div>
 
         {/* 콘텐츠 (내용) */}
         <div className={styles.detail}>
-          <p>{feed.content}</p>
           <div className={styles.hashtags}>
             {feed.hashtags.map((tag, idx) => (
               <Hashtag key={idx}>
-                <span>#{tag.tagName}</span>
+                <span>#{tag}</span>
               </Hashtag>
             ))}
           </div>
@@ -56,7 +55,7 @@ function FeedCard({ feed }) {
               <span className={styles.comment}>
                 <IoChatbubbleEllipses />
               </span>
-              {feed.countComment}
+              {feed.countFeedComment}
             </div>
           </div>
           <div>

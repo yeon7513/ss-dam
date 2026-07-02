@@ -1,5 +1,5 @@
 import react from "@vitejs/plugin-react";
-import { defineConfig } from "vite";
+import {defineConfig} from "vite";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       // 일반 사용자용 요청
-      "/api/user": {
+      "/api": {
         target: "http://localhost:9090",
         changeOrigin: true,
       },
