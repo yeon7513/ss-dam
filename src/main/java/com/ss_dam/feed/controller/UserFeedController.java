@@ -1,16 +1,16 @@
 package com.ss_dam.feed.controller;
 
-import com.ss_dam.auth.member.MemberProfile;
+
+
+import com.ss_dam.auth.login.Login;
 import com.ss_dam.common.pager.Pager;
+import com.ss_dam.feed.model.request.FeedCreate;
 import com.ss_dam.feed.model.response.FeedDetail;
 import com.ss_dam.feed.model.response.UserFeedView;
 import com.ss_dam.feed.service.UserFeedService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ public class UserFeedController {
   List<UserFeedView> loadFeeds(Pager pager, HttpSession session) {
 
     // 로그인한 사용자의 좋아요 여부를 받아오기 위해 세션에서 정보를 꺼내옴.
-    MemberProfile loginUser = (MemberProfile) session.getAttribute("loginUser");
+    Login loginUser = (Login) session.getAttribute("loginUser");
     // NullException을 방지하기 위해 삼항연산자로 분기 처리함.
     // -> 로그인 했을 경우, 해당 사용자의 고유 번호를 넘겨줌
     // -> 로그인하지 않았을 경우는 처음부터 null을 넘겨 무조건 false가 나오게 처리
@@ -49,10 +49,23 @@ public class UserFeedController {
     // 단일 조회지만 Pager를 받아온 이유?
     // -> 댓글 부분에 사용하기 위해..
 
-    MemberProfile loginUser = (MemberProfile) session.getAttribute("loginUser");
+    Login loginUser = (Login) session.getAttribute("loginUser");
     Long memberCode = (loginUser != null) ? loginUser.getCode() : null;
 
     return userFeedService.findFeedDetailByFeedCode(feedCode, pager, memberCode);
+  }
+
+  // 피드 등록
+  @PostMapping
+  Long registerFeed(FeedCreate feedCreate, HttpSession session) {
+
+    Login loginUser = (Login) session.getAttribute("loginUser");
+    feedCreate.setMemCode(loginUser.getCode());
+
+    Long newFeedCode = userFeedService.registerFeed(feedCreate);
+
+    return newFeedCode;
+
   }
 
 

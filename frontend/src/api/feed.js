@@ -71,7 +71,7 @@ export const handleLoadFeeds = async () => {
 // 피드 단일 조회
 export const handleFindFeedDetailByFeedCode = (code) => {
   try {
-    const detail = fetch(`/api/feed/${code}`, {
+    return fetch(`/api/feed/${code}`, {
       method: "GET",
     })
     .then((res) => {
@@ -81,6 +81,7 @@ export const handleFindFeedDetailByFeedCode = (code) => {
     })
     .then((result) => {
       if (result) {
+        console.log(result);
         return result;
       } else {
         return null;
@@ -90,8 +91,6 @@ export const handleFindFeedDetailByFeedCode = (code) => {
       console.error(err);
       return null;
     });
-
-    return detail;
   } catch (error) {
     console.error("통신 에러: ", error);
     return null;

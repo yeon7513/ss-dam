@@ -2,8 +2,10 @@ package com.ss_dam.feed.service;
 
 import com.ss_dam.comment.model.response.UserCommentView;
 import com.ss_dam.comment.service.UserCommentService;
+import com.ss_dam.common.image.service.ImageService;
 import com.ss_dam.common.pager.Pager;
 import com.ss_dam.feed.dao.UserFeedDao;
+import com.ss_dam.feed.model.request.FeedCreate;
 import com.ss_dam.feed.model.response.FeedDetail;
 import com.ss_dam.feed.model.response.UserFeedView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ public class UserFeedServiceImpl implements UserFeedService {
 
   @Autowired
   UserCommentService userCommentService;
+
+  @Autowired
+  ImageService imageService;
 
 
   @Override
@@ -48,5 +53,15 @@ public class UserFeedServiceImpl implements UserFeedService {
     feedDetail.setComments(comments);
 
     return feedDetail;
+  }
+
+  @Override
+  public Long registerFeed(FeedCreate feedCreate) {
+
+    Long newFeedCode = userFeedDao.registerFeed(feedCreate);
+
+    imageService.uploadImages(feedCreate.getImages(), "feed", newFeedCode);
+
+    return newFeedCode;
   }
 }

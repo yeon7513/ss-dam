@@ -58,6 +58,7 @@
     LEFT JOIN (
     SELECT c.feed_code, count(*) AS cnt
     FROM COMMENTS c
+    WHERE c.delete_yn = 0 AND c.status = 'active'
     GROUP BY c.feed_code
     ) AS cnt_comment
     ON cnt_comment.feed_code = f.code
@@ -119,6 +120,7 @@
     LEFT JOIN (
     SELECT c.feed_code, count(*) AS cnt
     FROM COMMENTS c
+    WHERE c.delete_yn = 0 AND c.status = 'active'
     GROUP BY c.feed_code
     ) AS cnt_comment
     ON cnt_comment.feed_code = f.code

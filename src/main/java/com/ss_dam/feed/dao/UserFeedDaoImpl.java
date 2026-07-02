@@ -1,5 +1,6 @@
 package com.ss_dam.feed.dao;
 
+import com.ss_dam.feed.model.request.FeedCreate;
 import com.ss_dam.feed.model.response.FeedDetail;
 import com.ss_dam.feed.model.response.UserFeedView;
 import org.apache.ibatis.session.SqlSession;
@@ -23,5 +24,10 @@ public class UserFeedDaoImpl implements UserFeedDao {
   @Override
   public FeedDetail findFeedDetailByFeedCode(Map<String, Object> params) {
     return sql.selectOne("userFeedView.findFeedDetailByFeedCode", params);
+  }
+
+  @Override
+  public Long registerFeed(FeedCreate feedCreate) {
+    return 0L;
   }
 }

@@ -1,9 +1,9 @@
 import { IoHeartSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import Card from "../../common/card/Card";
-import Thumbnail from "../../common/card/thumbnail/Thumbnail";
 import ProfileCard from "../../profile-card/ProfileCard";
 import styles from "./ProductCard.module.scss";
+import Slide from "../../common/slide/Slide.jsx";
 
 function ProductCard({ product }) {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ function ProductCard({ product }) {
 
       {/* 이미지 슬라이드 */}
       <div className={styles.thumbnails}>
-        <Thumbnail images={product.images || null} />
+        <Slide images={product.images} />
       </div>
 
       {/* 본문 */}

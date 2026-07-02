@@ -1,60 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="member">
-	<select id="searchProfileByMemberCode" resultType="MemberProfile">
-		SELECT m.code, m.id, i.path, m.rating, m.ranking
-		FROM MEMBER_ACCOUNT m
-		LEFT JOIN IMAGES i
-			ON i.target_code = m.code 
-				AND i.type= 'profile' 
-				AND i.delete_yn = 0
-		WHERE code = #{code}
-	</select>
-	
-	<select id="searchMemberByCode" resultType="Member">
-		SELECT m.*, i.path
-		FROM MEMBER_ACCOUNT m
-		LEFT JOIN IMAGES i
-			ON i.target_code = m.code 
-				AND i.type= 'profile' 
-				AND i.delete_yn = 0
-		WHERE code = #{code}
-	</select>
-	
-	<insert id="registerMember">
-		INSERT INTO MEMBER_ACCOUNT
-		(id, password, name, phone, address, rating, ranking, point, status, created_at, delete_yn)
-		VALUES 
-		(#{id}, #{password}, #{name}, #{phone}, #{address}, 0, 0, 0, 'ACTIVE', now(), 0)
-	
-		<selectKey keyProperty="code" resultType="long" order="AFTER">
-    		SELECT LAST_INSERT_ID()
-  		</selectKey>
-	</insert>
-	
-	<select id="findMemberForLogin" parameterType="map" resultType="Login">
-	    SELECT 
-	        ID AS memberId,
-	        PASSWORD AS password,
-	        NAME AS name,
-	        'MEMBER' AS role
-	    FROM MEMBER_ACCOUNT
-	    WHERE ID = #{id} 
-	      AND PASSWORD = #{password}
-	      AND DELETE_YN = 0
-	</select>
+  <select id="searchProfileByMemberCode" resultType="MemberProfile">
+    SELECT m.code, m.id, i.path, m.rating, m.ranking
+    FROM MEMBER_ACCOUNT m
+    LEFT JOIN IMAGES i
+    ON i.target_code = m.code
+    AND i.type= 'profile'
+    AND i.delete_yn = 0
+    WHERE code = #{code}
+  </select>
 
-	<select id="findAdminForLogin" parameterType="map" resultType="Login">
-	    SELECT 
-	        EMP_ID AS memberId,
-	        PASSWORD AS password,
-	        NAME AS name,
-	        ROLE AS role
-	    FROM ADMIN_ACCOUNT
-	    WHERE EMP_ID = #{id} 
-	      AND PASSWORD = #{password}
-	</select>
+  <select id="searchMemberByCode" resultType="Member">
+    SELECT m.*, i.path
+    FROM MEMBER_ACCOUNT m
+    LEFT JOIN IMAGES i
+    ON i.target_code = m.code
+    AND i.type= 'profile'
+    AND i.delete_yn = 0
+    WHERE code = #{code}
+  </select>
+
+  <insert id="registerMember">
+    INSERT INTO MEMBER_ACCOUNT
+    (id, password, name, phone, address, rating, ranking, point, status, created_at, delete_yn)
+    VALUES
+    (#{id}, #{password}, #{name}, #{phone}, #{address}, 0, 0, 0, 'ACTIVE', now(), 0)
+
+    <selectKey keyProperty="code" resultType="long" order="AFTER">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+  </insert>
+
+  <select id="findMemberForLogin" parameterType="map" resultType="Login">
+    SELECT
+    CODE AS code,
+    ID AS memberId,
+    PASSWORD AS password,
+    NAME AS name,
+    'MEMBER' AS role
+    FROM MEMBER_ACCOUNT
+    WHERE ID = #{id}
+    AND PASSWORD = #{password}
+    AND DELETE_YN = 0
+  </select>
+
+  <select id="findAdminForLogin" parameterType="map" resultType="Login">
+    SELECT
+    EMP_ID AS memberId,
+    PASSWORD AS password,
+    NAME AS name,
+    ROLE AS role
+    FROM ADMIN_ACCOUNT
+    WHERE EMP_ID = #{id}
+    AND PASSWORD = #{password}
+  </select>
 </mapper>
