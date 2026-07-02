@@ -5,7 +5,7 @@ import { FEED_MENU } from "../../../lib/sideMenu";
 import ProfileCard from "../../profile-card/ProfileCard";
 import styles from "./SideNav.module.scss";
 
-function SideNav({ className, isLoggedIn = false }) {
+function SideNav({ className, isLoggedIn = true }) {
   const filteringMenuItems = FEED_MENU.filter((item) => {
     if (item.authMode === "always") {
       return true;
@@ -30,7 +30,7 @@ function SideNav({ className, isLoggedIn = false }) {
         ) : (
           <>
             <p>로그인하고 더 많은 친환경 챌린지를 확인하세요!</p>
-            <Link to="/auth/login">로그인</Link>
+            <Link to="/login">로그인</Link>
           </>
         )}
       </li>
@@ -47,7 +47,7 @@ function SideNav({ className, isLoggedIn = false }) {
         <Link to="">공지사항</Link>
       </li>
       <li>
-        <Link to="/about/challengeGuide">이용가이드</Link>
+        <Link to="/about/challenge_guide">이용가이드</Link>
       </li>
     </Sidebar>
   );

@@ -1,7 +1,7 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import SideNav from "../../components/feed/side-nav/FeedSideNav";
 import styles from "./Feed.module.scss";
-import {handleLoadFeeds} from "../../api/feed.js";
+import { handleLoadFeeds } from "../../api/feed.js";
 import FeedCard from "../../components/feed/feed-card/FeedCard.jsx";
 
 const Feed = () => {
@@ -37,7 +37,7 @@ const Feed = () => {
 
   return (
     <main className={styles.wrap}>
-      <SideNav/>
+      <SideNav />
       <div className={styles.container}>
         {/*<SearchBox*/}
         {/*  options={extractOptions(feeds, "chalCode", "chalTitle")}*/}
@@ -47,7 +47,7 @@ const Feed = () => {
         {/*/>*/}
         <div className={styles.list}>
           {feeds.map((feed) => (
-            <FeedCard key={feed.code} feed={feed}/>
+            <FeedCard key={feed.code} feed={feed} />
           ))}
         </div>
         {/*<Pagination page={currentPage}/>*/}
