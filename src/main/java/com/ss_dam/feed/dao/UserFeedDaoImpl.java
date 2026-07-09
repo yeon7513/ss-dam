@@ -1,5 +1,6 @@
 package com.ss_dam.feed.dao;
 
+import com.ss_dam.feed.model.core.FeedHashtag;
 import com.ss_dam.feed.model.request.FeedCreate;
 import com.ss_dam.feed.model.response.FeedDetail;
 import com.ss_dam.feed.model.response.UserFeedView;
@@ -28,6 +29,12 @@ public class UserFeedDaoImpl implements UserFeedDao {
 
   @Override
   public Long registerFeed(FeedCreate feedCreate) {
-    return 0L;
+    sql.insert("feedCommand.registerFeed", feedCreate);
+    return feedCreate.getCode();
+  }
+
+  @Override
+  public void registerHashtags(List<FeedHashtag> feedHashtags) {
+    sql.insert("feedCommand.registerHashtags", feedHashtags);
   }
 }

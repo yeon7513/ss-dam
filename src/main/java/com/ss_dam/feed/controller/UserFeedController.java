@@ -32,12 +32,26 @@ public class UserFeedController {
   @GetMapping
   List<UserFeedView> loadFeeds(Pager pager, HttpSession session) {
 
+    //    System.out.println("=== 세션 디버깅 시작 ===");
+    //    // 1. 현재 세션의 고유 ID 확인
+    //    System.out.println("Session ID: " + session.getId());
+    //
+    //    // 2. 세션에 저장된 모든 속성의 이름(Key)과 값(Value) 확인
+    //    java.util.Enumeration<String> attributeNames = session.getAttributeNames();
+    //    while (attributeNames.hasMoreElements()) {
+    //      String name = attributeNames.nextElement();
+    //      System.out.println("Session Key: " + name + " / Value: " + session.getAttribute(name));
+    //    }
+    //    System.out.println("=== 세션 디버깅 끝 ===");
+
     // 로그인한 사용자의 좋아요 여부를 받아오기 위해 세션에서 정보를 꺼내옴.
     Login loginUser = (Login) session.getAttribute("loginUser");
     // NullException을 방지하기 위해 삼항연산자로 분기 처리함.
     // -> 로그인 했을 경우, 해당 사용자의 고유 번호를 넘겨줌
     // -> 로그인하지 않았을 경우는 처음부터 null을 넘겨 무조건 false가 나오게 처리
     Long memberCode = (loginUser != null) ? loginUser.getCode() : null;
+
+    System.out.println("memberCode: " + memberCode);
 
     return userFeedService.loadFeeds(pager, memberCode);
   }
@@ -59,8 +73,13 @@ public class UserFeedController {
   @PostMapping
   Long registerFeed(FeedCreate feedCreate, HttpSession session) {
 
-    Login loginUser = (Login) session.getAttribute("loginUser");
-    feedCreate.setMemCode(loginUser.getCode());
+    //    Login loginUser = (Login) session.getAttribute("loginUser");
+    //    feedCreate.setMemCode(loginUser.getCode());
+    //    feedCreate.setCreatedBy(loginUser.getMemberId());
+
+    // 임시로 회원 번호 1로...
+    feedCreate.setMemCode(1L);
+    feedCreate.setCreatedBy("user01");
 
     Long newFeedCode = userFeedService.registerFeed(feedCreate);
 

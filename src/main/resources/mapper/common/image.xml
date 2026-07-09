@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="image">
 
-	<select id="searchImages" resultType="Images">
-		SELECT *
-		FROM IMAGES
-	</select>
-	
-	<select id="searchImagesByCode" resultType="Images">
-		SELECT *
-		FROM IMAGES
-		WHERE type = #{type} AND target_code = #{code}
-	</select>
-	
-	<insert id="registerImages">
-		INSERT INTO IMAGES 
-		(target_code, type, path, delete_yn)
-		VALUES (#{targetCode}, #{type}, #{path}, #{deleteYn})
-	</insert>
+  <select id="searchImages" resultType="Images">
+    SELECT *
+    FROM IMAGES
+  </select>
+
+  <select id="searchImagesByCode" resultType="Images">
+    SELECT *
+    FROM IMAGES
+    WHERE type = #{type} AND target_code = #{code}
+  </select>
+
+  <insert id="registerImages">
+    INSERT INTO IMAGES
+    (target_code, type, path, order_seq, delete_yn)
+    VALUES (#{targetCode}, #{type}, #{path}, #{orderSeq}, #{deleteYn})
+  </insert>
 
 </mapper>

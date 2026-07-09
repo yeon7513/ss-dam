@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="category">
+
+  <!-- 피드 목록용 챌린지 카테고리 조회 (진행중, 진행완료 포함) -->
+  <select id="loadAllChallengeCategories" resultType="Category">
+    SELECT c.code, c.title AS name
+    FROM CHALLENGE AS c
+    WHERE c.delete_yn = 0
+  </select>
+
+  <!-- 피드 등록용 챌린지 카테고리 조회 (진행중인 것만) -->
+  <select id="loadActiveChallengeCategories" resultType="Category">
+    SELECT c.code, c.title AS name
+    FROM CHALLENGE AS c
+    WHERE c.status = 'ACTIVE' AND c.delete_yn = 0
+  </select>
+
+  <!-- 물품 등록용 마켓 카테고리 선택 -->
+  <select id="loadMarketCategories" resultType="Category">
+    SELECT
+    sub.code,
+    sub.name,
+    main.code AS main_category_code,
+    main.name AS main_category_name
+    FROM MARKET_CATEGORY AS sub
+    LEFT JOIN MARKET_CATEGORY AS main
+    ON sub.main_cate = main.code
+  </select>
+
+</mapper>

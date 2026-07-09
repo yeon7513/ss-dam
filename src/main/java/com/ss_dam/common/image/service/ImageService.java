@@ -16,4 +16,6 @@ public interface ImageService {
 
   Images uploadSingleImage(MultipartFile file, String type, Long targetCode);
 
+  Images uploadSingleImage(MultipartFile file, String type, Long targetCode, int seq);
+
 }

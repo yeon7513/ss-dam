@@ -20,8 +20,9 @@ public class WebConfig implements WebMvcConfigurer {
   // 리액트와의 통신을 허용함 (CORS 설정)
   @Override
   public void addCorsMappings(CorsRegistry registry) {
-    registry.addMapping("/**").allowedOrigins("http://localhost:5173")
-        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS").allowCredentials(true);
+    registry.addMapping("/**").allowedOrigins("http://localhost:5173") // 리액트 서버 주소
+        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 허용된 HTTP Method
+        .allowCredentials(true); // 쿠키 연동 허용
   }
 
 

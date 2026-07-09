@@ -8,8 +8,8 @@
 
   <!-- 피드 등록 -->
   <insert id="registerFeed">
-    INSERT INTO FEED (chal_code, mem_code, title, content, hitcount, status, created_at, delete_yn)
-    VALUES (#{chalCode}, #{memCode}, #{title}, #{content}, 0, 'ACTIVE', NOW(), 0)
+    INSERT INTO FEED (chal_code, mem_code, title, content, hitcount, status, created_by, created_at, delete_yn)
+    VALUES (#{chalCode}, #{memCode}, #{title}, #{content}, 0, 'ACTIVE', #{createdBy}, NOW(), 0)
 
     <selectKey keyProperty="code" resultType="long" order="AFTER">
       SELECT LAST_INSERT_ID()
@@ -17,9 +17,30 @@
   </insert>
 
   <!-- 해시태그 등록 -->
-
+  <insert id="registerHashtags">
+    INSERT INTO FEED_HASHTAG (feed_code, tag_name)
+    VALUES
+    <foreach collection="list" item="item" separator="," open="(" close=")">
+      #{item.feedCode}, #{item.tagName}
+    </foreach>
+  </insert>
 
   <!-- 피드 수정 (피드 작성자) -->
+  <update id="updateFeed">
+    UPDATE FEED
+    <set>
+      <if test="title != null">
+        title = #{title}
+      </if>
+      <if test="content != null">
+        content = #{content}
+      </if>
+
+      updated_by = #{updatedBy},
+      updated_at = NOW()
+    </set>
+    WHERE code = #{code}
+  </update>
 
 
   <!-- 피드 수정 (관리자) -->

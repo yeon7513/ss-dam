@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { sendToFeed } from "../../../api/feed";
 import Editor from "../../../components/common/editor/Editor";
 import Hashtag from "../../../components/feed/hashtag/Hashtag";
 import styles from "./FeedRegister.module.scss";
+import { useLoadData } from "../../../hooks/useLoadData.js";
+import { useSubmitData } from "../../../hooks/useSubmitData.js";
+import { createFeedFormData } from "../../../utils/createFeedFormData.js";
 
 // 초기값
 const initPost = {
-  memCode: "",
   title: "",
   content: "",
 };
@@ -17,6 +18,12 @@ const FeedRegister = () => {
   const navigate = useNavigate();
   const [hashs, setHashs] = useState([]);
   const [post, setPost] = useState(initPost);
+
+  // 등록이 가능한 챌린지 카테고리 조회 (현재 진행 중인 카테고리만)
+  const { data: categories } = useLoadData("/api/category/challenge/active");
+
+  // 피드 등록 커스텀 훅 호출
+  const { handleSubmit, loading } = useSubmitData("/api/feed", "POST");
 
   // 해시태그 등록 핸들러
   const handleRegisterHashs = (e) => {
@@ -59,9 +66,22 @@ const FeedRegister = () => {
   };
 
   // 서브밋 핸들러
-  const handleSubmit = (post) => {
-    sendToFeed(post, navigate);
+  const handleRegisterFeed = async (newPost) => {
+    try {
+      const formData = createFeedFormData(newPost);
+      const result = await handleSubmit(formData);
+
+      // 값이 있을 경우
+      if (result) {
+        alert("등록되었습니다.");
+        navigate(`/feed/${result}`);
+      }
+    } catch (err) {
+      alert("등록에 실패했습니다.");
+      console.error(err);
+    }
   };
+
 
   return (
     <form>
@@ -70,7 +90,8 @@ const FeedRegister = () => {
         typeName="chalCode"
         post={post}
         setPost={setPost}
-        onSubmit={handleSubmit}
+        categories={categories}
+        onSubmit={handleRegisterFeed}
       >
         <div className={styles.hash}>
           <div className={styles.regHashs}>
