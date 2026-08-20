@@ -57,7 +57,7 @@ const SignUp = () => {
               placeholder="아이디 입력"
               onChange={(e) => handleSetField(e, setForm)}
             />
-            <Button>중복확인</Button>
+            <Button className={styles.checkButton}>중복확인</Button>
           </div>
           <div className={styles.passwordGroup}>
             <TextInput
@@ -78,6 +78,7 @@ const SignUp = () => {
             <TextInput
               name="name"
               label="이름"
+              placeholder="실명 입력"
               onChange={(e) => handleSetField(e, setForm)}
             />
             <TextInput type="date" name="birth" label="생년월일" />
@@ -86,10 +87,11 @@ const SignUp = () => {
             <TextInput
               name="phone"
               label="전화번호"
+              placeholder="'-' 없이 11자리 숫자 입력"
               onChange={(e) => handleSetField(e, setForm)}
             />
           </div>
-          <div>
+          <div className={styles.addressGroup}>
             <Address onChange={handleTakeAddress} />
           </div>
           <div className={styles.profileImgGroup}>

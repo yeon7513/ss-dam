@@ -1,8 +1,23 @@
 .address {
-  > div {
+  width: 100%; // 가로폭 동일하게 유지
+
+  .postGroup {
     display: flex;
-    align-items: center;
+    width: 100%;
     gap: 8px;
+
+    margin-bottom: 0.5rem;
+
+    > div {
+      flex: 1;
+      width: 100%;
+    }
+
+    button {
+      flex-shrink: 0;
+      height: 3.4rem; // input 높이와 동일하게 맞춤
+      white-space: nowrap; // 글자 줄바꿈 방지
+    }
   }
 
   .modalOverlay {
