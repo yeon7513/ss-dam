@@ -1,11 +1,11 @@
 package com.ss_dam.auth.member.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import com.ss_dam.auth.member.Member;
 import com.ss_dam.auth.member.MemberProfile;
 import com.ss_dam.auth.member.dao.MemberDao;
-import com.ss_dam.global.image.service.ImageService;
+import com.ss_dam.common.image.service.ImageService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class MemberServiceImpl implements MemberService {

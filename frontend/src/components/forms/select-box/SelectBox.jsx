@@ -14,7 +14,7 @@ function SelectBox({ className, name, options, onChange }) {
       {options &&
         options.map((option, idx) => (
           <option key={idx} value={option.code}>
-            {option.label}
+            {option.name}
           </option>
         ))}
     </select>

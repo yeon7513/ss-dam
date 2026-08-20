@@ -23,15 +23,27 @@ const Header = () => {
     };
   }, []);
 
-  const handleLogOut = () => {
-    sessionStorage.removeItem("userName");
-    sessionStorage.removeItem("userRole");
+  const handleLogOut = async () => {
+    try {
+      const response = await fetch("/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
 
-    window.dispatchEvent(new Event("loginStateChanged"));
-    // setIsLoggedIn(false);
+      if (response.ok) {
+        sessionStorage.removeItem("userName");
+        sessionStorage.removeItem("userRole");
 
-    alert("로그아웃 되었습니다");
-    navigate("/");
+        window.dispatchEvent(new Event("loginStateChanged"));
+
+        alert("로그아웃 되었습니다");
+        navigate("/");
+      } else {
+        alert("로그아웃 처리에 실패했습니다");
+      }
+    } catch (error) {
+      console.error("로그아웃 통신 에러", error);
+    }
   };
 
   return (

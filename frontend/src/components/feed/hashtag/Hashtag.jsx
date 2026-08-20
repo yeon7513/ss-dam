@@ -6,3 +6,4 @@ function Hashtag({ children, className }) {
 }
 
 export default Hashtag;
+

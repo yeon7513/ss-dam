@@ -1,15 +1,16 @@
 package com.ss_dam.market.service;
 
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import com.ss_dam.auth.member.MemberProfile;
 import com.ss_dam.auth.member.service.MemberService;
-import com.ss_dam.global.image.Images;
-import com.ss_dam.global.image.service.ImageService;
-import com.ss_dam.global.likes.service.MarketProductPickService;
-import com.ss_dam.market.MarketProduct;
+import com.ss_dam.common.image.model.Images;
+import com.ss_dam.common.image.service.ImageService;
+import com.ss_dam.common.likes.service.MarketProductPickService;
 import com.ss_dam.market.dao.MarketProductDao;
+import com.ss_dam.market.model.MarketProduct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class MarketProductServiceImpl implements MarketProductService {

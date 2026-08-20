@@ -1,6 +1,5 @@
 import cn from "classnames";
 import { useState } from "react";
-import { feedCategory } from "../../../lib/categoryTest";
 import { handleSetField } from "../../../utils/changeHandler";
 import TextInput from "../../forms/text-input/TextInput";
 import CancelButton from "../button/CancelButton";
@@ -10,8 +9,8 @@ import UploadImage from "./../upload-images/UploadImages";
 import styles from "./Editor.module.scss";
 
 function Editor({
-  typeName = "chalCode", // 분류 코드 (FK)
-  categories = feedCategory, // 카테고리명 (임시로 넣음)
+  typeName, // 분류 코드 (FK)
+  categories, // 카테고리명
   title,
   children,
   onSubmit, // AJAX 전송 핸들러
@@ -25,10 +24,11 @@ function Editor({
 
     const resultData = {
       ...post,
-      files: selectedImages,
+      images: selectedImages,
     };
 
-    // 임시로 회원 번호 넣음
+    console.log("resultData: ", resultData);
+
     setPost(resultData);
 
     onSubmit(resultData);
@@ -69,7 +69,7 @@ function Editor({
           <Button onClick={handleSubmit}>
             {typeName === "chalCode" ? "피드" : "물품"} 등록
           </Button>
-          <CancelButton targetUrl="/feed">취소</CancelButton>
+          <CancelButton targetUrl={typeName === "chalCode" ? "/feed" : "/market"}>취소</CancelButton>
         </div>
       </div>
     </div>

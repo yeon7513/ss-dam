@@ -2,7 +2,6 @@ import React from "react";
 import styles from "./MarketGuide.module.scss";
 import cn from "classnames";
 
-console.log(styles);
 const MarketGuide = () => {
   return (
     <div className={styles.main}>
@@ -10,8 +9,8 @@ const MarketGuide = () => {
       <section className={styles.movingTitle}>
         <h2 className={styles.mainTitle}>
           마켓
-          <br /> 이용
-          <br /> 가이드
+          <br/> 이용
+          <br/> 가이드
         </h2>
       </section>
 

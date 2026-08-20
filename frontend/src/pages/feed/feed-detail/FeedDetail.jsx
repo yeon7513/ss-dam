@@ -2,15 +2,16 @@ import { useEffect, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import { IoChatbubbleEllipses, IoHeartSharp } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router-dom";
-import { searchFeedByCode } from "../../../api/feed";
 import Button from "../../../components/common/button/Button";
-import Thumbnail from "../../../components/common/card/thumbnail/Thumbnail";
 import Comment from "../../../components/feed/comment/Comment";
 import Hashtag from "../../../components/feed/hashtag/Hashtag";
 import TextInput from "../../../components/forms/text-input/TextInput";
 import ProfileCard from "../../../components/profile-card/ProfileCard";
 import { formatCreatedAt } from "../../../utils/formatDate";
 import styles from "./FeedDetail.module.scss";
+import { handleFindFeedDetailByFeedCode } from "../../../api/feed.js";
+import Slide from "../../../components/common/slide/Slide.jsx";
+import cn from "classnames";
 
 const FeedDetail = () => {
   const [detail, setDetail] = useState(null);
@@ -22,15 +23,15 @@ const FeedDetail = () => {
 
   // 피드 상세 조회 데이터 불러오기
   useEffect(() => {
-    const handleLoadFeedDetail = async () => {
-      const feedDetail = await searchFeedByCode(code);
+    const fetchFeedDetail = async () => {
+      const feedDetail = await handleFindFeedDetailByFeedCode(code);
 
       if (feedDetail) {
         setDetail(feedDetail);
       }
     };
 
-    handleLoadFeedDetail();
+    fetchFeedDetail();
   }, [code]);
 
   if (detail === null) {
@@ -38,7 +39,7 @@ const FeedDetail = () => {
   }
 
   return (
-    <div className={styles.feedDetail}>
+    <div className={cn(styles.feedDetail)}>
       <div className={styles.title}>
         <button onClick={() => navigate(-1)}>
           <FaArrowLeft />
@@ -51,10 +52,12 @@ const FeedDetail = () => {
 
       <div className={styles.container}>
         {/* 이미지 슬라이드 */}
-        <div className={styles.thumbnails}>
-          <Thumbnail images={detail.images || null} />
+        <div className={styles.images}>
+          <Slide images={detail.images} />
         </div>
-        <div className={styles.contents}>
+
+        {/* 피드 상세 */}
+        <div className={cn(styles.content, styles.detail)}>
           {/* 작성자 프로필 */}
           <ProfileCard memberProfile={detail.memberProfile} />
 
@@ -62,21 +65,21 @@ const FeedDetail = () => {
           <p>{detail.content}</p>
 
           {/* 해시태그 */}
-          <div>
+          <div className={styles.hashtags}>
             {detail.hashtags.map((tag, idx) => (
               <Hashtag key={idx}>
                 {/* 링크로 놓고 해당 해시태그만 모아보기? */}
-                <span>#{tag.tagName}</span>
+                <span>#{tag}</span>
               </Hashtag>
             ))}
           </div>
 
           {/* 피드 정보 (날짜, 좋아요 수, 댓글 수 등) */}
-          <div>
+          <div className={styles.meta}>
             <span>{formatCreatedAt(detail.createdAt)}</span>
             <div>
               <span>
-                <IoChatbubbleEllipses /> {detail.countComment}
+                <IoChatbubbleEllipses /> {detail.countFeedComment}
               </span>
               <span>
                 <IoHeartSharp /> {detail.countFeedLike}
@@ -85,9 +88,13 @@ const FeedDetail = () => {
           </div>
 
           {/* 댓글 */}
-          <div>
-            <div className={styles.commentField}>
+          <div className={cn(styles.content, styles.comment)}>
+            {/* 댓글 등록 */}
+            <div className={styles.postComment}>
               <TextInput
+                className={styles.field}
+                id="comment"
+                name="comment"
                 disabled={!isLoggedIn}
                 placeholder={
                   isLoggedIn
@@ -95,8 +102,10 @@ const FeedDetail = () => {
                     : "로그인 후 댓글을 작성할 수 있습니다."
                 }
               />
-              <Button disabled={!isLoggedIn}>등록</Button>
+              <Button className={styles.registerButton} disabled={!isLoggedIn}>등록</Button>
             </div>
+            
+            {/* 등록된 댓글 리스트 */}
             <div className={styles.comments}>
               <Comment comments={detail.comments} />
             </div>

@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       // 일반 사용자용 요청
-      "/api/user": {
+      "/api": {
         target: "http://localhost:9090",
         changeOrigin: true,
       },

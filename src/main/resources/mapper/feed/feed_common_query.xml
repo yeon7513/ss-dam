@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 이 매퍼는 공용으로 쓸 resultMap과 sql을 모아둔 매퍼 -->
+<mapper namespace="feedCommonQuery">
+
+  <!-- 일반 사용자용 resultMap -->
+  <resultMap type="UserFeedView" id="UserFeedViewMap" autoMapping="true">
+    <id column="code" property="code" />
+
+    <!-- 회원 프로필카드 리스트 매핑 -->
+    <collection property="memberProfile" javaType="MemberProfile" ofType="MemberProfile" autoMapping="true"
+                columnPrefix="m_">
+      <id column="code" property="code" />
+    </collection>
+
+    <!-- 해시태그를 문자열 리스트로 받아오기 -->
+    <collection property="hashtags" javaType="ArrayList" ofType="String">
+      <result column="hashtags" />
+    </collection>
+  </resultMap>
+
+  <!-- 관리자용 resultMap -->
+  <!-- extends로 일반 사용자용 resultMap을 기준으로 필요한 데이터를 더 추가함 -->
+  <resultMap id="AdminFeedViewMap" type="AdminFeedView" extends="UserFeedViewMap">
+
+  </resultMap>
+
+  <!-- 피드 상세 조회 resultMap -->
+  <resultMap id="FeedDetailMap" type="FeedDetail" autoMapping="true" extends="UserFeedViewMap">
+    <!-- 이미지 리스트 매핑 -->
+    <collection property="imagePaths" javaType="ArrayList" ofType="String">
+      <result column="image_paths" />
+    </collection>
+    <!-- 해시태그를 문자열 리스트로 받아오기 -->
+    <collection property="hashtags" javaType="ArrayList" ofType="String">
+      <result column="hashtags" />
+    </collection>
+  </resultMap>
+
+  <!-- 사용자가 사용하는 검색 필터 -->
+  <sql id="userSearchFiller">
+
+  </sql>
+
+  <!-- 관리자가 사용하는 검색 필터 -->
+  <sql id="adminSearchFilter">
+
+  </sql>
+</mapper>
