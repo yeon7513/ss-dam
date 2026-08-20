@@ -20,10 +20,10 @@ const FeedRegister = () => {
   const [post, setPost] = useState(initPost);
 
   // 등록이 가능한 챌린지 카테고리 조회 (현재 진행 중인 카테고리만)
-  const { data: categories } = useLoadData("/api/category/challenge/active");
+  const { data: categories } = useLoadData("/api/categories/challenge/active");
 
   // 피드 등록 커스텀 훅 호출
-  const { handleSubmit, loading } = useSubmitData("/api/feed", "POST");
+  const { handleSubmit, loading } = useSubmitData("/api/feeds", "POST");
 
   // 해시태그 등록 핸들러
   const handleRegisterHashs = (e) => {

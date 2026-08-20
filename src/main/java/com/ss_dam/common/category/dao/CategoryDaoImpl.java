@@ -24,8 +24,13 @@ public class CategoryDaoImpl implements CategoryDao {
   }
 
   @Override
-  public List<Category> loadMarketCategories() {
-    return sql.selectList("category.loadMarketCategories");
+  public List<Category> loadActiveMarketCategories() {
+    return sql.selectList("category.loadActiveMarketCategories");
+  }
+
+  @Override
+  public List<Category> loadAllMarketCategories() {
+    return sql.selectList("category.loadAllMarketCategories");
   }
 
 

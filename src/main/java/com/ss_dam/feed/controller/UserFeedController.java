@@ -22,7 +22,7 @@ import java.util.List;
 // -> 사용자가 요청하는 HTTP 메소드(GET, POST, PUT, DELETE 등)에 따라
 // 각 일치하는 어노테이션이 붙은 메소드를 실행~!
 @RestController
-@RequestMapping("/api/feed") // 26.06.30 엔드포인트 수정 -> 일반 사용자용(비회원, 회원)은 /user 안붙임
+@RequestMapping("/api/feeds") // 26.06.30 엔드포인트 수정 -> 일반 사용자용(비회원, 회원)은 /user 안붙임
 public class UserFeedController {
 
   @Autowired

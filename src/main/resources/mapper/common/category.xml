@@ -16,19 +16,26 @@
   <select id="loadActiveChallengeCategories" resultType="Category">
     SELECT c.code, c.title AS name
     FROM CHALLENGE AS c
-    WHERE c.status = 'ACTIVE' AND c.delete_yn = 0
+    WHERE c.progress_status = 'IN_PROGRESS' AND c.post_status = 'ACTIVE' AND c.delete_yn = 0
   </select>
 
-  <!-- 물품 등록용 마켓 카테고리 선택 -->
-  <select id="loadMarketCategories" resultType="Category">
+
+  <!-- 물품 등록용 마켓 카테고리 선택 (상위 & 하위) -->
+  <select id="loadActiveMarketCategories" resultType="Category">
     SELECT
     sub.code,
     sub.name,
-    main.code AS main_category_code,
-    main.name AS main_category_name
+    top.code AS top_category_code,
+    top.name AS top_category_name
     FROM MARKET_CATEGORY AS sub
-    LEFT JOIN MARKET_CATEGORY AS main
-    ON sub.main_cate = main.code
+    LEFT JOIN MARKET_CATEGORY AS top
+    ON sub.main_cate = top.code
+    <!--
+      [조건]
+      상위 카테고리가 활성화 및 삭제되지 않고, 하위도 활성화 및 삭제되지 않은 것
+    -->
+    WHERE top.delete_yn = 0 AND top.status = 'ACTIVE'
+    AND sub.delete_yn = 0 AND sub.status = 'ACTIVE'
   </select>
 
 </mapper>

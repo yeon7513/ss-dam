@@ -25,10 +25,10 @@ const Feed = () => {
     data,
     loading,
     error,
-  } = useLoadData(`/api/feed?${queryParams}`);
+  } = useLoadData(`/api/feeds?${queryParams}`);
 
   // 검색용 챌린지 카테고리 조회
-  const { data: categories } = useLoadData("/api/category/challenge/all");
+  const { data: categories } = useLoadData("/api/categories/challenge/all");
 
   const feeds = data || [];
 

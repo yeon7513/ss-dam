@@ -1,7 +1,7 @@
 // 피드 단일 조회
 export const handleFindFeedDetailByFeedCode = (code) => {
   try {
-    return fetch(`/api/feed/${code}`, {
+    return fetch(`/api/feeds/${code}`, {
       method: "GET",
     })
     .then((res) => {
