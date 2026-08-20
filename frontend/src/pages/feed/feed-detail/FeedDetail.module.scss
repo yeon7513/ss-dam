@@ -5,19 +5,59 @@
   padding: 32px 0;
 
   .title {
+    @include mix.wrap($pd: 0);
     display: flex;
     margin-bottom: 24px;
-  }
-
-  .container {
-    display: flex;
-    gap: 24px;
+    outline: 1px dotted red;
   }
 }
 
 .container {
+  @include mix.wrap($pd: 0);
+  display: flex;
+  gap: 24px;
+  outline: 1px dotted red;
+
+  // 등록한 이미지
   .images {
-    width: 50%;
+    flex: 1;
     height: 600px;
+  }
+}
+
+// 실제 본문 내용
+.content.detail {
+  flex: 1;
+  background-color: yellow;
+
+  > p {
+    margin-bottom: 1rem;
+    outline: 1px dotted red;
+  }
+}
+
+// 댓글
+.content.comment {
+  margin-top: 3rem;
+
+  // 댓글 등록
+  .postComment {
+    @include mix.flex($jc: start);
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+
+    // 입력 필드
+    .field {
+      flex: 1;
+
+      > input {
+        width: 100%;
+      }
+    }
+
+    // 댓글 등록 버튼
+    .registerButton {
+      width: 100px; // rem으로 바꿀 것!!
+    }
   }
 }
