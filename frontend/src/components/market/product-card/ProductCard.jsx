@@ -14,7 +14,7 @@ function ProductCard({ product }) {
 
   return (
     <Card
-      className={styles.product}
+      className={styles.productItem}
       onClick={() => handleClickDetail(product.code)}
     >
       {/* 프로필 카드 */}

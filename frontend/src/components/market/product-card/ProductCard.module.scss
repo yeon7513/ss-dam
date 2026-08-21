@@ -1,11 +1,9 @@
 @use "/src/scss/variables.scss" as *;
 @use "/src/scss/mixin.scss" as mix;
 
-.product {
+.productItem {
   position: relative;
   top: 0;
-  // 슬라이드 크기 줄이기 위해 사용!
-  min-width: 0;
   transition: 0.3s;
   cursor: pointer;
 

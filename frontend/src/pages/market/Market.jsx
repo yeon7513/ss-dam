@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { useLoadData } from "../../hooks/useLoadData.js";
 import styles from "../market/Market.module.scss";
 import ProductCard from "../../components/market/product-card/ProductCard.jsx";
@@ -25,7 +24,6 @@ const Market = () => {
   return (
     <main className={styles.wrap}>
       <div>
-        <Link to="/market/register">물품 등록</Link>
         <MarketSideNav />
       </div>
       {/* 목록 렌더링 */}
