@@ -73,10 +73,14 @@ const Header = () => {
               <>
                 {/* <span className={styles.navItem}>
                   <Link to="/myPage">마이페이지</Link>
-                </span>
-                <span className={styles.divider}> | </span> */}
+                  </span>
+                  <span className={styles.divider}> | </span> */}
                 <span className={styles.navItem}>
                   <Link to="/logIn">로그인</Link>
+                </span>
+                <span className={styles.divider}> | </span>
+                <span className={styles.navItem}>
+                  <Link to="/signUp">회원가입</Link>
                 </span>
               </>
             )}
