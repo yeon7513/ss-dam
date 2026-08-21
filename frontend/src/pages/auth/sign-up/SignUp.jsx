@@ -46,7 +46,7 @@ const SignUp = () => {
 
   // 이 아래로만 손댈 것. 퍼블리싱 시작.
   return (
-    <div className={styles.signUpPage}>
+    <main className={styles.signUpPage}>
       <div className={styles.signUpContainer}>
         <h2>회원가입</h2>
         <form method="post" onSubmit={handleSubmit}>
@@ -109,7 +109,7 @@ const SignUp = () => {
           <Link to="/login">로그인</Link>
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 
