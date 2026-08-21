@@ -1,12 +1,42 @@
 import { Link } from "react-router-dom";
+import { useLoadData } from "../../hooks/useLoadData.js";
+import styles from "../market/Market.module.scss";
+import ProductCard from "../../components/market/product-card/ProductCard.jsx";
+import MarketSideNav from "../../components/market/side-nav/MarketSideNav.jsx";
 
 const Market = () => {
+
+  const {
+    data, loading, error,
+  } = useLoadData(`/api/market/products`);
+
+  const products = data || [];
+
+  // 로딩 및 에러 처리
+  if (loading) {
+    return <div>다시쓰담 정보를 불러오고 있습니다.</div>;
+  }
+  if (error) {
+    return <div>에러가 발생했습니다. {error}</div>;
+  }
+
+  console.log(products);
+
   return (
-    <div>
-      <h2>마켓 페이지</h2>
-      <p>여기에 백엔드에서 가져온 마켓 목록이 보일 거예요!</p>
-      <Link to="/market/register">물품 등록</Link>
-    </div>
+    <main className={styles.wrap}>
+      <div>
+        <Link to="/market/register">물품 등록</Link>
+        <MarketSideNav />
+      </div>
+      {/* 목록 렌더링 */}
+      <div className={styles.list}>
+        {products.length > 0 ? (
+          products.map((product) => <ProductCard key={product.code} product={product} />)
+        ) : (
+          <p>검색된 피드가 없습니다.</p>
+        )}
+      </div>
+    </main>
   );
 };
 

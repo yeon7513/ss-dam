@@ -1,14 +1,15 @@
 package com.ss_dam.market.model.response;
 
 import com.ss_dam.auth.member.MemberProfile;
+import com.ss_dam.market.enums.DealStatus;
 
+// 일반 사용자가 보는 거래글 목록 DTO
 public class UserProductView {
   private Long code; // 물품 등록 고유 번호
   private String title; // 제목
   private int price; // 가격
   private int hitcount; // 조회수
-  private String postStatus; // 노출 상태
-  private String dealStatus; // 판매 상태
+  private DealStatus dealStatus; // 판매 상태
   private String createdAt; // 작성일
   private String updatedAt; // 수정일
 
@@ -123,19 +124,11 @@ public class UserProductView {
     this.pickedYn = pickedYn;
   }
 
-  public String getPostStatus() {
-    return postStatus;
-  }
-
-  public void setPostStatus(String postStatus) {
-    this.postStatus = postStatus;
-  }
-
-  public String getDealStatus() {
+  public DealStatus getDealStatus() {
     return dealStatus;
   }
 
-  public void setDealStatus(String dealStatus) {
+  public void setDealStatus(DealStatus dealStatus) {
     this.dealStatus = dealStatus;
   }
 }

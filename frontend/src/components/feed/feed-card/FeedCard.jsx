@@ -20,7 +20,7 @@ function FeedCard({ feed }) {
 
       {/* 썸네일 */}
       <div className={styles.thumbnail}>
-        <ImageBox src={feed.thumbnail} alt="피드 대표 이미지" />
+        <ImageBox src={feed.thumbnail} alt="대표 이미지" />
       </div>
 
       {/* 본문 */}
