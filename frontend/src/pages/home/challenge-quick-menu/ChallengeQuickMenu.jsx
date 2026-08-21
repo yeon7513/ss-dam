@@ -1,6 +1,6 @@
 import cn from "classnames";
-import {Link} from "react-router-dom";
-import {useEffect, useState} from "react";
+import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import styles from "./ChallengeQuickMenu.module.scss";
 
 const ChallengeQuickMenu = () => {
@@ -12,16 +12,23 @@ const ChallengeQuickMenu = () => {
     fetch("/api/user/challenge/popular", {
       method: "GET",
     })
-    .then((res) => res.json())
-    .then((data) => {
-      const popularList = data.slice(0, 3);
-      const latestItem = data[data.length - 1];
+      .then((res) => {
+        if (!res.ok) throw new Error("서버 응답 에러");
+        return res.json();
+      })
+      .then((resData) => {
+        const list = resData.data;
 
-      setPopular(popularList);
-      setLatest(latestItem);
-      setSelected(popularList[0]);
-    })
-    .catch((err) => console.error("챌린지 퀵 메뉴 로드 실패: ", err));
+        if (Array.isArray(list) && list.length > 0) {
+          const popularList = list.slice(0, 3);
+          const latestItem = list[list.length - 1];
+
+          setPopular(popularList);
+          setLatest(latestItem);
+          setSelected(popularList[0]);
+        }
+      })
+      .catch((err) => console.error("챌린지 퀵 메뉴 로드 실패: ", err));
   }, []);
 
   const challengeList = latest ? [...popular, latest] : popular;

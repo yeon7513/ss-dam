@@ -97,8 +97,7 @@
     <!-- 리눅스 서버에 DB가 올라가 있기 때문에 테이블명은 대문자로 -->
     FROM CHALLENGE c
     LEFT JOIN CHALLENGE_ENTRY ce
-    ON c.CODE = ce.CHAL_CODE
-    AND ce.DELETE_YN = false
+    ON c.CODE = ce.CHAL_CODE    
     WHERE c.DELETE_YN = false
     GROUP BY
     c.CODE,
@@ -131,8 +130,8 @@
     c.UPDATED_AT,
     c.DELETE_YN,
     COUNT(ce.MEM_CODE) AS participantCount
-    FROM challenge c
-    LEFT JOIN challenge_entry ce
+    FROM CHALLENGE c
+    LEFT JOIN CHALLENGE_ENTRY ce
     ON c.CODE = ce.CHAL_CODE
     AND ce.DELETE_YN = false
     WHERE c.DELETE_YN = false
