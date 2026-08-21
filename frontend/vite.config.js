@@ -4,6 +4,14 @@ import { defineConfig } from "vite";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  // scss 설정
+  css: {
+    modules: {
+      // [name]: 파일명 / [local]: 클래스명 / [hash]: 고유 해시값
+      generateScopedName: '[name]_[local]_[hash:base64:5]',
+    },
+  },
+  // 서버 설정
   server: {
     proxy: {
       // 일반 사용자용 요청

@@ -33,7 +33,7 @@
 .title {
   span,
   h3 {
-    @include mix.textLine(1);
+    @include mix.textLine(2);
   }
 
   span {
@@ -51,7 +51,6 @@
 .detail {
   display: flex;
   flex-direction: column;
-  min-height: 4.5rem;
 
   p {
     @include mix.textLine(2);

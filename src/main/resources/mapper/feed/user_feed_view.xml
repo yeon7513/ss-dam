@@ -7,7 +7,7 @@
 <mapper namespace="userFeedView">
 
   <!-- 피드 전체 개수 -->
-  <select id="totalCountFeed">
+  <select id="totalCountFeed" resultType="Integer">
     SELECT count(*)
     FROM FEED f
     WHERE f.status = 'active' AND f.delete_yn = 0
@@ -28,6 +28,7 @@
     mp.ranking AS m_ranking,
     mp.rating AS m_rating,
     mp.path AS m_profile_image,
+    i.path AS thumbnail,
     fh.tag_name AS hashtags,
     IFNULL(cnt_comment.cnt, 0) AS count_feed_comment,
     IFNULL(cnt_like.cnt, 0) AS count_feed_like,
@@ -44,6 +45,9 @@
     ON m.code = i.target_code AND i.TYPE = 'profile'
     ) AS mp
     ON mp.code = f.mem_code
+    <!-- 대표 이미지 -->
+    LEFT JOIN IMAGES i
+    ON f.code = i.target_code AND i.type = 'feed' AND i.order_seq = 1
     <!-- 해시태그 -->
     LEFT JOIN FEED_HASHTAG fh
     ON f.code = fh.feed_code

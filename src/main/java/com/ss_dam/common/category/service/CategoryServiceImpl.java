@@ -24,9 +24,13 @@ public class CategoryServiceImpl implements CategoryService {
   }
 
   @Override
-  public List<Category> loadMarketCategories() {
-    return categoryDao.loadMarketCategories();
+  public List<Category> loadActiveMarketCategories() {
+    return categoryDao.loadActiveMarketCategories();
   }
 
+  @Override
+  public List<Category> loadAllMarketCategories() {
+    return categoryDao.loadAllMarketCategories();
+  }
 
 }
