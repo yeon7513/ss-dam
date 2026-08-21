@@ -10,6 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+// 이 컨트롤러는 프론트엔드로 피드, 마켓 등록 시 사용하는
+// 카테고리를 불러오는 컨트롤러임.
+// -> 읽기 전용!!
+
+
 @RestController
 @RequestMapping("/api/categories")
 public class CategoryController {

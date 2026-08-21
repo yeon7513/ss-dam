@@ -3,7 +3,6 @@ package com.ss_dam.common.category.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.List;
-import java.util.Map;
 
 // 이 DTO는 일반 사용자용 & 읽기 전용
 // 즉, 글쓰기 부분에서 <select> 태그에 사용할 데이터들
@@ -19,11 +18,12 @@ public class Category {
   private Long code; // 카테고리 고유 번호
   private String name; // 카테고리명
 
-  // 대분류용 필드 (현재는 마켓에서만 사용)
-  private Long mainCate;
-  private List<Map<String, Object>> subCate;
+  // 수정 & 관리자용 필드
+  private String status;
+  private boolean deleteYn;
 
-  // 즉, 마켓에서 사용할 경우 code -> 하위 카테고리
+  // 대분류용 필드 (현재는 마켓에서만 사용)
+  private List<Category> depth;
 
   // getter, setter
   public Long getCode() {
@@ -42,19 +42,27 @@ public class Category {
     this.name = name;
   }
 
-  public Long getMainCate() {
-    return mainCate;
+  public List<Category> getDepth() {
+    return depth;
   }
 
-  public void setMainCate(Long mainCate) {
-    this.mainCate = mainCate;
+  public void setDepth(List<Category> depth) {
+    this.depth = depth;
   }
 
-  public List<Map<String, Object>> getSubCate() {
-    return subCate;
+  public String getStatus() {
+    return status;
   }
 
-  public void setSubCate(List<Map<String, Object>> subCate) {
-    this.subCate = subCate;
+  public void setStatus(String status) {
+    this.status = status;
+  }
+
+  public boolean isDeleteYn() {
+    return deleteYn;
+  }
+
+  public void setDeleteYn(boolean deleteYn) {
+    this.deleteYn = deleteYn;
   }
 }
