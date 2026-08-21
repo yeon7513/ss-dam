@@ -69,9 +69,9 @@ function Address({ onChange }) {
   };
 
   let buttonText = "주소 검색";
-  if (isOpen) {
-    buttonText = "닫기";
-  }
+  // if (isOpen) {
+  //   buttonText = "닫기";
+  // }
 
   // const handleFormatAddress = (detail) => {
   //   if (post && basic && detail) {

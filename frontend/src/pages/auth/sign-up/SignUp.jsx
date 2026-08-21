@@ -48,7 +48,7 @@ const SignUp = () => {
   return (
     <div className={styles.signUpPage}>
       <div className={styles.signUpContainer}>
-        <h2>회원가입 페이지</h2>
+        <h2>회원가입</h2>
         <form method="post" onSubmit={handleSubmit}>
           <div className={styles.idGroup}>
             <TextInput
@@ -92,6 +92,7 @@ const SignUp = () => {
             />
           </div>
           <div className={styles.addressGroup}>
+            <label className={styles.label}>주소</label>
             <Address onChange={handleTakeAddress} />
           </div>
           <div className={styles.profileImgGroup}>
