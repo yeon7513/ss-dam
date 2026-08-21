@@ -1,12 +1,18 @@
 @use "/src/scss/variables.scss" as *;
 @use "/src/scss/mixin.scss" as mix;
 
+.wrap {
+  @include mix.wrap();
+
+}
+
 .tabMenus {
   @include mix.flex;
-  gap: 2rem;
   padding: 3rem 0;
 
   .tabItem {
+    width: 240px;
+    min-width: 30%;
     outline: 1px dotted red;
 
     > a {

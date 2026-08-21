@@ -5,7 +5,7 @@ import styles from "./About.module.scss";
 const About = () => {
 
   return (
-    <main>
+    <main className={styles.wrap}>
       <ul className={styles.tabMenus}>
         <li className={styles.tabItem}>
           <Link to="/about/challenge_guide">챌린지 참여 가이드</Link>
