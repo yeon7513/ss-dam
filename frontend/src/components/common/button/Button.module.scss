@@ -1,6 +1,8 @@
+@use "/src/scss/variables.scss" as *;
+
 .button {
   padding: 1rem 1.5rem;
-  background-color: #ccc;
+  background-color: $grayscale-5;
 
   &:disabled {
     cursor: not-allowed;
