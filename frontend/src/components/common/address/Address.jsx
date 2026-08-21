@@ -82,7 +82,7 @@ function Address({ onChange }) {
 
   return (
     <div className={styles.address}>
-      <div>
+      <div className={styles.postGroup}>
         <TextInput
           name="post_number"
           placeholder="우편 번호"

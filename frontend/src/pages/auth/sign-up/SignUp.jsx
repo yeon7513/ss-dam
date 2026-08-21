@@ -44,62 +44,69 @@ const SignUp = () => {
     sendToSignup(form, navigate);
   };
 
+  // 이 아래로만 손댈 것. 퍼블리싱 시작.
   return (
-    <div className={styles.signUp}>
-      <h2>회원가입 페이지</h2>
-      <form method="post" onSubmit={handleSubmit}>
-        <div className={styles.idGroup}>
-          <TextInput
-            name="id"
-            label="아이디"
-            placeholder="아이디 입력"
-            onChange={(e) => handleSetField(e, setForm)}
-          />
-          <Button>중복확인</Button>
+    <div className={styles.signUpPage}>
+      <div className={styles.signUpContainer}>
+        <h2>회원가입 페이지</h2>
+        <form method="post" onSubmit={handleSubmit}>
+          <div className={styles.idGroup}>
+            <TextInput
+              name="id"
+              label="아이디"
+              placeholder="아이디 입력"
+              onChange={(e) => handleSetField(e, setForm)}
+            />
+            <Button className={styles.checkButton}>중복확인</Button>
+          </div>
+          <div className={styles.passwordGroup}>
+            <TextInput
+              type="password"
+              name="password"
+              label="비밀번호"
+              placeholder="비밀번호 입력"
+              onChange={(e) => handleSetField(e, setForm)}
+            />
+            <TextInput
+              type="password"
+              name="password_check"
+              label="비밀번호 확인"
+              placeholder="비밀번호 확인"
+            />
+          </div>
+          <div className={styles.basicInfoGroup}>
+            <TextInput
+              name="name"
+              label="이름"
+              placeholder="실명 입력"
+              onChange={(e) => handleSetField(e, setForm)}
+            />
+            <TextInput type="date" name="birth" label="생년월일" />
+          </div>
+          <div className={styles.phoneGroup}>
+            <TextInput
+              name="phone"
+              label="전화번호"
+              placeholder="'-' 없이 11자리 숫자 입력"
+              onChange={(e) => handleSetField(e, setForm)}
+            />
+          </div>
+          <div className={styles.addressGroup}>
+            <Address onChange={handleTakeAddress} />
+          </div>
+          <div className={styles.profileImgGroup}>
+            <ProfileImage onChange={handleChangeProfileImg} />
+          </div>
+          <div>
+            <Button className={styles.submitButton} type="submit">
+              회원가입
+            </Button>
+          </div>
+        </form>
+        <div className={styles.ctaLogin}>
+          <p>계정이 있으신가요?</p>
+          <Link to="/login">로그인</Link>
         </div>
-        <div className={styles.passwordGroup}>
-          <TextInput
-            type="password"
-            name="password"
-            label="비밀번호"
-            placeholder="비밀번호 입력"
-            onChange={(e) => handleSetField(e, setForm)}
-          />
-          <TextInput
-            type="password"
-            name="password_check"
-            label="비밀번호 확인"
-            placeholder="비밀번호 확인"
-          />
-        </div>
-        <div className={styles.basicInfoGroup}>
-          <TextInput
-            name="name"
-            label="이름"
-            onChange={(e) => handleSetField(e, setForm)}
-          />
-          <TextInput type="date" name="birth" label="생년월일" />
-        </div>
-        <div className={styles.phoneGroup}>
-          <TextInput
-            name="phone"
-            label="전화번호"
-            onChange={(e) => handleSetField(e, setForm)}
-          />
-        </div>
-        <div>
-          <Address onChange={handleTakeAddress} />
-        </div>
-        <div className={styles.profileImgGroup}>
-          <ProfileImage onChange={handleChangeProfileImg} />
-        </div>
-        <div className={styles.submitButton}>
-          <Button type="submit">회원가입</Button>
-        </div>
-      </form>
-      <div className={styles.ctaLogin}>
-        <p>계정이 있으신가요?</p>
-        <Link to="/login">로그인</Link>
       </div>
     </div>
   );

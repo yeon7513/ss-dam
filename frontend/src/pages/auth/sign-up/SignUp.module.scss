@@ -1,46 +1,151 @@
-.signUp {
+@use "/src/scss/variables.scss" as *;
+
+.signUpPage {
+  min-height: 40rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 32px;
-  width: fit-content;
-  border: 1px solid #000;
+}
+
+.signUpContainer {
+  width: 100%;
+  max-width: 26rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+  }
+
+  form {
+    width: 100%;
+
+    > button {
+      width: 100%;
+      height: 3.4rem;
+      box-sizing: border-box;
+
+      //border: 1.5px solid $point-20;
+      background-color: $grayscale-5;
+
+      font-size: 1rem;
+      font-weight: 500;
+
+      cursor: pointer;
+    }
+  }
+}
+
+.idGroup,
+.passwordGroup,
+.basicInfoGroup,
+.phoneGroup,
+.profileImgGroup,
+.addressGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  margin-bottom: 1.5rem;
+
+  // 인풋박스 위에 있는 아이디, 비밀번호
+  label {
+    font-size: 1rem;
+    font-weight: 400;
+
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  // 아이디, 비밀번호 인풋박스
+  input {
+    width: 100%;
+    height: 3.4rem; // 인풋 높이
+    padding: 0 1rem; // 좌우 여백
+
+    font-size: 0.9rem;
+    font-weight: 500;
+
+    box-sizing: border-box;
+    border: 1.5px solid $point-20;
+
+    // 모션을 서서히 나타나도록 함
+    transition: background-color 0.5s ease;
+
+    // "아이디 입력", "비밀번호 입력" 속성
+    &::placeholder {
+      color: $grayscale-50; // 선택 전 옅은 회색 글자
+      font-weight: 400;
+      font-size: 0.9rem;
+    }
+
+    // 인풋박스 클릭 시
+    &:focus {
+      border: 1.5px solid $point-20;
+      background-color: $point-5;
+      outline: none;
+
+      &::placeholder {
+        color: $grayscale-90; // 선택 시 회색 글자 더 진하게
+      }
+    }
+  }
 }
 
 .idGroup {
   display: flex;
-  align-items: center;
+  width: 100%;
   gap: 8px;
+
+  > div {
+    flex: 1;
+    width: 100%;
+  }
+
+  button {
+    flex-shrink: 0;
+    height: 3.4rem; // input 높이와 동일하게 맞춤
+    white-space: nowrap; // 글자 줄바꿈 방지
+  }
 }
 
 .passwordGroup {
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 
 .basicInfoGroup {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  input {
-    width: 100%;
-  }
 }
 
 .phoneGroup {
-  input {
-    width: 100%;
-  }
 }
 
 .profileImgGroup {
-  width: fit-content;
-}
-
-.submitButton {
 }
 
 .ctaLogin {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.submitButton {
+  width: 100%;
+  height: 3.4rem;
+  box-sizing: border-box;
+
+  background-color: $grayscale-5;
+
+  font-size: 1rem;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  &:hover {
+    background-color: $grayscale-10; // 원하는 색상으로 변경
+    transition: background-color 0.5s ease; // 모션을 서서히 나타나도록 함
+  }
 }
