@@ -1,9 +1,10 @@
+@use "/src/scss/variables.scss" as *;
+@use "/src/scss/mixin.scss" as mix;
+
 .page {
   width: 100%;
   min-height: 100vh;
   padding: clamp(18px, 2vw, 22px) 0 clamp(32px, 4vw, 40px);
-  background: #fff;
-  color: #111;
 }
 
 .breadcrumb,

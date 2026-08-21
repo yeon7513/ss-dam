@@ -2,8 +2,8 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import AdminLayout from "./layout/AdminLayout";
 import Layout from "./layout/Layout";
 import About from "./pages/about/About";
-import ChallengeGuide from "./pages/about/ChallengeGuide";
-import MarketGuide from "./pages/about/MarketGuide";
+import ChallengeGuide from "./pages/about/challenge-guide/ChallengeGuide.jsx";
+import MarketGuide from "./pages/about/market-guide/MarketGuide.jsx";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import ChallengeManage from "./pages/admin/ChallengeManage";
 import FeedManage from "./pages/admin/FeedManage";
@@ -86,8 +86,8 @@ function App() {
         </Route>
 
         {/* 소개 */}
-        <Route path="/about">
-          <Route index element={<About />} />
+        <Route path="/about" element={<About />}>
+          <Route index element={<Navigate to="challenge_guide" replace />} />
           <Route path="challenge_guide" element={<ChallengeGuide />} />
           <Route path="market_guide" element={<MarketGuide />} />
         </Route>

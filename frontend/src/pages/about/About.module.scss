@@ -1,0 +1,19 @@
+@use "/src/scss/variables.scss" as *;
+@use "/src/scss/mixin.scss" as mix;
+
+.tabMenus {
+  @include mix.flex;
+  gap: 2rem;
+  padding: 3rem 0;
+
+  .tabItem {
+    outline: 1px dotted red;
+
+    > a {
+      display: block;
+      padding: 24px 36px;
+    }
+  }
+
+
+}

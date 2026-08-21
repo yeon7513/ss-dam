@@ -1,11 +1,11 @@
 import React from "react";
 import styles from "./ChallengeGuide.module.scss";
-import { steps } from "../../lib/guideLine";
+import { steps } from "../../../lib/guideLine.js";
 
 const ChallengeGuide = () => {
   return (
-    <main className={styles.page}>
-      <div className={styles.breadcrumb}>소개 &gt; 챌린지 이용 가이드</div>
+    <div className={styles.page}>
+      {/*<div className={styles.breadcrumb}>소개 &gt; 챌린지 이용 가이드</div>*/}
 
       <section className={styles.titleBox}>
         <h1>챌린지 이용 가이드</h1>
@@ -145,7 +145,7 @@ const ChallengeGuide = () => {
           있습니다. 챌린지 관련 문의는 고객센터를 이용해 주세요.
         </span>
       </div>
-    </main>
+    </div>
   );
 };
 
