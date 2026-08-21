@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 마켓 관련에서 사용할 공용 resultMap & sql 매퍼 -->
+<mapper namespace="marketCommonQuery">
+
+  <!-- 일반 사용자용 전체 리스트 -->
+  <resultMap id="UserProductViewMap" type="UserProductView" autoMapping="true">
+    <id column="code" property="code" />
+
+    <!-- 회원 프로필카드 매핑 -->
+    <collection property="memberProfile" javaType="MemberProfile" ofType="MemberProfile" autoMapping="true"
+                columnPrefix="m_">
+      <id column="code" property="code" />
+    </collection>
+  </resultMap>
+
+  <!-- 거래글 상세 조회 -->
+  <resultMap id="ProductDetailMap" type="ProductDetail" autoMapping="true" extends="UserProductViewMap">
+    <!-- 등록한 이미지 리스트 -->
+    <collection property="imagePaths" javaType="ArrayList" ofType="String">
+      <result column="image_paths" />
+    </collection>
+  </resultMap>
+
+</mapper>

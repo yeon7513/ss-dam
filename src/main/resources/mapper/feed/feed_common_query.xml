@@ -10,7 +10,7 @@
   <resultMap type="UserFeedView" id="UserFeedViewMap" autoMapping="true">
     <id column="code" property="code" />
 
-    <!-- 회원 프로필카드 리스트 매핑 -->
+    <!-- 회원 프로필카드 매핑 -->
     <collection property="memberProfile" javaType="MemberProfile" ofType="MemberProfile" autoMapping="true"
                 columnPrefix="m_">
       <id column="code" property="code" />
@@ -41,12 +41,12 @@
   </resultMap>
 
   <!-- 사용자가 사용하는 검색 필터 -->
-  <sql id="userSearchFiller">
+  <sql id="UserSearchFiller">
 
   </sql>
 
   <!-- 관리자가 사용하는 검색 필터 -->
-  <sql id="adminSearchFilter">
+  <sql id="AdminSearchFilter">
 
   </sql>
 </mapper>

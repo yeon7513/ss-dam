@@ -7,7 +7,9 @@ import java.util.List;
 public interface CategoryDao {
   List<Category> loadAllChallengeCategories();
 
-  List<Category> loadMarketCategories();
-
   List<Category> loadActiveChallengeCategories();
+
+  List<Category> loadActiveMarketCategories();
+
+  List<Category> loadAllMarketCategories();
 }

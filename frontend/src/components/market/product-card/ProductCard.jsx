@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Card from "../../common/card/Card";
 import ProfileCard from "../../profile-card/ProfileCard";
 import styles from "./ProductCard.module.scss";
-import Slide from "../../common/slide/Slide.jsx";
+import ImageBox from "../../common/image-box/ImageBox.jsx";
 
 function ProductCard({ product }) {
   const navigate = useNavigate();
@@ -20,22 +20,24 @@ function ProductCard({ product }) {
       {/* 프로필 카드 */}
       <ProfileCard memberProfile={product.memberProfile} />
 
-      {/* 이미지 슬라이드 */}
-      <div className={styles.thumbnails}>
-        <Slide images={product.images} />
+      {/* 썸네일 */}
+      <div className={styles.thumbnail}>
+        <ImageBox src={product.thumbnail} alt="대표 이미지" />
       </div>
 
       {/* 본문 */}
       <div className={styles.contents}>
         {/* 제목 */}
         <div className={styles.title}>
-          <span>{product.categoryName}</span>
-          <h3>{product.title}</h3>
+          <span>{product.mainCategoryName} - {product.subCategoryName}</span>
+          <h3>
+            <span>{product.dealStatus}</span>
+            {product.title}
+          </h3>
         </div>
 
         {/* 콘텐츠 (내용) */}
         <div className={styles.detail}>
-          <p>{product.content}</p>
           <div className={styles.price}>{product.price.toLocaleString()}원</div>
         </div>
 

@@ -10,14 +10,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+// 이 컨트롤러는 프론트엔드로 피드, 마켓 등록 시 사용하는
+// 카테고리를 불러오는 컨트롤러임.
+// -> 읽기 전용!!
+
+
 @RestController
-@RequestMapping("/api/category")
+@RequestMapping("/api/categories")
 public class CategoryController {
 
   @Autowired
   CategoryService categoryService;
 
-  // 활성 상태에 따라 호출 분기 처리
+  // 각 구역의 카테고리 활성 상태에 따라 호출 분기 처리
+
+  // 챌린지 카테고리
   @GetMapping("/challenge/{status}")
   List<Category> loadChallengeCategories(@PathVariable String status) {
     if ("active".equalsIgnoreCase(status)) {
@@ -32,8 +39,18 @@ public class CategoryController {
     throw new IllegalArgumentException("지원하지 않는 카테고리 상태값입니다: " + status);
   }
 
-  @GetMapping("/market")
-  List<Category> loadMarketCategories() {
-    return categoryService.loadMarketCategories();
+  // 마켓 카테고리 (상위 & 하위)
+  @GetMapping("/market/{status}")
+  List<Category> loadMarketCategories(@PathVariable String status) {
+    if ("active".equalsIgnoreCase(status)) {
+      // 거래글 등록에서 사용할 활성화 중인 카테고리 조회
+      return categoryService.loadActiveMarketCategories();
+    } else if ("all".equalsIgnoreCase(status)) {
+      // 거래글 목록에서 사용할 전체 카테고리 조회 (판매중, 판매완료 포함)
+      return categoryService.loadAllMarketCategories();
+    }
+
+    // 허용되지 않은 status 값이 들어오면 예외 발생
+    throw new IllegalArgumentException("지원하지 않는 카테고리 상태값입니다: " + status);
   }
 }

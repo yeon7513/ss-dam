@@ -16,19 +16,66 @@
   <select id="loadActiveChallengeCategories" resultType="Category">
     SELECT c.code, c.title AS name
     FROM CHALLENGE AS c
-    WHERE c.status = 'ACTIVE' AND c.delete_yn = 0
+    WHERE c.progress_status = 'IN_PROGRESS' AND c.post_status = 'ACTIVE' AND c.delete_yn = 0
   </select>
 
-  <!-- 물품 등록용 마켓 카테고리 선택 -->
-  <select id="loadMarketCategories" resultType="Category">
+
+  <resultMap id="MarketCategoriesMap" type="Category" autoMapping="true">
+    <id column="code" property="code" />
+
+    <collection property="depth" columnPrefix="sub_" javaType="ArrayList" ofType="Category" autoMapping="true">
+      <id column="code" property="code" />
+    </collection>
+  </resultMap>
+
+  <!-- 물품 등록 및 조회용 마켓 카테고리 선택 (상위 & 하위, 활성중인 카테고리만) -->
+  <select id="loadActiveMarketCategories" resultMap="MarketCategoriesMap">
     SELECT
-    sub.code,
-    sub.name,
-    main.code AS main_category_code,
-    main.name AS main_category_name
+    main_category.code,
+    main_category.name,
+    sub_category.sub_category_code AS sub_code,
+    sub_category.sub_category_name AS sub_name
+    FROM MARKET_CATEGORY AS main_category
+    <!-- 하위 카테고리 -->
+    JOIN (
+    SELECT
+    sub.code AS sub_category_code,
+    sub.main_cate AS main_category_code,
+    sub.name AS sub_category_name
     FROM MARKET_CATEGORY AS sub
-    LEFT JOIN MARKET_CATEGORY AS main
-    ON sub.main_cate = main.code
+    WHERE sub.delete_yn = 0
+    AND sub.status = 'active'
+    AND sub.main_cate IS NOT NULL
+    ) AS sub_category
+    ON main_category.code = sub_category.main_category_code
+    WHERE main_category.status = 'active' AND main_category.delete_yn = 0
+  </select>
+
+  <!-- 물품 수정 시 사용할 수도 있을 것 같음. 일단 만들어두기~ -->
+  <!-- 이 쿼리는 All, 전체 마켓 카테고리를 조회할 수 있다. (관리자도 사용함) -->
+  <select id="loadAllMarketCategories" resultMap="MarketCategoriesMap">
+    SELECT
+    main_category.code,
+    main_category.name,
+    main_category.status,
+    main_category.delete_yn,
+    sub_category.sub_category_code AS sub_code,
+    sub_category.sub_category_name AS sub_name,
+    sub_category.sub_category_status AS sub_status,
+    sub_category.sub_category_delete_yn AS sub_delete_yn
+    FROM MARKET_CATEGORY AS main_category
+    <!-- 하위 카테고리 -->
+    JOIN (
+    SELECT
+    sub.code AS sub_category_code,
+    sub.main_cate AS main_category_code,
+    sub.name AS sub_category_name,
+    sub.status AS sub_category_status,
+    sub.delete_yn AS sub_category_delete_yn
+    FROM MARKET_CATEGORY AS sub
+    WHERE sub.main_cate IS NOT NULL
+    ) AS sub_category
+    ON main_category.code = sub_category.main_category_code
   </select>
 
 </mapper>
