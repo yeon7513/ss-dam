@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Sidebar from "../../../layout/sidebar/SideBar";
 import { FEED_MENU } from "../../../lib/sideMenu";
 import ProfileCard from "../../profile-card/ProfileCard";
-import styles from "./SideNav.module.scss";
+import styles from "./FeedSideNav.module.scss";
 
 function SideNav({ className, isLoggedIn = true }) {
   const filteringMenuItems = FEED_MENU.filter((item) => {
