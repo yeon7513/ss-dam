@@ -1,0 +1,24 @@
+@use "/src/scss/variables.scss" as *;
+@use "/src/scss/mixin.scss" as mix;
+
+.wrap {
+  @include mix.wrap;
+}
+
+.contents {
+  @include mix.flex($ai: flex-start);
+  gap: 2rem;
+}
+
+.productImages {
+  flex: 1;
+
+  img {
+    width: 50%;
+    min-width: 100%;
+  }
+}
+
+.productDetails {
+  flex: 1;
+}

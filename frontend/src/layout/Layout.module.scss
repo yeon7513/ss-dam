@@ -1,5 +1,20 @@
 @use "/src/scss/variables.scss" as *;
+@use "/src/scss/mixin.scss" as mix;
 
 .wrapper {
+  @include mix.flex($fd: column, $jc: flex-start);
+
   height: fit-content;
+  min-height: 100vh;
+
+  > header,
+  > main,
+  > footer {
+    width: 100%;
+  }
+
+  > main {
+    flex: 1;
+  }
+
 }

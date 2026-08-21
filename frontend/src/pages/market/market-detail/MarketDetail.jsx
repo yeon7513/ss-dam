@@ -1,6 +1,10 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useLoadData } from "../../../hooks/useLoadData.js";
+import MarketSideNav from "../../../components/market/side-nav/MarketSideNav.jsx";
+import Slide from "../../../components/common/slide/Slide.jsx";
+import { IoHeartSharp } from "react-icons/io5";
+import styles from "./MarketDetail.module.scss";
 
 const MarketDetail = () => {
   const navigate = useNavigate();
@@ -21,9 +25,48 @@ const MarketDetail = () => {
   console.log(detail);
 
   return (
-    <div>
-      <h2>MarketDetail</h2>
-    </div>
+    <main className={styles.wrap}>
+      {/* 사이드 메뉴 */}
+      <MarketSideNav />
+
+      <div className={styles.container}>
+        {/* 브레드크럼 */}
+        <div>
+          브레드크럼
+        </div>
+
+        <div className={styles.contents}>
+          {/* 이미지 슬라이드 */}
+          <div className={styles.productImages}>
+            <Slide images={detail.imagePaths} />
+          </div>
+
+          {/* 상세 내용 시작 */}
+          <div className={styles.productDetails}>
+            <h2>{detail.title}</h2>
+
+            <div>
+              <span>{detail.createdAt}</span>
+              <h3>{detail.price.toLocaleString()}그루</h3>
+            </div>
+
+            <p>{detail.content}</p>
+
+            <ul>
+              <li>
+                Pick <IoHeartSharp />
+                {detail.countPick}
+              </li>
+              <li>
+                조회수
+                {detail.hitcount}
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </main>
   );
 };
 

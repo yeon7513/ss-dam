@@ -16,6 +16,8 @@ import { HOST } from "../../../lib/url.js";
 
 function Slide({ children, images, className, isLoop = false, isAutoplay = false }) {
 
+  console.log("슬라이드 이미지: ", images);
+
   // children이 있을 경우
   if (children) {
     return (
@@ -38,7 +40,7 @@ function Slide({ children, images, className, isLoop = false, isAutoplay = false
 
   // 이미지가 없을 경우,
   // 슬라이드 X, placeholder 이미지로 대체
-  if (!images) {
+  if (!images || images.length === 0) {
     return (
       <ImageBox src={null} />
     );
