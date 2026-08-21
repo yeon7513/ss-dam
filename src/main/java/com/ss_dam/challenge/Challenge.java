@@ -1,104 +1,131 @@
 package com.ss_dam.challenge;
 
 public class Challenge {
-  private int code; // 챌린지 번호
-  private String empId; // 관리자 아이디
-  private String title; // 제목
-  private String content; // 내용
-  private String startDate; // 시작일
-  private String endDate; // 마감일
-  private String status; // 운영상태
-  private String createdAt; // 등록일
-  private String updateAt; // 수정일
-  private boolean deleteYn; // 삭제 여부
-  private int participantCount; // 참여자 수
+	private int code; // 챌린지 번호
+	private int admCode; // 관리자 아이디
+	private String title; // 제목
+	private String content; // 내용
+	private String startDate; // 시작일
+	private String endDate; // 마감일
+	private String postStatus;
+	private String progressStatus;
+	private String createdBy;
+	private String createdAt; // 등록일
+	private String updatedBy; // 수정일
+	private String updatedAt; // 수정일
+	private boolean deleteYn; // 삭제 여부
+	private int participantCount; // 참여자 수
 
-  public int getCode() {
-    return code;
-  }
+	public int getAdmCode() {
+		return admCode;
+	}
 
-  public void setCode(int code) {
-    this.code = code;
-  }
+	public void setAdmCode(int admCode) {
+		this.admCode = admCode;
+	}
 
-  public String getEmpId() {
-    return empId;
-  }
+	public String getCreatedBy() {
+		return createdBy;
+	}
 
-  public void setEmpId(String empId) {
-    this.empId = empId;
-  }
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
 
-  public String getTitle() {
-    return title;
-  }
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
 
-  public void setTitle(String title) {
-    this.title = title;
-  }
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
 
-  public String getContent() {
-    return content;
-  }
+	public String getUpdatedAt() {
+		return updatedAt;
+	}
 
-  public void setContent(String content) {
-    this.content = content;
-  }
+	public void setUpdatedAt(String updatedAt) {
+		this.updatedAt = updatedAt;
+	}
 
-  public String getStartDate() {
-    return startDate;
-  }
+	public int getCode() {
+		return code;
+	}
 
-  public void setStartDate(String startDate) {
-    this.startDate = startDate;
-  }
+	public void setCode(int code) {
+		this.code = code;
+	}
 
-  public String getEndDate() {
-    return endDate;
-  }
+	public String getTitle() {
+		return title;
+	}
 
-  public void setEndDate(String endDate) {
-    this.endDate = endDate;
-  }
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-  public String getStatus() {
-    return status;
-  }
+	public String getContent() {
+		return content;
+	}
 
-  public void setStatus(String status) {
-    this.status = status;
-  }
+	public void setContent(String content) {
+		this.content = content;
+	}
 
-  public String getCreatedAt() {
-    return createdAt;
-  }
+	public String getStartDate() {
+		return startDate;
+	}
 
-  public void setCreatedAt(String createdAt) {
-    this.createdAt = createdAt;
-  }
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
 
-  public String getUpdateAt() {
-    return updateAt;
-  }
+	public String getEndDate() {
+		return endDate;
+	}
 
-  public void setUpdateAt(String updateAt) {
-    this.updateAt = updateAt;
-  }
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
 
-  public boolean isDeleteYn() {
-    return deleteYn;
-  }
+	public String getPostStatus() {
+		return postStatus;
+	}
 
-  public void setDeleteYn(boolean deleteYn) {
-    this.deleteYn = deleteYn;
-  }
+	public void setPostStatus(String postStatus) {
+		this.postStatus = postStatus;
+	}
 
-  public int getParticipantCount() {
-    return participantCount;
-  }
+	public String getProgressStatus() {
+		return progressStatus;
+	}
 
-  public void setParticipantCount(int participantCount) {
-    this.participantCount = participantCount;
-  }
+	public void setProgressStatus(String progressStatus) {
+		this.progressStatus = progressStatus;
+	}
+
+	public String getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(String createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public boolean isDeleteYn() {
+		return deleteYn;
+	}
+
+	public void setDeleteYn(boolean deleteYn) {
+		this.deleteYn = deleteYn;
+	}
+
+	public int getParticipantCount() {
+		return participantCount;
+	}
+
+	public void setParticipantCount(int participantCount) {
+		this.participantCount = participantCount;
+	}
 
 }

@@ -29,21 +29,25 @@
           parameterType="Challenge">
 
     INSERT INTO CHALLENGE (
-    EMP_ID,
+    ADM_CODE,
     TITLE,
     CONTENT,
     START_DATE,
     END_DATE,
-    STATUS,
+    POST_STATUS,
+    PROGRESS_STATUS,
+    CREATED_BY,
     CREATED_AT,
     DELETE_YN
     ) VALUES (
-    #{empId},
+    #{admCode},
     #{title},
     #{content},
     #{startDate},
     #{endDate},
-    #{status},
+    #{postStatus},
+    #{progressStatus},
+    #{createdBy},
     NOW(),
     false
     )
@@ -59,7 +63,8 @@
     CONTENT = #{content},
     START_DATE = #{startDate},
     END_DATE = #{endDate},
-    STATUS = #{status},
+    POST_STATUS = #{postStatus},
+    PROGRESS_STATUS = #{progressStatus},
     DELETE_YN = #{deleteYn},
     UPDATED_AT = NOW()
     WHERE CODE = #{code}
@@ -78,12 +83,13 @@
   <select id="searchPopularChallenges" resultType="Challenge">
     SELECT
     c.CODE,
-    c.EMP_ID,
+    c.ADM_CODE,
     c.TITLE,
     c.CONTENT,
     c.START_DATE,
     c.END_DATE,
-    c.STATUS,
+    c.POST_STATUS,
+    c.PROGRESS_STATUS,
     c.CREATED_AT,
     c.UPDATED_AT,
     c.DELETE_YN,
@@ -96,12 +102,13 @@
     WHERE c.DELETE_YN = false
     GROUP BY
     c.CODE,
-    c.EMP_ID,
+    c.ADM_CODE,
     c.TITLE,
     c.CONTENT,
     c.START_DATE,
     c.END_DATE,
-    c.STATUS,
+    c.POST_STATUS,
+    c.PROGRESS_STATUS,
     c.CREATED_AT,
     c.UPDATED_AT,
     c.DELETE_YN
@@ -113,12 +120,13 @@
   <select id="searchLatestChallenge" resultType="Challenge">
     SELECT
     c.CODE,
-    c.EMP_ID,
+    c.ADM_CODE,
     c.TITLE,
     c.CONTENT,
     c.START_DATE,
     c.END_DATE,
-    c.STATUS,
+    c.POST_STATUS,
+    c.PROGRESS_STATUS,
     c.CREATED_AT,
     c.UPDATED_AT,
     c.DELETE_YN,
@@ -130,12 +138,13 @@
     WHERE c.DELETE_YN = false
     GROUP BY
     c.CODE,
-    c.EMP_ID,
+    c.ADM_CODE,
     c.TITLE,
     c.CONTENT,
     c.START_DATE,
     c.END_DATE,
-    c.STATUS,
+    c.POST_STATUS,
+    c.PROGRESS_STATUS,
     c.CREATED_AT,
     c.UPDATED_AT,
     c.DELETE_YN
