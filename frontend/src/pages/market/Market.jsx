@@ -2,6 +2,7 @@ import { useLoadData } from "../../hooks/useLoadData.js";
 import styles from "../market/Market.module.scss";
 import ProductCard from "../../components/market/product-card/ProductCard.jsx";
 import MarketSideNav from "../../components/market/side-nav/MarketSideNav.jsx";
+import SearchBox from "../../components/common/search-box/SearchBox.jsx";
 
 const Market = () => {
 
@@ -27,12 +28,15 @@ const Market = () => {
         <MarketSideNav />
       </div>
       {/* 목록 렌더링 */}
-      <div className={styles.list}>
-        {products.length > 0 ? (
-          products.map((product) => <ProductCard key={product.code} product={product} />)
-        ) : (
-          <p>검색된 피드가 없습니다.</p>
-        )}
+      <div className={styles.container}>
+        <SearchBox />
+        <div className={styles.list}>
+          {products.length > 0 ? (
+            products.map((product) => <ProductCard key={product.code} product={product} />)
+          ) : (
+            <p>검색된 피드가 없습니다.</p>
+          )}
+        </div>
       </div>
     </main>
   );
