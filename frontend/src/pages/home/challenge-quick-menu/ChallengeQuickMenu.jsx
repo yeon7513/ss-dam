@@ -12,9 +12,13 @@ const ChallengeQuickMenu = () => {
     fetch("/api/user/challenge/popular", {
       method: "GET",
     })
-      .then((res) => {
-        if (!res.ok) throw new Error("서버 응답 에러");
-        return res.json();
+      .then(async (res) => {
+        const resData = await res.json();
+
+        if (!res.ok) {
+          throw new Error(resData.message || "서버 응답 에러");
+        }
+        return resData;
       })
       .then((resData) => {
         const list = resData.data;
@@ -28,7 +32,7 @@ const ChallengeQuickMenu = () => {
           setSelected(popularList[0]);
         }
       })
-      .catch((err) => console.error("챌린지 퀵 메뉴 로드 실패: ", err));
+      .catch((err) => console.error("챌린지 퀵 메뉴 로드 실패: ", err.message));
   }, []);
 
   const challengeList = latest ? [...popular, latest] : popular;
