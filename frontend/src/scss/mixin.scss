@@ -17,8 +17,9 @@
 }
 
 // 전체를 감싸는 wrap 클래스 스타일
-@mixin wrap($gap: 32px, $pd: 5rem 0) {
+@mixin wrap($gap: 32px, $pd: 5rem 0, $fd: row) {
   display: flex;
+  flex-direction: $fd;
   gap: $gap;
   margin: 0 auto;
   padding: $pd;
