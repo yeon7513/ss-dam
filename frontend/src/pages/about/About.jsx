@@ -4,6 +4,8 @@ import styles from "./About.module.scss";
 import cn from "classnames";
 
 const About = () => {
+  // useLocation 훅으로 현재 위치를 받아와
+  // 탭 메뉴 버튼에 동적으로 active 클래스를 적용
   const { pathname } = useLocation();
 
   return (
