@@ -1,4 +1,6 @@
+@use "/src/scss/variables.scss" as *;
+
 .profileImg {
-  padding: 24px;
-  background-color: #ddd;
+  padding: 20px;
+  background-color: $grayscale-10;
 }

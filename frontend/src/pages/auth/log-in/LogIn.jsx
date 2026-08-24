@@ -55,7 +55,7 @@ const LogIn = () => {
 
   // 이 아래로만 손댈 것. 퍼블리싱 시작.
   return (
-    <div className={styles.loginPage}>
+    <main className={styles.loginPage}>
       <div className={styles.loginContainer}>
         <h2>로그인</h2>
         <p className={styles.subTitle}>
@@ -94,7 +94,7 @@ const LogIn = () => {
           </Button>
         </form>
       </div>
-    </div>
+    </main>
   );
 };
 
