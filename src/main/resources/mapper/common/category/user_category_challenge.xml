@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="category2">
+
+  <!-- 피드 목록용 챌린지 카테고리 조회 (진행중, 진행완료 포함) -->
+  <select id="loadAllChallengeCategories" resultType="Category">
+    SELECT c.code, c.title AS name
+    FROM CHALLENGE AS c
+    WHERE c.delete_yn = 0
+  </select>
+
+  <!-- 피드 등록용 챌린지 카테고리 조회 (진행중인 것만) -->
+  <select id="loadActiveChallengeCategories" resultType="Category">
+    SELECT c.code, c.title AS name
+    FROM CHALLENGE AS c
+    WHERE c.progress_status = 'IN_PROGRESS' AND c.post_status = 'ACTIVE' AND c.delete_yn = 0
+  </select>
+
+  <!-- 마켓용 카테고리 resultMap -->
+  <resultMap id="UserMarketCategoriesMap" type="UserMarketCategoryView" autoMapping="true">
+    <id column="code" property="code" />
+
+    <collection property="depth" columnPrefix="sub_" javaType="ArrayList" ofType="Category" autoMapping="true">
+      <id column="code" property="code" />
+    </collection>
+  </resultMap>
+
+  <resultMap id="AdminMarketCategoriesMap" type="AdminMarketCategoryView" extends="UserMarketCategoriesMap"
+             autoMapping="true">
+    <id column="code" property="code" />
+  </resultMap>
+
+
+  <!-- 물품 등록 및 조회용 마켓 카테고리 선택 (상위 & 하위, 활성중인 카테고리만) -->
+  <select id="loadActiveMarketCategories" resultMap="UserMarketCategoriesMap">
+    SELECT
+    main.code,
+    main.name,
+    sub.code AS sub_code,
+    sub.name AS sub_name
+    FROM MARKET_CATEGORY AS main
+    <!-- 하위 카테고리 셀프 조인 -->
+    JOIN MARKET_CATEGORY AS sub
+    ON main.code = sub.main_cate
+    WHERE main.status = 'active'
+    AND main.delete_yn = 0
+    AND sub.status = 'active'
+    AND sub.delete_yn = 0
+  </select>
+
+  <!-- 이 쿼리는 All, 전체 마켓 카테고리를 조회할 수 있다. (관리자용) -->
+  <select id="loadAllMarketCategories" resultMap="AdminMarketCategoriesMap">
+    SELECT
+    main.code,
+    main.name,
+    main.status,
+    main.created_by,
+    main.created_at,
+    main.updated_by,
+    main.updated_at,
+    main.delete_yn,
+    sub.code AS sub_code,
+    sub.name AS sub_name,
+    sub.status AS sub_status,
+    sub.delete_yn AS sub_delete_yn
+    FROM MARKET_CATEGORY AS main
+    LEFT JOIN MARKET_CATEGORY AS sub
+    ON main.code = sub.main_cate
+    WHERE main.main_cate IS NULL
+  </select>
+
+</mapper>

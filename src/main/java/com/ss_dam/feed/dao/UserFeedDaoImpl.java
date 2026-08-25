@@ -19,12 +19,12 @@ public class UserFeedDaoImpl implements UserFeedDao {
 
   @Override
   public List<UserFeedView> loadFeeds(Map<String, Object> params) {
-    return sql.selectList("userFeedView.loadFeeds", params);
+    return sql.selectList("feedView.loadFeeds", params);
   }
 
   @Override
   public FeedDetail findFeedDetailByFeedCode(Map<String, Object> params) {
-    return sql.selectOne("userFeedView.findFeedDetailByFeedCode", params);
+    return sql.selectOne("feedView.findFeedDetailByFeedCode", params);
   }
 
   @Override

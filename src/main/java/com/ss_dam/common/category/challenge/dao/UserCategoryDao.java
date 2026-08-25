@@ -1,15 +1,12 @@
-package com.ss_dam.common.category.dao;
+package com.ss_dam.common.category.challenge.dao;
 
 import com.ss_dam.common.category.core.Category;
 
 import java.util.List;
 
-public interface CategoryDao {
+public interface UserCategoryDao {
   List<Category> loadAllChallengeCategories();
 
   List<Category> loadActiveChallengeCategories();
 
-  List<Category> loadActiveMarketCategories();
-
-  List<Category> loadAllMarketCategories();
 }

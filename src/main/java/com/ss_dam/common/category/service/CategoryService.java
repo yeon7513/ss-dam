@@ -1,6 +1,6 @@
 package com.ss_dam.common.category.service;
 
-import com.ss_dam.common.category.model.Category;
+import com.ss_dam.common.category.core.Category;
 
 import java.util.List;
 

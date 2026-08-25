@@ -1,4 +1,4 @@
-package com.ss_dam.common.category.service;
+package com.ss_dam.common.category.challenge.service;
 
 import com.ss_dam.common.category.core.Category;
 import com.ss_dam.common.category.dao.CategoryDao;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class CategoryServiceImpl implements CategoryService {
+public class UserCategoryServiceImpl implements UserCategoryService {
 
   @Autowired
   CategoryDao categoryDao;
@@ -21,16 +21,6 @@ public class CategoryServiceImpl implements CategoryService {
   @Override
   public List<Category> loadActiveChallengeCategories() {
     return categoryDao.loadActiveChallengeCategories();
-  }
-
-  @Override
-  public List<Category> loadActiveMarketCategories() {
-    return categoryDao.loadActiveMarketCategories();
-  }
-
-  @Override
-  public List<Category> loadAllMarketCategories() {
-    return categoryDao.loadAllMarketCategories();
   }
 
 }

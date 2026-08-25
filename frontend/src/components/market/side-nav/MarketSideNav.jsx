@@ -30,11 +30,11 @@ function MarketSideNav() {
       </div>
 
       {/* 카테고리 */}
-      <ul>
+      <ul className={styles.mainMenu}>
         {categories.map((category) => (
           <li key={category.code}>
             <button type="button">{category.name}</button>
-            <ul>
+            <ul className={styles.subMenu}>
               {category.depth.map(sub => (
                 <li key={sub.code}>
                   <button type="button">{sub.name}</button>

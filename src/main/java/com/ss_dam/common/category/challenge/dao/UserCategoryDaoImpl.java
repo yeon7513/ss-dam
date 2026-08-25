@@ -1,4 +1,4 @@
-package com.ss_dam.common.category.dao;
+package com.ss_dam.common.category.challenge.dao;
 
 import com.ss_dam.common.category.core.Category;
 import org.apache.ibatis.session.SqlSession;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class CategoryDaoImpl implements CategoryDao {
+public class UserCategoryDaoImpl implements UserCategoryDao {
 
   @Autowired
   SqlSession sql;
@@ -22,16 +22,4 @@ public class CategoryDaoImpl implements CategoryDao {
   public List<Category> loadActiveChallengeCategories() {
     return sql.selectList("category.loadActiveChallengeCategories");
   }
-
-  @Override
-  public List<Category> loadActiveMarketCategories() {
-    return sql.selectList("category.loadActiveMarketCategories");
-  }
-
-  @Override
-  public List<Category> loadAllMarketCategories() {
-    return sql.selectList("category.loadAllMarketCategories");
-  }
-
-
 }

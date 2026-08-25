@@ -1,6 +1,6 @@
 package com.ss_dam.common.category.controller;
 
-import com.ss_dam.common.category.model.Category;
+import com.ss_dam.common.category.core.Category;
 import com.ss_dam.common.category.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
