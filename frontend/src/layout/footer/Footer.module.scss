@@ -1,7 +1,7 @@
 @use "/src/scss/variables.scss" as *;
 
 .container {
-  //border-top: 1px solid $grayscale-90;
+  border-top: 1px solid $grayscale-20; //푸터 상단에 연한 실선
   background-color: $grayscale-5;
   padding: 80px 0px 80px 0px;
   display: flex; //flex 모드를 켬
