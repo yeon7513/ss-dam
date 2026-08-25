@@ -96,6 +96,7 @@ const SignUp = () => {
             <Address onChange={handleTakeAddress} />
           </div>
           <div className={styles.profileImgGroup}>
+            <label className={styles.label}>프로필</label>
             <ProfileImage onChange={handleChangeProfileImg} />
           </div>
           <div>
@@ -106,7 +107,9 @@ const SignUp = () => {
         </form>
         <div className={styles.ctaLogin}>
           <p>계정이 있으신가요?</p>
-          <Link to="/login">로그인</Link>
+          <Link className={styles.loginLink} to="/login">
+            로그인
+          </Link>
         </div>
       </div>
     </main>
