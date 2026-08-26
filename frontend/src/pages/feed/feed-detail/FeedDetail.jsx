@@ -67,7 +67,7 @@ const FeedDetail = ({ code, onClose }) => {
           <div>
             <ul>
               <li>
-                <Button type="button" onClick={() => navigate()}>수정</Button>
+                <Button type="button" onClick={() => navigate(`edit/${code}`)}>수정</Button>
               </li>
               <li>
                 <Button type="button">삭제</Button>

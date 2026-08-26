@@ -36,7 +36,7 @@ import Points from "./pages/myPage/points/Points";
 import SupportDetail from "./pages/support/SupportDetail";
 import Supports from "./pages/support/Supports";
 import AdminRoute from "./components/common/admin/AdminRoute";
-import FeedDetail from "./pages/feed/feed-detail/FeedDetail.jsx";
+import FeedUpdate from "./pages/feed/feed-update/FeedUpdate.jsx";
 
 function App() {
   return (
@@ -49,7 +49,7 @@ function App() {
         <Route path="/feed">
           <Route index element={<Feed />} />
           <Route path="register" element={<FeedRegister />} />
-          <Route path="edit/:code" element={<FeedDetail />} />
+          <Route path="edit/:code" element={<FeedUpdate />} />
         </Route>
 
         {/* 챌린지 */}
