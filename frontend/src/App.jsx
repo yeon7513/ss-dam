@@ -21,7 +21,6 @@ import Challenge from "./pages/challenge/Challenge";
 import ChallengeDetail from "./pages/challenge/ChallengeDetail";
 import ChallengeRanking from "./pages/challenge/ChallengeRanking";
 import Feed from "./pages/feed/Feed";
-import FeedDetail from "./pages/feed/feed-detail/FeedDetail";
 import FeedRegister from "./pages/feed/feed-register/FeedRegister";
 import Home from "./pages/home/Home";
 import Market from "./pages/market/Market";
@@ -37,6 +36,7 @@ import Points from "./pages/myPage/points/Points";
 import SupportDetail from "./pages/support/SupportDetail";
 import Supports from "./pages/support/Supports";
 import AdminRoute from "./components/common/admin/AdminRoute";
+import FeedDetail from "./pages/feed/feed-detail/FeedDetail.jsx";
 
 function App() {
   return (
@@ -49,7 +49,7 @@ function App() {
         <Route path="/feed">
           <Route index element={<Feed />} />
           <Route path="register" element={<FeedRegister />} />
-          <Route path=":code" element={<FeedDetail />} />
+          <Route path="edit/:code" element={<FeedDetail />} />
         </Route>
 
         {/* 챌린지 */}

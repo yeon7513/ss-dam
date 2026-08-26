@@ -5,7 +5,7 @@ import styles from "./MarketSideNav.module.scss";
 
 // 다시쓰담 전용 사이드 메뉴
 function MarketSideNav() {
-  const { data, loading, error } = useLoadData("/api/categories/market/active");
+  const { data, loading, error } = useLoadData("/api/market/categories");
 
   const categories = data || [];
 

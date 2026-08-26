@@ -78,7 +78,7 @@
     ON my_like.feed_code = f.code AND my_like.mem_code = #{memberCode}
   </sql>
 
-  <!-- 2. 공통 피드 기본 컬럼 -->
+  <!-- 공통 피드 기본 컬럼 -->
   <sql id="feedBasicColumns">
     f.code,
     f.title,
@@ -111,7 +111,7 @@
   <select id="loadFeeds" resultMap="UserFeedViewMap">
     SELECT
     <include refid="feedBasicColumns" />,
-    i.path AS thumbnail -- 목록 전용 (대표 1장)
+    i.path AS thumbnail
     FROM FEED f
     <include refid="feedCommonJoins" />
     <!-- 목록 전용 대표 이미지 JOIN -->
@@ -126,8 +126,8 @@
   <select id="findFeedDetailByFeedCode" resultMap="FeedDetailMap">
     SELECT
     <include refid="feedBasicColumns" />,
-    f.content, -- 상세 전용 (본문)
-    i.path AS image_paths -- 상세 전용 (전체 이미지)
+    f.content,
+    i.path AS image_paths
     FROM FEED f
     <include refid="feedCommonJoins" />
     <!-- 상세 전용 전체 이미지 JOIN -->
