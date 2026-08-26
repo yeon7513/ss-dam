@@ -44,11 +44,11 @@ public class LoginController {
 	}
 	
 	@PostMapping("/logout")
-	public ResponseEntity<ApiResponse<String>> logout(HttpSession session){
+	public ResponseEntity<ApiResponse<Void>> logout(HttpSession session){
 		
 		session.invalidate();
 		
-		ApiResponse<String> response = ApiResponse.success("로그아웃 되었습니다", null);
+		ApiResponse<Void> response = ApiResponse.success("로그아웃 되었습니다", null);
 		
 		return ResponseEntity.ok(response);
 	}
