@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import TextInput from "../../../components/forms/text-input/TextInput";
 import Button from "../../../components/common/button/Button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import styles from "./LogIn.module.scss"; // 로그인 페이지 전용 scss모듈
 
 const LogIn = () => {
@@ -92,6 +92,23 @@ const LogIn = () => {
           >
             회원가입
           </Button>
+
+          <div className={styles.ctaAuthLinks}>
+            <p>계정 정보를 잊으셨나요?</p>
+            <div className={styles.linkGroup}>
+              <Link className={styles.subLink} to="#">
+                아이디 찾기
+              </Link>
+              <span className={styles.divider}>|</span>
+              <Link className={styles.subLink} to="#">
+                비밀번호 찾기
+              </Link>
+              <span className={styles.divider}>|</span>
+              <Link className={styles.subLink} to="#">
+                회원가입
+              </Link>
+            </div>
+          </div>
         </form>
       </div>
     </main>

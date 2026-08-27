@@ -129,3 +129,45 @@
   // 로그인 버튼과 회원가입 버튼 사이 상하 간격
   margin-bottom: 0.8rem;
 }
+
+// 기존 SCSS 코드 제일 하단에 추가하세요.
+
+.ctaAuthLinks {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+
+  p {
+    font-size: 1rem;
+    color: $grayscale-90; // 가지고 계신 회색조 변수에 맞춰 수정 가능
+    opacity: 0.6;
+  }
+
+  .linkGroup {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .subLink {
+      font-size: 1rem;
+      font-weight: 400;
+      color: $grayscale-90;
+      text-decoration: none;
+      cursor: pointer;
+
+      &:hover {
+        color: $point-50;
+        font-weight: 600;
+        text-decoration: underline;
+      }
+    }
+
+    .divider {
+      font-size: 1rem;
+      color: $grayscale-90;
+      user-select: none;
+    }
+  }
+}
