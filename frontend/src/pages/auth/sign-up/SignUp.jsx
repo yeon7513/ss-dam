@@ -106,7 +106,7 @@ const SignUp = () => {
           </div>
         </form>
         <div className={styles.ctaLogin}>
-          <p>계정이 있으신가요?</p>
+          <p>계정이 있을텐데?</p>
           <Link className={styles.loginLink} to="/login">
             로그인
           </Link>
