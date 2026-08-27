@@ -5,7 +5,7 @@ import styles from "./MarketSideNav.module.scss";
 
 // 다시쓰담 전용 사이드 메뉴
 function MarketSideNav() {
-  const { data, loading, error } = useLoadData("/api/categories/market/active");
+  const { data, loading, error } = useLoadData("/api/market/categories");
 
   const categories = data || [];
 
@@ -30,11 +30,11 @@ function MarketSideNav() {
       </div>
 
       {/* 카테고리 */}
-      <ul>
+      <ul className={styles.mainMenu}>
         {categories.map((category) => (
           <li key={category.code}>
             <button type="button">{category.name}</button>
-            <ul>
+            <ul className={styles.subMenu}>
               {category.depth.map(sub => (
                 <li key={sub.code}>
                   <button type="button">{sub.name}</button>

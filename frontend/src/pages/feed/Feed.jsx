@@ -5,12 +5,26 @@ import FeedCard from "../../components/feed/feed-card/FeedCard.jsx";
 import { useLoadData } from "../../hooks/useLoadData.js";
 import SearchBox from "../../components/common/search-box/SearchBox.jsx";
 import Pagination from "../../components/common/pagination/Pagination.jsx";
+import Modal from "../../components/common/modal/Modal.jsx";
+import FeedDetail from "./feed-detail/FeedDetail.jsx";
 
 const Feed = () => {
   // 페이지네이션 관련 state
   const [currentPage, setCurrentPage] = useState(1);
   const [searchCode, setSearchCode] = useState(null);
   const [keyword, setKeyword] = useState(null);
+
+  // 모달 관련 state & function
+  // 즉, 선택된 피드의 code를 관리함. null이면? 모달 닫힘
+  const [selectedFeedCode, setSelectedFeedCode] = useState(null);
+
+  const handleOpenDetail = (code) => {
+    setSelectedFeedCode(code);
+  };
+
+  const handleCloseDetail = () => {
+    setSelectedFeedCode(null);
+  };
 
   // 쿼리스트링 생성
   const queryParams = new URLSearchParams({
@@ -28,7 +42,7 @@ const Feed = () => {
   } = useLoadData(`/api/feeds?${queryParams}`);
 
   // 검색용 챌린지 카테고리 조회
-  const { data: categories } = useLoadData("/api/categories/challenge/all");
+  const { data: categories } = useLoadData("/api/challenge/categories");
 
   const feeds = data || [];
 
@@ -56,11 +70,19 @@ const Feed = () => {
         {/* 목록 렌더링 */}
         <div className={styles.list}>
           {feeds.length > 0 ? (
-            feeds.map((feed) => <FeedCard key={feed.code} feed={feed} />)
+            feeds.map((feed) => <FeedCard key={feed.code} feed={feed} onClickDetail={handleOpenDetail} />)
           ) : (
             <p>검색된 피드가 없습니다.</p>
           )}
         </div>
+
+        {/* 피드가 선택되었을 때만 모달 렌더링 */}
+        <Modal isOpen={selectedFeedCode !== null} onClose={handleCloseDetail}>
+          {selectedFeedCode && (
+            <FeedDetail code={selectedFeedCode} onClose={handleCloseDetail} />
+          )}
+        </Modal>
+
         {/* 페이지네이션 */}
         <Pagination page={currentPage} />
       </div>

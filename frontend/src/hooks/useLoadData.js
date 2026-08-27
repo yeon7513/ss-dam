@@ -10,6 +10,7 @@ export const useLoadData = (url) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true); // 로딩용
   const [error, setError] = useState(null); // 에러용
+  const [message, setMessage] = useState(null);
 
   useEffect(() => {
     // url이 비어있으면 바로 종료
@@ -33,13 +34,14 @@ export const useLoadData = (url) => {
     })
     .then(result => {
       if (!ignore) {
-        setData(result);
+        setData(result.data);
         setLoading(false);
       }
     })
     .catch(err => {
       if (!ignore) {
-        setError(err.message);
+        setMessage(err.message);
+        setError(err);
         setLoading(false);
       }
     });
@@ -50,5 +52,5 @@ export const useLoadData = (url) => {
     };
   }, [url]); // url이 바뀔 때만 실행
 
-  return { data, loading, error };
+  return { data, loading, error, message };
 };

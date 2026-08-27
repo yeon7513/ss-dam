@@ -1,12 +1,13 @@
 package com.ss_dam.feed.model.response;
 
 import com.ss_dam.admin.log.response.AdminActivitySummary;
+import com.ss_dam.common.enums.PostStatus;
 
 // 일반 사용자용 조회 DTO 상속
 public class AdminFeedView extends UserFeedView {
 
   // 관리자가 추가로 조회할 내용
-  private String status; // 상태
+  private PostStatus status; // 상태
   private String updatedBy; // 수정자 아이디
   private int countFeedReport; // 신고 누적 수
   private String authorStatus; // 작성자 활성 상태
@@ -17,11 +18,11 @@ public class AdminFeedView extends UserFeedView {
   private AdminActivitySummary adminActivitySummary;
 
   // GETTER, SETTER
-  public String getStatus() {
+  public PostStatus getStatus() {
     return status;
   }
 
-  public void setStatus(String status) {
+  public void setStatus(PostStatus status) {
     this.status = status;
   }
 

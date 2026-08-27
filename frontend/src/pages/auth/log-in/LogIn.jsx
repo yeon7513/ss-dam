@@ -28,7 +28,7 @@ const LogIn = () => {
       const result = await response.json();
       console.log("백엔드가 준 결과물:", result);
 
-      if (result.success) {
+      if (response.ok) {
         const userRole = result.data.role;
         const userName = result.data.name;
 
@@ -45,7 +45,7 @@ const LogIn = () => {
           navigate("/");
         }
       } else {
-        alert(result.message);
+        alert(result.message || "로그인에 실패했습니다");
       }
     } catch (error) {
       console.error("로그인 중 서버 통신 에러:", error);

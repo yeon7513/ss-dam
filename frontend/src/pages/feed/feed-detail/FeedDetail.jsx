@@ -1,7 +1,4 @@
-import { useEffect, useState } from "react";
-import { FaArrowLeft } from "react-icons/fa";
 import { IoChatbubbleEllipses, IoHeartSharp } from "react-icons/io5";
-import { useNavigate, useParams } from "react-router-dom";
 import Button from "../../../components/common/button/Button";
 import Comment from "../../../components/feed/comment/Comment";
 import Hashtag from "../../../components/feed/hashtag/Hashtag";
@@ -9,42 +6,34 @@ import TextInput from "../../../components/forms/text-input/TextInput";
 import ProfileCard from "../../../components/profile-card/ProfileCard";
 import { formatCreatedAt } from "../../../utils/formatDate";
 import styles from "./FeedDetail.module.scss";
-import { handleFindFeedDetailByFeedCode } from "../../../api/feed.js";
 import Slide from "../../../components/common/slide/Slide.jsx";
 import cn from "classnames";
+import { useLoadData } from "../../../hooks/useLoadData.js";
+import { useNavigate } from "react-router-dom";
 
-const FeedDetail = () => {
-  const [detail, setDetail] = useState(null);
+const FeedDetail = ({ code, onClose }) => {
   const navigate = useNavigate();
-  const { code } = useParams();
 
   // 임시로 로그인 관련 세션 설정 -> 나중에 변경할 것!
   const isLoggedIn = sessionStorage.getItem("userName") !== null;
 
-  // 피드 상세 조회 데이터 불러오기
-  useEffect(() => {
-    const fetchFeedDetail = async () => {
-      const feedDetail = await handleFindFeedDetailByFeedCode(code);
+  const { data, loading, error } = useLoadData(`/api/feeds/${code}`);
 
-      if (feedDetail) {
-        setDetail(feedDetail);
-      }
-    };
+  const detail = data || {};
 
-    fetchFeedDetail();
-  }, [code]);
-
-  if (detail === null) {
+  if (loading) {
     return <div>데이터를 불러오는 중입니다.</div>;
+  }
+
+  if (error) {
+    return <div>데이터를 불러오는 데 실패했습니다. {error}</div>;
   }
 
   return (
     <div className={cn(styles.feedDetail)}>
       <div className={styles.title}>
-        <button onClick={() => navigate(-1)}>
-          <FaArrowLeft />
-        </button>
         <div>
+          <button type="button" onClick={onClose}>X</button>
           <span>{detail.chalTitle}</span>
           <h2>{detail.title}</h2>
         </div>
@@ -72,6 +61,18 @@ const FeedDetail = () => {
                 <span>#{tag}</span>
               </Hashtag>
             ))}
+          </div>
+
+          {/* 수정 & 삭제 버튼 - 로그인한 사용자 전용 */}
+          <div>
+            <ul>
+              <li>
+                <Button type="button" onClick={() => navigate(`edit/${code}`)}>수정</Button>
+              </li>
+              <li>
+                <Button type="button">삭제</Button>
+              </li>
+            </ul>
           </div>
 
           {/* 피드 정보 (날짜, 좋아요 수, 댓글 수 등) */}
@@ -104,7 +105,7 @@ const FeedDetail = () => {
               />
               <Button className={styles.registerButton} disabled={!isLoggedIn}>등록</Button>
             </div>
-            
+
             {/* 등록된 댓글 리스트 */}
             <div className={styles.comments}>
               <Comment comments={detail.comments} />

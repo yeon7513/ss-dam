@@ -1,0 +1,686 @@
+@use "/src/scss/variables.scss" as *;
+@use "/src/scss/mixin.scss" as mix;
+
+/* ========================================
+   전체 페이지
+======================================== */
+
+.page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 30px 1%;
+  box-sizing: border-box;
+  background: #fff;
+  color: #222;
+}
+
+/* ========================================
+   Breadcrumb
+======================================== */
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  margin-bottom: 32px;
+
+  font-size: 13px;
+  color: #777;
+
+  strong {
+    color: #222;
+  }
+}
+
+/* ========================================
+   전체 3단 레이아웃
+======================================== */
+
+.mainLayout {
+  display: grid;
+
+  grid-template-columns:
+    300px
+    minmax(0, 1fr)
+    360px;
+
+  gap: 45px;
+
+  align-items: start;
+}
+
+/* ========================================
+   왼쪽 챌린지 목록
+======================================== */
+
+.left {
+  padding: 20px 18px;
+
+  background: #fff;
+
+  border: 1px solid #e2e2e2;
+  border-radius: 10px;
+}
+
+.leftTitle {
+  margin: 0 0 24px;
+
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* 탭 */
+
+.tabs {
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  margin-bottom: 18px;
+}
+
+.tab {
+  height: 44px;
+
+  border: 1px solid #d7d7d7;
+
+  background: #fff;
+
+  font-size: 14px;
+
+  cursor: pointer;
+
+  &:hover {
+    background: #f6faf7;
+  }
+}
+
+.activeTab {
+  color: #fff;
+
+  background: #29985a;
+
+  border-color: #29985a;
+
+  font-weight: 700;
+
+  &:hover {
+    background: #29985a;
+  }
+}
+
+/* 챌린지 목록 */
+
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.listButton {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+
+  padding: 10px 8px;
+  margin-bottom: 2px;
+
+  border: none;
+  border-bottom: 1px solid #eee;
+  border-radius: 8px;
+
+  background: #fff;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+
+  &:hover {
+    background: #f7fbf8;
+  }
+}
+
+.selectedItem {
+  border: 1px solid #2c9b5e;
+
+  background: #f2fbf6;
+
+  &:hover {
+    background: #f2fbf6;
+  }
+}
+
+/* 썸네일 */
+
+.thumbnail {
+  width: 82px;
+  height: 76px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 7px;
+
+  font-size: 34px;
+
+  background: linear-gradient(180deg, #dcefe7 0%, #ffe19a 55%, #68a65e 100%);
+}
+
+.itemText {
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+.itemTitle {
+  color: #111;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.smallStatus {
+  width: fit-content;
+
+  padding: 4px 10px;
+
+  border-radius: 20px;
+
+  background: #dff3e7;
+
+  color: #278852;
+
+  font-size: 11px;
+}
+
+/* ========================================
+   가운데 상세 영역
+======================================== */
+
+.center {
+  min-width: 0;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  margin-bottom: 25px;
+}
+
+.statusBadge {
+  display: inline-block;
+
+  padding: 5px 15px;
+  margin-bottom: 12px;
+
+  border-radius: 20px;
+
+  background: #29985a;
+
+  color: #fff;
+
+  font-size: 12px;
+}
+
+.title {
+  margin: 0 0 10px;
+
+  font-size: 32px;
+  font-weight: 800;
+
+  line-height: 1.3;
+}
+
+.subtitle {
+  margin: 0 0 18px;
+
+  color: #777;
+
+  font-size: 15px;
+}
+
+/* 태그 */
+
+.tags {
+  display: flex;
+
+  gap: 10px;
+
+  span {
+    padding: 7px 15px;
+
+    border-radius: 20px;
+
+    background: #f1f4f1;
+
+    color: #555;
+
+    font-size: 12px;
+  }
+}
+
+/* 공유 */
+
+.shareButton {
+  margin-top: 5px;
+
+  border: none;
+
+  background: transparent;
+
+  font-size: 14px;
+
+  cursor: pointer;
+
+  &:hover {
+    color: #29985a;
+  }
+}
+
+/* ========================================
+   메인 이미지
+======================================== */
+
+.hero {
+  position: relative;
+
+  width: 100%;
+  height: 255px;
+
+  overflow: hidden;
+
+  border-radius: 10px;
+
+  background: linear-gradient(180deg, #cce8d8 0%, #f5d47d 56%, #e7b545 100%);
+}
+
+.sun {
+  position: absolute;
+
+  top: 84px;
+  left: 48%;
+
+  width: 68px;
+  height: 68px;
+
+  border-radius: 50%;
+
+  background: #fff9d5;
+
+  z-index: 3;
+}
+
+.mountain1 {
+  position: absolute;
+
+  left: -50px;
+  bottom: 25px;
+
+  width: 0;
+  height: 0;
+
+  border-left: 250px solid transparent;
+  border-right: 250px solid transparent;
+  border-bottom: 120px solid #6e8669;
+}
+
+.mountain2 {
+  position: absolute;
+
+  left: 220px;
+  bottom: 20px;
+
+  width: 0;
+  height: 0;
+
+  border-left: 290px solid transparent;
+  border-right: 290px solid transparent;
+  border-bottom: 135px solid #6c8466;
+}
+
+.mountain3 {
+  position: absolute;
+
+  right: -30px;
+  bottom: 22px;
+
+  width: 0;
+  height: 0;
+
+  border-left: 280px solid transparent;
+  border-right: 280px solid transparent;
+  border-bottom: 125px solid #71886d;
+}
+
+.groundBack {
+  position: absolute;
+
+  left: -5%;
+  bottom: -55px;
+
+  width: 120%;
+  height: 110px;
+
+  background: #356e43;
+
+  transform: rotate(-2deg);
+
+  z-index: 4;
+}
+
+.groundFront {
+  position: absolute;
+
+  right: -10%;
+  bottom: -40px;
+
+  width: 120%;
+  height: 70px;
+
+  background: #245b3c;
+
+  transform: rotate(3deg);
+
+  z-index: 5;
+}
+
+/* ========================================
+   챌린지 소개
+======================================== */
+
+.description {
+  margin-top: 28px;
+
+  h3 {
+    margin: 0 0 18px;
+
+    color: #27945a;
+
+    font-size: 18px;
+  }
+
+  p {
+    margin: 0 0 12px;
+
+    font-size: 14px;
+
+    line-height: 1.8;
+  }
+}
+
+/* ========================================
+   오른쪽 영역
+======================================== */
+
+.right {
+  display: flex;
+  flex-direction: column;
+
+  gap: 18px;
+}
+
+/* 챌린지 정보 */
+
+.infoCard {
+  overflow: hidden;
+
+  background: #fff;
+
+  border: 1px solid #e0e5e1;
+  border-radius: 10px;
+}
+
+.cardTitle {
+  margin: 0;
+
+  padding: 20px;
+
+  background: #f4faf6;
+
+  color: #238852;
+
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.infoContent {
+  padding: 22px;
+}
+
+.infoItem {
+  display: flex;
+  align-items: center;
+
+  gap: 15px;
+
+  margin-bottom: 22px;
+
+  strong {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #18854c;
+
+    font-size: 13px;
+  }
+
+  p {
+    margin: 0;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+  }
+}
+
+.infoIcon {
+  width: 42px;
+  height: 42px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #f3f6f3;
+
+  color: #267e50;
+
+  font-size: 18px;
+}
+
+/* ========================================
+   버튼
+======================================== */
+
+.joinButton {
+  width: 100%;
+  height: 48px;
+
+  margin-top: 4px;
+
+  border: none;
+  border-radius: 5px;
+
+  background: #29985a;
+
+  color: #fff;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+
+  &:hover {
+    background: #21864d;
+  }
+}
+
+.likeButton {
+  width: 100%;
+  height: 48px;
+
+  margin-top: 10px;
+
+  border: 1px solid #579572;
+  border-radius: 5px;
+
+  background: #fff;
+
+  color: #245b3c;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+
+  &:hover {
+    background: #f4faf6;
+  }
+}
+
+.liked {
+  color: #29985a;
+
+  background: #f2fbf6;
+}
+
+/* ========================================
+   유의사항
+======================================== */
+
+.notice {
+  padding: 20px;
+
+  border: 1px solid #e0e5e1;
+  border-radius: 10px;
+
+  background: #fff;
+
+  h3 {
+    margin: 0 0 15px;
+
+    color: #268d55;
+  }
+
+  ul {
+    margin: 0;
+
+    padding-left: 18px;
+
+    color: #555;
+
+    font-size: 12px;
+
+    line-height: 2;
+  }
+}
+
+/* ========================================
+   함께하는 사람들
+======================================== */
+
+.peopleCard {
+  padding: 20px;
+
+  border: 1px solid #e0e5e1;
+  border-radius: 10px;
+
+  background: #fff;
+
+  h3 {
+    margin: 0 0 15px;
+
+    color: #268d55;
+
+    font-size: 16px;
+  }
+}
+
+.people {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 34px;
+    height: 34px;
+
+    border-radius: 50%;
+
+    background: #e6f3eb;
+
+    color: #29985a;
+  }
+}
+
+.more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 42px;
+  height: 34px;
+
+  border-radius: 20px;
+
+  background: #29985a;
+
+  color: #fff;
+
+  font-size: 11px;
+}
+
+/* ========================================
+   작은 화면 대응
+======================================== */
+
+@media (max-width: 1400px) {
+  .mainLayout {
+    grid-template-columns:
+      260px
+      minmax(0, 1fr)
+      320px;
+
+    gap: 25px;
+  }
+
+  .title {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .mainLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .left,
+  .right {
+    width: 100%;
+  }
+}

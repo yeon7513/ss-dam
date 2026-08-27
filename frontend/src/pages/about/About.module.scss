@@ -2,18 +2,27 @@
 @use "/src/scss/mixin.scss" as mix;
 
 .wrap {
-  @include mix.wrap();
+  @include mix.wrap($fd: column);
 
 }
 
 .tabMenus {
   @include mix.flex;
-  padding: 3rem 0;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  outline: 1px dotted red;
 
   .tabItem {
-    width: 240px;
-    min-width: 30%;
-    outline: 1px dotted red;
+    width: 50%;
+    text-align: center;
+    border-radius: 12px;
+    background-color: $grayscale-10;
+    color: #fff;
+
+    &.active {
+      color: $primary-50;
+      background-color: $point-5;
+    }
 
     > a {
       display: block;

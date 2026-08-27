@@ -8,7 +8,9 @@ function SearchBox({
   onKeywordChange,
   onSubmit,
 }) {
-  
+
+  console.log("options: ", options);
+
   const handleChangeSearchKeyword = (e) => {
     const value = e.target.value;
     onKeywordChange(value);

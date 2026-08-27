@@ -9,26 +9,32 @@ const ChallengeQuickMenu = () => {
   const [selected, setSelected] = useState(null);
 
   useEffect(() => {
-    fetch("/api/user/challenge/popular", {
-      method: "GET",
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error("서버 응답 에러");
-        return res.json();
-      })
-      .then((resData) => {
-        const list = resData.data;
+    const fetchQuickMenu = async () => {
+      try {
+        // method 지정 안해놓으면 GET 방식
+        const response = await fetch("/api/user/challenge/popular");
 
-        if (Array.isArray(list) && list.length > 0) {
-          const popularList = list.slice(0, 3);
-          const latestItem = list[list.length - 1];
+        if (response.ok) {
+          const result = await response.json();
+          const list = result.data;
 
-          setPopular(popularList);
-          setLatest(latestItem);
-          setSelected(popularList[0]);
+          if (Array.isArray(list) && list.length > 0) {
+            const popularList = list.slice(0, 3);
+            const latestItem = list[list.length - 1];
+
+            setPopular(popularList);
+            setLatest(latestItem);
+            setSelected(popularList[0]);
+          }
+        } else {
+          console.warn("챌린지 목록 조회 실패 (HTTP 상태): ", response.status);
         }
-      })
-      .catch((err) => console.error("챌린지 퀵 메뉴 로드 실패: ", err));
+      } catch (error) {
+        console.error("서버 통신 에러: ", error);
+      }
+    };
+
+    fetchQuickMenu();
   }, []);
 
   const challengeList = latest ? [...popular, latest] : popular;

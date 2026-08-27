@@ -1,20 +1,13 @@
 import { IoChatbubbleEllipses, IoHeartSharp } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
 import Card from "../../common/card/Card";
 import ProfileCard from "../../profile-card/ProfileCard";
 import Hashtag from "../hashtag/Hashtag";
 import styles from "./FeedCard.module.scss";
 import ImageBox from "../../common/image-box/ImageBox.jsx";
 
-function FeedCard({ feed }) {
-  const navigate = useNavigate();
-
-  const handleClickDetail = (code) => {
-    navigate(`/feed/${code}`);
-  };
-
+function FeedCard({ feed, onClickDetail }) {
   return (
-    <Card className={styles.feed} onClick={() => handleClickDetail(feed.code)}>
+    <Card className={styles.feed} onClick={() => onClickDetail(feed.code)}>
       {/* 프로필 카드 */}
       <ProfileCard memberProfile={feed.memberProfile} />
 
