@@ -30,12 +30,12 @@ public class UserCommentDaoImpl implements UserCommentDao {
 
   //댓글 수정
   @Override
-public int updateComment(
-    Map<String, Object> params) {
+  public int updateComment(
+      Map<String, Object> params) {
 
-  return sql.update(
-      "commentCommand.updateComment",
-      params
-  );
-    }
+    return sql.update(
+        "commentCommand.updateComment",
+        params
+    );
   }
+}
