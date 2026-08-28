@@ -38,17 +38,15 @@
         </selectKey>
     </insert>
 
-      <!-- 댓글 수정 -->
-  <update id="updateComment">
-  UPDATE COMMENTS
-  SET
-    content = #{content},
-    updated_at = NOW()
-  WHERE code = #{commentCode}
-    AND status = 'active'
-    AND delete_yn = 0
+    <!-- 댓글 수정 -->
+    <update id="updateComment">
+        UPDATE COMMENTS
+        SET
+            content = #{content},
+            updated_at = NOW()
+         WHERE code = #{commentCode}
+            AND mem_code = #{memCode}
+            AND status = 'active'
+            AND delete_yn = 0
     </update>
-<!-- 현재는 로그인 연동 전이므로 updated_by는 수정X,나중에 세션을 적용하면 다음처럼 확장
-    request.setMemberCode(loginUser.getCode());
-    request.setUpdatedBy(loginUser.getMemberId());-->
 </mapper>

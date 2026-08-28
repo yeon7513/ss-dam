@@ -48,7 +48,6 @@ public class UserCommentServiceImpl implements UserCommentService {
       throw new IllegalArgumentException("회원 번호가 필요합니다.");
     }
 
-    // 별도의 예외 처리기 추가 예정
     // 잘못된 요청이므로 원래는 400 Bad Request가 적절. 추후 @RestControllerAdvice를 추가
     if (comment.getContent() == null || comment.getContent().isBlank()) {
       throw new IllegalArgumentException("댓글 내용을 입력해주세요.");
@@ -67,16 +66,24 @@ public class UserCommentServiceImpl implements UserCommentService {
     return comment;
   }
 
-  // 댓글 수정
+  //댓글 수정
     @Override
     public void updateComment(
         Long commentCode,
+        Long memCode,
         CommentUpdate request) {
 
-      // 댓글 번호 검증
+      //댓글 번호 검증
       if (commentCode == null) {
         throw new IllegalArgumentException(
-            "댓글 번호가 필요합니다."
+            "댓글 번호가 필요합니다"
+        );
+      }
+
+      //회원 번호 검증
+      if(memCode == null){
+        throw new IllegalArgumentException(
+          "회원 번호가 필요합니다"
         );
       }
 
@@ -99,8 +106,8 @@ public class UserCommentServiceImpl implements UserCommentService {
           request.getContent().trim();
 
       Map<String, Object> params = new HashMap<>();
-
       params.put("commentCode", commentCode);
+      params.put("memCode", memCode);
       params.put("content", content);
 
       int updatedRows =
@@ -108,11 +115,11 @@ public class UserCommentServiceImpl implements UserCommentService {
 
       if (updatedRows != 1) {
         throw new IllegalStateException(
-            "댓글 수정에 실패했습니다."
+        "댓글이 없거나 수정 권한이 없습니다."
         );
       }
     }
-
+  }
   
 
 
@@ -188,7 +195,7 @@ public class UserCommentServiceImpl implements UserCommentService {
 
 */
 
-    }
+    
 
 
 

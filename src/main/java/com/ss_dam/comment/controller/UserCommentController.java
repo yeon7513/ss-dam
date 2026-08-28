@@ -8,19 +8,26 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ss_dam.comment.model.request.CommentCreate;
 import com.ss_dam.comment.model.request.CommentUpdate;
 import com.ss_dam.comment.service.UserCommentService;
 import com.ss_dam.common.ApiResponse;
+import com.ss_dam.common.category.challenge.controller.AdminChallengeCategoryController;
 
 @RestController
 @RequestMapping("/api/comments")
 public class UserCommentController {
 
-	@Autowired
+	private final AdminChallengeCategoryController adminChallengeCategoryController;
+    @Autowired
 	UserCommentService userCommentService;
+
+    UserCommentController(AdminChallengeCategoryController adminChallengeCategoryController) {
+        this.adminChallengeCategoryController = adminChallengeCategoryController;
+    }
 
 	//댓글 등록 (임시)
 	@PostMapping
@@ -33,29 +40,37 @@ public class UserCommentController {
 				.body(ApiResponse.success("댓글 등록 성공", createdComment));
 	}
 
-	//댓글 수정
+	//댓글 수정 (임시)
 	@PatchMapping("/{commentCode}")
 	public ResponseEntity<ApiResponse<Void>> updateComment(
     @PathVariable Long commentCode,
+	@RequestParam Long memCode,
     @RequestBody CommentUpdate request) {
+	//매개변수 : 댓글 번호, 회원 번호, 내용
+	//임시로 쿼리 파라미터를 받는 방식, 나중에 memCode 제거하고 세션에서 가져오기
 
-  userCommentService.updateComment(
-      commentCode,
-      request
-  );
+  		userCommentService.updateComment(commentCode, memCode, request);
 
-  return ResponseEntity.ok(
-      ApiResponse.success("댓글 수정 성공", null)
-  );
+  		return ResponseEntity.ok(
+		ApiResponse.success("댓글 수정 성공", null)
+  		);
+
+	}
+}
 	//code는 JSON으로 보내지 않습니다. Controller가 URL의 15를 DTO에 넣습니다.
 
-}
+	//댓글 삭제(soft delete -> delete_yn=0을 delete_yn=1로 변경)
+
 
 
 	/*
 	주의할 점은 현재 구조에서는 클라이언트가 memCode를 직접 보냅니다.
 	임시 구현으로는 동작하지만, 로그인 기능과 연결할 때는 memCode를 요청에서 받지 않고
 	 HttpSession의 loginUser에서 가져오는 것이 안전합니다.
+
+	 클라이언트가 보내는 memCode는 조작할 수 있기 때문에 로그인 기능이 연결되면,
+	 댓글 등록·수정·삭제 모두 반드시 세션의 loginUser.getCode()로 교체
+
 	*/
 
 	/* 
@@ -90,6 +105,6 @@ public class UserCommentController {
 				.body(ApiResponse.success("댓글 등록 성공", createdComment));
 */
 
-}
+
 			
 
