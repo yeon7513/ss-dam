@@ -12,6 +12,11 @@ public interface UserCommentService {
   //피드별 댓글 조회
   List<UserCommentView> findCommentsByFeedCode(Long feedCode, Pager pager, Long memberCode);
 
-  //댓글 등록
-  CommentCreate registerComment(Comment comment);
+  //댓글 등록 (임시)
+  CommentCreate registerComment(CommentCreate comment);
+
+  /* 
+  //댓글 등록 (세션 확인)
+  CommentCreate registerComment(CommentCreate request, Long memberCode);
+  */
 }
