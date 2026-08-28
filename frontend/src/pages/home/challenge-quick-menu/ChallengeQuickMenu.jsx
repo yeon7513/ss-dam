@@ -6,36 +6,39 @@ import styles from "./ChallengeQuickMenu.module.scss";
 const ChallengeQuickMenu = () => {
   const [popular, setPopular] = useState([]);
   const [latest, setLatest] = useState(null);
-  const [selected, setSelected] = useState(null);
+  // const [selected, setSelected] = useState(null);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   useEffect(() => {
-    fetch("/api/user/challenge/popular", {
-      method: "GET",
-    })
-      .then(async (res) => {
-        const resData = await res.json();
+    const fetchQuickMenu = async () => {
+      try {
+        // method 지정 안해놓으면 GET 방식
+        const response = await fetch("/api/user/challenge/popular");
 
-        if (!res.ok) {
-          throw new Error(resData.message || "서버 응답 에러");
+        if (response.ok) {
+          const result = await response.json();
+          const list = result.data;
+
+          if (Array.isArray(list) && list.length > 0) {
+            const popularList = list.slice(0, 3);
+            const latestItem = list[list.length - 1];
+
+            setPopular(popularList);
+            setLatest(latestItem);
+          }
+        } else {
+          console.warn("챌린지 목록 조회 실패 (HTTP 상태): ", response.status);
         }
-        return resData;
-      })
-      .then((resData) => {
-        const list = resData.data;
+      } catch (error) {
+        console.error("서버 통신 에러: ", error);
+      }
+    };
 
-        if (Array.isArray(list) && list.length > 0) {
-          const popularList = list.slice(0, 3);
-          const latestItem = list[list.length - 1];
-
-          setPopular(popularList);
-          setLatest(latestItem);
-          setSelected(popularList[0]);
-        }
-      })
-      .catch((err) => console.error("챌린지 퀵 메뉴 로드 실패: ", err.message));
+    fetchQuickMenu();
   }, []);
 
   const challengeList = latest ? [...popular, latest] : popular;
+  const selected = challengeList[selectedIndex];
 
   return (
     <section className={styles.quickMenus}>
@@ -64,9 +67,11 @@ const ChallengeQuickMenu = () => {
               // 키값은 중복 사용 X, 콘솔에 오류 납니다.
               key={index}
               className={cn(styles.menu, {
-                [styles.active]: selected?.code === item.code,
+                // 지정되는 부분을 item.code로 묶어놔서 같은 item.code라 세번째거랑 네번째거가 묶이길래 마우스 댄 곳에 스타일 적용되게 바꿨습니다
+                // [styles.active]: selected?.code === item.code,
+                [styles.active]: selectedIndex === index,
               })}
-              onMouseEnter={() => setSelected(item)}
+              onMouseEnter={() => setSelectedIndex(index)}
             >
               <div className={styles.menuContent}>
                 <div className={styles.menuText}>
