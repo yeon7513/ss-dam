@@ -9,7 +9,9 @@ import java.util.List;
 
 public interface UserCommentService {
 
+  //피드별 댓글 조회
   List<UserCommentView> findCommentsByFeedCode(Long feedCode, Pager pager, Long memberCode);
 
-  CommentCreate registerCommemnt(Comment comment);
+  //댓글 등록
+  CommentCreate registerComment(Comment comment);
 }

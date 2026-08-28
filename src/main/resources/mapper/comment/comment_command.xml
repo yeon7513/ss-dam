@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="commentCommand">
+
+    <!-- 댓글 등록 -->
+    <insert id="registerComment">
+        INSERT INTO COMMENTS (
+        feed_code,
+        mem_code,
+        content,
+        status,
+        created_by,
+        created_at,
+        delete_yn
+        )
+        VALUES (
+        #{feedCode},
+        #{memCode},
+        #{content},
+        'active',
+        (
+        SELECT id
+        FROM MEMBER_ACCOUNT
+        WHERE code = #{memCode}
+        ),
+        NOW(),
+        0
+        )
+
+        <selectKey
+                keyProperty="code"
+                resultType="long"
+                order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+</mapper>

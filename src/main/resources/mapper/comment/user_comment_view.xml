@@ -9,10 +9,14 @@
     <id column="code" property="code" />
 
     <!-- 회원 프로필카드 리스트 매핑 -->
-    <collection property="memberProfile" javaType="MemberProfile" ofType="MemberProfile" autoMapping="true"
+    <association property="memberProfile" javaType="MemberProfile"  autoMapping="true"
                 columnPrefix="m_">
       <id column="code" property="code" />
-    </collection>
+    </association>
+    <!-- UserCommentView의 필드는 리스트가 아닌 단일 객체 => association 수정
+    단일 객체: <association javaType="...">
+    리스트:    <collection ofType="...">-->
+
   </resultMap>
 
   <select id="countComment" resultType="Integer">
