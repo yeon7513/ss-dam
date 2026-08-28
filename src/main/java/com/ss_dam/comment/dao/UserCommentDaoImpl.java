@@ -1,13 +1,14 @@
 package com.ss_dam.comment.dao;
 
-import com.ss_dam.comment.model.request.CommentCreate;
-import com.ss_dam.comment.model.response.UserCommentView;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Map;
+import com.ss_dam.comment.model.request.CommentCreate;
+import com.ss_dam.comment.model.response.UserCommentView;
 
 @Repository
 public class UserCommentDaoImpl implements UserCommentDao {
@@ -26,4 +27,15 @@ public class UserCommentDaoImpl implements UserCommentDao {
   public int registerComment(CommentCreate comment){
     return sql.insert("commentCommand.registerComment", comment);
   }
-}
+
+  //댓글 수정
+  @Override
+public int updateComment(
+    Map<String, Object> params) {
+
+  return sql.update(
+      "commentCommand.updateComment",
+      params
+  );
+    }
+  }
