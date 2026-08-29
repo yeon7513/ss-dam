@@ -38,4 +38,12 @@ public class UserCommentDaoImpl implements UserCommentDao {
         params
     );
   }
+
+  //댓글 삭제
+  @Override
+  public int deleteComment(Map<String, Object> params) {
+    
+    return sql.update("commentCommand.deleteComment",
+    params); 
+  }
 }

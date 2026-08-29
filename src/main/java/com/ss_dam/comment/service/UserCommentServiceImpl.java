@@ -119,6 +119,32 @@ public class UserCommentServiceImpl implements UserCommentService {
         );
       }
     }
+
+    //댓글 삭제
+    @Override
+    public void deleteComment(Long commentCode, Long memCode){
+
+      if(commentCode == null) {
+        throw new IllegalArgumentException("댓글 번호가 필요합니다");
+      }
+
+      if(memCode == null){
+        throw new IllegalArgumentException("회원 번호가 필요합니다");
+      }
+
+      Map<String, Object> params = new HashMap<>();
+      params.put("commentCode", commentCode);
+      params.put("memCode", memCode);
+
+      int updatedRows = userCommentDao.deleteComment(params);
+
+      if(updatedRows != 1){
+        throw new IllegalStateException(
+          "댓글이 없거나 삭제 권한이 없습니다"
+        );
+      }
+
+    }
   }
   
 

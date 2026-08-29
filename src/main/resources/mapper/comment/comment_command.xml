@@ -49,4 +49,25 @@
             AND status = 'active'
             AND delete_yn = 0
     </update>
+
+    <!--댓글 삭제(soft delete)-->
+    <update id="deleteComment">
+        UPDATE COMMENTS
+        SET
+            delete_yn = 1,
+            updated_at = NOW()
+        WHERE 
+            code = #{commentCode}
+            AND mem_code = #{memCode}
+            AND status = 'active'
+            AND delete_yn = 0
+    </update>
+
+    <!-- 
+    code = #{commentCode}: 요청한 댓글만 변경
+    mem_code = #{memCode}: 작성자 본인 댓글만 변경
+    delete_yn = 0: 이미 삭제된 댓글은 다시 처리하지 않음
+    변경된 행이 없으면 Service에서 삭제 실패로 판단
+    -->
+
 </mapper>

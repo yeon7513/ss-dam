@@ -3,6 +3,7 @@ package com.ss_dam.comment.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,11 +57,23 @@ public class UserCommentController {
   		);
 
 	}
-}
+
 	//code는 JSON으로 보내지 않습니다. Controller가 URL의 15를 DTO에 넣습니다.
 
 	//댓글 삭제(soft delete -> delete_yn=0을 delete_yn=1로 변경)
+	@DeleteMapping("/{commentCode}")
+	public ResponseEntity<ApiResponse<Void>> deleteComment(
+		@PathVariable Long commentCode,
+		@RequestParam Long memCode) {
 
+		//현재는 임시로 memCode를 쿼리 파라미터로 받음
+		userCommentService.deleteComment(commentCode, memCode);
+
+		return ResponseEntity.ok(
+			ApiResponse.success("댓글 삭제 성공", null)
+		);
+		}
+}
 
 
 	/*
