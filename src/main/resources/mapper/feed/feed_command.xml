@@ -20,8 +20,8 @@
   <insert id="registerHashtags">
     INSERT INTO FEED_HASHTAG (feed_code, tag_name)
     VALUES
-    <foreach collection="list" item="item" separator="," open="(" close=")">
-      #{item.feedCode}, #{item.tagName}
+    <foreach collection="list" item="item" separator=",">
+      (#{item.feedCode}, #{item.tagName})
     </foreach>
   </insert>
 

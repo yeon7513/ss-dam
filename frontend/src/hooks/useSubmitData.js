@@ -20,7 +20,8 @@ export const useSubmitData = (url, method = "POST") => {
     const options = {
       method,
       headers,
-      body: isFormData ? data : JSON.stringify(data), // formData면 그대로, 아니면 JSON으로 변환
+      body: isFormData ? data : JSON.stringify(data),
+      // formData면 그대로, 아니면 JSON으로 변환
     };
 
     // 실제 서버 전송 로직 (fetch의 결과(result)를 반환)
@@ -34,7 +35,7 @@ export const useSubmitData = (url, method = "POST") => {
     .then(result => {
       console.log("result: ", result);
       setLoading(false);
-      return result;
+      return result.data;
     })
     .catch(err => {
       setError(err.message);

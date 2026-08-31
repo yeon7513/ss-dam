@@ -8,6 +8,7 @@ import com.ss_dam.feed.dao.UserFeedDao;
 import com.ss_dam.feed.model.core.FeedHashtag;
 import com.ss_dam.feed.model.request.FeedCreate;
 import com.ss_dam.feed.model.response.FeedDetail;
+import com.ss_dam.feed.model.response.FeedEditView;
 import com.ss_dam.feed.model.response.UserFeedView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ public class UserFeedServiceImpl implements UserFeedService {
   @Autowired
   ImageService imageService;
 
-
+  // 피드 목록 조회
   @Override
   public List<UserFeedView> loadFeeds(Pager pager, Long memberCode) {
     Map<String, Object> params = new HashMap<>();
@@ -42,6 +43,7 @@ public class UserFeedServiceImpl implements UserFeedService {
     return userFeedDao.loadFeeds(params);
   }
 
+  // 피드 단일 상세 조회 -> 아무나 볼 수 있는 단순 게시글
   @Override
   public FeedDetail findFeedDetailByFeedCode(Long FeedCode, Pager pager, Long memberCode) {
 
@@ -58,6 +60,7 @@ public class UserFeedServiceImpl implements UserFeedService {
     return feedDetail;
   }
 
+  // 피드 등록
   @Transactional
   @Override
   public Long registerFeed(FeedCreate feedCreate) {
@@ -76,6 +79,17 @@ public class UserFeedServiceImpl implements UserFeedService {
     return newFeedCode;
   }
 
+  // 수정할 피드 조회 -> 사용자가 작성한 피드만 조회
+  @Override
+  public FeedEditView findFeedDetailForEdit(Long feedCode, Long memberCode) {
+    Map<String, Long> params = new HashMap<>();
+    params.put("feedCode", feedCode);
+    params.put("memberCode", memberCode);
+
+    return userFeedDao.findFeedDetailForEdit(params);
+  }
+
+  // 해시태그 등록 메소드
   private void registerHashtags(List<String> hashtags, Long feedCode) {
     if (hashtags == null || hashtags.isEmpty()) {
       return;
@@ -87,7 +101,7 @@ public class UserFeedServiceImpl implements UserFeedService {
       FeedHashtag feedHashtag = new FeedHashtag();
       feedHashtag.setFeedCode(feedCode);
       feedHashtag.setTagName(tagName);
-      
+
       feedHashtags.add(feedHashtag);
     }
 

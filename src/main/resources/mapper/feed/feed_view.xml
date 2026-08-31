@@ -40,6 +40,20 @@
     </collection>
   </resultMap>
 
+  <!-- 피드 수정용 데이터 조회 resultMap -->
+  <resultMap id="FeedEditViewMap" type="FeedEditView" autoMapping="true">
+    <id column="code" property="code" />
+
+    <!-- 이미지 리스트 매핑 -->
+    <collection property="imagePaths" javaType="ArrayList" ofType="String">
+      <result column="image_paths" />
+    </collection>
+    <!-- 해시태그를 문자열 리스트로 받아오기 -->
+    <collection property="hashtags" javaType="ArrayList" ofType="String">
+      <result column="hashtags" />
+    </collection>
+  </resultMap>
+
   <!-- 사용자가 사용하는 검색 필터 -->
   <sql id="UserSearchFiller">
 
@@ -116,6 +130,7 @@
     <include refid="feedCommonJoins" />
     <!-- 목록 전용 대표 이미지 JOIN -->
     LEFT JOIN IMAGES i ON f.code = i.target_code AND i.type = 'feed' AND i.order_seq = 1
+    <!-- 해시태그 -->
     LEFT JOIN FEED_HASHTAG fh ON f.code = fh.feed_code
     WHERE f.status = 'active' AND f.delete_yn = 0
     ORDER BY f.created_at DESC, f.code DESC
@@ -132,8 +147,24 @@
     <include refid="feedCommonJoins" />
     <!-- 상세 전용 전체 이미지 JOIN -->
     LEFT JOIN IMAGES i ON f.code = i.target_code AND i.type = 'feed'
+    <!-- 해시태그 -->
     LEFT JOIN FEED_HASHTAG fh ON f.code = fh.feed_code
     WHERE f.code = #{feedCode}
+  </select>
+
+  <select id="findFeedDetailForEdit" resultMap="FeedEditViewMap">
+    SELECT
+    f.code,
+    f.chal_code,
+    f.title,
+    f.content,
+    fh.tag_name AS hashtags,
+    i.path AS image_paths
+    FROM FEED AS f
+    LEFT JOIN IMAGES i ON f.code = i.target_code AND i.type = 'feed'
+    LEFT JOIN FEED_HASHTAG fh ON f.code = fh.feed_code
+    WHERE f.code = #{feedCode}
+    AND f.mem_code = #{memberCode}
   </select>
 
 </mapper>

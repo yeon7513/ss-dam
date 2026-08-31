@@ -8,6 +8,7 @@ import com.ss_dam.common.pager.Pager;
 import com.ss_dam.feed.model.request.FeedCreate;
 import com.ss_dam.feed.model.request.FeedUpdate;
 import com.ss_dam.feed.model.response.FeedDetail;
+import com.ss_dam.feed.model.response.FeedEditView;
 import com.ss_dam.feed.model.response.UserFeedView;
 import com.ss_dam.feed.service.UserFeedService;
 import jakarta.servlet.http.HttpSession;
@@ -101,6 +102,28 @@ public class UserFeedController {
     }
 
     return ResponseEntity.ok(ApiResponse.success("피드가 등록되었습니다.", newFeedCode));
+  }
+
+  // 수정할 피드 데이터 조회
+  @GetMapping("/{feedCode}/edit")
+  ResponseEntity<ApiResponse<FeedEditView>> findFeedDetailForEdit(@PathVariable Long feedCode,
+      HttpSession session) {
+
+    // 로그인한 사용자가 피드를 작성한 사용자가 맞는지
+    //    Login loginUser = (Login) session.getAttribute("loginUser");
+    //    Long memberCode = (loginUser != null) ? loginUser.getCode() : null;
+
+    // 임시로 회원 번호 지정
+    Long memberCode = 1L;
+
+    FeedEditView feedDetailForEdit = userFeedService.findFeedDetailForEdit(feedCode, memberCode);
+
+    if (feedDetailForEdit == null) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND)
+          .body(ApiResponse.fail("존재하지 않는 피드 게시글입니다."));
+    }
+
+    return ResponseEntity.ok(ApiResponse.success("피드 수정 데이터 조회 성공", feedDetailForEdit));
   }
 
   // 피드 수정

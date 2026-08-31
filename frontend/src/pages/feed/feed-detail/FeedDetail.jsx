@@ -21,6 +21,9 @@ const FeedDetail = ({ code, onClose }) => {
 
   const detail = data || {};
 
+  console.log("code: ", code);
+  console.log("detail: ", detail);
+
   if (loading) {
     return <div>데이터를 불러오는 중입니다.</div>;
   }
@@ -42,7 +45,7 @@ const FeedDetail = ({ code, onClose }) => {
       <div className={styles.container}>
         {/* 이미지 슬라이드 */}
         <div className={styles.images}>
-          <Slide images={detail.images} />
+          <Slide images={detail.imagePaths} isLoop={true} />
         </div>
 
         {/* 피드 상세 */}

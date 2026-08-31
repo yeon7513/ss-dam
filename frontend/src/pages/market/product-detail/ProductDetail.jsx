@@ -1,13 +1,12 @@
 import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useLoadData } from "../../../hooks/useLoadData.js";
 import MarketSideNav from "../../../components/market/side-nav/MarketSideNav.jsx";
 import Slide from "../../../components/common/slide/Slide.jsx";
 import { IoHeartSharp } from "react-icons/io5";
-import styles from "./MarketDetail.module.scss";
+import styles from "./ProductDetail.module.scss";
 
-const MarketDetail = () => {
-  const navigate = useNavigate();
+const ProductDetail = () => {
   const { code } = useParams();
 
   const { data, loading, error } = useLoadData(`/api/market/products/${code}`)
@@ -70,4 +69,4 @@ const MarketDetail = () => {
   );
 };
 
-export default MarketDetail;
+export default ProductDetail;
