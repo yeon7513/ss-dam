@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="commentCommand">
+
+    <!-- 댓글 등록 -->
+    <insert id="registerComment">
+        INSERT INTO COMMENTS (
+        feed_code,
+        mem_code,
+        content,
+        status,
+        created_by,
+        created_at,
+        delete_yn
+        )
+        VALUES (
+        #{feedCode},
+        #{memCode},
+        #{content},
+        'active',
+        (
+        SELECT id
+        FROM MEMBER_ACCOUNT
+        WHERE code = #{memCode}
+        ),
+        NOW(),
+        0
+        )
+
+        <selectKey
+                keyProperty="code"
+                resultType="long"
+                order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <!-- 댓글 수정 -->
+    <update id="updateComment">
+        UPDATE COMMENTS
+        SET
+            content = #{content},
+            updated_at = NOW()
+         WHERE code = #{commentCode}
+            AND mem_code = #{memCode}
+            AND status = 'active'
+            AND delete_yn = 0
+    </update>
+
+    <!--댓글 삭제(soft delete)-->
+    <update id="deleteComment">
+        UPDATE COMMENTS
+        SET
+            delete_yn = 1,
+            updated_at = NOW()
+        WHERE 
+            code = #{commentCode}
+            AND mem_code = #{memCode}
+            AND status = 'active'
+            AND delete_yn = 0
+    </update>
+
+    <!-- 
+    code = #{commentCode}: 요청한 댓글만 변경
+    mem_code = #{memCode}: 작성자 본인 댓글만 변경
+    delete_yn = 0: 이미 삭제된 댓글은 다시 처리하지 않음
+    변경된 행이 없으면 Service에서 삭제 실패로 판단
+    -->
+
+</mapper>
