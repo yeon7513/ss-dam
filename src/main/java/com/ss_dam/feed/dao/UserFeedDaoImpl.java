@@ -2,6 +2,7 @@ package com.ss_dam.feed.dao;
 
 import com.ss_dam.feed.model.core.FeedHashtag;
 import com.ss_dam.feed.model.request.FeedCreate;
+import com.ss_dam.feed.model.request.FeedUpdate;
 import com.ss_dam.feed.model.response.FeedDetail;
 import com.ss_dam.feed.model.response.FeedEditView;
 import com.ss_dam.feed.model.response.UserFeedView;
@@ -42,5 +43,15 @@ public class UserFeedDaoImpl implements UserFeedDao {
   @Override
   public FeedEditView findFeedDetailForEdit(Map<String, Long> params) {
     return sql.selectOne("feedView.findFeedDetailForEdit", params);
+  }
+
+  @Override
+  public void deleteHashtags(Long feedCode) {
+    sql.delete("feedCommand.deleteHashtags", feedCode);
+  }
+
+  @Override
+  public void updateFeed(FeedUpdate feedUpdate) {
+    sql.update("feedCommand.updateFeed", feedUpdate);
   }
 }

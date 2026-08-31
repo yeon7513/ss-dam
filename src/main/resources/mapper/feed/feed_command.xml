@@ -25,6 +25,12 @@
     </foreach>
   </insert>
 
+  <!-- 해시태그 삭제 -->
+  <delete id="deleteHashtags">
+    DELETE FROM FEED_HASHTAG
+    WHERE feed_code = #{feedCode}
+  </delete>
+
   <!-- 피드 수정 (피드 작성자) -->
   <update id="updateFeed">
     UPDATE FEED

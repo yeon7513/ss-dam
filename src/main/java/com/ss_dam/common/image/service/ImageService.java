@@ -7,15 +7,16 @@ import java.util.List;
 
 public interface ImageService {
 
-  List<Images> searchImages();
+  List<Images> loadImages();
 
-  List<Images> searchImagesByCode(String type, Long code);
+  List<Images> findImagesByCode(String type, Long targetCode);
 
   // 업로드 (테스트중!)
-  List<Images> uploadImages(List<MultipartFile> files, String type, Long targetCode);
+  void uploadImages(List<MultipartFile> files, String type, Long targetCode);
 
-  Images uploadSingleImage(MultipartFile file, String type, Long targetCode);
+  void uploadSingleImage(MultipartFile file, String type, Long targetCode);
 
   Images uploadSingleImage(MultipartFile file, String type, Long targetCode, int seq);
 
+  void deleteImagesByTargetCode(String type, Long targetCode);
 }

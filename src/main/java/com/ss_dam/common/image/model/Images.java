@@ -9,6 +9,7 @@ public class Images {
 
   // 2026.05.11 수업시간에 잠깐 나온 배치 관리를 통해
   // 이미지의 물리적 삭제를 구현하면 좋을 것 같음.
+  // -> 26.08.31 일단 물리적 삭제로 구현해놨음.
 
   public Long getTargetCode() {
     return targetCode;

@@ -7,12 +7,11 @@ import java.util.Map;
 
 public interface ImageDao {
 
-  List<Images> searchImagesByCode(Map<String, Object> params);
+  List<Images> findImagesByCode(Map<String, Object> params);
 
   void registerImages(Images image);
 
-  List<Images> searchImages();
+  List<Images> loadImages();
 
-
-
+  void deleteImagesByTargetCode(Map<String, Object> params);
 }

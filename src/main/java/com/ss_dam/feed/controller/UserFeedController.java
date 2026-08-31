@@ -131,6 +131,27 @@ public class UserFeedController {
   ResponseEntity<ApiResponse<Void>> updateFeed(@PathVariable Long feedCode, FeedUpdate feedUpdate,
       HttpSession session) {
 
+    // 데이터 위변조 방지를 위한 2차 방어 로직
+    // -> @PathVariable의 값과 FeedUpdate의 code값을 비교함
+    if (feedUpdate.getCode() == null || !feedCode.equals(feedUpdate.getCode())) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+          .body(ApiResponse.fail("잘못된 요청입니다. 피드 식별자가 일치하지 않습니다."));
+    }
+
+    //    Login loginUser = (Login) session.getAttribute("loginUser");
+    //    // -> 로그인하지 않은 사용자의 경우
+    //    if (loginUser == null) {
+    //      return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+    //          .body(ApiResponse.fail("로그인이 필요한 서비스입니다."));
+    //    }
+    //
+    //    // -> 로그인한 사용자 본인이 작성한 글이 맞는지 확인
+    //    if (!loginUser.getCode().equals(feedUpdate.getMemCode())) {
+    //      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponse.fail("수정 권한이 없습니다."));
+    //    }
+
+    userFeedService.updateFeed(feedUpdate);
+
     return ResponseEntity.ok(ApiResponse.success("피드 수정 완료", null));
   }
 

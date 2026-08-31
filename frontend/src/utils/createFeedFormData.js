@@ -11,7 +11,7 @@ export const createFeedFormData = (data) => {
   // formData 전송 시 배열은 꺼내서 append 해야한다고함..
   if (data.hashtags) {
     data.hashtags.forEach((tag, idx) => {
-      formData.append(`hashtags[${idx}].tagName`, tag.tagName);
+      formData.append(`hashtags[${idx}]`, tag);
     });
   }
 
@@ -21,3 +21,4 @@ export const createFeedFormData = (data) => {
 
   return formData;
 };
+

@@ -5,12 +5,12 @@
 
 <mapper namespace="image">
 
-  <select id="searchImages" resultType="Images">
+  <select id="loadImages" resultType="Images">
     SELECT *
     FROM IMAGES
   </select>
 
-  <select id="searchImagesByCode" resultType="Images">
+  <select id="findImagesByCode" resultType="Images">
     SELECT *
     FROM IMAGES
     WHERE type = #{type} AND target_code = #{code}
@@ -21,5 +21,10 @@
     (target_code, type, path, order_seq, delete_yn)
     VALUES (#{targetCode}, #{type}, #{path}, #{orderSeq}, #{deleteYn})
   </insert>
+
+  <delete id="deleteImagesByTargetCode">
+    DELETE FROM IMAGES
+    WHERE type = #{type} AND target_code = #{targetCode}
+  </delete>
 
 </mapper>

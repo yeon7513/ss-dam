@@ -15,8 +15,8 @@ public class ImageDaoImpl implements ImageDao {
   SqlSession sql;
 
   @Override
-  public List<Images> searchImagesByCode(Map<String, Object> params) {
-    return sql.selectList("image.searchImagesByCode", params);
+  public List<Images> findImagesByCode(Map<String, Object> params) {
+    return sql.selectList("image.findImagesByCode", params);
   }
 
   @Override
@@ -25,8 +25,13 @@ public class ImageDaoImpl implements ImageDao {
   }
 
   @Override
-  public List<Images> searchImages() {
-    return sql.selectList("image.searchImages");
+  public List<Images> loadImages() {
+    return sql.selectList("image.loadImages");
+  }
+
+  @Override
+  public void deleteImagesByTargetCode(Map<String, Object> params) {
+    sql.delete("image.deleteImagesByTargetCode", params);
   }
 
 

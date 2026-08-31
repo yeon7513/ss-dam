@@ -8,6 +8,7 @@ import java.util.List;
 public class FeedUpdate {
   private Long code;
   private Long chalCode;
+  private Long memCode;
   private String title;
   private String content;
   private PostStatus status;
@@ -98,5 +99,13 @@ public class FeedUpdate {
 
   public void setHashtags(List<String> hashtags) {
     this.hashtags = hashtags;
+  }
+
+  public Long getMemCode() {
+    return memCode;
+  }
+
+  public void setMemCode(Long memCode) {
+    this.memCode = memCode;
   }
 }

@@ -11,15 +11,14 @@ import styles from "./Editor.module.scss";
 function Editor({
   typeName, // 분류 코드 (FK)
   categories, // 카테고리명
+  selectedValue,
   title,
-  children,
+  children, // 해시태그용 (피드)
   onSubmit, // AJAX 전송 핸들러
   post,
   setPost,
 }) {
   const [selectedImages, setSelectedImages] = useState(post?.imagePaths || []);
-
-  console.log("editor post: ", post);
 
   // 등록, 수정 모드 판별
   const isEditMode = post?.code;
@@ -54,6 +53,7 @@ function Editor({
           <SelectBox
             name={typeName}
             options={categories}
+            selectedValue={selectedValue}
             onChange={(e) => handleSetField(e, setPost)}
           />
           <TextInput

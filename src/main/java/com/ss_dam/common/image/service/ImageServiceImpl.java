@@ -5,6 +5,7 @@ import com.ss_dam.common.image.model.Images;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -23,21 +24,21 @@ public class ImageServiceImpl implements ImageService {
 
   // DB에서 이미지 경로 반환하기
   @Override
-  public List<Images> searchImagesByCode(String type, Long code) {
+  public List<Images> findImagesByCode(String type, Long targetCode) {
     Map<String, Object> params = new HashMap<>();
 
     params.put("type", type);
-    params.put("code", code);
+    params.put("targetCode", targetCode);
 
-    List<Images> images = imageDao.searchImagesByCode(params);
+    List<Images> images = imageDao.findImagesByCode(params);
 
     return images;
   }
 
   // 전체 이미지 불러오기 (테스트용)
   @Override
-  public List<Images> searchImages() {
-    return imageDao.searchImages();
+  public List<Images> loadImages() {
+    return imageDao.loadImages();
   }
 
   // 참고
@@ -47,7 +48,7 @@ public class ImageServiceImpl implements ImageService {
 
   // 이미지 리스트 등록
   @Override
-  public List<Images> uploadImages(List<MultipartFile> files, String type, Long targetCode) {
+  public void uploadImages(List<MultipartFile> files, String type, Long targetCode) {
     List<Images> images = new ArrayList<>();
 
     // 이미지 업로드 시작
@@ -62,17 +63,13 @@ public class ImageServiceImpl implements ImageService {
           images.add(uploaded);
         }
       }
-      // 이미지 반환
-      return images;
-    } else {
-      return null;
     }
   }
 
   // 단일 이미지 등록 시 이미지 순서를 1로 고정 (프로필 사진 같은거..)
   @Override
-  public Images uploadSingleImage(MultipartFile file, String type, Long targetCode) {
-    return uploadSingleImage(file, type, targetCode, 1);
+  public void uploadSingleImage(MultipartFile file, String type, Long targetCode) {
+    uploadSingleImage(file, type, targetCode, 1);
   }
 
   // 단일 이미지 등록 (이미지 리스트용)
@@ -121,6 +118,58 @@ public class ImageServiceImpl implements ImageService {
     } catch (Exception e) {
       e.printStackTrace();
       return null;
+    }
+  }
+
+  // 이미지 삭제 시 주의사항!
+  // DB의 경우 트랜젝션으로 묶이기 때문에 복구가 가능함.
+  // 하지만 물리적인 삭제는 복구가 안됨..
+  // 그렇기 때문에 DB 작업을 전부 다 처리한 후 문제가 없을 경우 물리적으로 삭제해야한다.
+  // -> 그럼 DB는 삭제되고, 실제 파일의 경로와 이름은 어떻게 처리할까?
+  // --> 자바의 메모리 영역에 삭제할 파일 목록을 임시로 저장한다!
+
+  // DB의 이미지 테이블에서 해당하는 컬럼만 삭제
+  @Transactional
+  @Override
+  public void deleteImagesByTargetCode(String type, Long targetCode) {
+    // DB에서 삭제 전 메모리에 삭제할 파일 정보를 미리 담아둠
+    List<Images> existingImages = findImagesByCode(type, targetCode);
+
+    // 없으면 실행 X
+    if (existingImages == null || existingImages.isEmpty()) {
+      return;
+    }
+
+    Map<String, Object> params = new HashMap<>();
+    params.put("type", type);
+    params.put("targetCode", targetCode);
+
+    // DB 작업을 먼저 하고 여기서 오류가 날 경우 롤백 (이 밑으로 코드 실행 X)
+    imageDao.deleteImagesByTargetCode(params);
+
+    // DB 작업 성공 시 메모리에 남아있는 경로 정보를 바탕으로 물리적 삭제 구현
+    for (Images image : existingImages) {
+      deletePhysicalImages(image.getPath());
+    }
+  }
+
+  // DB 저장 경로에 해당하는 실제 파일을 삭제
+  private void deletePhysicalImages(String imagePath) {
+    // 이미지가 없는 경우 실행 X
+    if (imagePath == null || imagePath.isEmpty()) {
+      return;
+    }
+
+    // [DB에 저장된 경로를 절대 경로로 변환]
+    // 첫번째로 오는 "/images/"를 떼버리고 (이미지 파일 중간에 포함될 경우 찾을 수 없으니까..)
+    String relativePath = imagePath.replaceFirst("^/images/", "");
+    // 절대경로(uploadPath)를 붙여 파일 구분자로 전부 치환
+    String absolutePath = uploadPath + File.separator + relativePath.replace("/", File.separator);
+
+    File file = new File(absolutePath);
+    // 대상 루트에 파일이 존재한다면 삭제
+    if (file.exists()) {
+      file.delete();
     }
   }
 

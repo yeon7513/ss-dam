@@ -7,6 +7,7 @@ import com.ss_dam.common.pager.Pager;
 import com.ss_dam.feed.dao.UserFeedDao;
 import com.ss_dam.feed.model.core.FeedHashtag;
 import com.ss_dam.feed.model.request.FeedCreate;
+import com.ss_dam.feed.model.request.FeedUpdate;
 import com.ss_dam.feed.model.response.FeedDetail;
 import com.ss_dam.feed.model.response.FeedEditView;
 import com.ss_dam.feed.model.response.UserFeedView;
@@ -89,6 +90,30 @@ public class UserFeedServiceImpl implements UserFeedService {
     return userFeedDao.findFeedDetailForEdit(params);
   }
 
+  // 피드 수정 -> 피드 포함, 해시태그, 이미지
+  @Transactional
+  @Override
+  public void updateFeed(FeedUpdate feedUpdate) {
+    // 피드 수정 실행
+    userFeedDao.updateFeed(feedUpdate);
+
+    // [ 삭제를 먼저하고, 새로 등록하는 이유? ]
+    // -> 글 수정 시 해시태그를 전부 삭제했을 경우를 고려함.
+
+    // 해시태그 삭제 및 재삽입
+    deleteHashtags(feedUpdate.getCode());
+    List<String> hashtags = feedUpdate.getHashtags();
+
+    if (hashtags != null && !hashtags.isEmpty()) {
+      // 새로 등록된 해시태그 삽입
+      registerHashtags(hashtags, feedUpdate.getCode());
+    }
+
+    // 이미지 삭제 및 재삽입
+
+  }
+
+
   // 해시태그 등록 메소드
   private void registerHashtags(List<String> hashtags, Long feedCode) {
     if (hashtags == null || hashtags.isEmpty()) {
@@ -106,6 +131,11 @@ public class UserFeedServiceImpl implements UserFeedService {
     }
 
     userFeedDao.registerHashtags(feedHashtags);
+  }
+
+  // 해시태그 삭제 메소드
+  private void deleteHashtags(Long feedCode) {
+    userFeedDao.deleteHashtags(feedCode);
   }
 
 }
