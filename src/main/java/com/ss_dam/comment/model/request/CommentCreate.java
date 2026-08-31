@@ -9,7 +9,7 @@ public class CommentCreate {
   private Long memCode;
   private Long code; // 이후 수정,삭제에 필요
 
-   // 댓글 내용
+  // 댓글 내용
 
   // GETTER, SETTER
   public Long getFeedCode() {
@@ -28,7 +28,7 @@ public class CommentCreate {
     this.content = content;
   }
 
-    public Long getMemCode() {
+  public Long getMemCode() {
     return memCode;
   }
 
@@ -36,11 +36,11 @@ public class CommentCreate {
     this.memCode = memCode;
   }
 
-  public Long getCode(){
+  public Long getCode() {
     return code;
   }
 
-  public void setCode(Long code){
+  public void setCode(Long code) {
     this.code = code;
   }
 }

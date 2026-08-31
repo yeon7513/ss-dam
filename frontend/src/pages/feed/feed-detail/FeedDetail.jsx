@@ -10,6 +10,7 @@ import Slide from "../../../components/common/slide/Slide.jsx";
 import cn from "classnames";
 import { useLoadData } from "../../../hooks/useLoadData.js";
 import { useNavigate } from "react-router-dom";
+import { useSubmitData } from "../../../hooks/useSubmitData.js";
 
 const FeedDetail = ({ code, onClose }) => {
   const navigate = useNavigate();
@@ -23,6 +24,31 @@ const FeedDetail = ({ code, onClose }) => {
 
   console.log("code: ", code);
   console.log("detail: ", detail);
+
+  const { handleSubmit } = useSubmitData("/api/comments", "POST");
+
+  const handleRegisterComment = async (e) => {
+    e.preventDefault();
+
+    const form = e.target.closest("form");
+
+    const newComment = {
+      feedCode: code,
+      content: form.comment.value,
+    }
+
+    try {
+      const result = await handleSubmit(newComment);
+
+      if (result) {
+        alert("댓글 등록 완료");
+      }
+
+    } catch (err) {
+      console.log(err);
+    }
+
+  }
 
   if (loading) {
     return <div>데이터를 불러오는 중입니다.</div>;
@@ -94,20 +120,20 @@ const FeedDetail = ({ code, onClose }) => {
           {/* 댓글 */}
           <div className={cn(styles.content, styles.comment)}>
             {/* 댓글 등록 */}
-            <div className={styles.postComment}>
+            <form className={styles.postComment}>
               <TextInput
                 className={styles.field}
                 id="comment"
                 name="comment"
-                disabled={!isLoggedIn}
-                placeholder={
-                  isLoggedIn
-                    ? "댓글을 작성해주세요."
-                    : "로그인 후 댓글을 작성할 수 있습니다."
-                }
+                // disabled={!isLoggedIn}
+                // placeholder={
+                //   isLoggedIn
+                //     ? "댓글을 작성해주세요."
+                //     : "로그인 후 댓글을 작성할 수 있습니다."
+                // }
               />
-              <Button className={styles.registerButton} disabled={!isLoggedIn}>등록</Button>
-            </div>
+              <Button className={styles.registerButton} type="submit" onClick={handleRegisterComment}>등록</Button>
+            </form>
 
             {/* 등록된 댓글 리스트 */}
             <div className={styles.comments}>

@@ -1,78 +1,71 @@
 package com.ss_dam.comment.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.ss_dam.comment.model.request.CommentCreate;
 import com.ss_dam.comment.model.request.CommentUpdate;
 import com.ss_dam.comment.service.UserCommentService;
 import com.ss_dam.common.ApiResponse;
 import com.ss_dam.common.category.challenge.controller.AdminChallengeCategoryController;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/comments")
 public class UserCommentController {
 
-	private final AdminChallengeCategoryController adminChallengeCategoryController;
-    @Autowired
-	UserCommentService userCommentService;
+  private final AdminChallengeCategoryController adminChallengeCategoryController;
+  @Autowired
+  UserCommentService userCommentService;
 
-    UserCommentController(AdminChallengeCategoryController adminChallengeCategoryController) {
-        this.adminChallengeCategoryController = adminChallengeCategoryController;
-    }
+  UserCommentController(AdminChallengeCategoryController adminChallengeCategoryController) {
+    this.adminChallengeCategoryController = adminChallengeCategoryController;
+  }
 
-	//댓글 등록 (임시)
-	@PostMapping
-	public ResponseEntity<ApiResponse<CommentCreate>> registerComment(@RequestBody CommentCreate comment) {
-		
-		CommentCreate createdComment = userCommentService.registerComment(comment);
-		
-		// 데이터 생성이라 HttpStatus.CREATED -> 201 상태 코드 적용
-		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(ApiResponse.success("댓글 등록 성공", createdComment));
-	}
+  //댓글 등록 (임시)
+  @PostMapping
+  public ResponseEntity<ApiResponse<CommentCreate>> registerComment(
+      @RequestBody CommentCreate comment, HttpSession session) {
 
-	//댓글 수정 (임시)
-	@PatchMapping("/{commentCode}")
-	public ResponseEntity<ApiResponse<Void>> updateComment(
-    @PathVariable Long commentCode,
-	@RequestParam Long memCode,
-    @RequestBody CommentUpdate request) {
-	//매개변수 : 댓글 번호, 회원 번호, 내용
-	//임시로 쿼리 파라미터를 받는 방식, 나중에 memCode 제거하고 세션에서 가져오기
+    // 로그인한 사용자만 댓글 작성 가능
+    // 클라이언트쪽에서 가져올 필요 없이 서버 세션에서 사용자 PK를 가져옴
 
-  		userCommentService.updateComment(commentCode, memCode, request);
+    // 현재는 임시로 하드코딩 -> 로그인 해제 후 삭제할 것
+    comment.setMemCode(2L);
 
-  		return ResponseEntity.ok(
-		ApiResponse.success("댓글 수정 성공", null)
-  		);
+    CommentCreate createdComment = userCommentService.registerComment(comment);
 
-	}
+    // 데이터 생성이라 HttpStatus.CREATED -> 201 상태 코드 적용
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(ApiResponse.success("댓글 등록 성공", createdComment));
+  }
 
-	//code는 JSON으로 보내지 않습니다. Controller가 URL의 15를 DTO에 넣습니다.
+  //댓글 수정 (임시)
+  @PatchMapping("/{commentCode}")
+  public ResponseEntity<ApiResponse<Void>> updateComment(@PathVariable Long commentCode,
+      @RequestParam Long memCode, @RequestBody CommentUpdate request) {
+    //매개변수 : 댓글 번호, 회원 번호, 내용
+    //임시로 쿼리 파라미터를 받는 방식, 나중에 memCode 제거하고 세션에서 가져오기
 
-	//댓글 삭제(soft delete -> delete_yn=0을 delete_yn=1로 변경)
-	@DeleteMapping("/{commentCode}")
-	public ResponseEntity<ApiResponse<Void>> deleteComment(
-		@PathVariable Long commentCode,
-		@RequestParam Long memCode) {
+    userCommentService.updateComment(commentCode, memCode, request);
 
-		//현재는 임시로 memCode를 쿼리 파라미터로 받음
-		userCommentService.deleteComment(commentCode, memCode);
+    return ResponseEntity.ok(ApiResponse.success("댓글 수정 성공", null));
 
-		return ResponseEntity.ok(
-			ApiResponse.success("댓글 삭제 성공", null)
-		);
-		}
+  }
+
+  //code는 JSON으로 보내지 않습니다. Controller가 URL의 15를 DTO에 넣습니다.
+
+  //댓글 삭제(soft delete -> delete_yn=0을 delete_yn=1로 변경)
+  @DeleteMapping("/{commentCode}")
+  public ResponseEntity<ApiResponse<Void>> deleteComment(@PathVariable Long commentCode,
+      @RequestParam Long memCode) {
+
+    //현재는 임시로 memCode를 쿼리 파라미터로 받음
+    userCommentService.deleteComment(commentCode, memCode);
+
+    return ResponseEntity.ok(ApiResponse.success("댓글 삭제 성공", null));
+  }
 }
 
 
