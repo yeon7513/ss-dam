@@ -1,5 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
+/* [아이콘 추가] react-icons/hi 패키지에서 눈 모양 아이콘 가져오기 */
+import { HiEye, HiEyeOff } from "react-icons/hi";
+
 import { sendToSignup } from "../../../api/member";
 import Address from "../../../components/common/address/Address";
 import Button from "../../../components/common/button/Button";
@@ -9,12 +13,24 @@ import TextInput from "./../../../components/forms/text-input/TextInput";
 import styles from "./SignUp.module.scss";
 
 const SignUp = () => {
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     id: "",
     password: "",
     name: "",
     phone: "",
   });
+
+  /* 💡 [추가 1] 아이디 중복확인 버튼 클릭 핸들러 */
+  const handleCheckIdDuplicate = () => {
+    if (!form.id) {
+      alert("아이디를 입력해 주세요.");
+      return;
+    }
+    // TODO: 백엔드 API 연동 위치 (ex: await checkIdApi(form.id))
+    alert(`[${form.id}] 중복 확인 버튼이 클릭되었습니다!`);
+  };
 
   // 비밀번호 확인 전용 state
   const [passwordCheck, setPasswordCheck] = useState("");
@@ -23,10 +39,16 @@ const SignUp = () => {
   const [passwordError, setPasswordError] = useState("");
   const [passwordConfirmError, setPasswordConfirmError] = useState("");
 
-  // 1. 비밀번호 일치(성공) 상태 관리 state 추가
+  // 비밀번호 일치(성공) 상태 관리 state
   const [isPasswordMatched, setIsPasswordMatched] = useState(false);
 
-  const navigate = useNavigate();
+  /* [토글 기능 추가] 1. 비밀번호 보이기/숨기기 상태 관리 (false: 숨김, true: 표시) */
+  const [showPassword, setShowPassword] = useState(false);
+
+  /* [토글 기능 추가] 2. 비밀번호 보이기/숨기기 토글 핸들러 */
+  const toggleShowPassword = () => {
+    setShowPassword((prev) => !prev);
+  };
 
   // 비밀번호 정규식 : 영문, 숫자, 특수문자(@$!%*?&) 포함 8~20자
   const passwordRegex =
@@ -37,6 +59,7 @@ const SignUp = () => {
     const value = e.target.value;
     handleSetField(e, setForm);
 
+    // 1차 비밀번호 유효성 검사
     if (!value) {
       setPasswordError("");
     } else if (!passwordRegex.test(value)) {
@@ -47,18 +70,24 @@ const SignUp = () => {
       setPasswordError("");
     }
 
-    // 비밀번호확인란과의 일치 여부 재검증
-    // 2. 1차 비밀번호 변경 시 일치하면 성공 문구 및 상태 업데이트
-    if (passwordCheck) {
-      if (value !== passwordCheck) {
-        setPasswordConfirmError("비밀번호가 일치하지 않습니다.");
-        setIsPasswordMatched(false);
-      } else {
-        setPasswordConfirmError("성공!"); //성공 내용은 필요없을 듯. 비밀번호확인 초기화하기로 함.
-        setIsPasswordMatched(true);
-      }
-    }
+    // 비밀번호란 입력/수정 시 비밀번호 확인란 초기화
+    setPasswordCheck(""); // 입력되어 있던 확인란 값 삭제
+    setPasswordConfirmError(""); // 확인란 관련 메시지 초기화
+    setIsPasswordMatched(false); // 일치 상태 해제
   };
+
+  // 비밀번호확인란과의 일치 여부 재검증
+  // 2. 1차 비밀번호 변경 시 일치하면 성공 문구 및 상태 업데이트
+  // if (passwordCheck) {
+  //   if (value !== passwordCheck) {
+  //     setPasswordConfirmError("비밀번호가 일치하지 않습니다.");
+  //     setIsPasswordMatched(false);
+  //   } else {
+  //     setPasswordConfirmError("성공!"); //성공 내용은 필요없을 듯. 비밀번호확인 초기화하기로 함.
+  //     setIsPasswordMatched(true);
+  //   }
+  // }
+  // };
 
   // 비밀번호 확인 변경 핸들러
   const handlePasswordCheckChange = (e) => {
@@ -127,22 +156,36 @@ const SignUp = () => {
               placeholder="아이디 입력"
               onChange={(e) => handleSetField(e, setForm)}
             />
-            <Button className={styles.checkButton}>중복확인</Button>
+
+            <Button
+              type="button"
+              className={styles.checkButton}
+              onClick={handleCheckIdDuplicate}
+            >
+              중복확인
+            </Button>
           </div>
           <div className={styles.messageContainer}>
             <div className={styles.passwordGroup}>
+              {/* 비밀번호 인풋 영역 */}
+
+              {/* [토글 기능 추가] 3. type 속성을 showPassword 상태에 따라 "text" 또는 "password"로 동적 변경 */}
               <TextInput
-                type="password"
+                type={showPassword ? "text" : "password"}
                 name="password"
                 label="비밀번호"
                 placeholder="비밀번호 입력"
                 onChange={handlePasswordChange}
               />
 
+              {/* [토글 기능 추가] 4. 비밀번호 확인란도 동일하게 type 동적 변경 */}
               <TextInput
-                type="password"
+                type={showPassword ? "text" : "password"}
                 name="password_check"
                 label="비밀번호 확인"
+                value={
+                  passwordCheck
+                } /* 확인란 입력값 초기화 (비밀번호란 수정 시) */
                 placeholder={
                   !passwordError && form.password
                     ? "비밀번호 확인"
@@ -152,6 +195,16 @@ const SignUp = () => {
                 /* 1차 비밀번호가 없거나 정규식을 통과하지 못하면 비활성화 */
                 disabled={!form.password || !!passwordError}
               />
+
+              {/* [토글 기능 추가] 5. 삼항 연산자로 눈 상태에 따라 아이콘 분기 */}
+              <button
+                type="button"
+                className={styles.togglePasswordBtn}
+                onClick={toggleShowPassword}
+                aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}
+              >
+                {showPassword ? <HiEyeOff size={20} /> : <HiEye size={20} />}
+              </button>
             </div>
             <div className={styles.errorGroup}>
               {passwordError && (

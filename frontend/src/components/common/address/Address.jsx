@@ -83,12 +83,14 @@ function Address({ onChange }) {
   return (
     <div className={styles.address}>
       <div className={styles.postGroup}>
+        {/* 우편번호 인풋 */}
         <TextInput
           name="post_number"
           placeholder="우편 번호"
           value={post}
           disabled={post !== ""} //-> 주소 API 등록 후 주석 해제할 것!!
           readOnly
+          onClick={togglePostcode} // 핸들러
         />
         <Button onClick={togglePostcode}>{buttonText}</Button>
       </div>
@@ -105,13 +107,17 @@ function Address({ onChange }) {
         </div>
       )}
 
+      {/*  기본 주소 인풋 */}
       <TextInput
         name="basic_address"
         placeholder="주소"
         value={basic}
         disabled={basic !== ""} // -> 주소 API 등록 후 주석 해제할 것!!
         readOnly
+        onClick={togglePostcode} // 핸들러
       />
+
+      {/* 상세 주소 인풋 */}
       <TextInput
         name="detaile_address"
         placeholder="상세 주소"

@@ -131,11 +131,18 @@
 }
 
 .passwordGroup {
+  position: relative; // 아이콘 absolute 배치의 기준점
   display: flex;
   align-items: center;
   gap: 0.5rem;
 
   margin-bottom: 0.5rem;
+  width: 100%;
+
+  > div {
+    flex: 1;
+    min-width: 0;
+  }
 
   // 인풋박스 위에 있는 아이디, 비밀번호
   label {
@@ -181,12 +188,39 @@
   }
 }
 
+// 비밀번호 확인 인풋(두 번째 인풋)에만 오른쪽에 아이콘 공간(여백) 확보
+> div:nth-child(2) input {
+  padding-right: 2.5rem;
+}
+
+/* 비밀번호확인 인풋박스 '안쪽 우측'으로 아이콘 이동 */
+.togglePasswordBtn {
+  position: absolute;
+
+  /* 음수(-2rem)에서 양수(0.8rem)로 변경하여 안쪽으로 넣기 */
+  right: 0.8rem;
+
+  /* 세로 중앙 정렬 (상단 라벨 높이를 고려한 정중앙 위치) */
+  top: calc(50% + 0.75rem);
+  transform: translateY(-50%);
+
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  color: $grayscale-50;
+
+  &:hover {
+    color: $grayscale-90;
+  }
+}
+
 //정규식
 .errorGroup {
   margin-bottom: 1.5rem;
 
   .errorMessage {
-    display: block; // 👈 inline 요소를 block 요소처럼 한 줄 전체를 쓰도록 지정
+    display: block; // inline 요소를 block 요소처럼 한 줄 전체를 쓰도록 지정
     color: $dan-color;
     //margin-top: 4px; // 메시지 간 위아래 간격
   }
@@ -279,10 +313,6 @@
     width: 100%;
     display: flex;
     justify-content: center;
-
-    flex-direction: column; // 👈 가로 배치를 세로(column) 배치로 변경
-    align-items: center; // 👈 이미지와 삭제 버튼을 중앙 정렬
-    gap: 1rem; // 👈 이미지와 삭제 버튼 사이의 간격 추가 (선택사항)
   }
 }
 

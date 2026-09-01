@@ -37,7 +37,7 @@
   /* 삭제 버튼 글자 크기 및 스타일 */
   button {
     font-size: 0.9rem;
-    color: $grayscale-90; /* 👈 존재하는 변수로 변경 ($grayscale-90 또는 #666 사용 가능) */
+    color: $grayscale-90;
 
     &:hover {
       color: $point-50; // 로그인 글자만 적용할 포인트 색상
