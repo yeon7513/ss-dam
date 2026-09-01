@@ -24,7 +24,7 @@ import Feed from "./pages/feed/Feed";
 import FeedRegister from "./pages/feed/feed-register/FeedRegister";
 import Home from "./pages/home/Home";
 import Market from "./pages/market/Market";
-import MarketDetail from "./pages/market/market-detail/MarketDetail";
+import ProductDetail from "./pages/market/product-detail/ProductDetail.jsx";
 import MarketPayment from "./pages/market/market-payment/MarketPayment";
 import ProductRegister from "./pages/market/product-register/ProductRegister";
 import Activities from "./pages/myPage/activities/Activities";
@@ -37,6 +37,7 @@ import SupportDetail from "./pages/support/SupportDetail";
 import Supports from "./pages/support/Supports";
 import AdminRoute from "./components/common/admin/AdminRoute";
 import FeedUpdate from "./pages/feed/feed-update/FeedUpdate.jsx";
+import ProductUpdate from "./pages/market/product-update/ProductUpdate.jsx";
 
 function App() {
   return (
@@ -63,7 +64,8 @@ function App() {
         <Route path="/market">
           <Route index element={<Market />} />
           <Route path="register" element={<ProductRegister />} />
-          <Route path=":code" element={<MarketDetail />} />
+          <Route path=":code" element={<ProductDetail />} />
+          <Route path="edit/:code" element={<ProductUpdate />} />
           <Route path="payment" element={<MarketPayment />} />
         </Route>
 

@@ -1,5 +1,6 @@
 package com.ss_dam.common.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -16,6 +17,8 @@ public class WebConfig implements WebMvcConfigurer {
   // 참고
   // https://itconquest.tistory.com/entry/Spring-Boot-WebMvcConfigurer-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0
 
+  @Value("${kopo.upload.url}")
+  private String uploadUrl;
 
   // 리액트와의 통신을 허용함 (CORS 설정)
   @Override
@@ -29,7 +32,7 @@ public class WebConfig implements WebMvcConfigurer {
   @Override
   public void addResourceHandlers(ResourceHandlerRegistry registry) {
     // 이미지 폴더 경로 매핑
-    registry.addResourceHandler("/images/**").addResourceLocations("${kopo.upload.url}");
+    registry.addResourceHandler("/images/**").addResourceLocations(uploadUrl);
 
     registry.addResourceHandler("/**").addResourceLocations("classpath:/static/")
         .resourceChain(true).addResolver(new PathResourceResolver() {

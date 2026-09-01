@@ -1,5 +1,5 @@
 import cn from "classnames";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { handleSetField } from "../../../utils/changeHandler";
 import TextInput from "../../forms/text-input/TextInput";
 import CancelButton from "../button/CancelButton";
@@ -17,7 +17,13 @@ function Editor({
   post,
   setPost,
 }) {
-  const [selectedImages, setSelectedImages] = useState([]);
+  const [selectedImages, setSelectedImages] = useState(post?.imagePaths || []);
+
+  console.log("editor post: ", post);
+
+  // 등록, 수정 모드 판별
+  const isEditMode = post?.code;
+  const modeText = isEditMode ? "수정" : "등록";
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -30,9 +36,15 @@ function Editor({
     console.log("resultData: ", resultData);
 
     setPost(resultData);
-
     onSubmit(resultData);
   };
+
+  useEffect(() => {
+    if (post?.images) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setSelectedImages(post.images);
+    }
+  }, [post?.images]);
 
   return (
     <div className={cn(styles.editor)}>
@@ -47,6 +59,7 @@ function Editor({
           <TextInput
             name="title"
             placeholder="제목을 입력하세요."
+            value={post?.title || ''}
             onChange={(e) => handleSetField(e, setPost)}
           />
         </div>
@@ -60,6 +73,7 @@ function Editor({
           {/* 텍스트 에디터 라이브러리로 바꿀 것... */}
           <textarea
             name="content"
+            value={post?.content || ''}
             onChange={(e) => handleSetField(e, setPost)}
           />
         </div>
@@ -67,7 +81,7 @@ function Editor({
         {children}
         <div className={styles.submit}>
           <Button onClick={handleSubmit}>
-            {typeName === "chalCode" ? "피드" : "물품"} 등록
+            {typeName === "chalCode" ? "피드" : "거래글"} {modeText}
           </Button>
           <CancelButton targetUrl={typeName === "chalCode" ? "/feed" : "/market"}>취소</CancelButton>
         </div>

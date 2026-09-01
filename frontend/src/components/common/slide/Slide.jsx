@@ -16,8 +16,6 @@ import { HOST } from "../../../lib/url.js";
 
 function Slide({ children, images, className, isLoop = false, isAutoplay = false }) {
 
-  console.log("슬라이드 이미지: ", images);
-
   // children이 있을 경우
   if (children) {
     return (
@@ -46,7 +44,7 @@ function Slide({ children, images, className, isLoop = false, isAutoplay = false
     );
   }
 
-  // 기본 슬라이드
+  // DB용 이미지 슬라이드
   if (!children && images.length > 0) {
     return (
       <Swiper
@@ -61,9 +59,9 @@ function Slide({ children, images, className, isLoop = false, isAutoplay = false
         modules={[Pagination, Navigation, isAutoplay ? Autoplay : ""]}
         className={cn(styles.wrap, className)}
       >
-        {!images > 0 && images.map((image, idx) => (
+        {images.map((image, idx) => (
           <SwiperSlide key={idx} className={styles.thumb}>
-            <ImageBox src={`${HOST}${image.path}`} />
+            <ImageBox src={HOST + image} />
           </SwiperSlide>
         ))}
       </Swiper>

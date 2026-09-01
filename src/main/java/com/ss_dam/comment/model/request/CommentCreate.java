@@ -5,7 +5,11 @@ package com.ss_dam.comment.model.request;
 // 서비스에서 조립해 DAO로 넘겨줌
 public class CommentCreate {
   private Long feedCode; // 피드 고유 번호
-  private String content; // 댓글 내용
+  private String content;
+  private Long memCode;
+  private Long code; // 이후 수정,삭제에 필요
+
+  // 댓글 내용
 
   // GETTER, SETTER
   public Long getFeedCode() {
@@ -22,5 +26,21 @@ public class CommentCreate {
 
   public void setContent(String content) {
     this.content = content;
+  }
+
+  public Long getMemCode() {
+    return memCode;
+  }
+
+  public void setMemCode(Long memCode) {
+    this.memCode = memCode;
+  }
+
+  public Long getCode() {
+    return code;
+  }
+
+  public void setCode(Long code) {
+    this.code = code;
   }
 }
