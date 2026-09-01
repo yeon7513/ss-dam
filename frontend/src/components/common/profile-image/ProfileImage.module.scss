@@ -3,17 +3,20 @@
 .profileImg {
   padding: 20px;
   background-color: $grayscale-5;
-
-  //position: relative;
-  //overflow: hidden;
   cursor: pointer;
 
-  //호버 전환 효과
+  /* 이미지 아래 삭제 버튼 세로 정렬 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+
+  /* 호버 전환 효과 */
   transition:
     filter 0.2s ease,
     background-color 0.2s ease;
 
-  /* 💡 마우스 호버 시 영역 전체가 살짝 어두워짐 */
+  /* 마우스 호버 시 영역 전체가 살짝 어두워짐 */
   &:hover {
     filter: brightness(0.97);
   }
@@ -23,11 +26,24 @@
     filter: brightness(0.9);
   }
 
-  /* 내부 이미지 및 텍스트 정렬 설정 */
+  /* 내부 이미지 */
   img {
     display: block;
     max-width: 100%;
     height: auto;
     object-fit: contain;
+  }
+
+  /* 삭제 버튼 글자 크기 및 스타일 */
+  button {
+    font-size: 0.9rem;
+    color: $grayscale-90; /* 👈 존재하는 변수로 변경 ($grayscale-90 또는 #666 사용 가능) */
+
+    &:hover {
+      color: $point-50; // 로그인 글자만 적용할 포인트 색상
+      text-decoration: underline; // 밑줄 표시
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
   }
 }

@@ -279,6 +279,10 @@
     width: 100%;
     display: flex;
     justify-content: center;
+
+    flex-direction: column; // 👈 가로 배치를 세로(column) 배치로 변경
+    align-items: center; // 👈 이미지와 삭제 버튼을 중앙 정렬
+    gap: 1rem; // 👈 이미지와 삭제 버튼 사이의 간격 추가 (선택사항)
   }
 }
 

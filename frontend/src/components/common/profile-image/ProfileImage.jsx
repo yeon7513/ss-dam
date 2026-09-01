@@ -1,8 +1,8 @@
-import cn from 'classnames';
-import { useRef, useState } from 'react';
-import placeholder from '../../../assets/images/placeholder.png';
-import FileInput from '../../forms/file-input/FileInput';
-import styles from './ProfileImage.module.scss';
+import cn from "classnames";
+import { useRef, useState } from "react";
+import placeholder from "../../../assets/images/placeholder.png";
+import FileInput from "../../forms/file-input/FileInput";
+import styles from "./ProfileImage.module.scss";
 
 function ProfileImage({ className, onChange }) {
   const [preview, setPreview] = useState(null);
