@@ -55,7 +55,10 @@ const Challenge = () => {
   return (
     <div className={styles.container}>
       <h1>데이터 연동 테스트 페이지</h1>
-
+      {/*챌린지 디테일 라우팅은 :code로 되어있긴 한데 챌린지쪽 화면이랑 디테일쪽 챌린지에 따른 화면을 안만들어놓아서 그냥 임시로 이렇게 박아놓았습니다 */}
+      <section className={styles.section}>
+        <Link to="/challenge/ChallengeDetail">챌린지 디테일로 임시 이동</Link>
+      </section>
       {/* 인기 챌린지 테스트 */}
       <section className={styles.section}>
         <h3>인기 챌린지 TOP 3</h3>
