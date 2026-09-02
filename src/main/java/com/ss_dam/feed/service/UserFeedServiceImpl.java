@@ -14,6 +14,7 @@ import com.ss_dam.feed.model.response.UserFeedView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -97,6 +98,14 @@ public class UserFeedServiceImpl implements UserFeedService {
     // 피드 수정 실행
     userFeedDao.updateFeed(feedUpdate);
 
+    Long feedCode = feedUpdate.getCode();
+    List<MultipartFile> images = feedUpdate.getImages();
+    List<Integer> newImageOrders = feedUpdate.getNewImageOrders();
+
+    // 기존 이미지 경로 문자열 & 순서 배열
+    List<String> imagePaths = feedUpdate.getImagePaths();
+    List<Integer> oldImageOrders = feedUpdate.getOldImageOrders();
+
     // [ 삭제를 먼저하고, 새로 등록하는 이유? ]
     // -> 글 수정 시 해시태그를 전부 삭제했을 경우를 고려함.
 
@@ -109,7 +118,8 @@ public class UserFeedServiceImpl implements UserFeedService {
       registerHashtags(hashtags, feedUpdate.getCode());
     }
 
-    // 이미지 삭제 및 재삽입
+    // 이미지 수정
+    imageService.updateImages(feedCode, "feed", images, newImageOrders, imagePaths, oldImageOrders);
 
   }
 

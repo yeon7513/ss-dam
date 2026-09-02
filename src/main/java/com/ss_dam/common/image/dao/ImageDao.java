@@ -13,5 +13,7 @@ public interface ImageDao {
 
   List<Images> loadImages();
 
-  void deleteImagesByTargetCode(Map<String, Object> params);
+  void deleteImagesByFilename(Map<String, Object> params);
+
+  void updateImageOrderSeq(Map<String, Object> params);
 }

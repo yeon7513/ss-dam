@@ -22,9 +22,19 @@
     VALUES (#{targetCode}, #{type}, #{path}, #{orderSeq}, #{deleteYn})
   </insert>
 
-  <delete id="deleteImagesByTargetCode">
+  <update id="updateImageOrderSeq">
+    UPDATE IMAGES
+    SET order_seq = #{orderSeq}
+    WHERE type = #{type}
+    AND target_code = #{targetCode}
+    AND path = #{path}
+  </update>
+
+  <delete id="deleteImagesByFilename">
     DELETE FROM IMAGES
-    WHERE type = #{type} AND target_code = #{targetCode}
+    WHERE type = #{type}
+    AND target_code = #{targetCode}
+    AND path = #{path}
   </delete>
 
 </mapper>

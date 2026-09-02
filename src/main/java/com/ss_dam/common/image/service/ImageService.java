@@ -18,5 +18,8 @@ public interface ImageService {
 
   Images uploadSingleImage(MultipartFile file, String type, Long targetCode, int seq);
 
-  void deleteImagesByTargetCode(String type, Long targetCode);
+  void deleteImagesByFilename(String type, Long targetCode, String filenames);
+
+  void updateImages(Long feedCode, String feed, List<MultipartFile> images,
+      List<Integer> newImageOrders, List<String> imagePaths, List<Integer> oldImageOrders);
 }

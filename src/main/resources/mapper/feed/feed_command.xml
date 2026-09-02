@@ -34,17 +34,12 @@
   <!-- 피드 수정 (피드 작성자) -->
   <update id="updateFeed">
     UPDATE FEED
-    <set>
-      <if test="title != null">
-        title = #{title}
-      </if>
-      <if test="content != null">
-        content = #{content}
-      </if>
-
-      updated_by = #{updatedBy},
-      updated_at = NOW()
-    </set>
+    SET
+    chal_code = #{chalCode},
+    title = #{title},
+    content = #{content},
+    updated_by = #{updatedBy},
+    updated_at = NOW()
     WHERE code = #{code}
   </update>
 

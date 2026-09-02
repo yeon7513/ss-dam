@@ -150,6 +150,10 @@ public class UserFeedController {
     //      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponse.fail("수정 권한이 없습니다."));
     //    }
 
+    // 임시로 하드 코딩!
+    feedUpdate.setMemCode(1L);
+    feedUpdate.setUpdatedBy("user01");
+
     userFeedService.updateFeed(feedUpdate);
 
     return ResponseEntity.ok(ApiResponse.success("피드 수정 완료", null));

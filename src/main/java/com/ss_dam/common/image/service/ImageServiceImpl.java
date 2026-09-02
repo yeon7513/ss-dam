@@ -131,7 +131,7 @@ public class ImageServiceImpl implements ImageService {
   // DB의 이미지 테이블에서 해당하는 컬럼만 삭제
   @Transactional
   @Override
-  public void deleteImagesByTargetCode(String type, Long targetCode) {
+  public void deleteImagesByFilename(String type, Long targetCode, String filenames) {
     // DB에서 삭제 전 메모리에 삭제할 파일 정보를 미리 담아둠
     List<Images> existingImages = findImagesByCode(type, targetCode);
 
@@ -143,13 +143,61 @@ public class ImageServiceImpl implements ImageService {
     Map<String, Object> params = new HashMap<>();
     params.put("type", type);
     params.put("targetCode", targetCode);
+    params.put("filenames", filenames);
 
     // DB 작업을 먼저 하고 여기서 오류가 날 경우 롤백 (이 밑으로 코드 실행 X)
-    imageDao.deleteImagesByTargetCode(params);
+    imageDao.deleteImagesByFilename(params);
 
     // DB 작업 성공 시 메모리에 남아있는 경로 정보를 바탕으로 물리적 삭제 구현
     for (Images image : existingImages) {
-      deletePhysicalImages(image.getPath());
+      if (filenames.contains(image.getPath())) {
+        deletePhysicalImages(image.getPath());
+      }
+    }
+  }
+
+  // 이미지 수정 요청 메소드
+  // 1. 기존 이미지 -> 유지
+  // 2. 수정 시 새로 등록한 이미지 -> 삽입
+  // 3. 수정 시 삭제한 이미지 -> 삭제
+  @Transactional
+  @Override
+  public void updateImages(Long targetCode, String type, List<MultipartFile> images,
+      List<Integer> newImageOrders, List<String> imagePaths, List<Integer> oldImageOrders) {
+
+    // DB에서 등록된 이미지 조회
+    List<Images> existingImages = findImagesByCode(type, targetCode);
+
+    // 기존에 있던 이미지를 삭제한 경우 DB 및 물리 삭제
+    if (existingImages != null && !existingImages.isEmpty()) {
+      // 기존 이미지를 순회하며
+      for (Images deletedImage : existingImages) {
+        // 매개변수로 받은 경로 문자열(imagePaths)이 포함되지 않았다면
+        if (!imagePaths.contains(deletedImage.getPath())) {
+          // 해당 이미지는 사용자가 삭제한 이미지
+          deleteImagesByFilename(type, targetCode, deletedImage.getPath());
+        }
+      }
+    }
+
+    if (imagePaths != null && !imagePaths.isEmpty()) {
+      // 수정 시 남아있던 기존 이미지는 순서만 업데이트
+      for (int i = 0; i < imagePaths.size(); i++) {
+        String path = imagePaths.get(i);
+        int orderSeq = oldImageOrders.get(i);
+
+        updateImageOrderSeq(targetCode, type, path, orderSeq);
+      }
+    }
+
+    if (images != null && !images.isEmpty()) {
+      // 새로 들어온 이미지는 삽입
+      for (int i = 0; i < images.size(); i++) {
+        MultipartFile file = images.get(i);
+        int orderSeq = newImageOrders.get(i);
+
+        uploadSingleImage(file, type, targetCode, orderSeq);
+      }
     }
   }
 
@@ -171,6 +219,17 @@ public class ImageServiceImpl implements ImageService {
     if (file.exists()) {
       file.delete();
     }
+  }
+
+  // 이미지 순서 업데이트
+  private void updateImageOrderSeq(Long targetCode, String type, String path, int orderSeqs) {
+    Map<String, Object> params = new HashMap<>();
+    params.put("targetCode", targetCode);
+    params.put("type", type);
+    params.put("path", path);
+    params.put("orderSeq", orderSeqs);
+
+    imageDao.updateImageOrderSeq(params);
   }
 
 }

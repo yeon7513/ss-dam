@@ -30,8 +30,13 @@ public class ImageDaoImpl implements ImageDao {
   }
 
   @Override
-  public void deleteImagesByTargetCode(Map<String, Object> params) {
-    sql.delete("image.deleteImagesByTargetCode", params);
+  public void deleteImagesByFilename(Map<String, Object> params) {
+    sql.delete("image.deleteImagesByFilename", params);
+  }
+
+  @Override
+  public void updateImageOrderSeq(Map<String, Object> params) {
+    sql.update("image.updateImageOrderSeq", params);
   }
 
 
