@@ -1,120 +1,36 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import { useLoadData } from "../../../hooks/useLoadData.js";
-import { createFeedFormData } from "../../../utils/createFeedFormData.js";
-import { useSubmitData } from "../../../hooks/useSubmitData.js";
-import Editor from "../../../components/common/editor/Editor.jsx";
-import styles from "../feed-register/FeedRegister.module.scss";
-import Hashtag from "../../../components/feed/hashtag/Hashtag.jsx";
+import FeedUpdateForm from "./FeedUpdateForm.jsx";
+import Button from "../../../components/common/button/Button.jsx";
 
-// 수정용 컴포넌트
+// 수정용 페이지 컴포넌트 -> 렌더링 페이지, 데이터 조회만 수행함.
 function FeedUpdate() {
   const navigate = useNavigate();
   const { code } = useParams();
 
   // 수정할 피드 데이터 불러오기
-  const { data } = useLoadData(`/api/feeds/${code}/edit`);
-  const initFeed = data || {};
+  const { data: initFeed, loading, error } = useLoadData(`/api/feeds/${code}/edit`);
 
-  const [updatedFeed, setUpdatedFeed] = useState(initFeed);
-  const [hashs, setHashs] = useState(updatedFeed?.hashtags);
+  // 등록이 가능한 챌린지 카테고리 조회 (현재 진행 중인 카테고리만)
+  const { data: categories } = useLoadData("/api/challenge/categories");
 
-  // 수정된 피드 데이터 state
-
-  // 수정된 피드 전송
-  const { handleSubmit } = useSubmitData("/api/feeds", "PUT");
-
-  // 피드 전송 핸들러
-  const handleSubmitUpdatedFeed = async (updatedFeed) => {
-    try {
-      const formData = createFeedFormData(updatedFeed);
-      const result = await handleSubmit(formData);
-
-      if (result) {
-        alert("작성된 피드를 수정했습니다.");
-        navigate("/feed", { state: { code: result } });
-      }
-
-    } catch (err) {
-      alert("피드 수정에 실패했습니다.");
-      console.error(err);
-    }
+  if (!loading && !initFeed) {
+    return <div>해당 피드의 정보를 불러오고 있습니다.</div>;
   }
 
-  // 해시태그 등록 핸들러
-  const handleRegisterHashs = (e) => {
-    // 앞뒤 공백 제거, 중간 공백 제거
-    const value = e.target.value.trim().replace(/\s+/g, "");
-
-    if (e.code === "Enter" && value !== "") {
-      // 중복 비허용
-      if (hashs.includes(value)) {
-        // 이 부분에 해당 input에 중복관련 경고 띄우면 좋을 것 같음.
-        e.target.value = "";
-        return;
-      }
-
-      // 화면 렌더링용
-      setHashs((prev) => [...prev, value]);
-
-      // 서버 전송용
-      setUpdatedFeed((prev) => ({
-        ...prev,
-        hashtags: [
-          ...(prev.hashtags || []),
-          {
-            tagName: value,
-          },
-        ],
-      }));
-
-      e.target.value = "";
-    }
-  };
-
-  // 해시태그 삭제
-  const handleDeleteHash = (tagName) => {
-    setHashs(hashs.filter((hash) => hash !== tagName));
-    setUpdatedFeed((prev) => ({
-      ...prev,
-      hashtags: prev.hashtags.filter((hash) => hash.tagName !== tagName),
-    }));
-  };
-
-
-  console.log("initFeed: ", initFeed);
-
-  if (!initFeed) {
-    alert("해당 게시글을 수정할 수 없습니다.");
-    navigate(-1);
+  if (error) {
+    return (
+      <div>
+        {error}
+        <Button onClick={() => navigate("/feed")}>피드 목록</Button>
+      </div>
+    );
   }
 
   return (
     <main>
-      <form>
-        <Editor post={initFeed} setPost={setUpdatedFeed} onSubmit={handleSubmitUpdatedFeed}>
-          <div className={styles.hash}>
-            <div className={styles.regHashs}>
-              {hashs?.length === 0 ? (
-                <p>등록된 태그가 없습니다.</p>
-              ) : (
-                hashs?.map((hash, idx) => (
-                  <Hashtag key={idx}>
-                    <button type="button" onClick={() => handleDeleteHash(hash)}>
-                      # {hash} X
-                    </button>
-                  </Hashtag>
-                ))
-              )}
-            </div>
-            <input
-              type="text"
-              onKeyUp={handleRegisterHashs}
-              placeholder="해시태그 등록"
-            />
-          </div>
-        </Editor>
-      </form>
+      <FeedUpdateForm key={initFeed?.code} initFeed={initFeed} categories={categories} />
     </main>
   );
 }

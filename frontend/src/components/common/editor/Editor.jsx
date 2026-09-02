@@ -1,5 +1,5 @@
 import cn from "classnames";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { handleSetField } from "../../../utils/changeHandler";
 import TextInput from "../../forms/text-input/TextInput";
 import CancelButton from "../button/CancelButton";
@@ -11,20 +11,23 @@ import styles from "./Editor.module.scss";
 function Editor({
   typeName, // 분류 코드 (FK)
   categories, // 카테고리명
+  selectedValue,
   title,
-  children,
+  children, // 해시태그용 (피드)
   onSubmit, // AJAX 전송 핸들러
   post,
   setPost,
 }) {
   const [selectedImages, setSelectedImages] = useState(post?.imagePaths || []);
 
-  console.log("editor post: ", post);
+  console.log("post: ", post);
+  console.log("selectedImages: ", selectedImages);
 
   // 등록, 수정 모드 판별
   const isEditMode = post?.code;
   const modeText = isEditMode ? "수정" : "등록";
 
+  // 전송
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -39,13 +42,6 @@ function Editor({
     onSubmit(resultData);
   };
 
-  useEffect(() => {
-    if (post?.images) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setSelectedImages(post.images);
-    }
-  }, [post?.images]);
-
   return (
     <div className={cn(styles.editor)}>
       <h3>{title}</h3>
@@ -54,6 +50,7 @@ function Editor({
           <SelectBox
             name={typeName}
             options={categories}
+            selectedValue={selectedValue}
             onChange={(e) => handleSetField(e, setPost)}
           />
           <TextInput
