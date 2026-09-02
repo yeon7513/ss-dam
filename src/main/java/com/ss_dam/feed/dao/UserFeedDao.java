@@ -24,4 +24,6 @@ public interface UserFeedDao {
   void deleteHashtags(Long feedCode);
 
   void updateFeed(FeedUpdate feedUpdate);
+
+  void deleteFeed(Map<String, Object> params);
 }

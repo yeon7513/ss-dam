@@ -54,4 +54,9 @@ public class UserFeedDaoImpl implements UserFeedDao {
   public void updateFeed(FeedUpdate feedUpdate) {
     sql.update("feedCommand.updateFeed", feedUpdate);
   }
+
+  @Override
+  public void deleteFeed(Map<String, Object> params) {
+    sql.update("feedCommand.deleteFeed", params);
+  }
 }

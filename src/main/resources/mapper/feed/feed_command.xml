@@ -39,10 +39,21 @@
     title = #{title},
     content = #{content},
     updated_by = #{updatedBy},
-    updated_at = NOW()
+    updated_at = NOW(),
+    delete_yn = #{deleteYn}
     WHERE code = #{code}
   </update>
 
+  <!-- 피드 삭제 (피드 작성자) -->
+  <update id="deleteFeed">
+    UPDATE FEED
+    SET
+    delete_yn = 1,
+    status = 'DELETED',
+    updated_by = #{updatedBy},
+    updated_at = NOW()
+    WHERE code = #{feedCode}
+  </update>
 
   <!-- 피드 수정 (관리자) -->
 

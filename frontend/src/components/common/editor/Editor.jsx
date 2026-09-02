@@ -15,13 +15,10 @@ function Editor({
   title,
   children, // 해시태그용 (피드)
   onSubmit, // AJAX 전송 핸들러
-  post,
+  post = {},
   setPost,
 }) {
   const [selectedImages, setSelectedImages] = useState(post?.imagePaths || []);
-
-  console.log("post: ", post);
-  console.log("selectedImages: ", selectedImages);
 
   // 등록, 수정 모드 판별
   const isEditMode = post?.code;
@@ -36,8 +33,6 @@ function Editor({
       images: selectedImages,
     };
 
-    console.log("resultData: ", resultData);
-
     setPost(resultData);
     onSubmit(resultData);
   };
@@ -50,7 +45,7 @@ function Editor({
           <SelectBox
             name={typeName}
             options={categories}
-            selectedValue={selectedValue}
+            selectedValue={post?.[typeName] ?? selectedValue ?? ""}
             onChange={(e) => handleSetField(e, setPost)}
           />
           <TextInput
