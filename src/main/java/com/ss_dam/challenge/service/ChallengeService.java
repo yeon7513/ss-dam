@@ -7,7 +7,7 @@ import com.ss_dam.challenge.Challenge;
 public interface ChallengeService {
 
     // 전체 챌린지 조회
-    List<Challenge> searchChallenges();
+    List<Challenge> searchChallenges(String progressStatus);
 
     // 챌린지 상세 조회
     Challenge searchChallengeByCode(int code);
