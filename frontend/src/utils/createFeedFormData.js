@@ -2,7 +2,10 @@
 export const createFeedFormData = (data) => {
   const formData = new FormData();
 
-  formData.append("code", data.code);
+  if (data.code) {
+    formData.append("code", data.code);
+  }
+  
   formData.append("chalCode", data.chalCode);
   formData.append("title", data.title);
   formData.append("content", data.content);

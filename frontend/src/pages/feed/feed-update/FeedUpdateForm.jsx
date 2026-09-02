@@ -21,15 +21,16 @@ function FeedUpdateForm({ initFeed, categories }) {
   const handleSubmitUpdatedFeed = async () => {
     try {
       const formData = createFeedFormData(updatedFeed);
-      const result = await handleSubmit(formData);
+      const { success } = await handleSubmit(formData);
 
-      if (result) {
+      if (success) {
         alert("작성된 피드를 수정했습니다.");
-        navigate("/feed", { state: { code: result } });
+        navigate("/feed", { state: { code: initFeed.code } });
+      } else {
+        alert("피드 수정에 실패했습니다.");
       }
-
     } catch (err) {
-      alert("피드 수정에 실패했습니다.");
+      alert("피드 수정 중 오류가 발생했습니다.");
       console.error(err);
     }
   }
@@ -70,6 +71,7 @@ function FeedUpdateForm({ initFeed, categories }) {
       hashtags: (prev?.hashtags || []).filter((hash) => hash !== tagName),
     }));
   };
+
   return (
     <form>
       <Editor

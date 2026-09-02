@@ -8,14 +8,14 @@ function SelectBox({ className, name, options, onChange, selectedValue }) {
       className={cn(styles.select, className)}
       name={name}
       onChange={onChange}
-      value={selectedValue ?? ''} // 수정 시 사용할 선택된 옵션으로 미리 선택되게
+      value={selectedValue || ''} // 수정 시 사용할 선택된 옵션으로 미리 선택되게
     >
       <option key="default" value="">
         카테고리 선택
       </option>
       {options &&
-        options.map((option, idx) => (
-          <option key={idx} value={option.code}>
+        options.map((option) => (
+          <option key={option.code} value={option.code}>
             {option.name}
           </option>
         ))}

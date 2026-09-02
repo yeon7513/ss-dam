@@ -19,4 +19,6 @@ public interface UserFeedService {
   FeedEditView findFeedDetailForEdit(Long feedCode, Long memberCode);
 
   void updateFeed(FeedUpdate feedUpdate);
+
+  void deleteFeed(Long feedCode, String updatedBy);
 }

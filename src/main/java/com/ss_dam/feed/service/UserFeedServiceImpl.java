@@ -123,6 +123,16 @@ public class UserFeedServiceImpl implements UserFeedService {
 
   }
 
+  // 피드 삭제 요청 메소드
+  @Override
+  public void deleteFeed(Long feedCode, String updatedBy) {
+    Map<String, Object> params = new HashMap<>();
+    params.put("feedCode", feedCode);
+    params.put("updatedBy", updatedBy);
+
+    userFeedDao.deleteFeed(params);
+  }
+
 
   // 해시태그 등록 메소드
   private void registerHashtags(List<String> hashtags, Long feedCode) {
