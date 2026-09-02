@@ -14,10 +14,8 @@ function FeedUpdateForm({ initFeed, categories }) {
   const [updatedFeed, setUpdatedFeed] = useState(initFeed);
   const [hashs, setHashs] = useState(initFeed?.hashtags || []);
 
-  // const selectedChallenge = categories?.find(category => category.code === updatedFeed?.chalCode);
-
   // 수정된 피드 전송
-  const { handleSubmit } = useSubmitData("/api/feeds", "PUT");
+  const { handleSubmit } = useSubmitData(`/api/feeds/${updatedFeed?.code}`, "PUT");
 
   // 피드 전송 핸들러
   const handleSubmitUpdatedFeed = async () => {

@@ -1,5 +1,5 @@
 import cn from "classnames";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { handleSetField } from "../../../utils/changeHandler";
 import TextInput from "../../forms/text-input/TextInput";
 import CancelButton from "../button/CancelButton";
@@ -20,10 +20,14 @@ function Editor({
 }) {
   const [selectedImages, setSelectedImages] = useState(post?.imagePaths || []);
 
+  console.log("post: ", post);
+  console.log("selectedImages: ", selectedImages);
+
   // 등록, 수정 모드 판별
   const isEditMode = post?.code;
   const modeText = isEditMode ? "수정" : "등록";
 
+  // 전송
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -37,13 +41,6 @@ function Editor({
     setPost(resultData);
     onSubmit(resultData);
   };
-
-  useEffect(() => {
-    if (post?.images) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setSelectedImages(post.images);
-    }
-  }, [post?.images]);
 
   return (
     <div className={cn(styles.editor)}>

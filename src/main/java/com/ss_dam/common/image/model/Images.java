@@ -1,5 +1,6 @@
 package com.ss_dam.common.image.model;
 
+
 public class Images {
   private Long targetCode; // 타겟 고유 번호
   private String type; // 타입 - 피드, 마켓, 프로필

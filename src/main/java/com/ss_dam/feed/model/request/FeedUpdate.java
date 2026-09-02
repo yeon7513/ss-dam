@@ -16,7 +16,11 @@ public class FeedUpdate {
   private String updatedAt;
   private boolean deleteYn;
 
+  // 수정 시 새로 등록할 이미지 리스트
   private List<MultipartFile> images;
+
+  // 기존 이미지 경로 유지
+  private List<String> imagePaths;
 
   private List<String> hashtags;
 
@@ -107,5 +111,13 @@ public class FeedUpdate {
 
   public void setMemCode(Long memCode) {
     this.memCode = memCode;
+  }
+
+  public List<String> getImagePaths() {
+    return imagePaths;
+  }
+
+  public void setImagePaths(List<String> imagePaths) {
+    this.imagePaths = imagePaths;
   }
 }
