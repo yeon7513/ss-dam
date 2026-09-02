@@ -6,12 +6,38 @@ import DaumPostcodeEmbed from "react-daum-postcode";
 
 // 나중에 카카오 주소 API 같은 거랑 연동할 때 소스코드 변경해야합니다!!
 function Address({ onChange }) {
+  // ==========================================
+  // State 정의
+  // ==========================================
   const [post, setPost] = useState("");
   const [basic, setBasic] = useState("");
   const [detail, setDetail] = useState("");
   const [isOpen, setIsOpen] = useState(false); // 주소창 열림/닫힘 상태
 
-  // 주소 선택이 완료됐을 때 실행되는 함수
+  // ==========================================
+  // 변수 정의
+  // ==========================================
+  let buttonText = "주소 검색";
+  // if (isOpen) {
+  //   buttonText = "닫기";
+  // }
+
+  // const handleFormatAddress = (detail) => {
+  //   if (post && basic && detail) {
+  //     const formatAddress = `${basic} ${detail}`;
+  //     onChange(formatAddress);
+  //   }
+  // };
+
+  // ==========================================
+  // 이벤트 핸들러
+  // ==========================================
+  // 주소 검색 버튼 클릭 시 실행
+  const togglePostcode = () => {
+    setIsOpen((prev) => !prev);
+  };
+
+  // 주소 선택 완료 핸들러
   const handleComplete = (data) => {
     let fullAddress = data.roadAddress;
     let extraAddress = "";
@@ -41,49 +67,32 @@ function Address({ onChange }) {
     setIsOpen(false); // 주소 입력창 닫기
 
     // 상세 주소가 입력되기 전, 기본 주소만 먼저 위로 전달
-    onChange(fullAddress);
+    onChange({
+      address: fullAddress,
+      detailAddress: detail,
+    });
   };
 
-  // 상세 주소 입력시 실행
+  // 상세 주소 입력 핸들러
   const handleDetailChange = (e) => {
     const detailValue = e.target.value;
     setDetail(detailValue);
 
-    // 기본 주소 채워져 있으면 합치기 시작
-    if (basic) {
-      let formatAddress = "";
-
-      if (detailValue) {
-        formatAddress = `${basic} ${detailValue}`; // 상세 주소 있으면 한칸 띄워서 합침
-      } else {
-        formatAddress = basic; // 상세 주소 비어있으면 기본 주소만
-      }
-
-      onChange(formatAddress); // 최종 주소 쏘기
-    }
+    // 객체 형태로 통일하여 전달
+    onChange({
+      address: basic,
+      detailAddress: detailValue,
+    });
   };
 
-  // 주소 검색 버튼 클릭 시 실행
-  const togglePostcode = () => {
-    setIsOpen((prev) => !prev);
-  };
-
-  let buttonText = "주소 검색";
-  // if (isOpen) {
-  //   buttonText = "닫기";
-  // }
-
-  // const handleFormatAddress = (detail) => {
-  //   if (post && basic && detail) {
-  //     const formatAddress = `${basic} ${detail}`;
-  //     onChange(formatAddress);
-  //   }
-  // };
+  // ==========================================
+  // JSX 퍼블리싱
+  // ==========================================
 
   return (
     <div className={styles.address}>
       <div className={styles.postGroup}>
-        {/* 우편번호 인풋 */}
+        {/* 우편번호 */}
         <TextInput
           name="post_number"
           placeholder="우편 번호"
@@ -95,7 +104,7 @@ function Address({ onChange }) {
         <Button onClick={togglePostcode}>{buttonText}</Button>
       </div>
 
-      {/* 주소 검색창 isOpen이 true 일 때 열림 */}
+      {/* 주소 검색창 (isOpen이 true 일 때만 열림) */}
       {isOpen && (
         <div className={styles.modalOverlay} onClick={togglePostcode}>
           <div
@@ -107,7 +116,7 @@ function Address({ onChange }) {
         </div>
       )}
 
-      {/*  기본 주소 인풋 */}
+      {/*  기본 주소 */}
       <TextInput
         name="basic_address"
         placeholder="주소"
@@ -117,7 +126,7 @@ function Address({ onChange }) {
         onClick={togglePostcode} // 핸들러
       />
 
-      {/* 상세 주소 인풋 */}
+      {/* 상세 주소 */}
       <TextInput
         name="detaile_address"
         placeholder="상세 주소"
