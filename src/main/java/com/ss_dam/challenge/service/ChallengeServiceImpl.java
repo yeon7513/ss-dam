@@ -15,8 +15,8 @@ public class ChallengeServiceImpl implements ChallengeService {
     ChallengeDao challengeDao;
 
     @Override
-    public List<Challenge> searchChallenges() {
-        return challengeDao.searchChallenges();
+    public List<Challenge> searchChallenges(String progressStatus) {
+        return challengeDao.searchChallenges(progressStatus);
     }
 
     @Override

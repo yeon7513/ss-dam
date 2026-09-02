@@ -44,7 +44,7 @@ const FeedRegister = () => {
       // 서버 전송용
       setPost((prev) => ({
         ...prev,
-        hashtags: [...prev.hashtags || [], { tagName: value }],
+        hashtags: [...prev.hashtags || [], value],
       }));
 
       e.target.value = "";
@@ -56,7 +56,7 @@ const FeedRegister = () => {
     setHashs(hashs.filter((hash) => hash !== tagName));
     setPost((prev) => ({
       ...prev,
-      hashtags: prev.hashtags.filter((hash) => hash.tagName !== tagName),
+      hashtags: prev.hashtags.filter((hash) => hash !== tagName),
     }));
   };
 
