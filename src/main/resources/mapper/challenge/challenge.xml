@@ -6,10 +6,14 @@
 <mapper namespace="challenge">
 
   <!-- 전체 조회 -->
-  <select id="searchChallenges" resultType="Challenge">
+  <select id="searchChallenges" parameterType="String" resultType="Challenge">
     SELECT *
     FROM CHALLENGE
     WHERE DELETE_YN = false
+    <!-- pregressStatus 값이 넘어왔을 떄 조건 추가 -->
+    <if test="progressStatus != null and progressStatus != ''">
+    	AND PROGRESS_STATUS = #{progressStatus}
+    </if>
     ORDER BY CREATED_AT DESC
   </select>
 
@@ -132,8 +136,7 @@
     COUNT(ce.MEM_CODE) AS participantCount
     FROM CHALLENGE c
     LEFT JOIN CHALLENGE_ENTRY ce
-    ON c.CODE = ce.CHAL_CODE
-    AND ce.DELETE_YN = false
+    ON c.CODE = ce.CHAL_CODE    
     WHERE c.DELETE_YN = false
     GROUP BY
     c.CODE,

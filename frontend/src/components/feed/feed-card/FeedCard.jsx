@@ -4,7 +4,6 @@ import ProfileCard from "../../profile-card/ProfileCard";
 import Hashtag from "../hashtag/Hashtag";
 import styles from "./FeedCard.module.scss";
 import ImageBox from "../../common/image-box/ImageBox.jsx";
-import { HOST } from "../../../lib/url.js";
 
 function FeedCard({ feed, onClickDetail }) {
   return (
@@ -14,7 +13,7 @@ function FeedCard({ feed, onClickDetail }) {
 
       {/* 썸네일 */}
       <div className={styles.thumbnail}>
-        <ImageBox src={HOST + feed.thumbnail} alt="대표 이미지" />
+        <ImageBox src={feed.thumbnail} alt="대표 이미지" />
       </div>
 
       {/* 본문 */}

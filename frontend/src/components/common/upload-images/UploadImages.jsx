@@ -4,9 +4,10 @@ import placeholder from '../../../assets/images/placeholder.png';
 import FileInput from '../../forms/file-input/FileInput';
 import Button from '../button/Button';
 import styles from './UploadImages.module.scss';
+import ImageBox from "../image-box/ImageBox.jsx";
 
 function UploadImage({ className, selectedImages, setSelectedImages }) {
-  const [previews, setPreviews] = useState([]);
+  const [previews, setPreviews] = useState(selectedImages || []);
   const fileInputRef = useRef();
 
   const MAX_COUNT = 10;
@@ -69,7 +70,7 @@ function UploadImage({ className, selectedImages, setSelectedImages }) {
       {previews.length > 0 ? (
         previews.map((preview, idx) => (
           <div className={styles.imagePreview} key={idx}>
-            <img src={preview || placeholder} width={300} alt="preview" />
+            <ImageBox src={preview || placeholder} width={300} alt="preview" />
 
             {/* 인덱스 0번은 대표 이미지로 표시, 나머지는 설정 버튼 표시 */}
             <div className={styles.badgeContainer}>

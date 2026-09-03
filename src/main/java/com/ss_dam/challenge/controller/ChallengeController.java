@@ -20,8 +20,9 @@ public class ChallengeController {
 
 	// 전체 챌린지 조회
 	@GetMapping
-	public ResponseEntity<ApiResponse<List<Challenge>>> searchChallenges() {
-		List<Challenge> challenges = challengeService.searchChallenges();
+	public ResponseEntity<ApiResponse<List<Challenge>>> searchChallenges(
+			@RequestParam(required = false) String progressStatus) {
+		List<Challenge> challenges = challengeService.searchChallenges(progressStatus);
 
 		return ResponseEntity.ok(ApiResponse.success("전체 챌린지 조회에 성공했습니다", challenges));
 	}
@@ -30,10 +31,9 @@ public class ChallengeController {
 	@GetMapping("/{code}")
 	public ResponseEntity<ApiResponse<Challenge>> searchChallengeByCode(@PathVariable int code) {
 		Challenge challenge = challengeService.searchChallengeByCode(code);
-		
-		if(challenge == null) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(ApiResponse.fail("존재하지 않는 챌린지입니다"));
+
+		if (challenge == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.fail("존재하지 않는 챌린지입니다"));
 		}
 
 		return ResponseEntity.ok(ApiResponse.success("챌린지 상세 조회에 성공했습니다", challenge));
@@ -51,9 +51,8 @@ public class ChallengeController {
 	@GetMapping("/latest")
 	public ResponseEntity<ApiResponse<Challenge>> searchLatestChallenge() {
 		Challenge challenge = challengeService.searchLatestChallenge();
-		if(challenge == null) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(ApiResponse.fail("최신 등록된 챌린지가 없습니다"));
+		if (challenge == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.fail("최신 등록된 챌린지가 없습니다"));
 		}
 
 		return ResponseEntity.ok(ApiResponse.success("최신 등록 챌린지 조회에 성공했습니다", challenge));

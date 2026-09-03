@@ -8,6 +8,7 @@ import java.util.List;
 public class FeedUpdate {
   private Long code;
   private Long chalCode;
+  private Long memCode;
   private String title;
   private String content;
   private PostStatus status;
@@ -15,8 +16,15 @@ public class FeedUpdate {
   private String updatedAt;
   private boolean deleteYn;
 
+  // 수정 시 새로 등록할 이미지 리스트 & 순서 배열
   private List<MultipartFile> images;
+  private List<Integer> newImageOrders;
 
+  // 기존 이미지 경로 문자열 & 순서 배열
+  private List<String> imagePaths;
+  private List<Integer> oldImageOrders;
+
+  // 해시태그
   private List<String> hashtags;
 
   // GETTER, SETTER
@@ -98,5 +106,37 @@ public class FeedUpdate {
 
   public void setHashtags(List<String> hashtags) {
     this.hashtags = hashtags;
+  }
+
+  public Long getMemCode() {
+    return memCode;
+  }
+
+  public void setMemCode(Long memCode) {
+    this.memCode = memCode;
+  }
+
+  public List<String> getImagePaths() {
+    return imagePaths;
+  }
+
+  public void setImagePaths(List<String> imagePaths) {
+    this.imagePaths = imagePaths;
+  }
+
+  public List<Integer> getNewImageOrders() {
+    return newImageOrders;
+  }
+
+  public void setNewImageOrders(List<Integer> newImageOrders) {
+    this.newImageOrders = newImageOrders;
+  }
+
+  public List<Integer> getOldImageOrders() {
+    return oldImageOrders;
+  }
+
+  public void setOldImageOrders(List<Integer> oldImageOrders) {
+    this.oldImageOrders = oldImageOrders;
   }
 }

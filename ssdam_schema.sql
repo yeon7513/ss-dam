@@ -1,789 +1,789 @@
--- ÀÏ¹Ý È¸¿ø Á¤º¸
+-- ì¼ë°˜ íšŒì› ì •ë³´
 CREATE TABLE `MEMBER_ACCOUNT` (
-	`CODE`       INT          NOT NULL COMMENT 'È¸¿ø ¹øÈ£', -- È¸¿ø ¹øÈ£
-	`ID`         VARCHAR(24)  NOT NULL COMMENT '¾ÆÀÌµð', -- ¾ÆÀÌµð
-	`PASSWORD`   VARCHAR(64)  NOT NULL COMMENT 'ºñ¹Ð¹øÈ£', -- ºñ¹Ð¹øÈ£
-	`NAME`       VARCHAR(16)  NOT NULL COMMENT 'ÀÌ¸§', -- ÀÌ¸§
-	`PHONE`      VARCHAR(30)  NOT NULL COMMENT '¿¬¶ôÃ³', -- ¿¬¶ôÃ³
-	`ADDRESS`    VARCHAR(255) NOT NULL COMMENT 'ÁÖ¼Ò', -- ÁÖ¼Ò
-	`RATING`     INT          NOT NULL DEFAULT 0 COMMENT 'µî±Þ', -- µî±Þ
-	`RANKING`    INT          NOT NULL DEFAULT 0 COMMENT '·©Å·', -- ·©Å·
-	`POINT`      INT          NOT NULL DEFAULT 0 COMMENT 'º¸À¯ Æ÷ÀÎÆ®', -- º¸À¯ Æ÷ÀÎÆ®
-	`STATUS`     VARCHAR(32)  NOT NULL COMMENT '»óÅÂ', -- »óÅÂ
-	`CREATED_AT` DATETIME     NOT NULL COMMENT '°¡ÀÔÀÏ', -- °¡ÀÔÀÏ
-	`UPDATED_AT` DATETIME     NULL     COMMENT '¼öÁ¤ÀÏ', -- ¼öÁ¤ÀÏ
-	`LOGGED_AT`  DATETIME     NULL     COMMENT '¸¶Áö¸· ·Î±×ÀÎ', -- ¸¶Áö¸· ·Î±×ÀÎ
-	`DELETE_YN`  BOOLEAN      NOT NULL COMMENT '»èÁ¦ ¿©ºÎ' -- »èÁ¦ ¿©ºÎ
+	`CODE`       INT          NOT NULL COMMENT 'íšŒì› ë²ˆí˜¸', -- íšŒì› ë²ˆí˜¸
+	`ID`         VARCHAR(24)  NOT NULL COMMENT 'ì•„ì´ë””', -- ì•„ì´ë””
+	`PASSWORD`   VARCHAR(64)  NOT NULL COMMENT 'ë¹„ë°€ë²ˆí˜¸', -- ë¹„ë°€ë²ˆí˜¸
+	`NAME`       VARCHAR(16)  NOT NULL COMMENT 'ì´ë¦„', -- ì´ë¦„
+	`PHONE`      VARCHAR(30)  NOT NULL COMMENT 'ì—°ë½ì²˜', -- ì—°ë½ì²˜
+	`ADDRESS`    VARCHAR(255) NOT NULL COMMENT 'ì£¼ì†Œ', -- ì£¼ì†Œ
+	`RATING`     INT          NOT NULL DEFAULT 0 COMMENT 'ë“±ê¸‰', -- ë“±ê¸‰
+	`RANKING`    INT          NOT NULL DEFAULT 0 COMMENT 'ëž­í‚¹', -- ëž­í‚¹
+	`POINT`      INT          NOT NULL DEFAULT 0 COMMENT 'ë³´ìœ  í¬ì¸íŠ¸', -- ë³´ìœ  í¬ì¸íŠ¸
+	`STATUS`     VARCHAR(32)  NOT NULL COMMENT 'ìƒíƒœ', -- ìƒíƒœ
+	`CREATED_AT` DATETIME     NOT NULL COMMENT 'ê°€ìž…ì¼', -- ê°€ìž…ì¼
+	`UPDATED_AT` DATETIME     NULL     COMMENT 'ìˆ˜ì •ì¼', -- ìˆ˜ì •ì¼
+	`LOGGED_AT`  DATETIME     NULL     COMMENT 'ë§ˆì§€ë§‰ ë¡œê·¸ì¸', -- ë§ˆì§€ë§‰ ë¡œê·¸ì¸
+	`DELETE_YN`  BOOLEAN      NOT NULL COMMENT 'ì‚­ì œ ì—¬ë¶€' -- ì‚­ì œ ì—¬ë¶€
 )
-COMMENT 'ÀÏ¹Ý È¸¿ø Á¤º¸';
+COMMENT 'ì¼ë°˜ íšŒì› ì •ë³´';
 
--- ÀÏ¹Ý È¸¿ø Á¤º¸
+-- ì¼ë°˜ íšŒì› ì •ë³´
 ALTER TABLE `MEMBER_ACCOUNT`
-	ADD CONSTRAINT `PK_MEMBER_ACCOUNT` -- ÀÏ¹Ý È¸¿ø Á¤º¸ ±âº»Å°
+	ADD CONSTRAINT `PK_MEMBER_ACCOUNT` -- ì¼ë°˜ íšŒì› ì •ë³´ ê¸°ë³¸í‚¤
 	PRIMARY KEY (
-	`CODE` -- È¸¿ø ¹øÈ£
+	`CODE` -- íšŒì› ë²ˆí˜¸
 	);
 
 ALTER TABLE `MEMBER_ACCOUNT`
-	MODIFY COLUMN `CODE` INT NOT NULL AUTO_INCREMENT COMMENT 'È¸¿ø ¹øÈ£';
+	MODIFY COLUMN `CODE` INT NOT NULL AUTO_INCREMENT COMMENT 'íšŒì› ë²ˆí˜¸';
 
--- °ü¸®ÀÚ Á¤º¸
+-- ê´€ë¦¬ìž ì •ë³´
 CREATE TABLE `ADMIN_ACCOUNT` (
-	`CODE`       INT         NOT NULL COMMENT '°ü¸®ÀÚ °íÀ¯ ¹øÈ£', -- °ü¸®ÀÚ °íÀ¯ ¹øÈ£
-	`ADM_CODE`   INT         NULL     COMMENT '»ý¼º °ü¸®ÀÚ ¹øÈ£', -- »ý¼º °ü¸®ÀÚ ¹øÈ£
-	`EMP_ID`     VARCHAR(32) NOT NULL COMMENT '¾ÆÀÌµð', -- ¾ÆÀÌµð
-	`PASSWORD`   VARCHAR(64) NOT NULL COMMENT 'ºñ¹Ð¹øÈ£', -- ºñ¹Ð¹øÈ£
-	`NAME`       VARCHAR(16) NOT NULL COMMENT 'ÀÌ¸§', -- ÀÌ¸§
-	`PHONE`      VARCHAR(30) NOT NULL COMMENT '¿¬¶ôÃ³', -- ¿¬¶ôÃ³
-	`DEPT`       VARCHAR(32) NOT NULL COMMENT '¼Ò¼Ó', -- ¼Ò¼Ó
-	`ROLE`       VARCHAR(32) NOT NULL COMMENT '¿ªÇÒ', -- ¿ªÇÒ
-	`CREATED_AT` DATETIME    NOT NULL COMMENT '°¡ÀÔÀÏ', -- °¡ÀÔÀÏ
-	`UPDATED_AT` DATETIME    NULL     COMMENT '¼öÁ¤ÀÏ', -- ¼öÁ¤ÀÏ
-	`LOGGED_AT`  DATETIME    NULL     COMMENT '¸¶Áö¸· ·Î±×ÀÎ', -- ¸¶Áö¸· ·Î±×ÀÎ
-	`DELETE_YN`  BOOLEAN     NOT NULL COMMENT '»èÁ¦ ¿©ºÎ' -- »èÁ¦ ¿©ºÎ
+	`CODE`       INT         NOT NULL COMMENT 'ê´€ë¦¬ìž ê³ ìœ  ë²ˆí˜¸', -- ê´€ë¦¬ìž ê³ ìœ  ë²ˆí˜¸
+	`ADM_CODE`   INT         NULL     COMMENT 'ìƒì„± ê´€ë¦¬ìž ë²ˆí˜¸', -- ìƒì„± ê´€ë¦¬ìž ë²ˆí˜¸
+	`EMP_ID`     VARCHAR(32) NOT NULL COMMENT 'ì•„ì´ë””', -- ì•„ì´ë””
+	`PASSWORD`   VARCHAR(64) NOT NULL COMMENT 'ë¹„ë°€ë²ˆí˜¸', -- ë¹„ë°€ë²ˆí˜¸
+	`NAME`       VARCHAR(16) NOT NULL COMMENT 'ì´ë¦„', -- ì´ë¦„
+	`PHONE`      VARCHAR(30) NOT NULL COMMENT 'ì—°ë½ì²˜', -- ì—°ë½ì²˜
+	`DEPT`       VARCHAR(32) NOT NULL COMMENT 'ì†Œì†', -- ì†Œì†
+	`ROLE`       VARCHAR(32) NOT NULL COMMENT 'ì—­í• ', -- ì—­í• 
+	`CREATED_AT` DATETIME    NOT NULL COMMENT 'ê°€ìž…ì¼', -- ê°€ìž…ì¼
+	`UPDATED_AT` DATETIME    NULL     COMMENT 'ìˆ˜ì •ì¼', -- ìˆ˜ì •ì¼
+	`LOGGED_AT`  DATETIME    NULL     COMMENT 'ë§ˆì§€ë§‰ ë¡œê·¸ì¸', -- ë§ˆì§€ë§‰ ë¡œê·¸ì¸
+	`DELETE_YN`  BOOLEAN     NOT NULL COMMENT 'ì‚­ì œ ì—¬ë¶€' -- ì‚­ì œ ì—¬ë¶€
 )
-COMMENT '°ü¸®ÀÚ Á¤º¸';
+COMMENT 'ê´€ë¦¬ìž ì •ë³´';
 
--- °ü¸®ÀÚ Á¤º¸
+-- ê´€ë¦¬ìž ì •ë³´
 ALTER TABLE `ADMIN_ACCOUNT`
-	ADD CONSTRAINT `PK_ADMIN_ACCOUNT` -- °ü¸®ÀÚ Á¤º¸ ±âº»Å°
+	ADD CONSTRAINT `PK_ADMIN_ACCOUNT` -- ê´€ë¦¬ìž ì •ë³´ ê¸°ë³¸í‚¤
 	PRIMARY KEY (
-	`CODE` -- °ü¸®ÀÚ °íÀ¯ ¹øÈ£
+	`CODE` -- ê´€ë¦¬ìž ê³ ìœ  ë²ˆí˜¸
 	);
 
 ALTER TABLE `ADMIN_ACCOUNT`
-	MODIFY COLUMN `CODE` INT NOT NULL AUTO_INCREMENT COMMENT '°ü¸®ÀÚ °íÀ¯ ¹øÈ£';
+	MODIFY COLUMN `CODE` INT NOT NULL AUTO_INCREMENT COMMENT 'ê´€ë¦¬ìž ê³ ìœ  ë²ˆí˜¸';
 
--- ¸¶ÄÏ µî·Ï ¹°Ç°
+-- ë§ˆì¼“ ë“±ë¡ ë¬¼í’ˆ
 CREATE TABLE `MARKET_PRODUCT` (
-	`CODE`        INT           NOT NULL COMMENT 'µî·Ï ¹°Ç° ¹øÈ£', -- µî·Ï ¹°Ç° ¹øÈ£
-	`CATE_CODE`   INT           NOT NULL COMMENT 'Ä«Å×°í¸® ¹øÈ£', -- Ä«Å×°í¸® ¹øÈ£
-	`MEM_CODE`    INT           NOT NULL COMMENT 'È¸¿ø ¹øÈ£', -- È¸¿ø ¹øÈ£
-	`TITLE`       VARCHAR(255)  NOT NULL COMMENT 'Á¦¸ñ', -- Á¦¸ñ
-	`CONTENT`     VARCHAR(4000) NULL     COMMENT '³»¿ë', -- ³»¿ë
-	`PRICE`       INT           NOT NULL COMMENT '°¡°Ý', -- °¡°Ý
-	`HITCOUNT`    INT           NOT NULL COMMENT 'Á¶È¸¼ö', -- Á¶È¸¼ö
-	`POST_STATUS` VARCHAR(32)   NOT NULL COMMENT '³ëÃâ »óÅÂ', -- ³ëÃâ »óÅÂ
-	`DEAL_STATUS` VARCHAR(32)   NOT NULL COMMENT 'ÆÇ¸Å »óÅÂ', -- ÆÇ¸Å »óÅÂ
-	`CREATED_BY`  VARCHAR(32)   NOT NULL COMMENT 'ÀÛ¼ºÀÚ ¾ÆÀÌµð', -- ÀÛ¼ºÀÚ ¾ÆÀÌµð
-	`CREATED_AT`  DATETIME      NOT NULL COMMENT 'ÀÛ¼ºÀÏ', -- ÀÛ¼ºÀÏ
-	`UPDATED_BY`  VARCHAR(32)   NULL     COMMENT '¼öÁ¤ÀÚ ¾ÆÀÌµð', -- ¼öÁ¤ÀÚ ¾ÆÀÌµð
-	`UPDATED_AT`  DATETIME      NULL     COMMENT '¼öÁ¤ÀÏ', -- ¼öÁ¤ÀÏ
-	`DELETE_YN`   BOOLEAN       NOT NULL COMMENT '»èÁ¦ ¿©ºÎ' -- »èÁ¦ ¿©ºÎ
+	`CODE`        INT           NOT NULL COMMENT 'ë“±ë¡ ë¬¼í’ˆ ë²ˆí˜¸', -- ë“±ë¡ ë¬¼í’ˆ ë²ˆí˜¸
+	`CATE_CODE`   INT           NOT NULL COMMENT 'ì¹´í…Œê³ ë¦¬ ë²ˆí˜¸', -- ì¹´í…Œê³ ë¦¬ ë²ˆí˜¸
+	`MEM_CODE`    INT           NOT NULL COMMENT 'íšŒì› ë²ˆí˜¸', -- íšŒì› ë²ˆí˜¸
+	`TITLE`       VARCHAR(255)  NOT NULL COMMENT 'ì œëª©', -- ì œëª©
+	`CONTENT`     VARCHAR(4000) NULL     COMMENT 'ë‚´ìš©', -- ë‚´ìš©
+	`PRICE`       INT           NOT NULL COMMENT 'ê°€ê²©', -- ê°€ê²©
+	`HITCOUNT`    INT           NOT NULL COMMENT 'ì¡°íšŒìˆ˜', -- ì¡°íšŒìˆ˜
+	`POST_STATUS` VARCHAR(32)   NOT NULL COMMENT 'ë…¸ì¶œ ìƒíƒœ', -- ë…¸ì¶œ ìƒíƒœ
+	`DEAL_STATUS` VARCHAR(32)   NOT NULL COMMENT 'íŒë§¤ ìƒíƒœ', -- íŒë§¤ ìƒíƒœ
+	`CREATED_BY`  VARCHAR(32)   NOT NULL COMMENT 'ìž‘ì„±ìž ì•„ì´ë””', -- ìž‘ì„±ìž ì•„ì´ë””
+	`CREATED_AT`  DATETIME      NOT NULL COMMENT 'ìž‘ì„±ì¼', -- ìž‘ì„±ì¼
+	`UPDATED_BY`  VARCHAR(32)   NULL     COMMENT 'ìˆ˜ì •ìž ì•„ì´ë””', -- ìˆ˜ì •ìž ì•„ì´ë””
+	`UPDATED_AT`  DATETIME      NULL     COMMENT 'ìˆ˜ì •ì¼', -- ìˆ˜ì •ì¼
+	`DELETE_YN`   BOOLEAN       NOT NULL COMMENT 'ì‚­ì œ ì—¬ë¶€' -- ì‚­ì œ ì—¬ë¶€
 )
-COMMENT '¸¶ÄÏ µî·Ï ¹°Ç°';
+COMMENT 'ë§ˆì¼“ ë“±ë¡ ë¬¼í’ˆ';
 
--- ¸¶ÄÏ µî·Ï ¹°Ç°
+-- ë§ˆì¼“ ë“±ë¡ ë¬¼í’ˆ
 ALTER TABLE `MARKET_PRODUCT`
-	ADD CONSTRAINT `PK_MARKET_PRODUCT` -- ¸¶ÄÏ µî·Ï ¹°Ç° ±âº»Å°
+	ADD CONSTRAINT `PK_MARKET_PRODUCT` -- ë§ˆì¼“ ë“±ë¡ ë¬¼í’ˆ ê¸°ë³¸í‚¤
 	PRIMARY KEY (
-	`CODE` -- µî·Ï ¹°Ç° ¹øÈ£
+	`CODE` -- ë“±ë¡ ë¬¼í’ˆ ë²ˆí˜¸
 	);
 
 ALTER TABLE `MARKET_PRODUCT`
-	MODIFY COLUMN `CODE` INT NOT NULL AUTO_INCREMENT COMMENT 'µî·Ï ¹°Ç° ¹øÈ£';
+	MODIFY COLUMN `CODE` INT NOT NULL AUTO_INCREMENT COMMENT 'ë“±ë¡ ë¬¼í’ˆ ë²ˆí˜¸';
 
--- °Å·¡ ÀÌ·Â
+-- ê±°ëž˜ ì´ë ¥
 CREATE TABLE `MARKET_DEAL_LOG` (
-	`CODE`       INT         NOT NULL COMMENT '°Å·¡ ÀÌ·Â ¹øÈ£', -- °Å·¡ ÀÌ·Â ¹øÈ£
-	`PROD_CODE`  INT         NOT NULL COMMENT 'µî·Ï ¹°Ç° ¹øÈ£', -- µî·Ï ¹°Ç° ¹øÈ£
-	`SELLER_ID`  VARCHAR(32) NOT NULL COMMENT 'ÆÇ¸ÅÀÚ', -- ÆÇ¸ÅÀÚ
-	`BUYER_ID`   VARCHAR(32) NOT NULL COMMENT '±¸¸ÅÀÚ', -- ±¸¸ÅÀÚ
-	`PRICE`      INT         NOT NULL COMMENT '°Å·¡±Ý¾×', -- °Å·¡±Ý¾×
-	`CREATED_AT` DATETIME    NOT NULL COMMENT '°Å·¡³¯Â¥' -- °Å·¡³¯Â¥
+	`CODE`       INT         NOT NULL COMMENT 'ê±°ëž˜ ì´ë ¥ ë²ˆí˜¸', -- ê±°ëž˜ ì´ë ¥ ë²ˆí˜¸
+	`PROD_CODE`  INT         NOT NULL COMMENT 'ë“±ë¡ ë¬¼í’ˆ ë²ˆí˜¸', -- ë“±ë¡ ë¬¼í’ˆ ë²ˆí˜¸
+	`SELLER_ID`  VARCHAR(32) NOT NULL COMMENT 'íŒë§¤ìž', -- íŒë§¤ìž
+	`BUYER_ID`   VARCHAR(32) NOT NULL COMMENT 'êµ¬ë§¤ìž', -- êµ¬ë§¤ìž
+	`PRICE`      INT         NOT NULL COMMENT 'ê±°ëž˜ê¸ˆì•¡', -- ê±°ëž˜ê¸ˆì•¡
+	`CREATED_AT` DATETIME    NOT NULL COMMENT 'ê±°ëž˜ë‚ ì§œ' -- ê±°ëž˜ë‚ ì§œ
 )
-COMMENT '°Å·¡ ÀÌ·Â';
+COMMENT 'ê±°ëž˜ ì´ë ¥';
 
--- °Å·¡ ÀÌ·Â
+-- ê±°ëž˜ ì´ë ¥
 ALTER TABLE `MARKET_DEAL_LOG`
-	ADD CONSTRAINT `PK_MARKET_DEAL_LOG` -- °Å·¡ ÀÌ·Â ±âº»Å°
+	ADD CONSTRAINT `PK_MARKET_DEAL_LOG` -- ê±°ëž˜ ì´ë ¥ ê¸°ë³¸í‚¤
 	PRIMARY KEY (
-	`CODE` -- °Å·¡ ÀÌ·Â ¹øÈ£
+	`CODE` -- ê±°ëž˜ ì´ë ¥ ë²ˆí˜¸
 	);
 
 ALTER TABLE `MARKET_DEAL_LOG`
-	MODIFY COLUMN `CODE` INT NOT NULL AUTO_INCREMENT COMMENT '°Å·¡ ÀÌ·Â ¹øÈ£';
+	MODIFY COLUMN `CODE` INT NOT NULL AUTO_INCREMENT COMMENT 'ê±°ëž˜ ì´ë ¥ ë²ˆí˜¸';
 
--- Æ÷ÀÎÆ® Àû¸³ ¹× »ç¿ë ÀÌ·Â
+-- í¬ì¸íŠ¸ ì ë¦½ ë° ì‚¬ìš© ì´ë ¥
 CREATE TABLE `POINT_LOG` (
-	`CODE`       INT         NOT NULL COMMENT 'ÀÌ·Â ¹øÈ£', -- ÀÌ·Â ¹øÈ£
-	`MEM_CODE`   INT         NOT NULL COMMENT 'È¸¿ø ¹øÈ£', -- È¸¿ø ¹øÈ£
-	`TYPE`       VARCHAR(32) NOT NULL COMMENT 'Æ÷ÀÎÆ® ±¸ºÐ', -- Æ÷ÀÎÆ® ±¸ºÐ
-	`AMOUNT`     INT         NOT NULL COMMENT 'Æ÷ÀÎÆ® ¼ö', -- Æ÷ÀÎÆ® ¼ö
-	`REASON`     VARCHAR(32) NOT NULL COMMENT '»çÀ¯', -- »çÀ¯
-	`CREATED_AT` DATETIME    NOT NULL COMMENT '¹ß»ýÀÏ' -- ¹ß»ýÀÏ
+	`CODE`       INT         NOT NULL COMMENT 'ì´ë ¥ ë²ˆí˜¸', -- ì´ë ¥ ë²ˆí˜¸
+	`MEM_CODE`   INT         NOT NULL COMMENT 'íšŒì› ë²ˆí˜¸', -- íšŒì› ë²ˆí˜¸
+	`TYPE`       VARCHAR(32) NOT NULL COMMENT 'í¬ì¸íŠ¸ êµ¬ë¶„', -- í¬ì¸íŠ¸ êµ¬ë¶„
+	`AMOUNT`     INT         NOT NULL COMMENT 'í¬ì¸íŠ¸ ìˆ˜', -- í¬ì¸íŠ¸ ìˆ˜
+	`REASON`     VARCHAR(32) NOT NULL COMMENT 'ì‚¬ìœ ', -- ì‚¬ìœ 
+	`CREATED_AT` DATETIME    NOT NULL COMMENT 'ë°œìƒì¼' -- ë°œìƒì¼
 )
-COMMENT 'Æ÷ÀÎÆ® Àû¸³ ¹× »ç¿ë ÀÌ·Â';
+COMMENT 'í¬ì¸íŠ¸ ì ë¦½ ë° ì‚¬ìš© ì´ë ¥';
 
--- Æ÷ÀÎÆ® Àû¸³ ¹× »ç¿ë ÀÌ·Â
+-- í¬ì¸íŠ¸ ì ë¦½ ë° ì‚¬ìš© ì´ë ¥
 ALTER TABLE `POINT_LOG`
-	ADD CONSTRAINT `PK_POINT_LOG` -- Æ÷ÀÎÆ® Àû¸³ ¹× »ç¿ë ÀÌ·Â ±âº»Å°
+	ADD CONSTRAINT `PK_POINT_LOG` -- í¬ì¸íŠ¸ ì ë¦½ ë° ì‚¬ìš© ì´ë ¥ ê¸°ë³¸í‚¤
 	PRIMARY KEY (
-	`CODE` -- ÀÌ·Â ¹øÈ£
+	`CODE` -- ì´ë ¥ ë²ˆí˜¸
 	);
 
 ALTER TABLE `POINT_LOG`
-	MODIFY COLUMN `CODE` INT NOT NULL AUTO_INCREMENT COMMENT 'ÀÌ·Â ¹øÈ£';
+	MODIFY COLUMN `CODE` INT NOT NULL AUTO_INCREMENT COMMENT 'ì´ë ¥ ë²ˆí˜¸';
 
--- °Å·¡ ÈÄ±â
+-- ê±°ëž˜ í›„ê¸°
 CREATE TABLE `MARKET_REVIEW` (
-	`CODE`       INT           NOT NULL COMMENT 'ÈÄ±â ¹øÈ£', -- ÈÄ±â ¹øÈ£
-	`DEAL_CODE`  INT           NOT NULL COMMENT '°Å·¡ ÀÌ·Â ¹øÈ£', -- °Å·¡ ÀÌ·Â ¹øÈ£
-	`MEM_CODE`   INT           NOT NULL COMMENT 'Å¸°Ù È¸¿ø ¹øÈ£', -- Å¸°Ù È¸¿ø ¹øÈ£
-	`RATING`     INT           NOT NULL COMMENT 'º°Á¡', -- º°Á¡
-	`CONTENT`    VARCHAR(4000) NOT NULL COMMENT '³»¿ë', -- ³»¿ë
-	`CREATED_BY` VARCHAR(32)   NOT NULL COMMENT 'ÀÛ¼ºÀÚ ¾ÆÀÌµð', -- ÀÛ¼ºÀÚ ¾ÆÀÌµð
-	`CREATED_AT` DATETIME      NOT NULL COMMENT 'ÀÛ¼ºÀÏ', -- ÀÛ¼ºÀÏ
-	`UPDATED_BY` VARCHAR(32)   NULL     COMMENT '¼öÁ¤ÀÚ ¾ÆÀÌµð', -- ¼öÁ¤ÀÚ ¾ÆÀÌµð
-	`UPDATED_AT` DATETIME      NULL     COMMENT '¼öÁ¤ÀÏ', -- ¼öÁ¤ÀÏ
-	`DELETE_YN`  BOOLEAN       NOT NULL COMMENT '»èÁ¦ ¿©ºÎ' -- »èÁ¦ ¿©ºÎ
+	`CODE`       INT           NOT NULL COMMENT 'í›„ê¸° ë²ˆí˜¸', -- í›„ê¸° ë²ˆí˜¸
+	`DEAL_CODE`  INT           NOT NULL COMMENT 'ê±°ëž˜ ì´ë ¥ ë²ˆí˜¸', -- ê±°ëž˜ ì´ë ¥ ë²ˆí˜¸
+	`MEM_CODE`   INT           NOT NULL COMMENT 'íƒ€ê²Ÿ íšŒì› ë²ˆí˜¸', -- íƒ€ê²Ÿ íšŒì› ë²ˆí˜¸
+	`RATING`     INT           NOT NULL COMMENT 'ë³„ì ', -- ë³„ì 
+	`CONTENT`    VARCHAR(4000) NOT NULL COMMENT 'ë‚´ìš©', -- ë‚´ìš©
+	`CREATED_BY` VARCHAR(32)   NOT NULL COMMENT 'ìž‘ì„±ìž ì•„ì´ë””', -- ìž‘ì„±ìž ì•„ì´ë””
+	`CREATED_AT` DATETIME      NOT NULL COMMENT 'ìž‘ì„±ì¼', -- ìž‘ì„±ì¼
+	`UPDATED_BY` VARCHAR(32)   NULL     COMMENT 'ìˆ˜ì •ìž ì•„ì´ë””', -- ìˆ˜ì •ìž ì•„ì´ë””
+	`UPDATED_AT` DATETIME      NULL     COMMENT 'ìˆ˜ì •ì¼', -- ìˆ˜ì •ì¼
+	`DELETE_YN`  BOOLEAN       NOT NULL COMMENT 'ì‚­ì œ ì—¬ë¶€' -- ì‚­ì œ ì—¬ë¶€
 )
-COMMENT '°Å·¡ ÈÄ±â';
+COMMENT 'ê±°ëž˜ í›„ê¸°';
 
--- °Å·¡ ÈÄ±â
+-- ê±°ëž˜ í›„ê¸°
 ALTER TABLE `MARKET_REVIEW`
-	ADD CONSTRAINT `PK_MARKET_REVIEW` -- °Å·¡ ÈÄ±â ±âº»Å°
+	ADD CONSTRAINT `PK_MARKET_REVIEW` -- ê±°ëž˜ í›„ê¸° ê¸°ë³¸í‚¤
 	PRIMARY KEY (
-	`CODE` -- ÈÄ±â ¹øÈ£
+	`CODE` -- í›„ê¸° ë²ˆí˜¸
 	);
 
 ALTER TABLE `MARKET_REVIEW`
-	MODIFY COLUMN `CODE` INT NOT NULL AUTO_INCREMENT COMMENT 'ÈÄ±â ¹øÈ£';
+	MODIFY COLUMN `CODE` INT NOT NULL AUTO_INCREMENT COMMENT 'í›„ê¸° ë²ˆí˜¸';
 
--- ¸¶ÄÏ Ä«Å×°í¸®
+-- ë§ˆì¼“ ì¹´í…Œê³ ë¦¬
 CREATE TABLE `MARKET_CATEGORY` (
-	`CODE`       INT         NOT NULL COMMENT 'Ä«Å×°í¸® ¹øÈ£', -- Ä«Å×°í¸® ¹øÈ£
-	`MAIN_CATE`  INT         NULL     COMMENT '´ëºÐ·ù ¹øÈ£', -- ´ëºÐ·ù ¹øÈ£
-	`NAME`       VARCHAR(16) NOT NULL COMMENT 'Ä«Å×°í¸®¸í', -- Ä«Å×°í¸®¸í
-	`STATUS`     VARCHAR(32) NOT NULL COMMENT '¿î¿µ »óÅÂ', -- ¿î¿µ »óÅÂ
-	`CREATED_BY` VARCHAR(32) NOT NULL COMMENT '»ý¼ºÇÑ °ü¸®ÀÚ', -- »ý¼ºÇÑ °ü¸®ÀÚ
-	`CREATED_AT` DATETIME    NOT NULL COMMENT '»ý¼ºÀÏ', -- »ý¼ºÀÏ
-	`UPDATED_BY` VARCHAR(32) NULL     COMMENT '¼öÁ¤ÇÑ °ü¸®ÀÚ', -- ¼öÁ¤ÇÑ °ü¸®ÀÚ
-	`UPDATED_AT` DATETIME    NULL     COMMENT '¼öÁ¤ÀÏ', -- ¼öÁ¤ÀÏ
-	`DELETE_YN`  BOOLEAN     NOT NULL COMMENT '»èÁ¦ ¿©ºÎ' -- »èÁ¦ ¿©ºÎ
+	`CODE`       INT         NOT NULL COMMENT 'ì¹´í…Œê³ ë¦¬ ë²ˆí˜¸', -- ì¹´í…Œê³ ë¦¬ ë²ˆí˜¸
+	`MAIN_CATE`  INT         NULL     COMMENT 'ëŒ€ë¶„ë¥˜ ë²ˆí˜¸', -- ëŒ€ë¶„ë¥˜ ë²ˆí˜¸
+	`NAME`       VARCHAR(16) NOT NULL COMMENT 'ì¹´í…Œê³ ë¦¬ëª…', -- ì¹´í…Œê³ ë¦¬ëª…
+	`STATUS`     VARCHAR(32) NOT NULL COMMENT 'ìš´ì˜ ìƒíƒœ', -- ìš´ì˜ ìƒíƒœ
+	`CREATED_BY` VARCHAR(32) NOT NULL COMMENT 'ìƒì„±í•œ ê´€ë¦¬ìž', -- ìƒì„±í•œ ê´€ë¦¬ìž
+	`CREATED_AT` DATETIME    NOT NULL COMMENT 'ìƒì„±ì¼', -- ìƒì„±ì¼
+	`UPDATED_BY` VARCHAR(32) NULL     COMMENT 'ìˆ˜ì •í•œ ê´€ë¦¬ìž', -- ìˆ˜ì •í•œ ê´€ë¦¬ìž
+	`UPDATED_AT` DATETIME    NULL     COMMENT 'ìˆ˜ì •ì¼', -- ìˆ˜ì •ì¼
+	`DELETE_YN`  BOOLEAN     NOT NULL COMMENT 'ì‚­ì œ ì—¬ë¶€' -- ì‚­ì œ ì—¬ë¶€
 )
-COMMENT '¸¶ÄÏ Ä«Å×°í¸®';
+COMMENT 'ë§ˆì¼“ ì¹´í…Œê³ ë¦¬';
 
--- ¸¶ÄÏ Ä«Å×°í¸®
+-- ë§ˆì¼“ ì¹´í…Œê³ ë¦¬
 ALTER TABLE `MARKET_CATEGORY`
-	ADD CONSTRAINT `PK_MARKET_CATEGORY` -- ¸¶ÄÏ Ä«Å×°í¸® ±âº»Å°
+	ADD CONSTRAINT `PK_MARKET_CATEGORY` -- ë§ˆì¼“ ì¹´í…Œê³ ë¦¬ ê¸°ë³¸í‚¤
 	PRIMARY KEY (
-	`CODE` -- Ä«Å×°í¸® ¹øÈ£
+	`CODE` -- ì¹´í…Œê³ ë¦¬ ë²ˆí˜¸
 	);
 
 ALTER TABLE `MARKET_CATEGORY`
-	MODIFY COLUMN `CODE` INT NOT NULL AUTO_INCREMENT COMMENT 'Ä«Å×°í¸® ¹øÈ£';
+	MODIFY COLUMN `CODE` INT NOT NULL AUTO_INCREMENT COMMENT 'ì¹´í…Œê³ ë¦¬ ë²ˆí˜¸';
 
--- °ü¸®ÀÚ È°µ¿ ÀÌ·Â
+-- ê´€ë¦¬ìž í™œë™ ì´ë ¥
 CREATE TABLE `ADMIN_ACTIVITY_LOG` (
-	`CODE`         INT           NOT NULL COMMENT '·Î±× ¹øÈ£', -- ·Î±× ¹øÈ£
-	`ADM_CODE`     INT           NOT NULL COMMENT '°ü¸®ÀÚ °íÀ¯ ¹øÈ£', -- °ü¸®ÀÚ °íÀ¯ ¹øÈ£
-	`TARGET_TYPE`  VARCHAR(32)   NOT NULL COMMENT 'Ã³¸® ´ë»ó À¯Çü', -- Ã³¸® ´ë»ó À¯Çü
-	`TARGET_CODE`  INT           NOT NULL COMMENT 'Ã³¸® ´ë»ó ¹øÈ£', -- Ã³¸® ´ë»ó ¹øÈ£
-	`PROCESS_TYPE` VARCHAR(32)   NOT NULL COMMENT 'Ã³¸® À¯Çü', -- Ã³¸® À¯Çü
-	`MEMO`         VARCHAR(4000) NOT NULL COMMENT 'Ã³¸® »çÀ¯', -- Ã³¸® »çÀ¯
-	`CREATED_AT`   DATETIME      NOT NULL COMMENT 'È°µ¿ ³¯Â¥' -- È°µ¿ ³¯Â¥
+	`CODE`         INT           NOT NULL COMMENT 'ë¡œê·¸ ë²ˆí˜¸', -- ë¡œê·¸ ë²ˆí˜¸
+	`ADM_CODE`     INT           NOT NULL COMMENT 'ê´€ë¦¬ìž ê³ ìœ  ë²ˆí˜¸', -- ê´€ë¦¬ìž ê³ ìœ  ë²ˆí˜¸
+	`TARGET_TYPE`  VARCHAR(32)   NOT NULL COMMENT 'ì²˜ë¦¬ ëŒ€ìƒ ìœ í˜•', -- ì²˜ë¦¬ ëŒ€ìƒ ìœ í˜•
+	`TARGET_CODE`  INT           NOT NULL COMMENT 'ì²˜ë¦¬ ëŒ€ìƒ ë²ˆí˜¸', -- ì²˜ë¦¬ ëŒ€ìƒ ë²ˆí˜¸
+	`PROCESS_TYPE` VARCHAR(32)   NOT NULL COMMENT 'ì²˜ë¦¬ ìœ í˜•', -- ì²˜ë¦¬ ìœ í˜•
+	`MEMO`         VARCHAR(4000) NOT NULL COMMENT 'ì²˜ë¦¬ ì‚¬ìœ ', -- ì²˜ë¦¬ ì‚¬ìœ 
+	`CREATED_AT`   DATETIME      NOT NULL COMMENT 'í™œë™ ë‚ ì§œ' -- í™œë™ ë‚ ì§œ
 )
-COMMENT '°ü¸®ÀÚ È°µ¿ ÀÌ·Â';
+COMMENT 'ê´€ë¦¬ìž í™œë™ ì´ë ¥';
 
--- °ü¸®ÀÚ È°µ¿ ÀÌ·Â
+-- ê´€ë¦¬ìž í™œë™ ì´ë ¥
 ALTER TABLE `ADMIN_ACTIVITY_LOG`
-	ADD CONSTRAINT `PK_ADMIN_ACTIVITY_LOG` -- °ü¸®ÀÚ È°µ¿ ÀÌ·Â ±âº»Å°
+	ADD CONSTRAINT `PK_ADMIN_ACTIVITY_LOG` -- ê´€ë¦¬ìž í™œë™ ì´ë ¥ ê¸°ë³¸í‚¤
 	PRIMARY KEY (
-	`CODE` -- ·Î±× ¹øÈ£
+	`CODE` -- ë¡œê·¸ ë²ˆí˜¸
 	);
 
 ALTER TABLE `ADMIN_ACTIVITY_LOG`
-	MODIFY COLUMN `CODE` INT NOT NULL AUTO_INCREMENT COMMENT '·Î±× ¹øÈ£';
+	MODIFY COLUMN `CODE` INT NOT NULL AUTO_INCREMENT COMMENT 'ë¡œê·¸ ë²ˆí˜¸';
 
--- ÇÇµå
+-- í”¼ë“œ
 CREATE TABLE `FEED` (
-	`CODE`       INT           NOT NULL COMMENT 'ÇÇµå ¹øÈ£', -- ÇÇµå ¹øÈ£
-	`CHAL_CODE`  INT           NOT NULL COMMENT 'Ã§¸°Áö ¹øÈ£', -- Ã§¸°Áö ¹øÈ£
-	`MEM_CODE`   INT           NOT NULL COMMENT 'È¸¿ø ¹øÈ£', -- È¸¿ø ¹øÈ£
-	`TITLE`      VARCHAR(255)  NOT NULL COMMENT 'Á¦¸ñ', -- Á¦¸ñ
-	`CONTENT`    VARCHAR(4000) NOT NULL COMMENT '³»¿ë', -- ³»¿ë
-	`HITCOUNT`   INT           NOT NULL COMMENT 'Á¶È¸¼ö', -- Á¶È¸¼ö
-	`STATUS`     VARCHAR(32)   NOT NULL COMMENT '°ø°³ »óÅÂ', -- °ø°³ »óÅÂ
-	`CREATED_BY` VARCHAR(32)   NOT NULL COMMENT 'ÀÛ¼ºÀÚ ¾ÆÀÌµð', -- ÀÛ¼ºÀÚ ¾ÆÀÌµð
-	`CREATED_AT` DATETIME      NOT NULL COMMENT 'ÀÛ¼ºÀÏ', -- ÀÛ¼ºÀÏ
-	`UPDATED_BY` VARCHAR(32)   NULL     COMMENT '¼öÁ¤ÀÚ ¾ÆÀÌµð', -- ¼öÁ¤ÀÚ ¾ÆÀÌµð
-	`UPDATED_AT` DATETIME      NULL     COMMENT '¼öÁ¤ÀÏ', -- ¼öÁ¤ÀÏ
-	`DELETE_YN`  BOOLEAN       NOT NULL COMMENT '»èÁ¦ ¿©ºÎ' -- »èÁ¦ ¿©ºÎ
+	`CODE`       INT           NOT NULL COMMENT 'í”¼ë“œ ë²ˆí˜¸', -- í”¼ë“œ ë²ˆí˜¸
+	`CHAL_CODE`  INT           NOT NULL COMMENT 'ì±Œë¦°ì§€ ë²ˆí˜¸', -- ì±Œë¦°ì§€ ë²ˆí˜¸
+	`MEM_CODE`   INT           NOT NULL COMMENT 'íšŒì› ë²ˆí˜¸', -- íšŒì› ë²ˆí˜¸
+	`TITLE`      VARCHAR(255)  NOT NULL COMMENT 'ì œëª©', -- ì œëª©
+	`CONTENT`    VARCHAR(4000) NOT NULL COMMENT 'ë‚´ìš©', -- ë‚´ìš©
+	`HITCOUNT`   INT           NOT NULL COMMENT 'ì¡°íšŒìˆ˜', -- ì¡°íšŒìˆ˜
+	`STATUS`     VARCHAR(32)   NOT NULL COMMENT 'ê³µê°œ ìƒíƒœ', -- ê³µê°œ ìƒíƒœ
+	`CREATED_BY` VARCHAR(32)   NOT NULL COMMENT 'ìž‘ì„±ìž ì•„ì´ë””', -- ìž‘ì„±ìž ì•„ì´ë””
+	`CREATED_AT` DATETIME      NOT NULL COMMENT 'ìž‘ì„±ì¼', -- ìž‘ì„±ì¼
+	`UPDATED_BY` VARCHAR(32)   NULL     COMMENT 'ìˆ˜ì •ìž ì•„ì´ë””', -- ìˆ˜ì •ìž ì•„ì´ë””
+	`UPDATED_AT` DATETIME      NULL     COMMENT 'ìˆ˜ì •ì¼', -- ìˆ˜ì •ì¼
+	`DELETE_YN`  BOOLEAN       NOT NULL COMMENT 'ì‚­ì œ ì—¬ë¶€' -- ì‚­ì œ ì—¬ë¶€
 )
-COMMENT 'ÇÇµå';
+COMMENT 'í”¼ë“œ';
 
--- ÇÇµå
+-- í”¼ë“œ
 ALTER TABLE `FEED`
-	ADD CONSTRAINT `PK_FEED` -- ÇÇµå ±âº»Å°
+	ADD CONSTRAINT `PK_FEED` -- í”¼ë“œ ê¸°ë³¸í‚¤
 	PRIMARY KEY (
-	`CODE` -- ÇÇµå ¹øÈ£
+	`CODE` -- í”¼ë“œ ë²ˆí˜¸
 	);
 
 ALTER TABLE `FEED`
-	MODIFY COLUMN `CODE` INT NOT NULL AUTO_INCREMENT COMMENT 'ÇÇµå ¹øÈ£';
+	MODIFY COLUMN `CODE` INT NOT NULL AUTO_INCREMENT COMMENT 'í”¼ë“œ ë²ˆí˜¸';
 
--- ÇÇµå ÃßÃµ
+-- í”¼ë“œ ì¶”ì²œ
 CREATE TABLE `FEED_LIKE` (
-	`FEED_CODE`  INT      NOT NULL COMMENT 'ÇÇµå ¹øÈ£', -- ÇÇµå ¹øÈ£
-	`MEM_CODE`   INT      NOT NULL COMMENT 'È¸¿ø ¹øÈ£', -- È¸¿ø ¹øÈ£
-	`CREATED_AT` DATETIME NOT NULL COMMENT 'µî·ÏÀÏ', -- µî·ÏÀÏ
-	`DELETE_YN`  BOOLEAN  NOT NULL COMMENT '»èÁ¦ ¿©ºÎ' -- »èÁ¦ ¿©ºÎ
+	`FEED_CODE`  INT      NOT NULL COMMENT 'í”¼ë“œ ë²ˆí˜¸', -- í”¼ë“œ ë²ˆí˜¸
+	`MEM_CODE`   INT      NOT NULL COMMENT 'íšŒì› ë²ˆí˜¸', -- íšŒì› ë²ˆí˜¸
+	`CREATED_AT` DATETIME NOT NULL COMMENT 'ë“±ë¡ì¼', -- ë“±ë¡ì¼
+	`DELETE_YN`  BOOLEAN  NOT NULL COMMENT 'ì‚­ì œ ì—¬ë¶€' -- ì‚­ì œ ì—¬ë¶€
 )
-COMMENT 'ÇÇµå ÃßÃµ';
+COMMENT 'í”¼ë“œ ì¶”ì²œ';
 
--- ÇÇµå ÃßÃµ
+-- í”¼ë“œ ì¶”ì²œ
 ALTER TABLE `FEED_LIKE`
-	ADD CONSTRAINT `PK_FEED_LIKE` -- ÇÇµå ÃßÃµ ±âº»Å°
+	ADD CONSTRAINT `PK_FEED_LIKE` -- í”¼ë“œ ì¶”ì²œ ê¸°ë³¸í‚¤
 	PRIMARY KEY (
-	`FEED_CODE`, -- ÇÇµå ¹øÈ£
-	`MEM_CODE`   -- È¸¿ø ¹øÈ£
+	`FEED_CODE`, -- í”¼ë“œ ë²ˆí˜¸
+	`MEM_CODE`   -- íšŒì› ë²ˆí˜¸
 	);
 
--- ´ñ±Û ÃßÃµ
+-- ëŒ“ê¸€ ì¶”ì²œ
 CREATE TABLE `COMMENT_LIKE` (
-	`CMT_CODE`   INT      NOT NULL COMMENT '´ñ±Û ¹øÈ£', -- ´ñ±Û ¹øÈ£
-	`MEM_CODE`   INT      NOT NULL COMMENT 'È¸¿ø ¹øÈ£', -- È¸¿ø ¹øÈ£
-	`CREATED_AT` DATETIME NOT NULL COMMENT 'µî·ÏÀÏ', -- µî·ÏÀÏ
-	`DELETE_YN`  BOOLEAN  NOT NULL COMMENT '»èÁ¦ ¿©ºÎ' -- »èÁ¦ ¿©ºÎ
+	`CMT_CODE`   INT      NOT NULL COMMENT 'ëŒ“ê¸€ ë²ˆí˜¸', -- ëŒ“ê¸€ ë²ˆí˜¸
+	`MEM_CODE`   INT      NOT NULL COMMENT 'íšŒì› ë²ˆí˜¸', -- íšŒì› ë²ˆí˜¸
+	`CREATED_AT` DATETIME NOT NULL COMMENT 'ë“±ë¡ì¼', -- ë“±ë¡ì¼
+	`DELETE_YN`  BOOLEAN  NOT NULL COMMENT 'ì‚­ì œ ì—¬ë¶€' -- ì‚­ì œ ì—¬ë¶€
 )
-COMMENT '´ñ±Û ÃßÃµ';
+COMMENT 'ëŒ“ê¸€ ì¶”ì²œ';
 
--- ´ñ±Û ÃßÃµ
+-- ëŒ“ê¸€ ì¶”ì²œ
 ALTER TABLE `COMMENT_LIKE`
-	ADD CONSTRAINT `PK_COMMENT_LIKE` -- ´ñ±Û ÃßÃµ ±âº»Å°
+	ADD CONSTRAINT `PK_COMMENT_LIKE` -- ëŒ“ê¸€ ì¶”ì²œ ê¸°ë³¸í‚¤
 	PRIMARY KEY (
-	`CMT_CODE`, -- ´ñ±Û ¹øÈ£
-	`MEM_CODE`  -- È¸¿ø ¹øÈ£
+	`CMT_CODE`, -- ëŒ“ê¸€ ë²ˆí˜¸
+	`MEM_CODE`  -- íšŒì› ë²ˆí˜¸
 	);
 
--- ´ñ±Û
+-- ëŒ“ê¸€
 CREATE TABLE `COMMENTS` (
-	`CODE`       INT           NOT NULL COMMENT '´ñ±Û ¹øÈ£', -- ´ñ±Û ¹øÈ£
-	`FEED_CODE`  INT           NOT NULL COMMENT 'ÇÇµå ¹øÈ£', -- ÇÇµå ¹øÈ£
-	`MEM_CODE`   INT           NOT NULL COMMENT 'È¸¿ø ¹øÈ£', -- È¸¿ø ¹øÈ£
-	`CONTENT`    VARCHAR(4000) NOT NULL COMMENT '³»¿ë', -- ³»¿ë
-	`STATUS`     VARCHAR(32)   NOT NULL COMMENT '°ø°³ »óÅÂ', -- °ø°³ »óÅÂ
-	`CREATED_BY` VARCHAR(32)   NOT NULL COMMENT 'ÀÛ¼ºÀÚ ¾ÆÀÌµð', -- ÀÛ¼ºÀÚ ¾ÆÀÌµð
-	`CREATED_AT` DATETIME      NOT NULL COMMENT 'ÀÛ¼ºÀÏ', -- ÀÛ¼ºÀÏ
-	`UPDATED_BY` VARCHAR(32)   NULL     COMMENT '¼öÁ¤ÀÚ ¾ÆÀÌµð', -- ¼öÁ¤ÀÚ ¾ÆÀÌµð
-	`UPDATED_AT` DATETIME      NULL     COMMENT '¼öÁ¤ÀÏ', -- ¼öÁ¤ÀÏ
-	`DELETE_YN`  BOOLEAN       NOT NULL COMMENT '»èÁ¦ ¿©ºÎ' -- »èÁ¦ ¿©ºÎ
+	`CODE`       INT           NOT NULL COMMENT 'ëŒ“ê¸€ ë²ˆí˜¸', -- ëŒ“ê¸€ ë²ˆí˜¸
+	`FEED_CODE`  INT           NOT NULL COMMENT 'í”¼ë“œ ë²ˆí˜¸', -- í”¼ë“œ ë²ˆí˜¸
+	`MEM_CODE`   INT           NOT NULL COMMENT 'íšŒì› ë²ˆí˜¸', -- íšŒì› ë²ˆí˜¸
+	`CONTENT`    VARCHAR(4000) NOT NULL COMMENT 'ë‚´ìš©', -- ë‚´ìš©
+	`STATUS`     VARCHAR(32)   NOT NULL COMMENT 'ê³µê°œ ìƒíƒœ', -- ê³µê°œ ìƒíƒœ
+	`CREATED_BY` VARCHAR(32)   NOT NULL COMMENT 'ìž‘ì„±ìž ì•„ì´ë””', -- ìž‘ì„±ìž ì•„ì´ë””
+	`CREATED_AT` DATETIME      NOT NULL COMMENT 'ìž‘ì„±ì¼', -- ìž‘ì„±ì¼
+	`UPDATED_BY` VARCHAR(32)   NULL     COMMENT 'ìˆ˜ì •ìž ì•„ì´ë””', -- ìˆ˜ì •ìž ì•„ì´ë””
+	`UPDATED_AT` DATETIME      NULL     COMMENT 'ìˆ˜ì •ì¼', -- ìˆ˜ì •ì¼
+	`DELETE_YN`  BOOLEAN       NOT NULL COMMENT 'ì‚­ì œ ì—¬ë¶€' -- ì‚­ì œ ì—¬ë¶€
 )
-COMMENT '´ñ±Û';
+COMMENT 'ëŒ“ê¸€';
 
--- ´ñ±Û
+-- ëŒ“ê¸€
 ALTER TABLE `COMMENTS`
-	ADD CONSTRAINT `PK_COMMENTS` -- ´ñ±Û ±âº»Å°
+	ADD CONSTRAINT `PK_COMMENTS` -- ëŒ“ê¸€ ê¸°ë³¸í‚¤
 	PRIMARY KEY (
-	`CODE` -- ´ñ±Û ¹øÈ£
+	`CODE` -- ëŒ“ê¸€ ë²ˆí˜¸
 	);
 
 ALTER TABLE `COMMENTS`
-	MODIFY COLUMN `CODE` INT NOT NULL AUTO_INCREMENT COMMENT '´ñ±Û ¹øÈ£';
+	MODIFY COLUMN `CODE` INT NOT NULL AUTO_INCREMENT COMMENT 'ëŒ“ê¸€ ë²ˆí˜¸';
 
--- Ã§¸°Áö
+-- ì±Œë¦°ì§€
 CREATE TABLE `CHALLENGE` (
-	`CODE`           INT           NOT NULL COMMENT 'Ã§¸°Áö ¹øÈ£', -- Ã§¸°Áö ¹øÈ£
-	`ADM_CODE`       INT           NOT NULL COMMENT 'µî·Ï °ü¸®ÀÚ ¹øÈ£', -- µî·Ï °ü¸®ÀÚ ¹øÈ£
-	`TITLE`          VARCHAR(255)  NOT NULL COMMENT 'Á¦¸ñ', -- Á¦¸ñ
-	`CONTENT`        VARCHAR(4000) NOT NULL COMMENT '³»¿ë', -- ³»¿ë
-	`START_DATE`     DATETIME      NOT NULL COMMENT '½ÃÀÛÀÏ', -- ½ÃÀÛÀÏ
-	`END_DATE`       DATETIME      NOT NULL COMMENT '¸¶°¨ÀÏ', -- ¸¶°¨ÀÏ
-	`GOAL`           VARCHAR(255)  NULL     COMMENT '¸ñÇ¥', -- ¸ñÇ¥
-	`POINT_EARNED`   INT           NULL     COMMENT 'È¹µæ Æ÷ÀÎÆ®', -- È¹µæ Æ÷ÀÎÆ®
-	`POST_STATUS`    VARCHAR(32)   NOT NULL COMMENT '³ëÃâ »óÅÂ', -- ³ëÃâ »óÅÂ
-	`PROGRESS_STATUS` VARCHAR(32)   NULL     COMMENT 'ÁøÇà »óÅÂ', -- ÁøÇà »óÅÂ
-	`CREATED_BY`     VARCHAR(32)   NOT NULL COMMENT 'µî·ÏÀÚ ¾ÆÀÌµð', -- µî·ÏÀÚ ¾ÆÀÌµð
-	`CREATED_AT`     DATETIME      NOT NULL COMMENT 'µî·ÏÀÏ', -- µî·ÏÀÏ
-	`UPDATED_BY`     VARCHAR(32)   NULL     COMMENT '¼öÁ¤ÀÚ ¾ÆÀÌµð', -- ¼öÁ¤ÀÚ ¾ÆÀÌµð
-	`UPDATED_AT`     DATETIME      NULL     COMMENT '¼öÁ¤ÀÏ', -- ¼öÁ¤ÀÏ
-	`DELETE_YN`      BOOLEAN       NOT NULL COMMENT '»èÁ¦ ¿©ºÎ' -- »èÁ¦ ¿©ºÎ
+	`CODE`           INT           NOT NULL COMMENT 'ì±Œë¦°ì§€ ë²ˆí˜¸', -- ì±Œë¦°ì§€ ë²ˆí˜¸
+	`ADM_CODE`       INT           NOT NULL COMMENT 'ë“±ë¡ ê´€ë¦¬ìž ë²ˆí˜¸', -- ë“±ë¡ ê´€ë¦¬ìž ë²ˆí˜¸
+	`TITLE`          VARCHAR(255)  NOT NULL COMMENT 'ì œëª©', -- ì œëª©
+	`CONTENT`        VARCHAR(4000) NOT NULL COMMENT 'ë‚´ìš©', -- ë‚´ìš©
+	`START_DATE`     DATETIME      NOT NULL COMMENT 'ì‹œìž‘ì¼', -- ì‹œìž‘ì¼
+	`END_DATE`       DATETIME      NOT NULL COMMENT 'ë§ˆê°ì¼', -- ë§ˆê°ì¼
+	`GOAL`           VARCHAR(255)  NULL     COMMENT 'ëª©í‘œ', -- ëª©í‘œ
+	`POINT_EARNED`   INT           NULL     COMMENT 'íšë“ í¬ì¸íŠ¸', -- íšë“ í¬ì¸íŠ¸
+	`POST_STATUS`    VARCHAR(32)   NOT NULL COMMENT 'ë…¸ì¶œ ìƒíƒœ', -- ë…¸ì¶œ ìƒíƒœ
+	`PROGRESS_STATUS` VARCHAR(32)   NULL     COMMENT 'ì§„í–‰ ìƒíƒœ', -- ì§„í–‰ ìƒíƒœ
+	`CREATED_BY`     VARCHAR(32)   NOT NULL COMMENT 'ë“±ë¡ìž ì•„ì´ë””', -- ë“±ë¡ìž ì•„ì´ë””
+	`CREATED_AT`     DATETIME      NOT NULL COMMENT 'ë“±ë¡ì¼', -- ë“±ë¡ì¼
+	`UPDATED_BY`     VARCHAR(32)   NULL     COMMENT 'ìˆ˜ì •ìž ì•„ì´ë””', -- ìˆ˜ì •ìž ì•„ì´ë””
+	`UPDATED_AT`     DATETIME      NULL     COMMENT 'ìˆ˜ì •ì¼', -- ìˆ˜ì •ì¼
+	`DELETE_YN`      BOOLEAN       NOT NULL COMMENT 'ì‚­ì œ ì—¬ë¶€' -- ì‚­ì œ ì—¬ë¶€
 )
-COMMENT 'Ã§¸°Áö';
+COMMENT 'ì±Œë¦°ì§€';
 
--- Ã§¸°Áö
+-- ì±Œë¦°ì§€
 ALTER TABLE `CHALLENGE`
-	ADD CONSTRAINT `PK_CHALLENGE` -- Ã§¸°Áö ±âº»Å°
+	ADD CONSTRAINT `PK_CHALLENGE` -- ì±Œë¦°ì§€ ê¸°ë³¸í‚¤
 	PRIMARY KEY (
-	`CODE` -- Ã§¸°Áö ¹øÈ£
+	`CODE` -- ì±Œë¦°ì§€ ë²ˆí˜¸
 	);
 
 ALTER TABLE `CHALLENGE`
-	MODIFY COLUMN `CODE` INT NOT NULL AUTO_INCREMENT COMMENT 'Ã§¸°Áö ¹øÈ£';
+	MODIFY COLUMN `CODE` INT NOT NULL AUTO_INCREMENT COMMENT 'ì±Œë¦°ì§€ ë²ˆí˜¸';
 
--- Ã§¸°Áö Âü¿© »ó¼¼ Á¤º¸
+-- ì±Œë¦°ì§€ ì°¸ì—¬ ìƒì„¸ ì •ë³´
 CREATE TABLE `CHALLENGE_ENTRY` (
-	`CODE`          INT         NOT NULL COMMENT 'Âü¿© »ó¼¼ ¹øÈ£', -- Âü¿© »ó¼¼ ¹øÈ£
-	`CHAL_CODE`     INT         NOT NULL COMMENT 'Ã§¸°Áö ¹øÈ£', -- Ã§¸°Áö ¹øÈ£
-	`MEM_CODE`      INT         NOT NULL COMMENT 'È¸¿ø ¹øÈ£', -- È¸¿ø ¹øÈ£
-	`STATUS`        VARCHAR(32) NOT NULL COMMENT 'ÇöÀç ÁøÇà »óÈ²', -- ÇöÀç ÁøÇà »óÈ²
-	`JOINED_AT`     DATETIME    NOT NULL COMMENT 'Âü¿©ÀÏ', -- Âü¿©ÀÏ
-	`CANCELED_BY`   VARCHAR(32) NULL     COMMENT 'Ãë¼ÒÀÚ ¾ÆÀÌµð', -- Ãë¼ÒÀÚ ¾ÆÀÌµð
-	`CANCELED_AT`   DATETIME    NULL     COMMENT 'Ãë¼ÒÀÏ', -- Ãë¼ÒÀÏ
-	`CANCEL_REASON` VARCHAR(32) NULL     COMMENT 'Ãë¼Ò »çÀ¯' -- Ãë¼Ò »çÀ¯
-	`DELETE_YN`     BOOLEAN     NOT NULL DEFAULT 0 COMMENT '»èÁ¦ ¿©ºÎ' -- »èÁ¦ ¿©ºÎ
+	`CODE`          INT         NOT NULL COMMENT 'ì°¸ì—¬ ìƒì„¸ ë²ˆí˜¸', -- ì°¸ì—¬ ìƒì„¸ ë²ˆí˜¸
+	`CHAL_CODE`     INT         NOT NULL COMMENT 'ì±Œë¦°ì§€ ë²ˆí˜¸', -- ì±Œë¦°ì§€ ë²ˆí˜¸
+	`MEM_CODE`      INT         NOT NULL COMMENT 'íšŒì› ë²ˆí˜¸', -- íšŒì› ë²ˆí˜¸
+	`STATUS`        VARCHAR(32) NOT NULL COMMENT 'í˜„ìž¬ ì§„í–‰ ìƒí™©', -- í˜„ìž¬ ì§„í–‰ ìƒí™©
+	`JOINED_AT`     DATETIME    NOT NULL COMMENT 'ì°¸ì—¬ì¼', -- ì°¸ì—¬ì¼
+	`CANCELED_BY`   VARCHAR(32) NULL     COMMENT 'ì·¨ì†Œìž ì•„ì´ë””', -- ì·¨ì†Œìž ì•„ì´ë””
+	`CANCELED_AT`   DATETIME    NULL     COMMENT 'ì·¨ì†Œì¼', -- ì·¨ì†Œì¼
+	`CANCEL_REASON` VARCHAR(32) NULL     COMMENT 'ì·¨ì†Œ ì‚¬ìœ ' -- ì·¨ì†Œ ì‚¬ìœ 
+	`DELETE_YN`     BOOLEAN     NOT NULL DEFAULT 0 COMMENT 'ì‚­ì œ ì—¬ë¶€' -- ì‚­ì œ ì—¬ë¶€
 )
-COMMENT 'Ã§¸°Áö Âü¿© »ó¼¼ Á¤º¸';
+COMMENT 'ì±Œë¦°ì§€ ì°¸ì—¬ ìƒì„¸ ì •ë³´';
 
--- Ã§¸°Áö Âü¿© »ó¼¼ Á¤º¸
+-- ì±Œë¦°ì§€ ì°¸ì—¬ ìƒì„¸ ì •ë³´
 ALTER TABLE `CHALLENGE_ENTRY`
-	ADD CONSTRAINT `PK_CHALLENGE_ENTRY` -- Ã§¸°Áö Âü¿© »ó¼¼ Á¤º¸ ±âº»Å°
+	ADD CONSTRAINT `PK_CHALLENGE_ENTRY` -- ì±Œë¦°ì§€ ì°¸ì—¬ ìƒì„¸ ì •ë³´ ê¸°ë³¸í‚¤
 	PRIMARY KEY (
-	`CODE` -- Âü¿© »ó¼¼ ¹øÈ£
+	`CODE` -- ì°¸ì—¬ ìƒì„¸ ë²ˆí˜¸
 	);
 
 ALTER TABLE `CHALLENGE_ENTRY`
-	MODIFY COLUMN `CODE` INT NOT NULL AUTO_INCREMENT COMMENT 'Âü¿© »ó¼¼ ¹øÈ£';
+	MODIFY COLUMN `CODE` INT NOT NULL AUTO_INCREMENT COMMENT 'ì°¸ì—¬ ìƒì„¸ ë²ˆí˜¸';
 
 ALTER TABLE `CHALLENGE_ENTRY`
-ADD COLUMN `DELETE_YN` BOOLEAN NOT NULL DEFAULT 0 COMMENT '»èÁ¦ ¿©ºÎ';
+ADD COLUMN `DELETE_YN` BOOLEAN NOT NULL DEFAULT 0 COMMENT 'ì‚­ì œ ì—¬ë¶€';
 
--- ÇÇµå Á¶È¸¼ö ÀÌ·Â
+-- í”¼ë“œ ì¡°íšŒìˆ˜ ì´ë ¥
 CREATE TABLE `FEED_HIT_LOG` (
-	`FEED_CODE`  INT      NOT NULL COMMENT 'ÇÇµå ¹øÈ£', -- ÇÇµå ¹øÈ£
-	`MEM_CODE`   INT      NOT NULL COMMENT 'È¸¿ø ¹øÈ£', -- È¸¿ø ¹øÈ£
-	`CREATED_AT` DATETIME NOT NULL COMMENT 'Á¶È¸ÀÏ' -- Á¶È¸ÀÏ
+	`FEED_CODE`  INT      NOT NULL COMMENT 'í”¼ë“œ ë²ˆí˜¸', -- í”¼ë“œ ë²ˆí˜¸
+	`MEM_CODE`   INT      NOT NULL COMMENT 'íšŒì› ë²ˆí˜¸', -- íšŒì› ë²ˆí˜¸
+	`CREATED_AT` DATETIME NOT NULL COMMENT 'ì¡°íšŒì¼' -- ì¡°íšŒì¼
 )
-COMMENT 'ÇÇµå Á¶È¸¼ö ÀÌ·Â';
+COMMENT 'í”¼ë“œ ì¡°íšŒìˆ˜ ì´ë ¥';
 
--- ÇÇµå Á¶È¸¼ö ÀÌ·Â
+-- í”¼ë“œ ì¡°íšŒìˆ˜ ì´ë ¥
 ALTER TABLE `FEED_HIT_LOG`
-	ADD CONSTRAINT `PK_FEED_HIT_LOG` -- ÇÇµå Á¶È¸¼ö ÀÌ·Â ±âº»Å°
+	ADD CONSTRAINT `PK_FEED_HIT_LOG` -- í”¼ë“œ ì¡°íšŒìˆ˜ ì´ë ¥ ê¸°ë³¸í‚¤
 	PRIMARY KEY (
-	`FEED_CODE`, -- ÇÇµå ¹øÈ£
-	`MEM_CODE`   -- È¸¿ø ¹øÈ£
+	`FEED_CODE`, -- í”¼ë“œ ë²ˆí˜¸
+	`MEM_CODE`   -- íšŒì› ë²ˆí˜¸
 	);
 
--- °Å·¡±Û Á¶È¸¼ö ÀÌ·Â
+-- ê±°ëž˜ê¸€ ì¡°íšŒìˆ˜ ì´ë ¥
 CREATE TABLE `MARKET_PROD_HIT_LOG` (
-	`PROD_CODE`  INT      NOT NULL COMMENT 'µî·Ï ¹°Ç° ¹øÈ£', -- µî·Ï ¹°Ç° ¹øÈ£
-	`MEM_CODE`   INT      NOT NULL COMMENT 'È¸¿ø ¹øÈ£', -- È¸¿ø ¹øÈ£
-	`CREATED_AT` DATETIME NOT NULL COMMENT 'Á¶È¸ÀÏ' -- Á¶È¸ÀÏ
+	`PROD_CODE`  INT      NOT NULL COMMENT 'ë“±ë¡ ë¬¼í’ˆ ë²ˆí˜¸', -- ë“±ë¡ ë¬¼í’ˆ ë²ˆí˜¸
+	`MEM_CODE`   INT      NOT NULL COMMENT 'íšŒì› ë²ˆí˜¸', -- íšŒì› ë²ˆí˜¸
+	`CREATED_AT` DATETIME NOT NULL COMMENT 'ì¡°íšŒì¼' -- ì¡°íšŒì¼
 )
-COMMENT '°Å·¡±Û Á¶È¸¼ö ÀÌ·Â';
+COMMENT 'ê±°ëž˜ê¸€ ì¡°íšŒìˆ˜ ì´ë ¥';
 
--- °Å·¡±Û Á¶È¸¼ö ÀÌ·Â
+-- ê±°ëž˜ê¸€ ì¡°íšŒìˆ˜ ì´ë ¥
 ALTER TABLE `MARKET_PROD_HIT_LOG`
-	ADD CONSTRAINT `PK_MARKET_PROD_HIT_LOG` -- °Å·¡±Û Á¶È¸¼ö ÀÌ·Â ±âº»Å°
+	ADD CONSTRAINT `PK_MARKET_PROD_HIT_LOG` -- ê±°ëž˜ê¸€ ì¡°íšŒìˆ˜ ì´ë ¥ ê¸°ë³¸í‚¤
 	PRIMARY KEY (
-	`PROD_CODE`, -- µî·Ï ¹°Ç° ¹øÈ£
-	`MEM_CODE`   -- È¸¿ø ¹øÈ£
+	`PROD_CODE`, -- ë“±ë¡ ë¬¼í’ˆ ë²ˆí˜¸
+	`MEM_CODE`   -- íšŒì› ë²ˆí˜¸
 	);
 
--- °Å·¡±Û Âò
+-- ê±°ëž˜ê¸€ ì°œ
 CREATE TABLE `MARKET_PROD_PICK` (
-	`PROD_CODE`  INT      NOT NULL COMMENT 'µî·Ï ¹°Ç° ¹øÈ£', -- µî·Ï ¹°Ç° ¹øÈ£
-	`MEM_CODE`   INT      NOT NULL COMMENT 'È¸¿ø ¹øÈ£', -- È¸¿ø ¹øÈ£
-	`CREATED_AT` DATETIME NOT NULL COMMENT 'µî·ÏÀÏ', -- µî·ÏÀÏ
-	`DELETE_YN`  BOOLEAN  NOT NULL COMMENT '»èÁ¦ ¿©ºÎ' -- »èÁ¦ ¿©ºÎ
+	`PROD_CODE`  INT      NOT NULL COMMENT 'ë“±ë¡ ë¬¼í’ˆ ë²ˆí˜¸', -- ë“±ë¡ ë¬¼í’ˆ ë²ˆí˜¸
+	`MEM_CODE`   INT      NOT NULL COMMENT 'íšŒì› ë²ˆí˜¸', -- íšŒì› ë²ˆí˜¸
+	`CREATED_AT` DATETIME NOT NULL COMMENT 'ë“±ë¡ì¼', -- ë“±ë¡ì¼
+	`DELETE_YN`  BOOLEAN  NOT NULL COMMENT 'ì‚­ì œ ì—¬ë¶€' -- ì‚­ì œ ì—¬ë¶€
 )
-COMMENT '°Å·¡±Û Âò';
+COMMENT 'ê±°ëž˜ê¸€ ì°œ';
 
--- °Å·¡±Û Âò
+-- ê±°ëž˜ê¸€ ì°œ
 ALTER TABLE `MARKET_PROD_PICK`
-	ADD CONSTRAINT `PK_MARKET_PROD_PICK` -- °Å·¡±Û Âò ±âº»Å°
+	ADD CONSTRAINT `PK_MARKET_PROD_PICK` -- ê±°ëž˜ê¸€ ì°œ ê¸°ë³¸í‚¤
 	PRIMARY KEY (
-	`PROD_CODE`, -- µî·Ï ¹°Ç° ¹øÈ£
-	`MEM_CODE`   -- È¸¿ø ¹øÈ£
+	`PROD_CODE`, -- ë“±ë¡ ë¬¼í’ˆ ë²ˆí˜¸
+	`MEM_CODE`   -- íšŒì› ë²ˆí˜¸
 	);
 
--- ÀÌ¹ÌÁö Á¤º¸
+-- ì´ë¯¸ì§€ ì •ë³´
 CREATE TABLE `IMAGES` (
-	`TARGET_CODE` INT          NOT NULL COMMENT 'Å¸°Ù ¹øÈ£', -- Å¸°Ù ¹øÈ£
-	`TYPE`        VARCHAR(32)  NOT NULL COMMENT 'ºÐ·ù', -- ºÐ·ù
-	`PATH`        VARCHAR(255) NOT NULL COMMENT '°æ·Î', -- °æ·Î
-	`ORDER_SEQ`   INT          NOT NULL COMMENT 'ÀÌ¹ÌÁö ¼ø¼­', -- ÀÌ¹ÌÁö ¼ø¼­
-	`DELETE_YN`   BOOLEAN      NOT NULL COMMENT '»èÁ¦ ¿©ºÎ' -- »èÁ¦ ¿©ºÎ
+	`TARGET_CODE` INT          NOT NULL COMMENT 'íƒ€ê²Ÿ ë²ˆí˜¸', -- íƒ€ê²Ÿ ë²ˆí˜¸
+	`TYPE`        VARCHAR(32)  NOT NULL COMMENT 'ë¶„ë¥˜', -- ë¶„ë¥˜
+	`PATH`        VARCHAR(255) NOT NULL COMMENT 'ê²½ë¡œ', -- ê²½ë¡œ
+	`ORDER_SEQ`   INT          NOT NULL COMMENT 'ì´ë¯¸ì§€ ìˆœì„œ', -- ì´ë¯¸ì§€ ìˆœì„œ
+	`DELETE_YN`   BOOLEAN      NOT NULL COMMENT 'ì‚­ì œ ì—¬ë¶€' -- ì‚­ì œ ì—¬ë¶€
 )
-COMMENT 'ÀÌ¹ÌÁö Á¤º¸';
+COMMENT 'ì´ë¯¸ì§€ ì •ë³´';
 
--- ÇÇµå ÇØ½ÃÅÂ±×
+-- í”¼ë“œ í•´ì‹œíƒœê·¸
 CREATE TABLE `FEED_HASHTAG` (
-	`FEED_CODE` INT           NOT NULL COMMENT 'ÇÇµå ¹øÈ£', -- ÇÇµå ¹øÈ£
-	`TAG_NAME`  VARCHAR(4000) NOT NULL COMMENT 'ÅÂ±×¸í' -- ÅÂ±×¸í
+	`FEED_CODE` INT           NOT NULL COMMENT 'í”¼ë“œ ë²ˆí˜¸', -- í”¼ë“œ ë²ˆí˜¸
+	`TAG_NAME`  VARCHAR(4000) NOT NULL COMMENT 'íƒœê·¸ëª…' -- íƒœê·¸ëª…
 )
-COMMENT 'ÇÇµå ÇØ½ÃÅÂ±×';
+COMMENT 'í”¼ë“œ í•´ì‹œíƒœê·¸';
 
--- ½Å°í °ü¸®
+-- ì‹ ê³  ê´€ë¦¬
 CREATE TABLE `REPORT` (
-	`CODE`        INT           NOT NULL COMMENT '½Å°í ¹øÈ£', -- ½Å°í ¹øÈ£
-	`MEM_CODE`    INT           NOT NULL COMMENT '½Å°íÇÑ È¸¿ø ¹øÈ£', -- ½Å°íÇÑ È¸¿ø ¹øÈ£
-	`TARGET_TYPE` VARCHAR(32)   NOT NULL COMMENT '´ë»ó À¯Çü', -- ´ë»ó À¯Çü
-	`TARGET_CODE` INT           NOT NULL COMMENT '´ë»ó ¹øÈ£', -- ´ë»ó ¹øÈ£
-	`REASON_TYPE` VARCHAR(32)   NOT NULL COMMENT '½Å°í »çÀ¯', -- ½Å°í »çÀ¯
-	`CONTENT`     VARCHAR(4000) NULL     COMMENT '½Å°í »ó¼¼ ³»¿ë', -- ½Å°í »ó¼¼ ³»¿ë
-	`STATUS`      VARCHAR(32)   NOT NULL COMMENT 'Ã³¸® »óÅÂ', -- Ã³¸® »óÅÂ
-	`CREATED_AT`  DATETIME      NOT NULL COMMENT '½Å°íÀÏ' -- ½Å°íÀÏ
+	`CODE`        INT           NOT NULL COMMENT 'ì‹ ê³  ë²ˆí˜¸', -- ì‹ ê³  ë²ˆí˜¸
+	`MEM_CODE`    INT           NOT NULL COMMENT 'ì‹ ê³ í•œ íšŒì› ë²ˆí˜¸', -- ì‹ ê³ í•œ íšŒì› ë²ˆí˜¸
+	`TARGET_TYPE` VARCHAR(32)   NOT NULL COMMENT 'ëŒ€ìƒ ìœ í˜•', -- ëŒ€ìƒ ìœ í˜•
+	`TARGET_CODE` INT           NOT NULL COMMENT 'ëŒ€ìƒ ë²ˆí˜¸', -- ëŒ€ìƒ ë²ˆí˜¸
+	`REASON_TYPE` VARCHAR(32)   NOT NULL COMMENT 'ì‹ ê³  ì‚¬ìœ ', -- ì‹ ê³  ì‚¬ìœ 
+	`CONTENT`     VARCHAR(4000) NULL     COMMENT 'ì‹ ê³  ìƒì„¸ ë‚´ìš©', -- ì‹ ê³  ìƒì„¸ ë‚´ìš©
+	`STATUS`      VARCHAR(32)   NOT NULL COMMENT 'ì²˜ë¦¬ ìƒíƒœ', -- ì²˜ë¦¬ ìƒíƒœ
+	`CREATED_AT`  DATETIME      NOT NULL COMMENT 'ì‹ ê³ ì¼' -- ì‹ ê³ ì¼
 )
-COMMENT '½Å°í °ü¸®';
+COMMENT 'ì‹ ê³  ê´€ë¦¬';
 
--- ½Å°í °ü¸®
+-- ì‹ ê³  ê´€ë¦¬
 ALTER TABLE `REPORT`
-	ADD CONSTRAINT `PK_REPORT` -- ½Å°í °ü¸® ±âº»Å°
+	ADD CONSTRAINT `PK_REPORT` -- ì‹ ê³  ê´€ë¦¬ ê¸°ë³¸í‚¤
 	PRIMARY KEY (
-	`CODE` -- ½Å°í ¹øÈ£
+	`CODE` -- ì‹ ê³  ë²ˆí˜¸
 	);
 
 ALTER TABLE `REPORT`
-	MODIFY COLUMN `CODE` INT NOT NULL AUTO_INCREMENT COMMENT '½Å°í ¹øÈ£';
+	MODIFY COLUMN `CODE` INT NOT NULL AUTO_INCREMENT COMMENT 'ì‹ ê³  ë²ˆí˜¸';
 
--- ¹®ÀÇ
+-- ë¬¸ì˜
 CREATE TABLE `INQUIRY` (
-	`CODE`           INT           NOT NULL COMMENT '¹®ÀÇ ¹øÈ£', -- ¹®ÀÇ ¹øÈ£
-	`ORIGIN_CODE`    INT           NULL     COMMENT 'Àç¹®ÀÇ ¹øÈ£', -- Àç¹®ÀÇ ¹øÈ£
-	`MEM_CODE`       INT           NOT NULL COMMENT 'È¸¿ø ¹øÈ£', -- È¸¿ø ¹øÈ£
-	`CATEGORY`       VARCHAR(32)   NOT NULL COMMENT 'Ä«Å×°í¸®', -- Ä«Å×°í¸®
-	`TITLE`          VARCHAR(255)  NOT NULL COMMENT 'Á¦¸ñ', -- Á¦¸ñ
-	`CONTENT`        VARCHAR(4000) NOT NULL COMMENT '³»¿ë', -- ³»¿ë
-	`STATUS`         VARCHAR(32)   NOT NULL COMMENT '´äº¯ »óÅÂ', -- ´äº¯ »óÅÂ
-	`CREATED_AT`     DATETIME      NOT NULL COMMENT '¹®ÀÇÀÏ', -- ¹®ÀÇÀÏ
-	`DELETE_YN`      BOOLEAN       NOT NULL COMMENT '»èÁ¦ ¿©ºÎ', -- »èÁ¦ ¿©ºÎ
-	`DELETED_AT`     DATETIME      NULL     COMMENT '»èÁ¦ÀÏ', -- »èÁ¦ÀÏ
-	`ANSWERED_BY`    VARCHAR(32)   NULL     COMMENT '´äº¯ÇÑ °ü¸®ÀÚ', -- ´äº¯ÇÑ °ü¸®ÀÚ
-	`ANSWER_CONTENT` VARCHAR(4000) NULL     COMMENT '´äº¯ ³»¿ë', -- ´äº¯ ³»¿ë
-	`ANSWERED_AT`    DATETIME      NULL     COMMENT '´äº¯ÀÏ' -- ´äº¯ÀÏ
+	`CODE`           INT           NOT NULL COMMENT 'ë¬¸ì˜ ë²ˆí˜¸', -- ë¬¸ì˜ ë²ˆí˜¸
+	`ORIGIN_CODE`    INT           NULL     COMMENT 'ìž¬ë¬¸ì˜ ë²ˆí˜¸', -- ìž¬ë¬¸ì˜ ë²ˆí˜¸
+	`MEM_CODE`       INT           NOT NULL COMMENT 'íšŒì› ë²ˆí˜¸', -- íšŒì› ë²ˆí˜¸
+	`CATEGORY`       VARCHAR(32)   NOT NULL COMMENT 'ì¹´í…Œê³ ë¦¬', -- ì¹´í…Œê³ ë¦¬
+	`TITLE`          VARCHAR(255)  NOT NULL COMMENT 'ì œëª©', -- ì œëª©
+	`CONTENT`        VARCHAR(4000) NOT NULL COMMENT 'ë‚´ìš©', -- ë‚´ìš©
+	`STATUS`         VARCHAR(32)   NOT NULL COMMENT 'ë‹µë³€ ìƒíƒœ', -- ë‹µë³€ ìƒíƒœ
+	`CREATED_AT`     DATETIME      NOT NULL COMMENT 'ë¬¸ì˜ì¼', -- ë¬¸ì˜ì¼
+	`DELETE_YN`      BOOLEAN       NOT NULL COMMENT 'ì‚­ì œ ì—¬ë¶€', -- ì‚­ì œ ì—¬ë¶€
+	`DELETED_AT`     DATETIME      NULL     COMMENT 'ì‚­ì œì¼', -- ì‚­ì œì¼
+	`ANSWERED_BY`    VARCHAR(32)   NULL     COMMENT 'ë‹µë³€í•œ ê´€ë¦¬ìž', -- ë‹µë³€í•œ ê´€ë¦¬ìž
+	`ANSWER_CONTENT` VARCHAR(4000) NULL     COMMENT 'ë‹µë³€ ë‚´ìš©', -- ë‹µë³€ ë‚´ìš©
+	`ANSWERED_AT`    DATETIME      NULL     COMMENT 'ë‹µë³€ì¼' -- ë‹µë³€ì¼
 )
-COMMENT '¹®ÀÇ';
+COMMENT 'ë¬¸ì˜';
 
--- ¹®ÀÇ
+-- ë¬¸ì˜
 ALTER TABLE `INQUIRY`
-	ADD CONSTRAINT `PK_INQUIRY` -- ¹®ÀÇ ±âº»Å°
+	ADD CONSTRAINT `PK_INQUIRY` -- ë¬¸ì˜ ê¸°ë³¸í‚¤
 	PRIMARY KEY (
-	`CODE` -- ¹®ÀÇ ¹øÈ£
+	`CODE` -- ë¬¸ì˜ ë²ˆí˜¸
 	);
 
 ALTER TABLE `INQUIRY`
-	MODIFY COLUMN `CODE` INT NOT NULL AUTO_INCREMENT COMMENT '¹®ÀÇ ¹øÈ£';
+	MODIFY COLUMN `CODE` INT NOT NULL AUTO_INCREMENT COMMENT 'ë¬¸ì˜ ë²ˆí˜¸';
 
--- ÀÏ¹Ý È¸¿ø È°µ¿ ÀÌ·Â
+-- ì¼ë°˜ íšŒì› í™œë™ ì´ë ¥
 CREATE TABLE `MEMBER_ACTIVITY_LOG` (
-	`CODE`          INT          NOT NULL COMMENT 'È°µ¿ ÀÌ·Â ¹øÈ£', -- È°µ¿ ÀÌ·Â ¹øÈ£
-	`MEM_CODE`      INT          NOT NULL COMMENT 'È¸¿ø ¹øÈ£', -- È¸¿ø ¹øÈ£
-	`ACTION_TYPE`   VARCHAR(32)  NOT NULL COMMENT 'È°µ¿ À¯Çü', -- È°µ¿ À¯Çü
-	`ACTION_REASON` VARCHAR(255) NOT NULL COMMENT 'È°µ¿ »çÀ¯', -- È°µ¿ »çÀ¯
-	`ACTIONED_BY`   VARCHAR(32)  NOT NULL COMMENT 'È°µ¿ÀÚ ¾ÆÀÌµð', -- È°µ¿ÀÚ ¾ÆÀÌµð
-	`ACTIONED_IP`   VARCHAR(64)  NOT NULL COMMENT 'È°µ¿ÀÚ ¾ÆÀÌÇÇ', -- È°µ¿ÀÚ ¾ÆÀÌÇÇ
-	`CREATED_AT`    DATETIME     NOT NULL COMMENT 'È°µ¿ÀÏ' -- È°µ¿ÀÏ
+	`CODE`          INT          NOT NULL COMMENT 'í™œë™ ì´ë ¥ ë²ˆí˜¸', -- í™œë™ ì´ë ¥ ë²ˆí˜¸
+	`MEM_CODE`      INT          NOT NULL COMMENT 'íšŒì› ë²ˆí˜¸', -- íšŒì› ë²ˆí˜¸
+	`ACTION_TYPE`   VARCHAR(32)  NOT NULL COMMENT 'í™œë™ ìœ í˜•', -- í™œë™ ìœ í˜•
+	`ACTION_REASON` VARCHAR(255) NOT NULL COMMENT 'í™œë™ ì‚¬ìœ ', -- í™œë™ ì‚¬ìœ 
+	`ACTIONED_BY`   VARCHAR(32)  NOT NULL COMMENT 'í™œë™ìž ì•„ì´ë””', -- í™œë™ìž ì•„ì´ë””
+	`ACTIONED_IP`   VARCHAR(64)  NOT NULL COMMENT 'í™œë™ìž ì•„ì´í”¼', -- í™œë™ìž ì•„ì´í”¼
+	`CREATED_AT`    DATETIME     NOT NULL COMMENT 'í™œë™ì¼' -- í™œë™ì¼
 )
-COMMENT 'ÀÏ¹Ý È¸¿ø È°µ¿ ÀÌ·Â';
+COMMENT 'ì¼ë°˜ íšŒì› í™œë™ ì´ë ¥';
 
--- ÀÏ¹Ý È¸¿ø È°µ¿ ÀÌ·Â
+-- ì¼ë°˜ íšŒì› í™œë™ ì´ë ¥
 ALTER TABLE `MEMBER_ACTIVITY_LOG`
-	ADD CONSTRAINT `PK_MEMBER_ACTIVITY_LOG` -- ÀÏ¹Ý È¸¿ø È°µ¿ ÀÌ·Â ±âº»Å°
+	ADD CONSTRAINT `PK_MEMBER_ACTIVITY_LOG` -- ì¼ë°˜ íšŒì› í™œë™ ì´ë ¥ ê¸°ë³¸í‚¤
 	PRIMARY KEY (
-	`CODE` -- È°µ¿ ÀÌ·Â ¹øÈ£
+	`CODE` -- í™œë™ ì´ë ¥ ë²ˆí˜¸
 	);
 
 ALTER TABLE `MEMBER_ACTIVITY_LOG`
-	MODIFY COLUMN `CODE` INT NOT NULL AUTO_INCREMENT COMMENT 'È°µ¿ ÀÌ·Â ¹øÈ£';
+	MODIFY COLUMN `CODE` INT NOT NULL AUTO_INCREMENT COMMENT 'í™œë™ ì´ë ¥ ë²ˆí˜¸';
 
--- °ü¸®ÀÚ Á¤º¸
+-- ê´€ë¦¬ìž ì •ë³´
 ALTER TABLE `ADMIN_ACCOUNT`
-	ADD CONSTRAINT `FK_ADMIN_ACCOUNT_TO_ADMIN_ACCOUNT` -- °ü¸®ÀÚ Á¤º¸ -> °ü¸®ÀÚ Á¤º¸
+	ADD CONSTRAINT `FK_ADMIN_ACCOUNT_TO_ADMIN_ACCOUNT` -- ê´€ë¦¬ìž ì •ë³´ -> ê´€ë¦¬ìž ì •ë³´
 	FOREIGN KEY (
-	`ADM_CODE` -- »ý¼º °ü¸®ÀÚ ¹øÈ£
+	`ADM_CODE` -- ìƒì„± ê´€ë¦¬ìž ë²ˆí˜¸
 	)
-	REFERENCES `ADMIN_ACCOUNT` ( -- °ü¸®ÀÚ Á¤º¸
-	`CODE` -- °ü¸®ÀÚ °íÀ¯ ¹øÈ£
+	REFERENCES `ADMIN_ACCOUNT` ( -- ê´€ë¦¬ìž ì •ë³´
+	`CODE` -- ê´€ë¦¬ìž ê³ ìœ  ë²ˆí˜¸
 	);
 
--- ¸¶ÄÏ µî·Ï ¹°Ç°
+-- ë§ˆì¼“ ë“±ë¡ ë¬¼í’ˆ
 ALTER TABLE `MARKET_PRODUCT`
-	ADD CONSTRAINT `FK_MARKET_CATEGORY_TO_MARKET_PRODUCT` -- ¸¶ÄÏ Ä«Å×°í¸® -> ¸¶ÄÏ µî·Ï ¹°Ç°
+	ADD CONSTRAINT `FK_MARKET_CATEGORY_TO_MARKET_PRODUCT` -- ë§ˆì¼“ ì¹´í…Œê³ ë¦¬ -> ë§ˆì¼“ ë“±ë¡ ë¬¼í’ˆ
 	FOREIGN KEY (
-	`CATE_CODE` -- Ä«Å×°í¸® ¹øÈ£
+	`CATE_CODE` -- ì¹´í…Œê³ ë¦¬ ë²ˆí˜¸
 	)
-	REFERENCES `MARKET_CATEGORY` ( -- ¸¶ÄÏ Ä«Å×°í¸®
-	`CODE` -- Ä«Å×°í¸® ¹øÈ£
+	REFERENCES `MARKET_CATEGORY` ( -- ë§ˆì¼“ ì¹´í…Œê³ ë¦¬
+	`CODE` -- ì¹´í…Œê³ ë¦¬ ë²ˆí˜¸
 	);
 
--- ¸¶ÄÏ µî·Ï ¹°Ç°
+-- ë§ˆì¼“ ë“±ë¡ ë¬¼í’ˆ
 ALTER TABLE `MARKET_PRODUCT`
-	ADD CONSTRAINT `FK_MEMBER_ACCOUNT_TO_MARKET_PRODUCT` -- ÀÏ¹Ý È¸¿ø Á¤º¸ -> ¸¶ÄÏ µî·Ï ¹°Ç°
+	ADD CONSTRAINT `FK_MEMBER_ACCOUNT_TO_MARKET_PRODUCT` -- ì¼ë°˜ íšŒì› ì •ë³´ -> ë§ˆì¼“ ë“±ë¡ ë¬¼í’ˆ
 	FOREIGN KEY (
-	`MEM_CODE` -- È¸¿ø ¹øÈ£
+	`MEM_CODE` -- íšŒì› ë²ˆí˜¸
 	)
-	REFERENCES `MEMBER_ACCOUNT` ( -- ÀÏ¹Ý È¸¿ø Á¤º¸
-	`CODE` -- È¸¿ø ¹øÈ£
+	REFERENCES `MEMBER_ACCOUNT` ( -- ì¼ë°˜ íšŒì› ì •ë³´
+	`CODE` -- íšŒì› ë²ˆí˜¸
 	);
 
--- °Å·¡ ÀÌ·Â
+-- ê±°ëž˜ ì´ë ¥
 ALTER TABLE `MARKET_DEAL_LOG`
-	ADD CONSTRAINT `FK_MARKET_PRODUCT_TO_MARKET_DEAL_LOG` -- ¸¶ÄÏ µî·Ï ¹°Ç° -> °Å·¡ ÀÌ·Â
+	ADD CONSTRAINT `FK_MARKET_PRODUCT_TO_MARKET_DEAL_LOG` -- ë§ˆì¼“ ë“±ë¡ ë¬¼í’ˆ -> ê±°ëž˜ ì´ë ¥
 	FOREIGN KEY (
-	`PROD_CODE` -- µî·Ï ¹°Ç° ¹øÈ£
+	`PROD_CODE` -- ë“±ë¡ ë¬¼í’ˆ ë²ˆí˜¸
 	)
-	REFERENCES `MARKET_PRODUCT` ( -- ¸¶ÄÏ µî·Ï ¹°Ç°
-	`CODE` -- µî·Ï ¹°Ç° ¹øÈ£
+	REFERENCES `MARKET_PRODUCT` ( -- ë§ˆì¼“ ë“±ë¡ ë¬¼í’ˆ
+	`CODE` -- ë“±ë¡ ë¬¼í’ˆ ë²ˆí˜¸
 	);
 
--- Æ÷ÀÎÆ® Àû¸³ ¹× »ç¿ë ÀÌ·Â
+-- í¬ì¸íŠ¸ ì ë¦½ ë° ì‚¬ìš© ì´ë ¥
 ALTER TABLE `POINT_LOG`
-	ADD CONSTRAINT `FK_MEMBER_ACCOUNT_TO_POINT_LOG` -- ÀÏ¹Ý È¸¿ø Á¤º¸ -> Æ÷ÀÎÆ® Àû¸³ ¹× »ç¿ë ÀÌ·Â
+	ADD CONSTRAINT `FK_MEMBER_ACCOUNT_TO_POINT_LOG` -- ì¼ë°˜ íšŒì› ì •ë³´ -> í¬ì¸íŠ¸ ì ë¦½ ë° ì‚¬ìš© ì´ë ¥
 	FOREIGN KEY (
-	`MEM_CODE` -- È¸¿ø ¹øÈ£
+	`MEM_CODE` -- íšŒì› ë²ˆí˜¸
 	)
-	REFERENCES `MEMBER_ACCOUNT` ( -- ÀÏ¹Ý È¸¿ø Á¤º¸
-	`CODE` -- È¸¿ø ¹øÈ£
+	REFERENCES `MEMBER_ACCOUNT` ( -- ì¼ë°˜ íšŒì› ì •ë³´
+	`CODE` -- íšŒì› ë²ˆí˜¸
 	);
 
--- °Å·¡ ÈÄ±â
+-- ê±°ëž˜ í›„ê¸°
 ALTER TABLE `MARKET_REVIEW`
-	ADD CONSTRAINT `FK_MARKET_DEAL_LOG_TO_MARKET_REVIEW` -- °Å·¡ ÀÌ·Â -> °Å·¡ ÈÄ±â
+	ADD CONSTRAINT `FK_MARKET_DEAL_LOG_TO_MARKET_REVIEW` -- ê±°ëž˜ ì´ë ¥ -> ê±°ëž˜ í›„ê¸°
 	FOREIGN KEY (
-	`DEAL_CODE` -- °Å·¡ ÀÌ·Â ¹øÈ£
+	`DEAL_CODE` -- ê±°ëž˜ ì´ë ¥ ë²ˆí˜¸
 	)
-	REFERENCES `MARKET_DEAL_LOG` ( -- °Å·¡ ÀÌ·Â
-	`CODE` -- °Å·¡ ÀÌ·Â ¹øÈ£
+	REFERENCES `MARKET_DEAL_LOG` ( -- ê±°ëž˜ ì´ë ¥
+	`CODE` -- ê±°ëž˜ ì´ë ¥ ë²ˆí˜¸
 	);
 
--- °Å·¡ ÈÄ±â
+-- ê±°ëž˜ í›„ê¸°
 ALTER TABLE `MARKET_REVIEW`
-	ADD CONSTRAINT `FK_MEMBER_ACCOUNT_TO_MARKET_REVIEW` -- ÀÏ¹Ý È¸¿ø Á¤º¸ -> °Å·¡ ÈÄ±â
+	ADD CONSTRAINT `FK_MEMBER_ACCOUNT_TO_MARKET_REVIEW` -- ì¼ë°˜ íšŒì› ì •ë³´ -> ê±°ëž˜ í›„ê¸°
 	FOREIGN KEY (
-	`MEM_CODE` -- Å¸°Ù È¸¿ø ¹øÈ£
+	`MEM_CODE` -- íƒ€ê²Ÿ íšŒì› ë²ˆí˜¸
 	)
-	REFERENCES `MEMBER_ACCOUNT` ( -- ÀÏ¹Ý È¸¿ø Á¤º¸
-	`CODE` -- È¸¿ø ¹øÈ£
+	REFERENCES `MEMBER_ACCOUNT` ( -- ì¼ë°˜ íšŒì› ì •ë³´
+	`CODE` -- íšŒì› ë²ˆí˜¸
 	);
 
--- ¸¶ÄÏ Ä«Å×°í¸®
+-- ë§ˆì¼“ ì¹´í…Œê³ ë¦¬
 ALTER TABLE `MARKET_CATEGORY`
-	ADD CONSTRAINT `FK_MARKET_CATEGORY_TO_MARKET_CATEGORY` -- ¸¶ÄÏ Ä«Å×°í¸® -> ¸¶ÄÏ Ä«Å×°í¸®
+	ADD CONSTRAINT `FK_MARKET_CATEGORY_TO_MARKET_CATEGORY` -- ë§ˆì¼“ ì¹´í…Œê³ ë¦¬ -> ë§ˆì¼“ ì¹´í…Œê³ ë¦¬
 	FOREIGN KEY (
-	`MAIN_CATE` -- ´ëºÐ·ù ¹øÈ£
+	`MAIN_CATE` -- ëŒ€ë¶„ë¥˜ ë²ˆí˜¸
 	)
-	REFERENCES `MARKET_CATEGORY` ( -- ¸¶ÄÏ Ä«Å×°í¸®
-	`CODE` -- Ä«Å×°í¸® ¹øÈ£
+	REFERENCES `MARKET_CATEGORY` ( -- ë§ˆì¼“ ì¹´í…Œê³ ë¦¬
+	`CODE` -- ì¹´í…Œê³ ë¦¬ ë²ˆí˜¸
 	);
 
--- °ü¸®ÀÚ È°µ¿ ÀÌ·Â
+-- ê´€ë¦¬ìž í™œë™ ì´ë ¥
 ALTER TABLE `ADMIN_ACTIVITY_LOG`
-	ADD CONSTRAINT `FK_ADMIN_ACCOUNT_TO_ADMIN_ACTIVITY_LOG` -- °ü¸®ÀÚ Á¤º¸ -> °ü¸®ÀÚ È°µ¿ ÀÌ·Â
+	ADD CONSTRAINT `FK_ADMIN_ACCOUNT_TO_ADMIN_ACTIVITY_LOG` -- ê´€ë¦¬ìž ì •ë³´ -> ê´€ë¦¬ìž í™œë™ ì´ë ¥
 	FOREIGN KEY (
-	`ADM_CODE` -- °ü¸®ÀÚ °íÀ¯ ¹øÈ£
+	`ADM_CODE` -- ê´€ë¦¬ìž ê³ ìœ  ë²ˆí˜¸
 	)
-	REFERENCES `ADMIN_ACCOUNT` ( -- °ü¸®ÀÚ Á¤º¸
-	`CODE` -- °ü¸®ÀÚ °íÀ¯ ¹øÈ£
+	REFERENCES `ADMIN_ACCOUNT` ( -- ê´€ë¦¬ìž ì •ë³´
+	`CODE` -- ê´€ë¦¬ìž ê³ ìœ  ë²ˆí˜¸
 	);
 
--- ÇÇµå
+-- í”¼ë“œ
 ALTER TABLE `FEED`
-	ADD CONSTRAINT `FK_MEMBER_ACCOUNT_TO_FEED` -- ÀÏ¹Ý È¸¿ø Á¤º¸ -> ÇÇµå
+	ADD CONSTRAINT `FK_MEMBER_ACCOUNT_TO_FEED` -- ì¼ë°˜ íšŒì› ì •ë³´ -> í”¼ë“œ
 	FOREIGN KEY (
-	`MEM_CODE` -- È¸¿ø ¹øÈ£
+	`MEM_CODE` -- íšŒì› ë²ˆí˜¸
 	)
-	REFERENCES `MEMBER_ACCOUNT` ( -- ÀÏ¹Ý È¸¿ø Á¤º¸
-	`CODE` -- È¸¿ø ¹øÈ£
+	REFERENCES `MEMBER_ACCOUNT` ( -- ì¼ë°˜ íšŒì› ì •ë³´
+	`CODE` -- íšŒì› ë²ˆí˜¸
 	);
 
--- ÇÇµå
+-- í”¼ë“œ
 ALTER TABLE `FEED`
-	ADD CONSTRAINT `FK_CHALLENGE_TO_FEED` -- Ã§¸°Áö -> ÇÇµå
+	ADD CONSTRAINT `FK_CHALLENGE_TO_FEED` -- ì±Œë¦°ì§€ -> í”¼ë“œ
 	FOREIGN KEY (
-	`CHAL_CODE` -- Ã§¸°Áö ¹øÈ£
+	`CHAL_CODE` -- ì±Œë¦°ì§€ ë²ˆí˜¸
 	)
-	REFERENCES `CHALLENGE` ( -- Ã§¸°Áö
-	`CODE` -- Ã§¸°Áö ¹øÈ£
+	REFERENCES `CHALLENGE` ( -- ì±Œë¦°ì§€
+	`CODE` -- ì±Œë¦°ì§€ ë²ˆí˜¸
 	);
 
--- ÇÇµå ÃßÃµ
+-- í”¼ë“œ ì¶”ì²œ
 ALTER TABLE `FEED_LIKE`
-	ADD CONSTRAINT `FK_FEED_TO_FEED_LIKE` -- ÇÇµå -> ÇÇµå ÃßÃµ
+	ADD CONSTRAINT `FK_FEED_TO_FEED_LIKE` -- í”¼ë“œ -> í”¼ë“œ ì¶”ì²œ
 	FOREIGN KEY (
-	`FEED_CODE` -- ÇÇµå ¹øÈ£
+	`FEED_CODE` -- í”¼ë“œ ë²ˆí˜¸
 	)
-	REFERENCES `FEED` ( -- ÇÇµå
-	`CODE` -- ÇÇµå ¹øÈ£
+	REFERENCES `FEED` ( -- í”¼ë“œ
+	`CODE` -- í”¼ë“œ ë²ˆí˜¸
 	);
 
--- ÇÇµå ÃßÃµ
+-- í”¼ë“œ ì¶”ì²œ
 ALTER TABLE `FEED_LIKE`
-	ADD CONSTRAINT `FK_MEMBER_ACCOUNT_TO_FEED_LIKE` -- ÀÏ¹Ý È¸¿ø Á¤º¸ -> ÇÇµå ÃßÃµ
+	ADD CONSTRAINT `FK_MEMBER_ACCOUNT_TO_FEED_LIKE` -- ì¼ë°˜ íšŒì› ì •ë³´ -> í”¼ë“œ ì¶”ì²œ
 	FOREIGN KEY (
-	`MEM_CODE` -- È¸¿ø ¹øÈ£
+	`MEM_CODE` -- íšŒì› ë²ˆí˜¸
 	)
-	REFERENCES `MEMBER_ACCOUNT` ( -- ÀÏ¹Ý È¸¿ø Á¤º¸
-	`CODE` -- È¸¿ø ¹øÈ£
+	REFERENCES `MEMBER_ACCOUNT` ( -- ì¼ë°˜ íšŒì› ì •ë³´
+	`CODE` -- íšŒì› ë²ˆí˜¸
 	);
 
--- ´ñ±Û ÃßÃµ
+-- ëŒ“ê¸€ ì¶”ì²œ
 ALTER TABLE `COMMENT_LIKE`
-	ADD CONSTRAINT `FK_COMMENTS_TO_COMMENT_LIKE` -- ´ñ±Û -> ´ñ±Û ÃßÃµ
+	ADD CONSTRAINT `FK_COMMENTS_TO_COMMENT_LIKE` -- ëŒ“ê¸€ -> ëŒ“ê¸€ ì¶”ì²œ
 	FOREIGN KEY (
-	`CMT_CODE` -- ´ñ±Û ¹øÈ£
+	`CMT_CODE` -- ëŒ“ê¸€ ë²ˆí˜¸
 	)
-	REFERENCES `COMMENTS` ( -- ´ñ±Û
-	`CODE` -- ´ñ±Û ¹øÈ£
+	REFERENCES `COMMENTS` ( -- ëŒ“ê¸€
+	`CODE` -- ëŒ“ê¸€ ë²ˆí˜¸
 	);
 
--- ´ñ±Û ÃßÃµ
+-- ëŒ“ê¸€ ì¶”ì²œ
 ALTER TABLE `COMMENT_LIKE`
-	ADD CONSTRAINT `FK_MEMBER_ACCOUNT_TO_COMMENT_LIKE` -- ÀÏ¹Ý È¸¿ø Á¤º¸ -> ´ñ±Û ÃßÃµ
+	ADD CONSTRAINT `FK_MEMBER_ACCOUNT_TO_COMMENT_LIKE` -- ì¼ë°˜ íšŒì› ì •ë³´ -> ëŒ“ê¸€ ì¶”ì²œ
 	FOREIGN KEY (
-	`MEM_CODE` -- È¸¿ø ¹øÈ£
+	`MEM_CODE` -- íšŒì› ë²ˆí˜¸
 	)
-	REFERENCES `MEMBER_ACCOUNT` ( -- ÀÏ¹Ý È¸¿ø Á¤º¸
-	`CODE` -- È¸¿ø ¹øÈ£
+	REFERENCES `MEMBER_ACCOUNT` ( -- ì¼ë°˜ íšŒì› ì •ë³´
+	`CODE` -- íšŒì› ë²ˆí˜¸
 	);
 
--- ´ñ±Û
+-- ëŒ“ê¸€
 ALTER TABLE `COMMENTS`
-	ADD CONSTRAINT `FK_FEED_TO_COMMENTS` -- ÇÇµå -> ´ñ±Û
+	ADD CONSTRAINT `FK_FEED_TO_COMMENTS` -- í”¼ë“œ -> ëŒ“ê¸€
 	FOREIGN KEY (
-	`FEED_CODE` -- ÇÇµå ¹øÈ£
+	`FEED_CODE` -- í”¼ë“œ ë²ˆí˜¸
 	)
-	REFERENCES `FEED` ( -- ÇÇµå
-	`CODE` -- ÇÇµå ¹øÈ£
+	REFERENCES `FEED` ( -- í”¼ë“œ
+	`CODE` -- í”¼ë“œ ë²ˆí˜¸
 	);
 
--- ´ñ±Û
+-- ëŒ“ê¸€
 ALTER TABLE `COMMENTS`
-	ADD CONSTRAINT `FK_MEMBER_ACCOUNT_TO_COMMENTS` -- ÀÏ¹Ý È¸¿ø Á¤º¸ -> ´ñ±Û
+	ADD CONSTRAINT `FK_MEMBER_ACCOUNT_TO_COMMENTS` -- ì¼ë°˜ íšŒì› ì •ë³´ -> ëŒ“ê¸€
 	FOREIGN KEY (
-	`MEM_CODE` -- È¸¿ø ¹øÈ£
+	`MEM_CODE` -- íšŒì› ë²ˆí˜¸
 	)
-	REFERENCES `MEMBER_ACCOUNT` ( -- ÀÏ¹Ý È¸¿ø Á¤º¸
-	`CODE` -- È¸¿ø ¹øÈ£
+	REFERENCES `MEMBER_ACCOUNT` ( -- ì¼ë°˜ íšŒì› ì •ë³´
+	`CODE` -- íšŒì› ë²ˆí˜¸
 	);
 
--- Ã§¸°Áö
+-- ì±Œë¦°ì§€
 ALTER TABLE `CHALLENGE`
-	ADD CONSTRAINT `FK_ADMIN_ACCOUNT_TO_CHALLENGE` -- °ü¸®ÀÚ Á¤º¸ -> Ã§¸°Áö
+	ADD CONSTRAINT `FK_ADMIN_ACCOUNT_TO_CHALLENGE` -- ê´€ë¦¬ìž ì •ë³´ -> ì±Œë¦°ì§€
 	FOREIGN KEY (
-	`ADM_CODE` -- µî·Ï °ü¸®ÀÚ ¹øÈ£
+	`ADM_CODE` -- ë“±ë¡ ê´€ë¦¬ìž ë²ˆí˜¸
 	)
-	REFERENCES `ADMIN_ACCOUNT` ( -- °ü¸®ÀÚ Á¤º¸
-	`CODE` -- °ü¸®ÀÚ °íÀ¯ ¹øÈ£
+	REFERENCES `ADMIN_ACCOUNT` ( -- ê´€ë¦¬ìž ì •ë³´
+	`CODE` -- ê´€ë¦¬ìž ê³ ìœ  ë²ˆí˜¸
 	);
 
--- Ã§¸°Áö Âü¿© »ó¼¼ Á¤º¸
+-- ì±Œë¦°ì§€ ì°¸ì—¬ ìƒì„¸ ì •ë³´
 ALTER TABLE `CHALLENGE_ENTRY`
-	ADD CONSTRAINT `FK_CHALLENGE_TO_CHALLENGE_ENTRY` -- Ã§¸°Áö -> Ã§¸°Áö Âü¿© »ó¼¼ Á¤º¸
+	ADD CONSTRAINT `FK_CHALLENGE_TO_CHALLENGE_ENTRY` -- ì±Œë¦°ì§€ -> ì±Œë¦°ì§€ ì°¸ì—¬ ìƒì„¸ ì •ë³´
 	FOREIGN KEY (
-	`CHAL_CODE` -- Ã§¸°Áö ¹øÈ£
+	`CHAL_CODE` -- ì±Œë¦°ì§€ ë²ˆí˜¸
 	)
-	REFERENCES `CHALLENGE` ( -- Ã§¸°Áö
-	`CODE` -- Ã§¸°Áö ¹øÈ£
+	REFERENCES `CHALLENGE` ( -- ì±Œë¦°ì§€
+	`CODE` -- ì±Œë¦°ì§€ ë²ˆí˜¸
 	);
 
--- Ã§¸°Áö Âü¿© »ó¼¼ Á¤º¸
+-- ì±Œë¦°ì§€ ì°¸ì—¬ ìƒì„¸ ì •ë³´
 ALTER TABLE `CHALLENGE_ENTRY`
-	ADD CONSTRAINT `FK_MEMBER_ACCOUNT_TO_CHALLENGE_ENTRY` -- ÀÏ¹Ý È¸¿ø Á¤º¸ -> Ã§¸°Áö Âü¿© »ó¼¼ Á¤º¸
+	ADD CONSTRAINT `FK_MEMBER_ACCOUNT_TO_CHALLENGE_ENTRY` -- ì¼ë°˜ íšŒì› ì •ë³´ -> ì±Œë¦°ì§€ ì°¸ì—¬ ìƒì„¸ ì •ë³´
 	FOREIGN KEY (
-	`MEM_CODE` -- È¸¿ø ¹øÈ£
+	`MEM_CODE` -- íšŒì› ë²ˆí˜¸
 	)
-	REFERENCES `MEMBER_ACCOUNT` ( -- ÀÏ¹Ý È¸¿ø Á¤º¸
-	`CODE` -- È¸¿ø ¹øÈ£
+	REFERENCES `MEMBER_ACCOUNT` ( -- ì¼ë°˜ íšŒì› ì •ë³´
+	`CODE` -- íšŒì› ë²ˆí˜¸
 	);
 
--- ÇÇµå Á¶È¸¼ö ÀÌ·Â
+-- í”¼ë“œ ì¡°íšŒìˆ˜ ì´ë ¥
 ALTER TABLE `FEED_HIT_LOG`
-	ADD CONSTRAINT `FK_FEED_TO_FEED_HIT_LOG` -- ÇÇµå -> ÇÇµå Á¶È¸¼ö ÀÌ·Â
+	ADD CONSTRAINT `FK_FEED_TO_FEED_HIT_LOG` -- í”¼ë“œ -> í”¼ë“œ ì¡°íšŒìˆ˜ ì´ë ¥
 	FOREIGN KEY (
-	`FEED_CODE` -- ÇÇµå ¹øÈ£
+	`FEED_CODE` -- í”¼ë“œ ë²ˆí˜¸
 	)
-	REFERENCES `FEED` ( -- ÇÇµå
-	`CODE` -- ÇÇµå ¹øÈ£
+	REFERENCES `FEED` ( -- í”¼ë“œ
+	`CODE` -- í”¼ë“œ ë²ˆí˜¸
 	);
 
--- ÇÇµå Á¶È¸¼ö ÀÌ·Â
+-- í”¼ë“œ ì¡°íšŒìˆ˜ ì´ë ¥
 ALTER TABLE `FEED_HIT_LOG`
-	ADD CONSTRAINT `FK_MEMBER_ACCOUNT_TO_FEED_HIT_LOG` -- ÀÏ¹Ý È¸¿ø Á¤º¸ -> ÇÇµå Á¶È¸¼ö ÀÌ·Â
+	ADD CONSTRAINT `FK_MEMBER_ACCOUNT_TO_FEED_HIT_LOG` -- ì¼ë°˜ íšŒì› ì •ë³´ -> í”¼ë“œ ì¡°íšŒìˆ˜ ì´ë ¥
 	FOREIGN KEY (
-	`MEM_CODE` -- È¸¿ø ¹øÈ£
+	`MEM_CODE` -- íšŒì› ë²ˆí˜¸
 	)
-	REFERENCES `MEMBER_ACCOUNT` ( -- ÀÏ¹Ý È¸¿ø Á¤º¸
-	`CODE` -- È¸¿ø ¹øÈ£
+	REFERENCES `MEMBER_ACCOUNT` ( -- ì¼ë°˜ íšŒì› ì •ë³´
+	`CODE` -- íšŒì› ë²ˆí˜¸
 	);
 
--- °Å·¡±Û Á¶È¸¼ö ÀÌ·Â
+-- ê±°ëž˜ê¸€ ì¡°íšŒìˆ˜ ì´ë ¥
 ALTER TABLE `MARKET_PROD_HIT_LOG`
-	ADD CONSTRAINT `FK_MARKET_PRODUCT_TO_MARKET_PROD_HIT_LOG` -- ¸¶ÄÏ µî·Ï ¹°Ç° -> °Å·¡±Û Á¶È¸¼ö ÀÌ·Â
+	ADD CONSTRAINT `FK_MARKET_PRODUCT_TO_MARKET_PROD_HIT_LOG` -- ë§ˆì¼“ ë“±ë¡ ë¬¼í’ˆ -> ê±°ëž˜ê¸€ ì¡°íšŒìˆ˜ ì´ë ¥
 	FOREIGN KEY (
-	`PROD_CODE` -- µî·Ï ¹°Ç° ¹øÈ£
+	`PROD_CODE` -- ë“±ë¡ ë¬¼í’ˆ ë²ˆí˜¸
 	)
-	REFERENCES `MARKET_PRODUCT` ( -- ¸¶ÄÏ µî·Ï ¹°Ç°
-	`CODE` -- µî·Ï ¹°Ç° ¹øÈ£
+	REFERENCES `MARKET_PRODUCT` ( -- ë§ˆì¼“ ë“±ë¡ ë¬¼í’ˆ
+	`CODE` -- ë“±ë¡ ë¬¼í’ˆ ë²ˆí˜¸
 	);
 
--- °Å·¡±Û Á¶È¸¼ö ÀÌ·Â
+-- ê±°ëž˜ê¸€ ì¡°íšŒìˆ˜ ì´ë ¥
 ALTER TABLE `MARKET_PROD_HIT_LOG`
-	ADD CONSTRAINT `FK_MEMBER_ACCOUNT_TO_MARKET_PROD_HIT_LOG` -- ÀÏ¹Ý È¸¿ø Á¤º¸ -> °Å·¡±Û Á¶È¸¼ö ÀÌ·Â
+	ADD CONSTRAINT `FK_MEMBER_ACCOUNT_TO_MARKET_PROD_HIT_LOG` -- ì¼ë°˜ íšŒì› ì •ë³´ -> ê±°ëž˜ê¸€ ì¡°íšŒìˆ˜ ì´ë ¥
 	FOREIGN KEY (
-	`MEM_CODE` -- È¸¿ø ¹øÈ£
+	`MEM_CODE` -- íšŒì› ë²ˆí˜¸
 	)
-	REFERENCES `MEMBER_ACCOUNT` ( -- ÀÏ¹Ý È¸¿ø Á¤º¸
-	`CODE` -- È¸¿ø ¹øÈ£
+	REFERENCES `MEMBER_ACCOUNT` ( -- ì¼ë°˜ íšŒì› ì •ë³´
+	`CODE` -- íšŒì› ë²ˆí˜¸
 	);
 
--- °Å·¡±Û Âò
+-- ê±°ëž˜ê¸€ ì°œ
 ALTER TABLE `MARKET_PROD_PICK`
-	ADD CONSTRAINT `FK_MARKET_PRODUCT_TO_MARKET_PROD_PICK` -- ¸¶ÄÏ µî·Ï ¹°Ç° -> °Å·¡±Û Âò
+	ADD CONSTRAINT `FK_MARKET_PRODUCT_TO_MARKET_PROD_PICK` -- ë§ˆì¼“ ë“±ë¡ ë¬¼í’ˆ -> ê±°ëž˜ê¸€ ì°œ
 	FOREIGN KEY (
-	`PROD_CODE` -- µî·Ï ¹°Ç° ¹øÈ£
+	`PROD_CODE` -- ë“±ë¡ ë¬¼í’ˆ ë²ˆí˜¸
 	)
-	REFERENCES `MARKET_PRODUCT` ( -- ¸¶ÄÏ µî·Ï ¹°Ç°
-	`CODE` -- µî·Ï ¹°Ç° ¹øÈ£
+	REFERENCES `MARKET_PRODUCT` ( -- ë§ˆì¼“ ë“±ë¡ ë¬¼í’ˆ
+	`CODE` -- ë“±ë¡ ë¬¼í’ˆ ë²ˆí˜¸
 	);
 
--- °Å·¡±Û Âò
+-- ê±°ëž˜ê¸€ ì°œ
 ALTER TABLE `MARKET_PROD_PICK`
-	ADD CONSTRAINT `FK_MEMBER_ACCOUNT_TO_MARKET_PROD_PICK` -- ÀÏ¹Ý È¸¿ø Á¤º¸ -> °Å·¡±Û Âò
+	ADD CONSTRAINT `FK_MEMBER_ACCOUNT_TO_MARKET_PROD_PICK` -- ì¼ë°˜ íšŒì› ì •ë³´ -> ê±°ëž˜ê¸€ ì°œ
 	FOREIGN KEY (
-	`MEM_CODE` -- È¸¿ø ¹øÈ£
+	`MEM_CODE` -- íšŒì› ë²ˆí˜¸
 	)
-	REFERENCES `MEMBER_ACCOUNT` ( -- ÀÏ¹Ý È¸¿ø Á¤º¸
-	`CODE` -- È¸¿ø ¹øÈ£
+	REFERENCES `MEMBER_ACCOUNT` ( -- ì¼ë°˜ íšŒì› ì •ë³´
+	`CODE` -- íšŒì› ë²ˆí˜¸
 	);
 
--- ÇÇµå ÇØ½ÃÅÂ±×
+-- í”¼ë“œ í•´ì‹œíƒœê·¸
 ALTER TABLE `FEED_HASHTAG`
-	ADD CONSTRAINT `FK_FEED_TO_FEED_HASHTAG` -- ÇÇµå -> ÇÇµå ÇØ½ÃÅÂ±×
+	ADD CONSTRAINT `FK_FEED_TO_FEED_HASHTAG` -- í”¼ë“œ -> í”¼ë“œ í•´ì‹œíƒœê·¸
 	FOREIGN KEY (
-	`FEED_CODE` -- ÇÇµå ¹øÈ£
+	`FEED_CODE` -- í”¼ë“œ ë²ˆí˜¸
 	)
-	REFERENCES `FEED` ( -- ÇÇµå
-	`CODE` -- ÇÇµå ¹øÈ£
+	REFERENCES `FEED` ( -- í”¼ë“œ
+	`CODE` -- í”¼ë“œ ë²ˆí˜¸
 	);
 
--- ½Å°í °ü¸®
+-- ì‹ ê³  ê´€ë¦¬
 ALTER TABLE `REPORT`
-	ADD CONSTRAINT `FK_MEMBER_ACCOUNT_TO_REPORT` -- ÀÏ¹Ý È¸¿ø Á¤º¸ -> ½Å°í °ü¸®
+	ADD CONSTRAINT `FK_MEMBER_ACCOUNT_TO_REPORT` -- ì¼ë°˜ íšŒì› ì •ë³´ -> ì‹ ê³  ê´€ë¦¬
 	FOREIGN KEY (
-	`MEM_CODE` -- ½Å°íÇÑ È¸¿ø ¹øÈ£
+	`MEM_CODE` -- ì‹ ê³ í•œ íšŒì› ë²ˆí˜¸
 	)
-	REFERENCES `MEMBER_ACCOUNT` ( -- ÀÏ¹Ý È¸¿ø Á¤º¸
-	`CODE` -- È¸¿ø ¹øÈ£
+	REFERENCES `MEMBER_ACCOUNT` ( -- ì¼ë°˜ íšŒì› ì •ë³´
+	`CODE` -- íšŒì› ë²ˆí˜¸
 	);
 
--- ¹®ÀÇ
+-- ë¬¸ì˜
 ALTER TABLE `INQUIRY`
-	ADD CONSTRAINT `FK_MEMBER_ACCOUNT_TO_INQUIRY` -- ÀÏ¹Ý È¸¿ø Á¤º¸ -> ¹®ÀÇ
+	ADD CONSTRAINT `FK_MEMBER_ACCOUNT_TO_INQUIRY` -- ì¼ë°˜ íšŒì› ì •ë³´ -> ë¬¸ì˜
 	FOREIGN KEY (
-	`MEM_CODE` -- È¸¿ø ¹øÈ£
+	`MEM_CODE` -- íšŒì› ë²ˆí˜¸
 	)
-	REFERENCES `MEMBER_ACCOUNT` ( -- ÀÏ¹Ý È¸¿ø Á¤º¸
-	`CODE` -- È¸¿ø ¹øÈ£
+	REFERENCES `MEMBER_ACCOUNT` ( -- ì¼ë°˜ íšŒì› ì •ë³´
+	`CODE` -- íšŒì› ë²ˆí˜¸
 	);
 
--- ¹®ÀÇ
+-- ë¬¸ì˜
 ALTER TABLE `INQUIRY`
-	ADD CONSTRAINT `FK_INQUIRY_TO_INQUIRY` -- ¹®ÀÇ -> ¹®ÀÇ
+	ADD CONSTRAINT `FK_INQUIRY_TO_INQUIRY` -- ë¬¸ì˜ -> ë¬¸ì˜
 	FOREIGN KEY (
-	`ORIGIN_CODE` -- Àç¹®ÀÇ ¹øÈ£
+	`ORIGIN_CODE` -- ìž¬ë¬¸ì˜ ë²ˆí˜¸
 	)
-	REFERENCES `INQUIRY` ( -- ¹®ÀÇ
-	`CODE` -- ¹®ÀÇ ¹øÈ£
+	REFERENCES `INQUIRY` ( -- ë¬¸ì˜
+	`CODE` -- ë¬¸ì˜ ë²ˆí˜¸
 	);
 
--- ÀÏ¹Ý È¸¿ø È°µ¿ ÀÌ·Â
+-- ì¼ë°˜ íšŒì› í™œë™ ì´ë ¥
 ALTER TABLE `MEMBER_ACTIVITY_LOG`
-	ADD CONSTRAINT `FK_MEMBER_ACCOUNT_TO_MEMBER_ACTIVITY_LOG` -- ÀÏ¹Ý È¸¿ø Á¤º¸ -> ÀÏ¹Ý È¸¿ø È°µ¿ ÀÌ·Â
+	ADD CONSTRAINT `FK_MEMBER_ACCOUNT_TO_MEMBER_ACTIVITY_LOG` -- ì¼ë°˜ íšŒì› ì •ë³´ -> ì¼ë°˜ íšŒì› í™œë™ ì´ë ¥
 	FOREIGN KEY (
-	`MEM_CODE` -- È¸¿ø ¹øÈ£
+	`MEM_CODE` -- íšŒì› ë²ˆí˜¸
 	)
-	REFERENCES `MEMBER_ACCOUNT` ( -- ÀÏ¹Ý È¸¿ø Á¤º¸
-	`CODE` -- È¸¿ø ¹øÈ£
+	REFERENCES `MEMBER_ACCOUNT` ( -- ì¼ë°˜ íšŒì› ì •ë³´
+	`CODE` -- íšŒì› ë²ˆí˜¸
 	);

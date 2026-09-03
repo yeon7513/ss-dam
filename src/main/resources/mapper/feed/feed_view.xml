@@ -150,8 +150,10 @@
     <!-- 해시태그 -->
     LEFT JOIN FEED_HASHTAG fh ON f.code = fh.feed_code
     WHERE f.code = #{feedCode}
+    ORDER BY i.order_seq ASC
   </select>
 
+  <!-- 피드 수정용 기존 데이터 조회 -->
   <select id="findFeedDetailForEdit" resultMap="FeedEditViewMap">
     SELECT
     f.code,

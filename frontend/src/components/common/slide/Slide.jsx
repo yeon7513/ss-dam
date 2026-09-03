@@ -7,7 +7,6 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import ImageBox from "../image-box/ImageBox.jsx";
-import { HOST } from "../../../lib/url.js";
 
 // Slide 컴포넌트 사용법
 // <Slide> 안에 <SwiperSlide>를 import해서 사용하세요!!
@@ -61,7 +60,7 @@ function Slide({ children, images, className, isLoop = false, isAutoplay = false
       >
         {images.map((image, idx) => (
           <SwiperSlide key={idx} className={styles.thumb}>
-            <ImageBox src={HOST + image} />
+            <ImageBox src={image} />
           </SwiperSlide>
         ))}
       </Swiper>
