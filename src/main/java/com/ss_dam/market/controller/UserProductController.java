@@ -3,17 +3,16 @@ package com.ss_dam.market.controller;
 import com.ss_dam.auth.login.Login;
 import com.ss_dam.common.ApiResponse;
 import com.ss_dam.common.pager.Pager;
+import com.ss_dam.market.model.request.ProductUpdate;
 import com.ss_dam.market.model.response.ProductDetail;
+import com.ss_dam.market.model.response.ProductEditView;
 import com.ss_dam.market.model.response.UserProductView;
 import com.ss_dam.market.service.UserProductService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -58,17 +57,61 @@ public class UserProductController {
   }
 
 
-  // 수정할 거래글 조회
+  // 수정할 거래글 데이터 조회
   @GetMapping("/{prodCode}/edit")
-  ResponseEntity<ApiResponse<ProductDetail>> findProductDetailForEdit(@PathVariable Long prodCode,
+  ResponseEntity<ApiResponse<ProductEditView>> findProductDetailForEdit(@PathVariable Long prodCode,
       HttpSession session) {
 
     // 로그인한 사용자와 거래글 작성자가 맞는지
-    Login loginUser = (Login) session.getAttribute("loginUser");
-    Long memberCode = (loginUser != null) ? loginUser.getCode() : null;
+    // Login loginUser = (Login) session.getAttribute("loginUser");
+    // Long memberCode = (loginUser != null) ? loginUser.getCode() : null;
 
+    // 임시로 하드코딩
+    Long memberCode = 1L;
 
+    ProductEditView productEditView = userProductService.findProductDetailForEdit(prodCode, memberCode);
+
+    if (productEditView == null) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND)
+          .body(ApiResponse.fail("존재하지 않는 피드 게시물입니다."));
+    }
 
     return ResponseEntity.ok(ApiResponse.success("거래글 수정 데이터 조회 성공", null));
   }
+
+
+  // 거래글 수정
+  @PutMapping("/{prodCode}")
+  ResponseEntity<ApiResponse<Void>> updateProductPost(@PathVariable Long prodCode, ProductUpdate productUpdate, HttpSession session) {
+
+    // 데이터 위변조 방지
+    if (productUpdate.getCode() == null || !prodCode.equals(productUpdate.getCode())) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+          .body(ApiResponse.fail("잘못된 요청입니다. 거래글 식별자가 일치하지 않습니다."));
+    }
+
+//    Login loginUser = (Login) session.getAttribute("loginUser");
+//
+//    // 로그인하지 않은 사용자일 경우
+//    if (loginUser == null) {
+//      return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+//          .body(ApiResponse.fail("로그인이 필요한 서비스입니다."));
+//    }
+//
+//    // 로그인은 했지만, 사용자 본인이 작성한 글이 아닐 경우
+//    if (!loginUser.getCode().equals(productUpdate.getMemCode())) {
+//      return ResponseEntity.status(HttpStatus.FORBIDDEN)
+//          .body(ApiResponse.fail("수정 권한이 없습니다."));
+//    }
+
+    // 임시로 하드 코딩 -> 나중에 삭제할 것!!
+    productUpdate.setMemCode(1L);
+    productUpdate.setUpdatedBy("user01");
+
+    userProductService.updateProductPost(productUpdate);
+
+    return ResponseEntity.ok(ApiResponse.success("거래글 수정 완료", null));
+  }
+
+
 }

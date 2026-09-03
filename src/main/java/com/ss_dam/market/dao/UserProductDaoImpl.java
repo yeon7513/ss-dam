@@ -3,6 +3,8 @@ package com.ss_dam.market.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.ss_dam.market.model.request.ProductUpdate;
+import com.ss_dam.market.model.response.ProductEditView;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -25,4 +27,15 @@ public class UserProductDaoImpl implements UserProductDao {
   public ProductDetail findProductDetailByProdCode(Map<String, Object> params) {
     return sql.selectOne("userProductView.findProductDetailByProdCode", params);
   }
+
+  @Override
+  public ProductEditView findProductDetailForEdit(Map<String, Object> params) {
+    return sql.selectOne("userProductView.findProductDetailForEdit", params);
+  }
+
+  @Override
+  public void updateProductPost(ProductUpdate productUpdate) {
+    sql.update("productCommand.updateProductPost", productUpdate);
+  }
+
 }
