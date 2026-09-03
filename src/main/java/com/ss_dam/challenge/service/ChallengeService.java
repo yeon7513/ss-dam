@@ -1,8 +1,10 @@
 package com.ss_dam.challenge.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.ss_dam.challenge.Challenge;
+import com.ss_dam.challenge.ChallengeInfo;
 
 public interface ChallengeService {
 
@@ -26,4 +28,10 @@ public interface ChallengeService {
 
     // 최신 등록 챌린지 1개
     Challenge searchLatestChallenge();
+
+	ChallengeInfo searchChallengeInfoByCode(int code, int memCode);
+
+	boolean joinChallenge(int code, int memCode);
+
+	List<Map<String, Object>> searchTopRankings();
 }
