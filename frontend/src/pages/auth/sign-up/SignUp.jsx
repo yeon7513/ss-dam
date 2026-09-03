@@ -97,7 +97,7 @@ const SignUp = () => {
       return;
     }
     // 모든 조건을 통과하면 중복확인 성공 처리
-    alert(`[${form.id}] 사용 가능한 아이디입니다!`);
+    alert(`[${form.id}] 사용 가능한 아이디입니다.`);
     setIsIdChecked(true);
   };
 
@@ -125,7 +125,7 @@ const SignUp = () => {
       setPasswordError("");
     } else if (!passwordRegex.test(value)) {
       setPasswordError(
-        "비밀번호는 영문, 숫자, 특수문자 포함 8~20자여야 합니다.",
+        "비밀번호는 영문, 숫자, 특수문자를 조합하여 8~20자로 입력해 주세요.",
       );
     } else {
       setPasswordError("");
@@ -149,7 +149,7 @@ const SignUp = () => {
       setPasswordConfirmError("비밀번호가 일치하지 않습니다.");
       setIsPasswordMatched(false);
     } else {
-      setPasswordConfirmError("비밀번호가 일치합니다!");
+      setPasswordConfirmError("비밀번호가 일치합니다.");
       setIsPasswordMatched(true);
     }
   };
@@ -157,10 +157,27 @@ const SignUp = () => {
   // ==========================================
   // 이름(Name) 관련 핸들러
   // ==========================================
+  const [nameError, setNameError] = useState("");
+
   const handleNameChange = (e) => {
     const { name, value } = e.target;
-    // 연속 공백을 1칸으로 제한
-    setForm((prev) => ({ ...prev, [name]: value.replace(/\s+/g, " ") }));
+    // 연속 공백 1칸 제한 및 form state 업데이트
+    const formattedValue = value.replace(/\s+/g, " ");
+    setForm((prev) => ({ ...prev, [name]: formattedValue }));
+
+    // 실시간 인라인 유효성 검사
+    const cleanName = formattedValue.trim();
+    const nameRegex = /^[가-힣a-zA-Z\s]+$/;
+
+    if (!cleanName) {
+      setNameError(""); // 입력값이 없을 때는 메시지를 노출하지 않음
+    } else if (cleanName.length < 2 || cleanName.length > 20) {
+      setNameError("이름은 2자 이상 20자 이하로 입력해 주세요.");
+    } else if (!nameRegex.test(cleanName) || /[ㄱ-ㅎㅏ-ㅣ]/.test(cleanName)) {
+      setNameError("이름은 올바른 한글 또는 영문으로만 입력해 주세요.");
+    } else {
+      setNameError(""); // 모든 유효성 조건 통과 시 에러 메시지 초기화
+    }
   };
 
   // ==========================================
@@ -334,6 +351,13 @@ const SignUp = () => {
               onChange={(e) => handleSetField(e, setForm)}
             />
           </div>
+
+          {/* 이름 메시지 영역 */}
+          {nameError && (
+            <div className={styles.nameErrorGroup}>
+              <span className={styles.errorMessage}>{nameError}</span>
+            </div>
+          )}
 
           {/* 전화번호 영역 */}
           <div className={styles.phoneGroup}>
