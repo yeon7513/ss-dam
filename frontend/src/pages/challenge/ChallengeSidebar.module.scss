@@ -1,0 +1,160 @@
+.sidebarContainer {
+  width: 100%;
+  height: 680px; /* 고정 높이 (컨텐츠가 없어도 테두리 유지) */
+  background-color: #ffffff;
+  border: 1px solid #e5e8eb;
+  border-radius: 12px;
+  padding: 20px;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #111;
+  flex-shrink: 0; /* 제목 높이 축소 방지 */
+}
+
+/* 카드 목록: 상단 요소(제목, 탭 등)를 제외한 남은 높이를 모두 차지하며 넘치면 스크롤 */
+.cardList {
+  flex: 1;
+  min-height: 0; /* Flex 스크롤 동작을 위한 필수 속성 */
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-right: 4px; /* 스크롤바 영역 간격 */
+
+  /* 커스텀 스크롤바 */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #d1d5db;
+    border-radius: 3px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #f0f0f0;
+  background-color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0; /* 카드 모양 일그러짐 방지 */
+
+  &:hover {
+    background-color: #f9f9f9;
+  }
+
+  /* 선택된 카드 스타일 */
+  &.selectedCard {
+    border: 1.5px solid #279953;
+    background-color: #f2f9f4;
+  }
+}
+
+.thumbnailBox {
+  width: 52px;
+  height: 52px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.thumbImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cardInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.cardTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #222222;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  color: #279953;
+  background-color: #eaf5ee;
+  padding: 2px 6px;
+  border-radius: 4px;
+  width: fit-content;
+}
+
+/* CSS 일러스트 미니 버전 스타일 */
+.heroMini {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: linear-gradient(180deg, #cce8d8 0%, #f5d47d 56%, #e7b545 100%);
+}
+
+.sunMini {
+  position: absolute;
+  top: 10px;
+  left: 42%;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff9d5;
+  z-index: 3;
+}
+
+.mountainMini1 {
+  position: absolute;
+  left: -10px;
+  bottom: 2px;
+  width: 0;
+  height: 0;
+  border-left: 25px solid transparent;
+  border-right: 25px solid transparent;
+  border-bottom: 22px solid #6e8669;
+}
+
+.mountainMini2 {
+  position: absolute;
+  right: -10px;
+  bottom: 2px;
+  width: 0;
+  height: 0;
+  border-left: 28px solid transparent;
+  border-right: 28px solid transparent;
+  border-bottom: 24px solid #6c8466;
+}
+
+.groundMini {
+  position: absolute;
+  left: -10%;
+  bottom: -8px;
+  width: 120%;
+  height: 16px;
+  background: #245b3c;
+  z-index: 5;
+}
