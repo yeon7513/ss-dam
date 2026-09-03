@@ -35,7 +35,7 @@ const reservedIds = [
 ];
 
 // 전화번호 정규식 : 010, 011 등으로 시작하는 11자리 숫자
-const phoneRegex = /^01[016789]\d{7,8}$/;
+const phoneRegex = /^010\d{8}$/;
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -88,17 +88,26 @@ const SignUp = () => {
   // 아이디 입력 변경 핸들러
   const handleIdChange = (e) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value.replace(/\s/g, "") })); // 공백 제거
+    const formattedValue = value.replace(/\s/g, "").toLowerCase(); // 공백 제거 후 소문자로 변환
+    setForm((prev) => ({ ...prev, [name]: formattedValue }));
     setIsIdChecked(false); // 입력값이 바뀌면 중복확인 초기화
   };
 
   // 아이디 중복확인 버튼 클릭 핸들러
   const handleCheckIdDuplicate = () => {
-    const errorMsg = validateId(form.id); // 공통 validateId 함수로 검증 수행
+    // 1. 이미 중복확인을 마친 경우 메시지 출력 후 종료
+    if (isIdChecked) {
+      alert("이미 확인된 아이디입니다.");
+      return;
+    }
+
+    // 아이디 유효성 검증
+    const errorMsg = validateId(form.id);
     if (errorMsg) {
       alert(errorMsg);
       return;
     }
+
     // 모든 조건을 통과하면 중복확인 성공 처리
     alert(`[${form.id}] 사용 가능한 아이디입니다.`);
     setIsIdChecked(true);
@@ -189,35 +198,45 @@ const SignUp = () => {
   const [phoneError, setPhoneError] = useState("");
 
   const handlePhoneChange = (e) => {
-    const rawValue = e.target.value;
-    // 숫자 이외의 문자 제거 및 하이픈(-) 자동 제거 처리
-    const onlyNums = rawValue.replace(/[^0-9]/g, "");
+    // 1. 숫자 이외의 모든 문자 제거
+    const rawValue = e.target.value.replace(/[^0-9]/g, "");
 
-    // form state 업데이트
-    setForm((prev) => ({ ...prev, phone: onlyNums }));
+    // 2. 숫자에 하이픈(-) 자동 추가 포맷팅
+    let formattedPhone = rawValue;
+    if (rawValue.length > 3 && rawValue.length <= 7) {
+      formattedPhone = `${rawValue.slice(0, 3)}-${rawValue.slice(3)}`;
+    } else if (rawValue.length > 7) {
+      formattedPhone = `${rawValue.slice(0, 3)}-${rawValue.slice(3, 7)}-${rawValue.slice(7, 11)}`;
+    }
 
-    // 실시간 유효성 검사
-    if (!onlyNums) {
-      setPhoneError(""); // 입력값이 없을 때는 메시지를 노출하지 않음
-    } else if (!phoneRegex.test(onlyNums)) {
-      setPhoneError("올바른 전화번호 형식(11자리 숫자)으로 입력해 주세요.");
+    // 3. state 업데이트
+    setForm((prev) => ({ ...prev, phone: formattedPhone }));
+
+    // 4. 유효성 검사 (숫자가 정확히 11자리일 때만 에러 해제)
+    if (rawValue.length === 0) {
+      setPhoneError(""); // 입력값이 없으면 메시지 숨김
+    } else if (rawValue.length < 11) {
+      setPhoneError("휴대폰 번호 11자리를 모두 입력해 주세요.");
+    } else if (!rawValue.startsWith("010")) {
+      setPhoneError("010으로 시작하는 올바른 번호를 입력해 주세요.");
     } else {
-      setPhoneError(""); // 정상 입력 시 에러 메시지 제거
+      setPhoneError(""); // 정상 11자리 입력 완료
     }
   };
 
   // ==========================================
-  // 기타(주소, 프로필) 핸들러
+  // 주소 & 프로필 이미지 핸들러
   // ==========================================
-
-  // 주소 입력 핸들러
-  const handleTakeAddress = ({ address, detailAddress }) => {
-    setForm((prev) => ({ ...prev, address, detailAddress }));
+  const handleTakeAddress = (addressData) => {
+    setForm((prev) => ({
+      ...prev,
+      address: addressData.address || "",
+      detailAddress: addressData.detailAddress || "",
+    }));
   };
 
-  // 프로필 이미지 변경 핸들러
   const handleChangeProfileImg = (file) => {
-    if (file) setForm((prev) => ({ ...prev, file }));
+    setForm((prev) => ({ ...prev, file }));
   };
 
   // ==========================================
@@ -284,7 +303,7 @@ const SignUp = () => {
             <TextInput
               name="id"
               label="아이디"
-              placeholder="영문 소문자로 시작, 8~20자"
+              placeholder="영문 소문자, 숫자, 언더바(_) 조합 (8~20자)"
               value={form.id} // 실시간 공백 제거
               onChange={handleIdChange}
             />
@@ -382,14 +401,15 @@ const SignUp = () => {
             )}
           </div>
 
-          {/* 전화번호 영역 */}
+          {/* 휴대폰번호 영역 */}
           <div className={styles.phoneGroup}>
             <TextInput
               name="phone"
-              label="전화번호"
-              placeholder="'-' 없이 11자리 숫자 입력"
+              label="휴대폰번호"
+              placeholder="010-0000-0000" // 하이픈 자동 포맷팅 형태 안내
               value={form.phone}
               onChange={handlePhoneChange}
+              maxLength={13} // 010-0000-0000 총 13자까지만 입력 허용
             />
           </div>
 

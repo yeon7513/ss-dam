@@ -4,11 +4,10 @@
 // 페이지 & 메인 컨테이너
 // ==========================================
 .signUpPage {
-  min-height: 85rem;
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding: 2rem;
+  align-items: flex-start; // 하단 요소에 영향받지 않고 헤더와의 간격 고정
+  padding: 6rem 2rem; // 헤더, 푸터와 간격 조정
 }
 
 .signUpContainer {
@@ -87,7 +86,7 @@
   width: 100%;
   display: flex;
   gap: 0.5rem;
-  margin-bottom: 0.5rem; // 인풋과 메시지 사이 좁은 간격
+  //margin-bottom: 0.5rem; // 인풋과 메시지 사이 좁은 간격
 
   > div {
     flex: 1;
@@ -164,7 +163,14 @@
 .pwErrorGroup,
 .nameErrorGroup,
 .phoneErrorGroup {
-  margin-bottom: 1.5rem;
+  margin-top: 0.5rem; // 인풋박스와 에러 메시지 사이 간격
+  margin-bottom: 1.5rem; // 에러 메시지와 아래 인풋박스 사이 간격
+
+  // 메시지가 없을 때는 빈 박스가 여백(margin)을 만들지 않도록 처리
+  &:empty {
+    margin-top: 0;
+    margin-bottom: 1.5rem; // 메시지가 없을 때는 인풋과 다음 인풋 사이 간격이 1.5rem이 됨
+  }
 
   .errorMessage {
     display: block;
