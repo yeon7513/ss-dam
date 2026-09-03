@@ -138,7 +138,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-bottom: 0.5rem; // [수정] passwordGroup과 동일하게 0.5rem으로 통일
+  margin-bottom: 0.5rem; // 이름 인풋박스와 일므 오류메시지 간격 조정
 
   > div {
     flex: 1;
@@ -147,11 +147,24 @@
 }
 
 // ==========================================
-// 공통 에러 메시지 영역 (유지보수를 위해 분리 및 스타일 통일)
+// 전화번호 영역
 // ==========================================
-.errorGroup,
-.nameErrorGroup {
-  margin-bottom: 1.5rem; // 다음 영역(전화번호 등)과의 간격 통일
+.phoneGroup {
+  width: 100%;
+  margin-bottom: 0.5rem;
+
+  > div {
+    width: 100%;
+  }
+}
+
+// ==========================================
+// 공통 에러 메시지 영역
+// ==========================================
+.pwErrorGroup,
+.nameErrorGroup,
+.phoneErrorGroup {
+  margin-bottom: 1.5rem;
 
   .errorMessage {
     display: block;
@@ -161,18 +174,6 @@
   .successMessage {
     display: block;
     color: $succ-color;
-  }
-}
-
-// ==========================================
-// 전화번호 영역
-// ==========================================
-.phoneGroup {
-  width: 100%;
-  margin-bottom: 1.5rem;
-
-  > div {
-    width: 100%;
   }
 }
 

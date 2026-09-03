@@ -34,6 +34,9 @@ const reservedIds = [
   "service",
 ];
 
+// 전화번호 정규식 : 010, 011 등으로 시작하는 11자리 숫자
+const phoneRegex = /^01[016789]\d{7,8}$/;
+
 const SignUp = () => {
   const navigate = useNavigate();
 
@@ -181,11 +184,31 @@ const SignUp = () => {
   };
 
   // ==========================================
-  // 기타(전화번호, 주소, 프로필) 핸들러
+  // 전화번호(Phone) 관련 State & 핸들러
   // ==========================================
+  const [phoneError, setPhoneError] = useState("");
 
-  // 전화번호 정규식 : 010, 011 등으로 시작하는 11자리 숫자
-  const phoneRegex = /^01[016789]\d{7,8}$/;
+  const handlePhoneChange = (e) => {
+    const rawValue = e.target.value;
+    // 숫자 이외의 문자 제거 및 하이픈(-) 자동 제거 처리
+    const onlyNums = rawValue.replace(/[^0-9]/g, "");
+
+    // form state 업데이트
+    setForm((prev) => ({ ...prev, phone: onlyNums }));
+
+    // 실시간 유효성 검사
+    if (!onlyNums) {
+      setPhoneError(""); // 입력값이 없을 때는 메시지를 노출하지 않음
+    } else if (!phoneRegex.test(onlyNums)) {
+      setPhoneError("올바른 전화번호 형식(11자리 숫자)으로 입력해 주세요.");
+    } else {
+      setPhoneError(""); // 정상 입력 시 에러 메시지 제거
+    }
+  };
+
+  // ==========================================
+  // 기타(주소, 프로필) 핸들러
+  // ==========================================
 
   // 주소 입력 핸들러
   const handleTakeAddress = ({ address, detailAddress }) => {
@@ -316,7 +339,7 @@ const SignUp = () => {
           </div>
 
           {/* 비밀번호 메시지 영역 */}
-          <div className={styles.errorGroup}>
+          <div className={styles.pwErrorGroup}>
             {passwordError && (
               <span className={styles.errorMessage}>{passwordError}</span>
             )}
@@ -353,11 +376,11 @@ const SignUp = () => {
           </div>
 
           {/* 이름 메시지 영역 */}
-          {nameError && (
-            <div className={styles.nameErrorGroup}>
+          <div className={styles.nameErrorGroup}>
+            {nameError && (
               <span className={styles.errorMessage}>{nameError}</span>
-            </div>
-          )}
+            )}
+          </div>
 
           {/* 전화번호 영역 */}
           <div className={styles.phoneGroup}>
@@ -365,8 +388,16 @@ const SignUp = () => {
               name="phone"
               label="전화번호"
               placeholder="'-' 없이 11자리 숫자 입력"
-              onChange={(e) => handleSetField(e, setForm)}
+              value={form.phone}
+              onChange={handlePhoneChange}
             />
+          </div>
+
+          {/* 전화번호 메시지 영역 */}
+          <div className={styles.phoneErrorGroup}>
+            {phoneError && (
+              <span className={styles.errorMessage}>{phoneError}</span>
+            )}
           </div>
 
           {/* 주소 영역 */}
