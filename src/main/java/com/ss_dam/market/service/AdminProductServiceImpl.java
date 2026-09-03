@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.ss_dam.common.pager.Pager;
 import com.ss_dam.market.dao.AdminProductDao;
+import com.ss_dam.market.model.response.AdminProductDetail;
 import com.ss_dam.market.model.response.AdminProductView;
 
 @Service
@@ -17,6 +18,7 @@ public class AdminProductServiceImpl implements AdminProductService {
   @Autowired
   private AdminProductDao adminProductDao;
 
+  //관리자 상품 목록 조회
   @Override
   public List<AdminProductView> loadProducts(Pager pager){
     Map<String, Object> params = new HashMap<>();
@@ -37,5 +39,13 @@ public class AdminProductServiceImpl implements AdminProductService {
     return adminProductDao.loadProducts(params);
 
   }
+
+  //관리자 상품 상세 조회
+  @Override
+  public AdminProductDetail loadProduct(Long prodCode){
+    return adminProductDao.loadProduct(prodCode);
+  }
+
+
   
 }
