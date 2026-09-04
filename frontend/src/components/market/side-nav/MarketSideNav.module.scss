@@ -4,3 +4,24 @@
 .sideNav {
   min-width: 15%;
 }
+
+.mainMenu {
+  margin-top: 1rem;
+
+  > li {
+
+    > button {
+      width: 100%;
+      padding: 0.5rem 0;
+      text-align: left;
+      outline: 1px dotted blue;
+    }
+  }
+
+  .subMenu {
+    > li {
+      padding: 0.5rem 0 0.5rem 1rem;
+      outline: 1px dotted red;
+    }
+  }
+}

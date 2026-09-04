@@ -1,0 +1,40 @@
+.tabContainer {
+  display: flex;
+  width: 100%;
+  border: 1px solid #d0d7de;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.tab {
+  flex: 1;
+  padding: 10px 0;
+  background-color: #ffffff;
+  border: none;
+  border-right: 1px solid #d0d7de;
+  color: #555555;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:last-child {
+    border-right: none;
+  }
+}
+
+.activeTab {
+  flex: 1;
+  padding: 10px 0;
+  background-color: #279953;
+  border: none;
+  border-right: 1px solid #279953;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:last-child {
+    border-right: none;
+  }
+}

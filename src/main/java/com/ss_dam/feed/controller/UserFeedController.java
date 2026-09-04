@@ -3,13 +3,18 @@ package com.ss_dam.feed.controller;
 
 
 import com.ss_dam.auth.login.Login;
+import com.ss_dam.common.ApiResponse;
 import com.ss_dam.common.pager.Pager;
 import com.ss_dam.feed.model.request.FeedCreate;
+import com.ss_dam.feed.model.request.FeedUpdate;
 import com.ss_dam.feed.model.response.FeedDetail;
+import com.ss_dam.feed.model.response.FeedEditView;
 import com.ss_dam.feed.model.response.UserFeedView;
 import com.ss_dam.feed.service.UserFeedService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,7 +35,7 @@ public class UserFeedController {
 
   // 전체 피드 목록 조회
   @GetMapping
-  List<UserFeedView> loadFeeds(Pager pager, HttpSession session) {
+  ResponseEntity<ApiResponse<List<UserFeedView>>> loadFeeds(Pager pager, HttpSession session) {
 
     //    System.out.println("=== 세션 디버깅 시작 ===");
     //    // 1. 현재 세션의 고유 ID 확인
@@ -53,25 +58,36 @@ public class UserFeedController {
 
     System.out.println("memberCode: " + memberCode);
 
-    return userFeedService.loadFeeds(pager, memberCode);
+    List<UserFeedView> feeds = userFeedService.loadFeeds(pager, memberCode);
+
+    return ResponseEntity.ok(ApiResponse.success("피드 정보 조회 성공", feeds));
   }
+
 
   // 단일 피드 조회
   @GetMapping("/{feedCode}")
-  FeedDetail findFeedDetailByFeedCode(@PathVariable Long feedCode, HttpSession session,
-      Pager pager) {
+  ResponseEntity<ApiResponse<FeedDetail>> findFeedDetailByFeedCode(@PathVariable Long feedCode,
+      HttpSession session, Pager pager) {
     // 단일 조회지만 Pager를 받아온 이유?
     // -> 댓글 부분에 사용하기 위해..
 
     Login loginUser = (Login) session.getAttribute("loginUser");
     Long memberCode = (loginUser != null) ? loginUser.getCode() : null;
 
-    return userFeedService.findFeedDetailByFeedCode(feedCode, pager, memberCode);
+    FeedDetail feedDetail = userFeedService.findFeedDetailByFeedCode(feedCode, pager, memberCode);
+
+    if (feedDetail == null) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND)
+          .body(ApiResponse.fail("해당 피드에 대한 정보를 찾을 수 없습니다."));
+    }
+
+    return ResponseEntity.ok(ApiResponse.success("피드 상세 조회 성공", feedDetail));
   }
+
 
   // 피드 등록
   @PostMapping
-  Long registerFeed(FeedCreate feedCreate, HttpSession session) {
+  ResponseEntity<ApiResponse<Long>> registerFeed(FeedCreate feedCreate, HttpSession session) {
 
     //    Login loginUser = (Login) session.getAttribute("loginUser");
     //    feedCreate.setMemCode(loginUser.getCode());
@@ -83,9 +99,96 @@ public class UserFeedController {
 
     Long newFeedCode = userFeedService.registerFeed(feedCreate);
 
-    return newFeedCode;
+    if (newFeedCode == null || newFeedCode == 0) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.fail("피드 등록에 실패했습니다."));
+    }
 
+    return ResponseEntity.ok(ApiResponse.success("피드가 등록되었습니다.", newFeedCode));
   }
 
+
+  // 수정할 피드 데이터 조회
+  @GetMapping("/{feedCode}/edit")
+  ResponseEntity<ApiResponse<FeedEditView>> findFeedDetailForEdit(@PathVariable Long feedCode,
+      HttpSession session) {
+
+    // 로그인한 사용자가 피드를 작성한 사용자가 맞는지
+    //    Login loginUser = (Login) session.getAttribute("loginUser");
+    //    Long memberCode = (loginUser != null) ? loginUser.getCode() : null;
+
+    // 임시로 회원 번호 지정
+    Long memberCode = 1L;
+
+    FeedEditView feedDetailForEdit = userFeedService.findFeedDetailForEdit(feedCode, memberCode);
+
+    if (feedDetailForEdit == null) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND)
+          .body(ApiResponse.fail("존재하지 않는 피드 게시글입니다."));
+    }
+
+    return ResponseEntity.ok(ApiResponse.success("피드 수정 데이터 조회 성공", feedDetailForEdit));
+  }
+
+
+  // 피드 수정
+  @PutMapping("/{feedCode}")
+  ResponseEntity<ApiResponse<Void>> updateFeed(@PathVariable Long feedCode, FeedUpdate feedUpdate,
+      HttpSession session) {
+
+    // 데이터 위변조 방지를 위한 2차 방어 로직
+    // -> @PathVariable의 값과 FeedUpdate의 code값을 비교함
+    if (feedUpdate.getCode() == null || !feedCode.equals(feedUpdate.getCode())) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+          .body(ApiResponse.fail("잘못된 요청입니다. 피드 식별자가 일치하지 않습니다."));
+    }
+
+    //    Login loginUser = (Login) session.getAttribute("loginUser");
+    //    // -> 로그인하지 않은 사용자의 경우
+    //    if (loginUser == null) {
+    //      return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+    //          .body(ApiResponse.fail("로그인이 필요한 서비스입니다."));
+    //    }
+    //
+    //    // -> 로그인한 사용자 본인이 작성한 글이 맞는지 확인
+    //    if (!loginUser.getCode().equals(feedUpdate.getMemCode())) {
+    //      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponse.fail("수정 권한이 없습니다."));
+    //    }
+
+    // 임시로 하드 코딩!
+    feedUpdate.setMemCode(1L);
+    feedUpdate.setUpdatedBy("user01");
+
+    userFeedService.updateFeed(feedUpdate);
+
+    return ResponseEntity.ok(ApiResponse.success("피드 수정 완료", null));
+  }
+
+
+  // 피드 삭제
+  @DeleteMapping("/{feedCode}")
+  ResponseEntity<ApiResponse<Void>> deleteFeed(@PathVariable Long feedCode, Long memCode,
+      HttpSession session) {
+
+    //    Login loginUser = (Login) session.getAttribute("loginUser");
+    //    // -> 로그인하지 않은 사용자의 경우
+    //    if (loginUser == null) {
+    //      return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+    //          .body(ApiResponse.fail("로그인이 필요한 서비스입니다."));
+    //    }
+    //
+    //    // -> 로그인한 사용자 본인이 작성한 글이 맞는지 확인
+    //    if (!loginUser.getCode().equals(memCode)) {
+    //      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponse.fail("삭제 권한이 없습니다."));
+    //    }
+    //
+    //    String updatedBy = loginUser.getMemberId();
+
+    // 임시로 하드코딩
+    String updatedBy = "user01";
+
+    userFeedService.deleteFeed(feedCode, updatedBy);
+
+    return ResponseEntity.ok(ApiResponse.success("피드 삭제 완료", null));
+  }
 
 }

@@ -7,7 +7,6 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import ImageBox from "../image-box/ImageBox.jsx";
-import { HOST } from "../../../lib/url.js";
 
 // Slide 컴포넌트 사용법
 // <Slide> 안에 <SwiperSlide>를 import해서 사용하세요!!
@@ -15,8 +14,6 @@ import { HOST } from "../../../lib/url.js";
 // <SwiperSlide>가 하나의 슬라이드 콘텐츠 입니다.
 
 function Slide({ children, images, className, isLoop = false, isAutoplay = false }) {
-
-  console.log("슬라이드 이미지: ", images);
 
   // children이 있을 경우
   if (children) {
@@ -46,7 +43,7 @@ function Slide({ children, images, className, isLoop = false, isAutoplay = false
     );
   }
 
-  // 기본 슬라이드
+  // DB용 이미지 슬라이드
   if (!children && images.length > 0) {
     return (
       <Swiper
@@ -61,9 +58,9 @@ function Slide({ children, images, className, isLoop = false, isAutoplay = false
         modules={[Pagination, Navigation, isAutoplay ? Autoplay : ""]}
         className={cn(styles.wrap, className)}
       >
-        {!images > 0 && images.map((image, idx) => (
+        {images.map((image, idx) => (
           <SwiperSlide key={idx} className={styles.thumb}>
-            <ImageBox src={`${HOST}${image.path}`} />
+            <ImageBox src={image} />
           </SwiperSlide>
         ))}
       </Swiper>

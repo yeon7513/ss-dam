@@ -2,7 +2,9 @@ package com.ss_dam.feed.dao;
 
 import com.ss_dam.feed.model.core.FeedHashtag;
 import com.ss_dam.feed.model.request.FeedCreate;
+import com.ss_dam.feed.model.request.FeedUpdate;
 import com.ss_dam.feed.model.response.FeedDetail;
+import com.ss_dam.feed.model.response.FeedEditView;
 import com.ss_dam.feed.model.response.UserFeedView;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +21,12 @@ public class UserFeedDaoImpl implements UserFeedDao {
 
   @Override
   public List<UserFeedView> loadFeeds(Map<String, Object> params) {
-    return sql.selectList("userFeedView.loadFeeds", params);
+    return sql.selectList("feedView.loadFeeds", params);
   }
 
   @Override
   public FeedDetail findFeedDetailByFeedCode(Map<String, Object> params) {
-    return sql.selectOne("userFeedView.findFeedDetailByFeedCode", params);
+    return sql.selectOne("feedView.findFeedDetailByFeedCode", params);
   }
 
   @Override
@@ -36,5 +38,25 @@ public class UserFeedDaoImpl implements UserFeedDao {
   @Override
   public void registerHashtags(List<FeedHashtag> feedHashtags) {
     sql.insert("feedCommand.registerHashtags", feedHashtags);
+  }
+
+  @Override
+  public FeedEditView findFeedDetailForEdit(Map<String, Long> params) {
+    return sql.selectOne("feedView.findFeedDetailForEdit", params);
+  }
+
+  @Override
+  public void deleteHashtags(Long feedCode) {
+    sql.delete("feedCommand.deleteHashtags", feedCode);
+  }
+
+  @Override
+  public void updateFeed(FeedUpdate feedUpdate) {
+    sql.update("feedCommand.updateFeed", feedUpdate);
+  }
+
+  @Override
+  public void deleteFeed(Map<String, Object> params) {
+    sql.update("feedCommand.deleteFeed", params);
   }
 }

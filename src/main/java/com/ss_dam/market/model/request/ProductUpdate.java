@@ -7,6 +7,7 @@ import java.util.List;
 public class ProductUpdate {
   private Long code; // 수정할 게시글의 PK
   private Long cateCode; // 카테고리 고유 번호
+  private Long memCode; // 게시글을 수정한 사용자의 PK
   private String title; // 제목
   private String content; // 내용
   private int price; // 가격
@@ -14,8 +15,41 @@ public class ProductUpdate {
   private String updatedAt; // 수정일
   private boolean deleteYn; // 삭제 여부
 
-  // 이미지
+
+  // 이 부분은 공통 DTO로 만들고 상속받으면 될 듯?
+  // -> 피드, 마켓 등 이미지가 들어가는 곳이면 모두 쓰일 것 같음.
+  // 수정 시 새로 등록할 이미지 리스트 & 순서 배열
   private List<MultipartFile> images;
+  private List<Integer> newImageOrders;
+
+  // 기존 이미지 경로 문자열 & 순서 배열
+  private List<String> imagePaths;
+
+  public List<Integer> getNewImageOrders() {
+    return newImageOrders;
+  }
+
+  public void setNewImageOrders(List<Integer> newImageOrders) {
+    this.newImageOrders = newImageOrders;
+  }
+
+  public List<String> getImagePaths() {
+    return imagePaths;
+  }
+
+  public void setImagePaths(List<String> imagePaths) {
+    this.imagePaths = imagePaths;
+  }
+
+  public List<Integer> getOldImageOrders() {
+    return oldImageOrders;
+  }
+
+  public void setOldImageOrders(List<Integer> oldImageOrders) {
+    this.oldImageOrders = oldImageOrders;
+  }
+
+  private List<Integer> oldImageOrders;
 
   public Long getCode() {
     return code;
@@ -87,5 +121,13 @@ public class ProductUpdate {
 
   public void setImages(List<MultipartFile> images) {
     this.images = images;
+  }
+
+  public Long getMemCode() {
+    return memCode;
+  }
+
+  public void setMemCode(Long memCode) {
+    this.memCode = memCode;
   }
 }

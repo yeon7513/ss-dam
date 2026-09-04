@@ -7,7 +7,7 @@ import SearchBox from "../../components/common/search-box/SearchBox.jsx";
 const Market = () => {
 
   const {
-    data, loading, error,
+    data, loading, error, message,
   } = useLoadData(`/api/market/products`);
 
   const products = data || [];
@@ -17,7 +17,7 @@ const Market = () => {
     return <div>다시쓰담 정보를 불러오고 있습니다.</div>;
   }
   if (error) {
-    return <div>에러가 발생했습니다. {error}</div>;
+    return <div>에러가 발생했습니다. {error}, {message}</div>;
   }
 
   console.log(products);
@@ -34,7 +34,7 @@ const Market = () => {
           {products.length > 0 ? (
             products.map((product) => <ProductCard key={product.code} product={product} />)
           ) : (
-            <p>검색된 피드가 없습니다.</p>
+            <p>검색된 거래글이 없습니다.</p>
           )}
         </div>
       </div>

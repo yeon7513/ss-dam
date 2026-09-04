@@ -20,21 +20,36 @@ export const useSubmitData = (url, method = "POST") => {
     const options = {
       method,
       headers,
-      body: isFormData ? data : JSON.stringify(data), // formData면 그대로, 아니면 JSON으로 변환
+      body: isFormData ? data : JSON.stringify(data),
+      // formData면 그대로, 아니면 JSON으로 변환
     };
 
     // 실제 서버 전송 로직 (fetch의 결과(result)를 반환)
     return fetch(url, { ...options })
     .then(res => {
       if (!res.ok) {
-        throw new Error("데이터 전송에 실패했습니다.");
+        // 백엔드에서 ApiResponse.fail로 넘겨주는 body 파싱
+        return res.json().then(err => {
+          const errorMessage = err?.message || "데이터 전송에 실패했습니다.";
+          const error = new Error(errorMessage);
+          error.status = res.status;
+          error.code = err?.code;
+
+          // 여기서 바로 catch절로 이동~
+          throw error;
+        })
       }
+
+      // 이상이 없을 시 (200~299일 경우) 정상적으로 반환
       return res.json();
     })
     .then(result => {
-      console.log("result: ", result);
+      const { data, success, message } = result;
+
+      console.log("useSubmitData - result: ", result);
       setLoading(false);
-      return result;
+
+      return { data, success, message };
     })
     .catch(err => {
       setError(err.message);

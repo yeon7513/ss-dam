@@ -3,7 +3,7 @@ import { formatCreatedAt } from "../../../utils/formatDate";
 import ProfileCard from "../../profile-card/ProfileCard";
 
 const Comment = ({ comments }) => {
-  if (comments === undefined) {
+  if (!comments) {
     return <div>댓글 정보를 불러오는 중입니다.</div>;
   }
 
