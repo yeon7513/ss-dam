@@ -1,9 +1,26 @@
 @use "/src/scss/variables.scss" as *;
 
+.profileImgGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  margin-bottom: 1.5rem;
+  box-sizing: border-box;
+
+  > div {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+}
+
 .profileImg {
+  width: 100%;
   padding: 20px;
   background-color: $grayscale-5;
   cursor: pointer;
+  box-sizing: border-box;
 
   /* 이미지 아래 삭제 버튼 세로 정렬 */
   display: flex;
@@ -38,6 +55,9 @@
   button {
     font-size: 0.9rem;
     color: $grayscale-90;
+    background: transparent;
+    border: none;
+    cursor: pointer;
 
     &:hover {
       color: $point-50; // 로그인 글자만 적용할 포인트 색상
