@@ -136,6 +136,10 @@ public class UserFeedServiceImpl implements UserFeedService {
     params.put("updatedBy", updatedBy);
 
     userFeedDao.deleteFeed(params);
+
+    // 26.09.04
+    // 마켓쪽 삭제 구현하다 깨달음.
+    // 삭제 시에도 피드에 종속된 이미지, 해시태그를 지워야 하지 않나..?
   }
 
   // ========================================================

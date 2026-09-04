@@ -16,4 +16,6 @@ public interface UserProductService {
   ProductEditView findProductDetailForEdit(Long prodCode, Long memberCode);
 
   void updateProductPost(ProductUpdate productUpdate);
+
+  void deleteProductPost(Long prodCode, String updatedBy);
 }

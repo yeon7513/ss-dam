@@ -69,7 +69,8 @@ public class UserProductController {
     // 임시로 하드코딩
     Long memberCode = 1L;
 
-    ProductEditView productEditView = userProductService.findProductDetailForEdit(prodCode, memberCode);
+    ProductEditView productEditView =
+        userProductService.findProductDetailForEdit(prodCode, memberCode);
 
     if (productEditView == null) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -82,7 +83,8 @@ public class UserProductController {
 
   // 거래글 수정
   @PutMapping("/{prodCode}")
-  ResponseEntity<ApiResponse<Void>> updateProductPost(@PathVariable Long prodCode, ProductUpdate productUpdate, HttpSession session) {
+  ResponseEntity<ApiResponse<Void>> updateProductPost(@PathVariable Long prodCode,
+      ProductUpdate productUpdate, HttpSession session) {
 
     // 데이터 위변조 방지
     if (productUpdate.getCode() == null || !prodCode.equals(productUpdate.getCode())) {
@@ -90,19 +92,19 @@ public class UserProductController {
           .body(ApiResponse.fail("잘못된 요청입니다. 거래글 식별자가 일치하지 않습니다."));
     }
 
-//    Login loginUser = (Login) session.getAttribute("loginUser");
-//
-//    // 로그인하지 않은 사용자일 경우
-//    if (loginUser == null) {
-//      return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-//          .body(ApiResponse.fail("로그인이 필요한 서비스입니다."));
-//    }
-//
-//    // 로그인은 했지만, 사용자 본인이 작성한 글이 아닐 경우
-//    if (!loginUser.getCode().equals(productUpdate.getMemCode())) {
-//      return ResponseEntity.status(HttpStatus.FORBIDDEN)
-//          .body(ApiResponse.fail("수정 권한이 없습니다."));
-//    }
+    //    Login loginUser = (Login) session.getAttribute("loginUser");
+    //
+    //    // 로그인하지 않은 사용자일 경우
+    //    if (loginUser == null) {
+    //      return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+    //          .body(ApiResponse.fail("로그인이 필요한 서비스입니다."));
+    //    }
+    //
+    //    // 로그인은 했지만, 사용자 본인이 작성한 글이 아닐 경우
+    //    if (!loginUser.getCode().equals(productUpdate.getMemCode())) {
+    //      return ResponseEntity.status(HttpStatus.FORBIDDEN)
+    //          .body(ApiResponse.fail("수정 권한이 없습니다."));
+    //    }
 
     // 임시로 하드 코딩 -> 나중에 삭제할 것!!
     productUpdate.setMemCode(1L);
@@ -113,5 +115,30 @@ public class UserProductController {
     return ResponseEntity.ok(ApiResponse.success("거래글 수정 완료", null));
   }
 
+  @DeleteMapping("/{prodCode}")
+  ResponseEntity<ApiResponse<Void>> deleteProductPost(@PathVariable Long prodCode, Long memCode,
+      HttpSession session) {
+
+    //    Login loginUser = (Login) session.getAttribute("loginUser");
+    //    // -> 로그인하지 않은 사용자의 경우
+    //    if (loginUser == null) {
+    //      return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+    //          .body(ApiResponse.fail("로그인이 필요한 서비스입니다."));
+    //    }
+    //
+    //    // -> 로그인한 사용자 본인이 작성한 글이 맞는지 확인
+    //    if (!loginUser.getCode().equals(memCode)) {
+    //      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponse.fail("삭제 권한이 없습니다."));
+    //    }
+    //
+    //    String updatedBy = loginUser.getMemberId();
+
+    // 임시로 하드코딩
+    String updatedBy = "user01";
+
+    userProductService.deleteProductPost(prodCode, updatedBy);
+
+    return ResponseEntity.ok(ApiResponse.success("거래글 삭제 완료", null));
+  }
 
 }

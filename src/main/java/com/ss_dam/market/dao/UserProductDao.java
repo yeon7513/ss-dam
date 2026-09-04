@@ -16,4 +16,6 @@ public interface UserProductDao {
   ProductEditView findProductDetailForEdit(Map<String, Object> params);
 
   void updateProductPost(ProductUpdate productUpdate);
+
+  void deleteProductPost(Map<String, Object> params);
 }

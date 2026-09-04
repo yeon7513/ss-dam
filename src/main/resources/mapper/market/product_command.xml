@@ -18,7 +18,7 @@
   </update>
 
   <!-- 거래글 삭제 (일반 작성자) -->
-  <update id="deleteFeed">
+  <update id="deleteProductPost">
     UPDATE MARKET_PRODUCT
     SET
     delete_yn = 1,
