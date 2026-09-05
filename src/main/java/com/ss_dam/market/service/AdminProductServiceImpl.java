@@ -5,12 +5,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.ss_dam.common.pager.Pager;
 import com.ss_dam.market.dao.AdminProductDao;
-import com.ss_dam.market.model.response.AdminProductDetail;
 import com.ss_dam.market.model.response.AdminProductView;
+import com.ss_dam.market.model.response.ProductDetail;
 
 @Service
 public class AdminProductServiceImpl implements AdminProductService {
@@ -18,7 +20,7 @@ public class AdminProductServiceImpl implements AdminProductService {
   @Autowired
   private AdminProductDao adminProductDao;
 
-  //관리자 상품 목록 조회
+  //관리자 - 상품 목록 조회
   @Override
   public List<AdminProductView> loadProducts(Pager pager){
     Map<String, Object> params = new HashMap<>();
@@ -40,11 +42,28 @@ public class AdminProductServiceImpl implements AdminProductService {
 
   }
 
-  //관리자 상품 상세 조회
+  //관리자 - 상품 상세 조회
   @Override
-  public AdminProductDetail loadProduct(Long prodCode){
+  public ProductDetail loadProduct(Long prodCode){
     return adminProductDao.loadProduct(prodCode);
   }
+
+  //관리자 - 상품 선택 삭제
+    //관리자 - 상품 단건 삭제
+    @Override 
+    public void deleteProduct(Long prodCode) {
+      int updatedCount = adminProductDao.deleteProduct(prodCode);
+
+      if(updatedCount == 0) {
+        throw new ResponseStatusException(
+          HttpStatus.NOT_FOUND,
+        " 상품이 존재하지 않거나 이미 삭제되었습니다"
+        );
+      }
+    }
+
+
+
 
 
   

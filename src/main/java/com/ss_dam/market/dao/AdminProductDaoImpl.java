@@ -7,8 +7,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.ss_dam.market.model.response.AdminProductDetail;
 import com.ss_dam.market.model.response.AdminProductView;
+import com.ss_dam.market.model.response.ProductDetail;
 
 @Repository
 public class AdminProductDaoImpl implements AdminProductDao {
@@ -33,8 +33,19 @@ public class AdminProductDaoImpl implements AdminProductDao {
 
   //관리자 상품 상세 조회
   @Override
-  public AdminProductDetail loadProduct(Long prodCode){
+  public ProductDetail loadProduct(Long prodCode){
     return sql.selectOne(
       "adminProductView.loadProduct", prodCode);
   }
+
+  //관리자 - 상품 선택 삭제
+    //상품 단건 삭제
+    @Override 
+    public int deleteProduct(Long prodCode){
+      return sql.update(
+        "adminProductView.deleteProduct",
+        prodCode
+      );
+    }
+
 }

@@ -24,9 +24,15 @@
 
   <!-- 관리자 상품 상세 DTO 매핑 -->
   <resultMap id="AdminProductDetailMap"
-             type="AdminProductDetail"
+             type="ProductDetail"
              extends="AdminProductViewMap"
              autoMapping="true">
+
+    <!-- type : 조회결과를 담을 javaDTO 타입 -->
+    <!--AdminProductViewMap에는 status, adminActivitySummary 
+    같은 관리자용 속성 매핑이 있습니다. 
+    그런데 ProductDetail에 해당 필드나 setter가 없으면
+    실행할 때 다음과 같은 오류가 날 수 있습니다.-->
 
     <!-- 상품 이미지 목록 -->
     <collection property="imagePaths"
@@ -305,5 +311,25 @@
 
     ORDER BY product_image.order_seq ASC
   </select>
+
+  <!--관리자 - 상품 단건 삭제-->
+  <update id="deleteProduct" parameterType="java.lang.Long">
+    UPDATE MARKET_PRODUCT
+    SET delete_yn = 1,
+      updated_at = CURRENT_TIMESTAMP
+    WHERE code = #{prodCode}
+      AND delete_yn = 0
+  </update>
+
+  <!--
+   현재 관리자 상품 조회에서 삭제 상품까지 전체 조회 가능
+
+   화면 상에 보이게 하려면...?
+   나중에 관리자 화면에서는 delete_yn 값에 따라 정상 / 삭제됨을 표시하고,
+   삭제된 상품은 삭제 버튼을 비활성화
+   화면에서 구분하려면 응답 DTO에도 삭제 여부가 포함되어야 함
+   나중에는 관리자 목록에 전체 / 미삭제 / 삭제됨 필터를 추가
+  -->
+
 
 </mapper>
