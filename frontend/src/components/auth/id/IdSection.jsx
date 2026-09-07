@@ -1,3 +1,4 @@
+import { checkDuplicateId } from "../../../api/member"; // [추가] API 함수 import
 import Button from "../../common/button/Button";
 import TextInput from "../../forms/text-input/TextInput";
 import styles from "./IdSection.module.scss";
@@ -25,18 +26,35 @@ const IdSection = ({ form, setForm, isIdChecked, setIsIdChecked }) => {
     setIsIdChecked(false);
   };
 
-  const handleCheckIdDuplicate = () => {
+  // [수정] 백엔드 연동 비동기 중복확인 함수
+  const handleCheckIdDuplicate = async () => {
     if (isIdChecked) {
       alert("이미 확인된 아이디입니다.");
       return;
     }
+
     const errorMsg = validateId(form.id);
     if (errorMsg) {
       alert(errorMsg);
       return;
     }
-    alert(`[${form.id}] 사용 가능한 아이디입니다.`);
-    setIsIdChecked(true);
+
+    try {
+      // API 호출
+      const result = await checkDuplicateId(form.id);
+
+      // 백엔드의 ApiResponse.data 값이 true(중복)인지 false(사용 가능)인지 확인
+      if (result.data === true) {
+        alert("이미 사용 중인 아이디입니다.");
+        setIsIdChecked(false);
+      } else {
+        alert(`[${form.id}] 사용 가능한 아이디입니다.`);
+        setIsIdChecked(true); // 중복 확인 완료 처리
+      }
+    } catch (error) {
+      console.error("아이디 중복 확인 에러:", error);
+      alert("아이디 중복 확인 중 오류가 발생했습니다.");
+    }
   };
 
   return (
