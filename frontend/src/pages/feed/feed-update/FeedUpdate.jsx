@@ -23,14 +23,22 @@ function FeedUpdate() {
     return (
       <div>
         {error}
-        <Button onClick={() => navigate("/feed")}>피드 목록</Button>
+        <Button
+          onClick={() => navigate("/feed")}
+        >
+          피드 목록
+        </Button>
       </div>
     );
   }
 
   return (
     <main>
-      <FeedUpdateForm key={initFeed?.code} initFeed={initFeed} categories={categories} />
+      <FeedUpdateForm
+        key={initFeed?.code}
+        initFeed={initFeed}
+        categories={categories}
+      />
     </main>
   );
 }

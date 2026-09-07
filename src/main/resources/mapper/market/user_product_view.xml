@@ -50,7 +50,7 @@
     ON main_category.sub_cate_code = MP.cate_code
     <!-- 작성자 프로필 -->
     JOIN (
-    SELECT m.code, m.id, i.path, m.ranking, m.rating
+    SELECT m.code, m.id, i.path, m.rating
     FROM MEMBER_ACCOUNT m
     LEFT JOIN IMAGES i
     ON m.code = i.target_code AND i.TYPE = 'profile'
@@ -62,12 +62,12 @@
     <!-- Pick 개수 -->
     LEFT JOIN (
     SELECT pick.prod_code, count(*) AS cnt
-    FROM MARKET_PROD_PICK pick
+    FROM MARKET_PROD_PICK AS pick
     GROUP BY pick.prod_code
     ) AS pick_cnt
     ON pick_cnt.prod_code = MP.code
     <!-- 로그인한 사용자의 Pick 여부 -->
-    LEFT JOIN MARKET_PROD_PICK my_pick
+    LEFT JOIN MARKET_PROD_PICK AS my_pick
     ON my_pick.prod_code = MP.code AND my_pick.mem_code = #{memberCode}
   </sql>
 
@@ -84,7 +84,6 @@
     writer.code AS m_code,
     writer.id AS m_id,
     writer.rating AS m_rating,
-    writer.ranking AS m_ranking,
     writer.path AS m_profile_image,
     IFNULL(pick_cnt.cnt, 0) AS count_pick,
     IF(my_pick.prod_code IS NOT NULL, 1, 0) AS picked_yn
@@ -95,7 +94,7 @@
   <!-- 등록된 거래글 전체 개수 -->
   <select id="totalCountProduct" resultType="Integer">
     SELECT count(*)
-    FROM MARKET_PRODUCT MP
+    FROM MARKET_PRODUCT AS MP
     WHERE MP.post_status = 'active' AND MP.delete_yn = 0
     <!-- 검색용 쿼리 나중에 추가할 것 -->
   </select>
@@ -103,7 +102,7 @@
   <!-- 전체 목록 조회 -->
   <select id="loadProducts" resultMap="UserProductViewMap">
     SELECT
-    <include refid="ProductBasicColumns" />
+    <include refid="ProductBasicColumns" />,
     i.path AS thumbnail
     FROM MARKET_PRODUCT AS MP
     <include refid="ProductCommonJoins" />
@@ -117,7 +116,7 @@
   <!-- 거래 게시글 단일 조회 -->
   <select id="findProductDetailByProdCode" resultMap="ProductDetailMap">
     SELECT
-    <include refid="ProductBasicColumns" />
+    <include refid="ProductBasicColumns" />,
     i.path AS image_paths
     FROM MARKET_PRODUCT AS MP
     <include refid="ProductCommonJoins" />

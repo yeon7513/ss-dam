@@ -15,7 +15,7 @@ import ImageBox from "../image-box/ImageBox.jsx";
 
 function Slide({ children, images, className, isLoop = false, isAutoplay = false }) {
 
-  // children이 있을 경우
+  // children이 있을 경우 -> 이미지만 단독으로 들어가는 경우가 아닐 경우
   if (children) {
     return (
       <Swiper
@@ -43,7 +43,14 @@ function Slide({ children, images, className, isLoop = false, isAutoplay = false
     );
   }
 
-  // DB용 이미지 슬라이드
+  // 이미지 1장만 단독으로 있을 경우
+  if (images.length === 1) {
+    return (
+      <ImageBox src={images[0]} />
+    );
+  }
+
+  // 이미지 전용 슬라이드 -> 이미지만 있는 슬라이드인 경우
   if (!children && images.length > 0) {
     return (
       <Swiper

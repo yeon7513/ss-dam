@@ -5,7 +5,7 @@ import Hashtag from "../../../components/feed/hashtag/Hashtag";
 import styles from "./FeedRegister.module.scss";
 import { useLoadData } from "../../../hooks/useLoadData.js";
 import { useSubmitData } from "../../../hooks/useSubmitData.js";
-import { createFeedFormData } from "../../../utils/createFeedFormData.js";
+import { createFormData } from "../../../utils/createFormData.js";
 
 /* 피드 등록 */
 const FeedRegister = () => {
@@ -57,7 +57,7 @@ const FeedRegister = () => {
   // 서브밋 핸들러
   const handleRegisterFeed = async (newPost) => {
     try {
-      const formData = createFeedFormData(newPost);
+      const formData = createFormData(newPost);
       const { data: newCode, success } = await handleSubmit(formData);
 
       // 값이 있을 경우

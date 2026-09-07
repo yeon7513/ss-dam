@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSubmitData } from "../../../hooks/useSubmitData.js";
-import { createFeedFormData } from "../../../utils/createFeedFormData.js";
+import { createFormData } from "../../../utils/createFormData.js";
 import Editor from "../../../components/common/editor/Editor.jsx";
 import styles from "../feed-register/FeedRegister.module.scss";
 import Hashtag from "../../../components/feed/hashtag/Hashtag.jsx";
@@ -20,7 +20,7 @@ function FeedUpdateForm({ initFeed, categories }) {
   // 피드 전송 핸들러
   const handleSubmitUpdatedFeed = async () => {
     try {
-      const formData = createFeedFormData(updatedFeed);
+      const formData = createFormData(updatedFeed);
       const { success } = await handleSubmit(formData);
 
       if (success) {
