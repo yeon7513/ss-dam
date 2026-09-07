@@ -40,12 +40,22 @@ public class AdminProductDaoImpl implements AdminProductDao {
 
   //관리자 - 상품 선택 삭제
     //상품 단건 삭제
-    @Override 
-    public int deleteProduct(Long prodCode){
-      return sql.update(
-        "adminProductView.deleteProduct",
-        prodCode
-      );
-    }
+      //상품 논리 삭제
+      @Override
+      public int deleteProduct(Long prodCode) {
+          return sql.update(
+              "adminProductView.deleteProduct",
+              prodCode
+          );
+      }
+      
+      //삭제 로그 저장
+      @Override 
+      public int insertDeleteLog(Map<String, Object> params) {
+        return sql.insert(
+          "adminProductView.insertDeleteLog",
+          params
+        );
+      }
 
 }

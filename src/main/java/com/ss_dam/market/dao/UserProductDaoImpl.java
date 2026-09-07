@@ -25,4 +25,6 @@ public class UserProductDaoImpl implements UserProductDao {
   public ProductDetail findProductDetailByProdCode(Map<String, Object> params) {
     return sql.selectOne("userProductView.findProductDetailByProdCode", params);
   }
+
+
 }

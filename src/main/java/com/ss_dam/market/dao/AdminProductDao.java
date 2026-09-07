@@ -3,8 +3,8 @@ package com.ss_dam.market.dao;
 import java.util.List;
 import java.util.Map;
 
-import com.ss_dam.market.model.response.ProductDetail;
 import com.ss_dam.market.model.response.AdminProductView;
+import com.ss_dam.market.model.response.ProductDetail;
 
 public interface AdminProductDao {
 
@@ -18,8 +18,11 @@ public interface AdminProductDao {
   ProductDetail loadProduct(Long prodCode);
 
   //관리자 - 선택 상품 삭제
-    //상품 단건 삭제
-    int deleteProduct(Long prodCode);
+    //상품 단건 삭제 
+      //상품 논리 삭제
+      int deleteProduct(Long prodCode);
 
+      //관리자 삭제 로그 저장
+      int insertDeleteLog(Map<String, Object> params);
   
 } 

@@ -8,14 +8,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ss_dam.common.ApiResponse;
 import com.ss_dam.common.pager.Pager;
+import com.ss_dam.market.model.request.ProductDelete;
 import com.ss_dam.market.model.response.AdminProductView;
 import com.ss_dam.market.model.response.ProductDetail;
 import com.ss_dam.market.service.AdminProductService;
+
+import jakarta.validation.Valid;
 
 
 @RestController
@@ -62,19 +67,28 @@ public class AdminProductController {
     //3. 보관 기간 종료 /	나중에 보관 정책을 정한 뒤 자동 정리 구현
     //2번, 3번 기능 구현
   
-  //2. 관리자가 게시글 삭제 - 상품 단건 삭제
+  //2. 관리자 상품 단건 삭제 + 처리 사유
   @DeleteMapping("/{prodCode}")
   public ResponseEntity<ApiResponse<Void>> deleteProduct(
-    @PathVariable Long prodCode) {
+    @PathVariable Long prodCode,
+    @RequestParam Long memCode,
+    @Valid @RequestBody ProductDelete request) {
 
-      adminProductService.deleteProduct(prodCode);
+      adminProductService.deleteProduct
+        (prodCode, 
+        request.getReason(),
+        memCode);
 
       return ResponseEntity.ok(
-        ApiResponse.<Void>success("상품 삭제 성공", null)
-      );
+        ApiResponse.<Void>success("상품 삭제 성공", null));
     }
-    //관리자 권한 확인 추가 
 
+    //아직 관리자 권한 검증 X
+    //세션 이용 X -> memCode이용 
+    // memCode로 적어도 service에서 admCode 사용 가능, 변수 이름이 달라도 세 번째 인자로 전달
+
+  //관리자 권한 확인 추가 
+  
 
 
 
@@ -82,6 +96,9 @@ public class AdminProductController {
   //상품 판매 중지 및 재개 (판매 중지시 사유 판매자에게 전달)
   //상품 판매 숨김(판매자와 관리자 조회 가능)
   //+처리 사유 입력 및 변경 이력 확인
+
+
+
 
   /*나중에 추가하면 좋은 편의 기능*/
   //여러 상품 일괄 처리
