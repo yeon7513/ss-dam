@@ -1,0 +1,156 @@
+/* Wrapper & Containers */
+.cardWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.cardContainer {
+  width: 100%;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background-color: #ffffff;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+/* Card Header & Body */
+.cardHeader {
+  background-color: #f3f9f5;
+  padding: 16px 20px;
+  border-bottom: 1px solid #edf4f0;
+
+  h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: #1b5e20;
+  }
+}
+
+.cardBody {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Info Item Components */
+.infoRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.iconBox {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background-color: #f0f7f2;
+  color: #2e7d32;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.infoContent {
+  display: flex;
+  flex-direction: column;
+
+  .label {
+    font-size: 13px;
+    color: #2e7d32;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  .value {
+    font-size: 14px;
+    color: #333333;
+    font-weight: 500;
+  }
+}
+
+/* Buttons */
+.btnGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.joinBtn {
+  width: 100%;
+  padding: 14px 0;
+  border: none;
+  border-radius: 8px;
+  background-color: #2e7d32;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #216325;
+  }
+
+  &.joined {
+    background-color: #a5d6a7;
+    cursor: not-allowed;
+  }
+}
+
+.likeBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 12px 0;
+  border: 1px solid #2e7d32;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #2e7d32;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #f0f7f2;
+  }
+}
+
+/* Notice Card */
+.noticeCard {
+  padding: 18px;
+  border: 1px solid #edf2ef;
+  border-radius: 10px;
+  background-color: #fafcfb;
+
+  h4 {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    font-weight: 700;
+    color: #2e7d32;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 18px;
+    color: #666666;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  li {
+    margin-bottom: 4px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

@@ -1,22 +1,91 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="likes">
 
-	<!-- 피드 좋아요 개수 -->
-	<select id="countFeedLike" resultType="Integer">
-		SELECT IFNULL(count(*), 0)
-		FROM FEED_LIKE
-		WHERE feed_code = #{feedCode}
-	</select>
-	
-	<!-- 댓글 좋아요 개수 -->
-	<select id="countCommetLike" resultType="Integer">
-		SELECT IFNULL(count(*), 0)
-		FROM COMMENT_LIKE
-		WHERE cmt_code = #{cmtCode}
-	</select>
-	
+    <!-- 피드 좋아요 개수 -->
+    <select id="countFeedLike" resultType="Integer">
+
+        SELECT IFNULL(COUNT(*), 0)
+        FROM FEED_LIKE
+        WHERE FEED_CODE = #{feedCode}
+          AND DELETE_YN = 0
+
+    </select>
+
+
+    <!-- 댓글 좋아요 개수 -->
+    <select id="countCommentLike" resultType="Integer">
+
+        SELECT IFNULL(COUNT(*), 0)
+        FROM COMMENT_LIKE
+        WHERE CMT_CODE = #{cmtCode}
+
+    </select>
+
+
+    <!-- 특정 회원의 피드 좋아요 기록 조회 -->
+    <select id="searchFeedLike"
+            parameterType="com.ss_dam.common.likes.FeedLike"
+            resultType="com.ss_dam.common.likes.FeedLike">
+
+        SELECT
+            FEED_CODE AS feedCode,
+            MEM_CODE AS memCode,
+            CREATED_AT AS createdAt,
+            DELETE_YN AS deleteYn
+        FROM FEED_LIKE
+        WHERE FEED_CODE = #{feedCode}
+          AND MEM_CODE = #{memCode}
+
+    </select>
+
+
+    <!-- 피드 좋아요 등록 -->
+    <insert id="registerFeedLike"
+            parameterType="com.ss_dam.common.likes.FeedLike">
+
+        INSERT INTO FEED_LIKE (
+            FEED_CODE,
+            MEM_CODE,
+            CREATED_AT,
+            DELETE_YN
+        )
+        VALUES (
+            #{feedCode},
+            #{memCode},
+            CURDATE(),
+            0
+        )
+
+    </insert>
+
+
+    <!-- 취소했던 피드 좋아요 다시 활성화 -->
+    <update id="updateFeedLike"
+            parameterType="com.ss_dam.common.likes.FeedLike">
+
+        UPDATE FEED_LIKE
+        SET DELETE_YN = 0,
+            CREATED_AT = CURDATE()
+        WHERE FEED_CODE = #{feedCode}
+          AND MEM_CODE = #{memCode}
+
+    </update>
+
+
+    <!-- 피드 좋아요 취소 -->
+    <update id="deleteFeedLike"
+            parameterType="com.ss_dam.common.likes.FeedLike">
+
+        UPDATE FEED_LIKE
+        SET DELETE_YN = 1
+        WHERE FEED_CODE = #{feedCode}
+          AND MEM_CODE = #{memCode}
+
+    </update>
+
 </mapper>

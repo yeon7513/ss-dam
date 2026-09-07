@@ -5,153 +5,216 @@
 
 <mapper namespace="challenge">
 
-  <!-- 전체 조회 -->
-  <select id="searchChallenges" parameterType="String" resultType="Challenge">
-    SELECT *
-    FROM CHALLENGE
-    WHERE DELETE_YN = false
-    <!-- pregressStatus 값이 넘어왔을 떄 조건 추가 -->
-    <if test="progressStatus != null and progressStatus != ''">
-    	AND PROGRESS_STATUS = #{progressStatus}
-    </if>
-    ORDER BY CREATED_AT DESC
-  </select>
+	<!-- 전체 조회 -->
+	<select id="searchChallenges" parameterType="String"
+		resultType="Challenge">
+		SELECT *
+		FROM CHALLENGE
+		WHERE DELETE_YN = false
+		<!-- pregressStatus 값이 넘어왔을 떄 조건 추가 -->
+		<if test="progressStatus != null and progressStatus != ''">
+			AND PROGRESS_STATUS = #{progressStatus}
+		</if>
+		ORDER BY CREATED_AT DESC
+	</select>
 
-  <!-- 상세 조회 -->
-  <select id="searchChallengeByCode"
-          parameterType="int"
-          resultType="Challenge">
+	<!-- 상세 조회 -->
+	<select id="searchChallengeByCode" parameterType="int"
+		resultType="Challenge">
 
-    SELECT *
-    FROM CHALLENGE
-    WHERE CODE = #{code}
-    AND DELETE_YN = false
-  </select>
+		SELECT *
+		FROM CHALLENGE
+		WHERE CODE = #{code}
+		AND DELETE_YN = false
+	</select>
 
-  <!-- 등록 -->
-  <insert id="registerChallenge"
-          parameterType="Challenge">
+	<!-- 등록 -->
+	<insert id="registerChallenge" parameterType="Challenge">
 
-    INSERT INTO CHALLENGE (
-    ADM_CODE,
-    TITLE,
-    CONTENT,
-    START_DATE,
-    END_DATE,
-    POST_STATUS,
-    PROGRESS_STATUS,
-    CREATED_BY,
-    CREATED_AT,
-    DELETE_YN
-    ) VALUES (
-    #{admCode},
-    #{title},
-    #{content},
-    #{startDate},
-    #{endDate},
-    #{postStatus},
-    #{progressStatus},
-    #{createdBy},
-    NOW(),
-    false
-    )
-  </insert>
+		INSERT INTO CHALLENGE (
+		ADM_CODE,
+		TITLE,
+		CONTENT,
+		START_DATE,
+		END_DATE,
+		POST_STATUS,
+		PROGRESS_STATUS,
+		CREATED_BY,
+		CREATED_AT,
+		DELETE_YN
+		) VALUES (
+		#{admCode},
+		#{title},
+		#{content},
+		#{startDate},
+		#{endDate},
+		#{postStatus},
+		#{progressStatus},
+		#{createdBy},
+		NOW(),
+		false
+		)
+	</insert>
 
-  <!-- 수정 -->
-  <update id="updateChallenge"
-          parameterType="Challenge">
+	<!-- 수정 -->
+	<update id="updateChallenge" parameterType="Challenge">
 
-    UPDATE CHALLENGE
-    SET
-    TITLE = #{title},
-    CONTENT = #{content},
-    START_DATE = #{startDate},
-    END_DATE = #{endDate},
-    POST_STATUS = #{postStatus},
-    PROGRESS_STATUS = #{progressStatus},
-    DELETE_YN = #{deleteYn},
-    UPDATED_AT = NOW()
-    WHERE CODE = #{code}
-  </update>
+		UPDATE CHALLENGE
+		SET
+		TITLE = #{title},
+		CONTENT = #{content},
+		START_DATE = #{startDate},
+		END_DATE = #{endDate},
+		POST_STATUS = #{postStatus},
+		PROGRESS_STATUS = #{progressStatus},
+		DELETE_YN = #{deleteYn},
+		UPDATED_AT = NOW()
+		WHERE CODE = #{code}
+	</update>
 
-  <!-- 삭제 -->
-  <update id="deleteChallenge"
-          parameterType="int">
+	<!-- 삭제 -->
+	<update id="deleteChallenge" parameterType="int">
 
-    UPDATE CHALLENGE
-    SET DELETE_YN = true
-    WHERE CODE = #{code}
-  </update>
+		UPDATE CHALLENGE
+		SET DELETE_YN = true
+		WHERE CODE = #{code}
+	</update>
 
-  <!-- 인기 챌린지 TOP 3 -->
-  <select id="searchPopularChallenges" resultType="Challenge">
-    SELECT
-    c.CODE,
-    c.ADM_CODE,
-    c.TITLE,
-    c.CONTENT,
-    c.START_DATE,
-    c.END_DATE,
-    c.POST_STATUS,
-    c.PROGRESS_STATUS,
-    c.CREATED_AT,
-    c.UPDATED_AT,
-    c.DELETE_YN,
-    COUNT(ce.MEM_CODE) AS participantCount
-    <!-- 리눅스 서버에 DB가 올라가 있기 때문에 테이블명은 대문자로 -->
-    FROM CHALLENGE c
-    LEFT JOIN CHALLENGE_ENTRY ce
-    ON c.CODE = ce.CHAL_CODE    
-    WHERE c.DELETE_YN = false
-    GROUP BY
-    c.CODE,
-    c.ADM_CODE,
-    c.TITLE,
-    c.CONTENT,
-    c.START_DATE,
-    c.END_DATE,
-    c.POST_STATUS,
-    c.PROGRESS_STATUS,
-    c.CREATED_AT,
-    c.UPDATED_AT,
-    c.DELETE_YN
-    ORDER BY participantCount DESC, c.CREATED_AT DESC
-    LIMIT 3
-  </select>
+	<!-- 인기 챌린지 TOP 3 -->
+	<select id="searchPopularChallenges" resultType="Challenge">
+		SELECT
+		c.CODE,
+		c.ADM_CODE,
+		c.TITLE,
+		c.CONTENT,
+		c.START_DATE,
+		c.END_DATE,
+		c.POST_STATUS,
+		c.PROGRESS_STATUS,
+		c.CREATED_AT,
+		c.UPDATED_AT,
+		c.DELETE_YN,
+		COUNT(ce.MEM_CODE) AS participantCount
+		<!-- 리눅스 서버에 DB가 올라가 있기 때문에 테이블명은 대문자로 -->
+		FROM CHALLENGE c
+		LEFT JOIN CHALLENGE_ENTRY ce
+		ON c.CODE = ce.CHAL_CODE
+		WHERE c.DELETE_YN = false
+		GROUP BY
+		c.CODE,
+		c.ADM_CODE,
+		c.TITLE,
+		c.CONTENT,
+		c.START_DATE,
+		c.END_DATE,
+		c.POST_STATUS,
+		c.PROGRESS_STATUS,
+		c.CREATED_AT,
+		c.UPDATED_AT,
+		c.DELETE_YN
+		ORDER BY participantCount DESC, c.CREATED_AT DESC
+		LIMIT 3
+	</select>
 
-  <!-- 최신 등록 챌린지 1개 -->
-  <select id="searchLatestChallenge" resultType="Challenge">
-    SELECT
-    c.CODE,
-    c.ADM_CODE,
-    c.TITLE,
-    c.CONTENT,
-    c.START_DATE,
-    c.END_DATE,
-    c.POST_STATUS,
-    c.PROGRESS_STATUS,
-    c.CREATED_AT,
-    c.UPDATED_AT,
-    c.DELETE_YN,
-    COUNT(ce.MEM_CODE) AS participantCount
-    FROM CHALLENGE c
-    LEFT JOIN CHALLENGE_ENTRY ce
-    ON c.CODE = ce.CHAL_CODE    
-    WHERE c.DELETE_YN = false
-    GROUP BY
-    c.CODE,
-    c.ADM_CODE,
-    c.TITLE,
-    c.CONTENT,
-    c.START_DATE,
-    c.END_DATE,
-    c.POST_STATUS,
-    c.PROGRESS_STATUS,
-    c.CREATED_AT,
-    c.UPDATED_AT,
-    c.DELETE_YN
-    ORDER BY c.CREATED_AT DESC
-    LIMIT 1
-  </select>
+	<!-- 최신 등록 챌린지 1개 -->
+	<select id="searchLatestChallenge" resultType="Challenge">
+		SELECT
+		c.CODE,
+		c.ADM_CODE,
+		c.TITLE,
+		c.CONTENT,
+		c.START_DATE,
+		c.END_DATE,
+		c.POST_STATUS,
+		c.PROGRESS_STATUS,
+		c.CREATED_AT,
+		c.UPDATED_AT,
+		c.DELETE_YN,
+		COUNT(ce.MEM_CODE) AS participantCount
+		FROM CHALLENGE c
+		LEFT JOIN CHALLENGE_ENTRY ce
+		ON c.CODE = ce.CHAL_CODE
+		WHERE c.DELETE_YN = false
+		GROUP BY
+		c.CODE,
+		c.ADM_CODE,
+		c.TITLE,
+		c.CONTENT,
+		c.START_DATE,
+		c.END_DATE,
+		c.POST_STATUS,
+		c.PROGRESS_STATUS,
+		c.CREATED_AT,
+		c.UPDATED_AT,
+		c.DELETE_YN
+		ORDER BY c.CREATED_AT DESC
+		LIMIT 1
+	</select>
+
+	<!-- 챌린지 정보 -->
+	<select id="searchChallengeInfoByCode" parameterType="map"
+		resultType="ChallengeInfo">
+		SELECT
+		c.CODE AS code,
+		DATE_FORMAT(c.START_DATE, '%Y.%m.%d') AS startDate,
+		DATE_FORMAT(c.END_DATE, '%Y.%m.%d') AS endDate,
+		DATEDIFF(c.END_DATE, NOW()) AS daysLeft,		
+		(SELECT COUNT(*)
+		FROM CHALLENGE_ENTRY ce
+		WHERE ce.CHAL_CODE = c.CODE
+		AND STATUS = 'JOINED') AS participantCount,
+		c.GOAL AS goal,
+		(SELECT COUNT(*)
+		FROM FEED f
+		WHERE f.CHAL_CODE = c.CODE
+		AND f.MEM_CODE = #{memCode}
+		AND f.DELETE_YN = false) AS proofCount,
+		(DATEDIFF(c.END_DATE, c.START_DATE) + 1) AS totalProofCount,
+		c.POINT_EARNED as pointEarn,
+		EXISTS(
+		SELECT 1
+		FROM CHALLENGE_ENTRY ce
+		WHERE ce.CHAL_CODE = c.CODE
+		AND MEM_CODE = #{memCode}
+		AND STATUS = 'JOINED'
+		) AS isJoined		
+		FROM CHALLENGE c
+		WHERE c.CODE = #{code}
+		AND c.DELETE_YN = false		
+	</select>
+	
+	<!-- 챌린지 참여 -->
+	<insert id="joinChallenge" parameterType="map">
+	INSERT INTO CHALLENGE_ENTRY(
+	CHAL_CODE,
+	MEM_CODE,
+	STATUS,
+	JOINED_AT
+	)
+	SELECT
+	#{code},
+	#{memCode},
+	'JOINED',
+	NOW()
+	FROM DUAL
+	WHERE NOT EXISTS (
+	SELECT 1
+	FROM CHALLENGE_ENTRY
+	WHERE CHAL_CODE = #{code}
+	AND MEM_CODE = #{memCode}
+	)
+	</insert>
+	
+	<!-- 사용자 랭킹-->
+	<!-- 랭킹 산정은 회의 했을 때 좋아요와 조회수를 각각 포인트를 부여해서 합산 후 랭킹을 매기는 시스템으로 가자 했지만 지금 로직이 덜 구현되었기 때문에 임시로 포인트로 박아놓음-->
+	<select id="searchTopRankings" resultType="map">
+	SELECT
+	CODE AS code,
+	NAME AS name,
+	POINT AS point
+	FROM MEMBER_ACCOUNT
+	ORDER BY POINT DESC
+	LIMIT 10
+	</select>
 
 </mapper>

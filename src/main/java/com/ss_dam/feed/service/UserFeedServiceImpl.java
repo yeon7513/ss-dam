@@ -33,6 +33,7 @@ public class UserFeedServiceImpl implements UserFeedService {
   @Autowired
   ImageService imageService;
 
+
   // 피드 목록 조회
   @Override
   public List<UserFeedView> loadFeeds(Pager pager, Long memberCode) {
@@ -44,6 +45,7 @@ public class UserFeedServiceImpl implements UserFeedService {
 
     return userFeedDao.loadFeeds(params);
   }
+
 
   // 피드 단일 상세 조회 -> 아무나 볼 수 있는 단순 게시글
   @Override
@@ -61,6 +63,7 @@ public class UserFeedServiceImpl implements UserFeedService {
 
     return feedDetail;
   }
+
 
   // 피드 등록
   @Transactional
@@ -81,6 +84,7 @@ public class UserFeedServiceImpl implements UserFeedService {
     return newFeedCode;
   }
 
+
   // 수정할 피드 조회 -> 사용자가 작성한 피드만 조회
   @Override
   public FeedEditView findFeedDetailForEdit(Long feedCode, Long memberCode) {
@@ -90,6 +94,7 @@ public class UserFeedServiceImpl implements UserFeedService {
 
     return userFeedDao.findFeedDetailForEdit(params);
   }
+
 
   // 피드 수정 -> 피드 포함, 해시태그, 이미지
   @Transactional
@@ -131,8 +136,13 @@ public class UserFeedServiceImpl implements UserFeedService {
     params.put("updatedBy", updatedBy);
 
     userFeedDao.deleteFeed(params);
+
+    // 26.09.04
+    // 마켓쪽 삭제 구현하다 깨달음.
+    // 삭제 시에도 피드에 종속된 이미지, 해시태그를 지워야 하지 않나..?
   }
 
+  // ========================================================
 
   // 해시태그 등록 메소드
   private void registerHashtags(List<String> hashtags, Long feedCode) {

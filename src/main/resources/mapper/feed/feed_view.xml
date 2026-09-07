@@ -54,6 +54,8 @@
     </collection>
   </resultMap>
 
+  <!-- ================================================== -->
+
   <!-- 사용자가 사용하는 검색 필터 -->
   <sql id="UserSearchFiller">
 
@@ -65,7 +67,7 @@
   </sql>
 
   <!-- 공통 작성자 & 통계 데이터 JOIN 절 -->
-  <sql id="feedCommonJoins">
+  <sql id="FeedCommonJoins">
     <!-- 챌린지 정보 -->
     JOIN CHALLENGE ch ON f.chal_code = ch.code
     <!-- 작성자 정보 -->
@@ -93,7 +95,7 @@
   </sql>
 
   <!-- 공통 피드 기본 컬럼 -->
-  <sql id="feedBasicColumns">
+  <sql id="FeedBasicColumns">
     f.code,
     f.title,
     f.hitcount,
@@ -124,10 +126,10 @@
   <!-- 피드 전체 목록 조회 -->
   <select id="loadFeeds" resultMap="UserFeedViewMap">
     SELECT
-    <include refid="feedBasicColumns" />,
+    <include refid="FeedBasicColumns" />,
     i.path AS thumbnail
     FROM FEED f
-    <include refid="feedCommonJoins" />
+    <include refid="FeedCommonJoins" />
     <!-- 목록 전용 대표 이미지 JOIN -->
     LEFT JOIN IMAGES i ON f.code = i.target_code AND i.type = 'feed' AND i.order_seq = 1
     <!-- 해시태그 -->
@@ -140,11 +142,11 @@
   <!-- 피드 상세 조회 -->
   <select id="findFeedDetailByFeedCode" resultMap="FeedDetailMap">
     SELECT
-    <include refid="feedBasicColumns" />,
+    <include refid="FeedBasicColumns" />,
     f.content,
     i.path AS image_paths
     FROM FEED f
-    <include refid="feedCommonJoins" />
+    <include refid="FeedCommonJoins" />
     <!-- 상세 전용 전체 이미지 JOIN -->
     LEFT JOIN IMAGES i ON f.code = i.target_code AND i.type = 'feed'
     <!-- 해시태그 -->
