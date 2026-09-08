@@ -1,0 +1,388 @@
+/* 공통 변수 */
+$border-color: #e5e7eb;
+$bg-light: #f9fafb;
+$text-dark: #111827;
+$text-sub: #6b7280;
+$badge-red: #ef4444;
+
+.adminLayout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f3f4f6;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: $text-dark;
+}
+
+/* 메인 콘텐츠 영역 (사이드바 제외 순수 대시보드) */
+.mainContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+  .topHeader {
+    height: 70px;
+    background-color: #ffffff;
+    border-bottom: 1px solid $border-color;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+
+    .breadcrumb {
+      font-size: 18px;
+    }
+
+    .userModeBtn {
+      padding: 6px 12px;
+      background-color: #e5e7eb;
+      border: none;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #374151;
+      cursor: pointer;
+    }
+  }
+
+  .dashboardBody {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .pageTitleRow {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      h1 {
+        font-size: 22px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .refreshIcon {
+          font-size: 16px;
+          cursor: pointer;
+        }
+      }
+
+      .timeInfo {
+        font-size: 12px;
+        color: #9ca3af;
+      }
+    }
+  }
+}
+
+/* 카드 공통 규격 */
+.cardBox {
+  background-color: #ffffff;
+  border-radius: 8px;
+  border: 1px solid $border-color;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+
+  .cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+
+    h3 {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .legend {
+      font-size: 11px;
+      color: $text-sub;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
+      .dotDark,
+      .dotLight {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+      }
+      .dotDark {
+        background-color: #4b5563;
+      }
+      .dotLight {
+        background-color: #d1d5db;
+      }
+    }
+  }
+}
+
+/* 상단 1열 레이아웃 Grid (카드 2x2 + 활동로그 + 미처리신고) */
+.topGrid {
+  display: grid;
+  grid-template-columns: 280px 320px 1fr;
+  gap: 16px;
+
+  .statsContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+
+    .statCard {
+      background-color: #ffffff;
+      border: 1px solid $border-color;
+      border-radius: 8px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      .statTitle {
+        font-size: 12px;
+        color: $text-sub;
+      }
+
+      .statValRow {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-top: 8px;
+
+        .statVal {
+          font-size: 16px;
+          font-weight: 700;
+        }
+
+        .statRate {
+          font-size: 11px;
+          padding: 2px 6px;
+          border-radius: 4px;
+          font-weight: 600;
+
+          &.plus {
+            background-color: #f3f4f6;
+            color: #374151;
+          }
+          &.minus {
+            background-color: #fef2f2;
+            color: $badge-red;
+          }
+        }
+      }
+    }
+  }
+
+  .logBox {
+    .logList {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 220px;
+      overflow-y: auto;
+
+      li {
+        font-size: 12px;
+        color: #4b5563;
+        line-height: 1.4;
+      }
+    }
+  }
+
+  .reportBox {
+    .reportTable {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+
+      th {
+        text-align: left;
+        color: $text-sub;
+        padding-bottom: 8px;
+        border-bottom: 1px solid $border-color;
+      }
+
+      td {
+        padding: 8px 0;
+        border-bottom: 1px solid #f3f4f6;
+
+        .userInfo {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+
+          .avatar {
+            width: 24px;
+            height: 24px;
+            background-color: #e5e7eb;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+          }
+
+          .userText {
+            display: flex;
+            flex-direction: column;
+            strong {
+              font-size: 12px;
+            }
+            small {
+              font-size: 10px;
+              color: $text-sub;
+            }
+          }
+        }
+
+        .badge {
+          background-color: #f3f4f6;
+          padding: 2px 6px;
+          border-radius: 4px;
+          font-size: 11px;
+        }
+
+        &.descTd {
+          max-width: 180px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          color: $text-sub;
+        }
+      }
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 12px;
+      font-size: 12px;
+      color: $text-sub;
+
+      span {
+        cursor: pointer;
+        &.activePage {
+          font-weight: 700;
+          color: $text-dark;
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+/* 중단 차트 3열 레이아웃 (자리만 확보) */
+.middleGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+
+  .chartPlaceholder {
+    height: 200px;
+    border: 1px dashed $border-color;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9ca3af;
+    font-size: 13px;
+    background-color: #fafafa;
+  }
+}
+
+/* 하단 2열 레이아웃 */
+.bottomGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+
+  .regionList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+
+      .regionVal {
+        display: flex;
+        gap: 8px;
+        small {
+          color: $text-sub;
+        }
+      }
+    }
+  }
+
+  .sellerFlex {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+
+    .donutPlaceholder {
+      flex: 1;
+      height: 160px;
+      border: 1px dashed $border-color;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #9ca3af;
+      font-size: 12px;
+      background-color: #fafafa;
+    }
+
+    .sellerList {
+      flex: 1;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      li {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+
+        .sellerName {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+
+          .dot {
+            width: 6px;
+            height: 6px;
+            background-color: #9ca3af;
+            border-radius: 50%;
+          }
+        }
+
+        .sellerVal {
+          display: flex;
+          gap: 8px;
+
+          .plus {
+            color: #374151;
+          }
+          .minus {
+            color: $badge-red;
+          }
+        }
+      }
+    }
+  }
+}
