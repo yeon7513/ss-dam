@@ -67,12 +67,50 @@ public class AdminProductController {
     //3. 보관 기간 종료 /	나중에 보관 정책을 정한 뒤 자동 정리 구현
     //2번, 3번 기능 구현
   
-  //2. 관리자 상품 단건 삭제 + 처리 사유
+  //2. 관리자 상품 단건 삭제 
+    // + 처리 사유 
+    // + 처리 상태 4가지 중 하나 
+
+    //
+
   @DeleteMapping("/{prodCode}")
   public ResponseEntity<ApiResponse<Void>> deleteProduct(
     @PathVariable Long prodCode,
-    @RequestParam Long memCode,
-    @Valid @RequestBody ProductDelete request) {
+    @Valid @RequestBody ProductDelete request,
+    @RequestParam Long memCode
+    /* @RequstParam Long memCode 나중에 수정
+     * HttpSession session
+     */
+
+    ) {
+
+      /* 나중에 추가
+       * Login loginUser = (Login) session.getAttribute("loginUser");
+       * if (loginUser == null) {
+       *    throw new ResponseStatusException(
+       *     HttpStatus.UNAUTHORIZED, "로그인이 필요합니다"); }
+       * 
+       * //ADMIN, SUPER_ADMIN은 예시
+       * //ADMIN_ACCOUNT.ROLE에 실제 저장하는 값에 맞추기
+       * String role = loginUser.getRole();
+       * 
+       * if(!"ADMIN".equals(role) && !"SUPER_ADMIN".equals(role)) {
+       *    throw new ResponseStatusException(
+       *      HttpStatus.FORBIDDEN,
+       *       "관리자만 상품을 삭제할 수 있습니다"
+       *     );
+       *   }
+       * 
+       * Long admCode = loginUser.getCode();
+       * 
+       * if(admCode == null) {
+       *    throw new ResponseStatusException(
+       *      HttpStatus.UNAUTHORIZED,
+       *      "관리자 로그인 정보를 확인할 수 없습니다"
+       *    );
+       *  } 
+       * 
+       */
 
       adminProductService.deleteProduct
         (prodCode, 
@@ -87,8 +125,6 @@ public class AdminProductController {
     //세션 이용 X -> memCode이용 
     // memCode로 적어도 service에서 admCode 사용 가능, 변수 이름이 달라도 세 번째 인자로 전달
 
-  //관리자 권한 확인 추가 
-  
 
 
 
