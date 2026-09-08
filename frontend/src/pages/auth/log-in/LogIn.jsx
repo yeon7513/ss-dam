@@ -41,7 +41,7 @@ const LogIn = () => {
           alert("관리자 계정으로 로그인");
           navigate("/admin");
         } else {
-          alert(`${userName}님 환영`);
+          alert(`${userName}님 환영합니다!`);
           navigate("/");
         }
       } else {

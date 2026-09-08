@@ -24,4 +24,10 @@
   opacity: 0.6;
   margin: 0;
   cursor: pointer;
+
+  transition: color 0.2s ease-in-out;
+
+  &:hover {
+    color: $point-70;
+  }
 }
