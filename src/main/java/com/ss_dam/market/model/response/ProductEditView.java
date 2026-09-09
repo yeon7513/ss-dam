@@ -12,8 +12,8 @@ public class ProductEditView {
   // 26.09.03
   // -> 지금 생각해보니 카테고리 관련해서 이미 엔드포인트를 만들어
   // 따로 렌더링을 하고있는데, 이 부분이 필요할까? 의문이 듦.
-  private Long mainCategoryName;
-  private Long subCategoryName;
+  private Long mainCategoryCode;
+  private Long subCategoryCode;
 
   // 이미지 리스트
   private List<String> imagePaths;
@@ -43,21 +43,6 @@ public class ProductEditView {
     this.content = content;
   }
 
-  public Long getMainCategoryName() {
-    return mainCategoryName;
-  }
-
-  public void setMainCategoryName(Long mainCategoryName) {
-    this.mainCategoryName = mainCategoryName;
-  }
-
-  public Long getSubCategoryName() {
-    return subCategoryName;
-  }
-
-  public void setSubCategoryName(Long subCategoryName) {
-    this.subCategoryName = subCategoryName;
-  }
 
   public List<String> getImagePaths() {
     return imagePaths;
@@ -73,5 +58,21 @@ public class ProductEditView {
 
   public void setPrice(int price) {
     this.price = price;
+  }
+
+  public Long getMainCategoryCode() {
+    return mainCategoryCode;
+  }
+
+  public void setMainCategoryCode(Long mainCategoryCode) {
+    this.mainCategoryCode = mainCategoryCode;
+  }
+
+  public Long getSubCategoryCode() {
+    return subCategoryCode;
+  }
+
+  public void setSubCategoryCode(Long subCategoryCode) {
+    this.subCategoryCode = subCategoryCode;
   }
 }

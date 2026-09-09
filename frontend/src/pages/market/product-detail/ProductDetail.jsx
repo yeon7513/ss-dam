@@ -1,12 +1,14 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useLoadData } from "../../../hooks/useLoadData.js";
 import MarketSideNav from "../../../components/market/side-nav/MarketSideNav.jsx";
 import Slide from "../../../components/common/slide/Slide.jsx";
 import { IoHeartSharp } from "react-icons/io5";
 import styles from "./ProductDetail.module.scss";
+import Button from "../../../components/common/button/Button.jsx";
 
 const ProductDetail = () => {
+  const navigate = useNavigate();
   const { code } = useParams();
 
   const { data, loading, error } = useLoadData(`/api/market/products/${code}`)
@@ -23,6 +25,10 @@ const ProductDetail = () => {
 
   console.log(detail);
 
+  const handleClickDeletePost = () => {
+    console.log("거래글 삭제");
+  }
+
   return (
     <main className={styles.wrap}>
       {/* 사이드 메뉴 */}
@@ -31,6 +37,7 @@ const ProductDetail = () => {
       <div className={styles.container}>
         {/* 브레드크럼 */}
         <div>
+          <button type="button" onClick={() => navigate("/market")}>목록으로</button>
           브레드크럼
         </div>
 
@@ -62,6 +69,12 @@ const ProductDetail = () => {
               </li>
             </ul>
           </div>
+        </div>
+
+        {/* 수정 & 삭제 버튼 */}
+        <div>
+          <Link to={`/market/edit/${code}`}>수정</Link>
+          <Button onClick={handleClickDeletePost}>삭제</Button>
         </div>
 
       </div>

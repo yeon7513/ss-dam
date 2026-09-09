@@ -4,7 +4,9 @@ public class MemberProfile {
   private Long code; // 회원 고유 번호
   private String id; // 아이디
   private int rating; // 등급
-  private int ranking; // 랭킹
+
+  // 회원 랭킹
+  private int ranking;
 
   // 프로필 사진
   private String profileImage;
@@ -33,19 +35,19 @@ public class MemberProfile {
     this.rating = rating;
   }
 
-  public int getRanking() {
-    return ranking;
-  }
-
-  public void setRanking(int ranking) {
-    this.ranking = ranking;
-  }
-
   public String getProfileImage() {
     return profileImage;
   }
 
   public void setProfileImage(String profileImage) {
     this.profileImage = profileImage;
+  }
+
+  public int getRanking() {
+    return ranking;
+  }
+
+  public void setRanking(int ranking) {
+    this.ranking = ranking;
   }
 }

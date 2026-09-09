@@ -165,6 +165,8 @@ public class ImageServiceImpl implements ImageService {
   public void updateImages(Long targetCode, String type, List<MultipartFile> images,
       List<Integer> newImageOrders, List<String> imagePaths, List<Integer> oldImageOrders) {
 
+    System.out.println("images: " + images);
+
     // DB에서 등록된 이미지 조회
     List<Images> existingImages = findImagesByCode(type, targetCode);
 

@@ -1,11 +1,13 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Editor from "../../../components/common/editor/Editor";
 import Hashtag from "../../../components/feed/hashtag/Hashtag";
 import styles from "./FeedRegister.module.scss";
 import { useLoadData } from "../../../hooks/useLoadData.js";
 import { useSubmitData } from "../../../hooks/useSubmitData.js";
-import { createFeedFormData } from "../../../utils/createFeedFormData.js";
+import { createFormData } from "../../../utils/createFormData.js";
+import SelectBox from "../../../components/forms/select-box/SelectBox.jsx";
+import { handleSetField } from "../../../utils/changeHandler.js";
 
 /* 피드 등록 */
 const FeedRegister = () => {
@@ -57,7 +59,7 @@ const FeedRegister = () => {
   // 서브밋 핸들러
   const handleRegisterFeed = async (newPost) => {
     try {
-      const formData = createFeedFormData(newPost);
+      const formData = createFormData(newPost);
       const { data: newCode, success } = await handleSubmit(formData);
 
       // 값이 있을 경우
@@ -82,7 +84,15 @@ const FeedRegister = () => {
           typeName="chalCode"
           post={post}
           setPost={setPost}
-          categories={categories}
+          selectCategoryBox={
+            <SelectBox
+              name="chalCode"
+              options={categories}
+              selectedValue={post?.chalCode}
+              placeholder="챌린지 선택"
+              onChange={e => handleSetField(e, setPost)}
+            />
+          }
           onSubmit={handleRegisterFeed}
         >
           <div className={styles.hash}>
