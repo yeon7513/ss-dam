@@ -8,10 +8,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ss_dam.common.ApiResponse;
 
 //관리자 대시보드
+//대시보드 요약 카드와 통계 조회
 
 @RestController
 @RequestMapping("/api/admin/")
-public class AdminController {
+public class AdminDashboardController {
 
 	@GetMapping("/check")
 	public ResponseEntity<ApiResponse<Void>> checkAdmin(){

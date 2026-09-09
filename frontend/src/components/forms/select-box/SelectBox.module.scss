@@ -1,0 +1,8 @@
+@use "/src/scss/variables.scss" as *;
+@use "/src/scss/mixin.scss" as mix;
+
+.selectWrap {
+  > select {
+    padding: 0.5rem;
+  }
+}

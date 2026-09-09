@@ -1,8 +1,9 @@
 import styles from "./TabMenus.module.scss";
+import cn from "classnames";
 
-const TabMenus = ({ tabs, activeStatus, onTabChange }) => {
+const TabMenus = ({ tabs, activeStatus, onTabChange, className }) => {
   return (
-    <div className={styles.tabContainer}>
+    <div className={cn(styles.tabContainer, className)}>
       {tabs.map((tab) => (
         <button
           key={tab.value}

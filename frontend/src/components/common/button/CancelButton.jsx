@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import Button from "./Button.jsx";
 
 function CancelButton({
   targetUrl = '/',
@@ -15,9 +16,9 @@ function CancelButton({
   };
 
   return (
-    <button type="button" className={className} onClick={handleCancel}>
+    <Button type="button" className={className} onClick={handleCancel}>
       {children}
-    </button>
+    </Button>
   );
 }
 

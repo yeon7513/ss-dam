@@ -3,28 +3,23 @@ import { useState } from "react";
 import { handleSetField } from "../../../utils/changeHandler";
 import TextInput from "../../forms/text-input/TextInput";
 import CancelButton from "../button/CancelButton";
-import SelectBox from "./../../forms/select-box/SelectBox";
 import Button from "./../button/Button";
 import UploadImage from "./../upload-images/UploadImages";
 import styles from "./Editor.module.scss";
 
 function Editor({
-  typeName, // 분류 코드 (FK)
-  categories, // 카테고리명
-  selectedValue,
+  selectCategoryBox, // 카테고리 선택
   title,
   children, // 해시태그용 (피드)
   onSubmit, // AJAX 전송 핸들러
   post = {},
   setPost,
+  cancelUrl = "/feed",
+  submitText = "등록",
 }) {
   const [selectedImages, setSelectedImages] = useState(post?.imagePaths || []);
 
-  // 등록, 수정 모드 판별
-  const isEditMode = post?.code;
-  const modeText = isEditMode ? "수정" : "등록";
-
-  // 전송
+  // 입력된 데이터 전송
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -32,6 +27,8 @@ function Editor({
       ...post,
       images: selectedImages,
     };
+
+    console.log("resultData: ", resultData);
 
     setPost(resultData);
     onSubmit(resultData);
@@ -42,12 +39,9 @@ function Editor({
       <h3>{title}</h3>
       <div className={styles.container}>
         <div className={styles.title}>
-          <SelectBox
-            name={typeName}
-            options={categories}
-            selectedValue={post?.[typeName] ?? selectedValue ?? ""}
-            onChange={(e) => handleSetField(e, setPost)}
-          />
+          {/* 카테고리 선택용 컴포넌트 영역 */}
+          {selectCategoryBox && (selectCategoryBox)}
+          {/* 제목 */}
           <TextInput
             name="title"
             placeholder="제목을 입력하세요."
@@ -73,9 +67,9 @@ function Editor({
         {children}
         <div className={styles.submit}>
           <Button onClick={handleSubmit}>
-            {typeName === "chalCode" ? "피드" : "거래글"} {modeText}
+            {submitText}
           </Button>
-          <CancelButton targetUrl={typeName === "chalCode" ? "/feed" : "/market"}>취소</CancelButton>
+          <CancelButton targetUrl={cancelUrl}>취소</CancelButton>
         </div>
       </div>
     </div>
