@@ -3,7 +3,7 @@ import cn from "classnames";
 
 const TabMenus = ({ tabs, activeStatus, onTabChange, className }) => {
   return (
-    <div className={cn(styles.tabs, className)}>
+    <div className={cn(styles.tabContainer, className)}>
       {tabs.map((tab) => (
         <button
           key={tab.value}

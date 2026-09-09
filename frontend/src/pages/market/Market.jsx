@@ -3,8 +3,8 @@ import styles from "../market/Market.module.scss";
 import ProductCard from "../../components/market/product-card/ProductCard.jsx";
 import MarketSideNav from "../../components/market/side-nav/MarketSideNav.jsx";
 import SearchBox from "../../components/common/search-box/SearchBox.jsx";
-import TabMenus from "../../components/common/tab-manus/TabMenus.jsx";
 import { useState } from "react";
+import TabMenus from "../../components/common/tab-menus/TabMenus.jsx";
 
 const SORT_MENU = [
   { label: "최신등록순", value: "createdAt" },
