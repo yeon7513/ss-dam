@@ -2,7 +2,7 @@
 
 // isFixed={false}일 때 기본 영역 차지
 .sidebar {
-  width: 300px;
+  width: 250px;
   flex-shrink: 0; // 메인 콘텐츠가 늘어나도 240px 영역 유지
   min-height: 100vh;
   background-color: $color-white;

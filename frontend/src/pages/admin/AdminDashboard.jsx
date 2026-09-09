@@ -1,69 +1,93 @@
 import React from "react";
-// 기존에 만들어진 Sidebar 컴포넌트 경로
+import Card from "../../components/common/card/Card.jsx";
 import Sidebar from "../../layout/sidebar/Sidebar.jsx";
+import AdminHeader from "../../components/admin/AdminHeader.jsx";
 import styles from "./AdminDashboard.module.scss";
 
-// 피그마 기반 Mock Data
-const mockStats = [
-  { title: "전체 회원", value: "11.8M", rate: "+2.5%" },
-  { title: "신규 회원", value: "8.236K", rate: "-1.2%" },
-  { title: "신규 피드", value: "2.352M", rate: "+11%" },
-  { title: "신규 거래", value: "8K", rate: "+5.2%" },
+// 더미데이터
+const summaryData = [
+  // 요약 데이터
+  { title: "전체 회원 수", value: "12,450명", rate: "+5.2%" },
+  { title: "오늘 신규 가입", value: "128명", rate: "+12.0%" },
+  { title: "진행 중 챌린지", value: "42개", rate: "-2.1%" },
+  { title: "일일 참여 건수", value: "1,890건", rate: "+8.4%" },
 ];
 
-const mockLogs = Array(10).fill(
-  "2026년 4월 10일 [운영] 김철수 관리자가 이영희 회원의 활동을 정지했습니다.",
-);
-
-const mockReports = [
-  { reason: "[피드] 욕설" },
-  { reason: "[피드] 도배" },
-  { reason: "[회원] 프로필" },
-  { reason: "[피드] 부적절" },
-  { reason: "[회원] 아이디" },
-  { reason: "[마켓] 광고" },
-  { reason: "[마켓] 광고" },
-  { reason: "[마켓] 기타" },
-].map((item) => ({
-  user: "Jane Doe",
-  role: "Senior Designer",
-  reason: item.reason,
-  desc: "Egestas elit dui scelerisque ut eu purus aliquam vitae habita...",
-  date: "2026/04/10",
-}));
-
-const mockRegionData = [
-  { name: "서울특별시", percent: "27.5%", count: "4.5M" },
-  { name: "경기도", percent: "11.2%", count: "2.3M" },
-  { name: "부산광역시", percent: "9.4%", count: "2M" },
-  { name: "대구광역시", percent: "8%", count: "1.7M" },
-  { name: "인천광역시", percent: "7.9%", count: "1.6M" },
-  { name: "광주광역시", percent: "6.1%", count: "1.2M" },
-  { name: "대전광역시", percent: "5.9%", count: "1M" },
+const adminLogsData = [
+  // 관리자활동로그 데이터
+  "[14:20] admin1님이 신고 처리 완료",
+  "[13:45] admin2님이 신규 챌린지 등록 승인",
+  "[11:10] system 자동 백업 완료",
+  "[09:30] admin1님이 회원 상태 변경 (제재)",
 ];
 
-const mockSellers = [
-  { name: "User Name", value: "$1.2M", rate: "+8.2%" },
-  { name: "User Name", value: "$800K", rate: "+7%" },
-  { name: "User Name", value: "$645K", rate: "+2.5%" },
-  { name: "User Name", value: "$590K", rate: "-6.5%" },
-  { name: "User Name", value: "$342K", rate: "+1.7%" },
+const pendingReportsData = [
+  // 미처리신고 데이터
+  {
+    user: "김철수",
+    role: "일반회원",
+    reason: "부적절한 게시글",
+    desc: "광고성 도배글 작성...",
+    date: "2026-04-10",
+  },
+  {
+    user: "이영희",
+    role: "판매자",
+    reason: "허위 정보",
+    desc: "상품 정보 다름...",
+    date: "2026-04-09",
+  },
+  {
+    user: "박민수",
+    role: "일반회원",
+    reason: "욕설/비방",
+    desc: "댓글 내 욕설 포함...",
+    date: "2026-04-09",
+  },
+  {
+    user: "최민수",
+    role: "일반회원",
+    reason: "욕설/비방",
+    desc: "댓글 내 욕설 포함...",
+    date: "2026-04-09",
+  },
+  {
+    user: "이민수",
+    role: "일반회원",
+    reason: "욕설/비방",
+    desc: "댓글 내 욕설 포함...",
+    date: "2026-04-09",
+  },
+];
+
+const ParticipationData = [
+  // 지역별참여도 데이터
+  { name: "서울/경기", percent: "45%", count: "(5,600명)" },
+  { name: "부산/경남", percent: "22%", count: "(2,740명)" },
+  { name: "대구/경북", percent: "15%", count: "(1,860명)" },
+  { name: "인천/강원", percent: "18%", count: "(2,250명)" },
+];
+
+const topSellersData = [
+  // 우수판매자 데이터
+  { name: "에코라이프", value: "1,240건", rate: "+12%" },
+  { name: "클린마켓", value: "980건", rate: "+5%" },
+  { name: "제로웨이스트", value: "850건", rate: "-1%" },
 ];
 
 const AdminDashboard = () => {
   return (
     <div className={styles.adminLayout}>
-      {/* 1. 이미 구현된 공통 Sidebar 컴포넌트 배치 */}
+      {/* 사이드바 */}
       <Sidebar isFixed={false} />
 
-      {/* 2. 우측 메인 콘텐츠 영역 */}
+      {/* 우측 메인 콘텐츠 */}
       <main className={styles.mainContent}>
-        <header className={styles.topHeader}>
-          <div className={styles.breadcrumb}>🏠</div>
-          <button className={styles.userModeBtn}>사용자 모드 전환</button>
-        </header>
+        {/* 관리자 헤더 */}
+        <AdminHeader />
 
         <div className={styles.dashboardBody}>
+          {/* 페이지 타이틀 */}
           <div className={styles.pageTitleRow}>
             <h1>
               운영 현황 <span className={styles.refreshIcon}>🔄</span>
@@ -71,38 +95,44 @@ const AdminDashboard = () => {
             <span className={styles.timeInfo}>2026-04-10 14:00 기준</span>
           </div>
 
-          {/* 상단 1열: 요약 카드 / 활동 로그 / 미처리 신고 */}
+          {/* 상단 2열 레이아웃 */}
           <div className={styles.topGrid}>
-            <div className={styles.statsContainer}>
-              {mockStats.map((item, index) => (
-                <div key={index} className={styles.statCard}>
-                  <span className={styles.statTitle}>{item.title}</span>
-                  <div className={styles.statValRow}>
-                    <span className={styles.statVal}>{item.value}</span>
-                    <span
-                      className={`${styles.statRate} ${
-                        item.rate.startsWith("-") ? styles.minus : styles.plus
-                      }`}
-                    >
-                      {item.rate}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className={`${styles.cardBox} ${styles.logBox}`}>
-              <div className={styles.cardHeader}>
-                <h3>관리자 활동 로그 ↗</h3>
-              </div>
-              <ul className={styles.logList}>
-                {mockLogs.map((log, index) => (
-                  <li key={index}>{log}</li>
+            {/* 좌측 Column 묶음 */}
+            <div className={styles.leftColumn}>
+              {/* 2x2 요약 카드 영역 */}
+              <div className={styles.statsContainer}>
+                {summaryData.map((item, index) => (
+                  <Card key={index} className={styles.statCard}>
+                    <span className={styles.statTitle}>{item.title}</span>
+                    <div className={styles.statValRow}>
+                      <span className={styles.statVal}>{item.value}</span>
+                      <span
+                        className={`${styles.statRate} ${
+                          item.rate.startsWith("-") ? styles.minus : styles.plus
+                        }`}
+                      >
+                        {item.rate}
+                      </span>
+                    </div>
+                  </Card>
                 ))}
-              </ul>
+              </div>
+
+              {/* 관리자 활동 로그 카드 */}
+              <Card className={styles.logCard}>
+                <div className={styles.cardHeader}>
+                  <h3>관리자 활동 로그 ↗</h3>
+                </div>
+                <ul className={styles.logList}>
+                  {adminLogsData.map((log, index) => (
+                    <li key={index}>{log}</li>
+                  ))}
+                </ul>
+              </Card>
             </div>
 
-            <div className={`${styles.cardBox} ${styles.reportBox}`}>
+            {/* 우측 Column: 미처리 신고 */}
+            <Card className={styles.reportCard}>
               <div className={styles.cardHeader}>
                 <h3>미처리 신고 ↗</h3>
               </div>
@@ -116,7 +146,7 @@ const AdminDashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {mockReports.map((item, index) => (
+                  {pendingReportsData.map((item, index) => (
                     <tr key={index}>
                       <td>
                         <div className={styles.userInfo}>
@@ -147,12 +177,12 @@ const AdminDashboard = () => {
                 <span>11</span>
                 <span>마지막 &gt;</span>
               </div>
-            </div>
+            </Card>
           </div>
 
-          {/* 중단 2열: 차트 레이아웃 영역 (Placeholder) */}
+          {/* 중단 3열: 차트 레이아웃 영역 */}
           <div className={styles.middleGrid}>
-            <div className={styles.cardBox}>
+            <Card className={styles.chartCard}>
               <div className={styles.cardHeader}>
                 <h3>월간 신규 회원</h3>
                 <div className={styles.legend}>
@@ -163,9 +193,9 @@ const AdminDashboard = () => {
               <div className={styles.chartPlaceholder}>
                 <span>[ 월간 신규 회원 차트 영역 ]</span>
               </div>
-            </div>
+            </Card>
 
-            <div className={styles.cardBox}>
+            <Card className={styles.chartCard}>
               <div className={styles.cardHeader}>
                 <h3>전체 챌린지 달성률</h3>
                 <div className={styles.legend}>
@@ -176,9 +206,9 @@ const AdminDashboard = () => {
               <div className={styles.chartPlaceholder}>
                 <span>[ 달성률 도넛 차트 영역 (67%) ]</span>
               </div>
-            </div>
+            </Card>
 
-            <div className={styles.cardBox}>
+            <Card className={styles.chartCard}>
               <div className={styles.cardHeader}>
                 <h3>챌린지 인기 순위</h3>
                 <div className={styles.legend}>
@@ -189,15 +219,17 @@ const AdminDashboard = () => {
               <div className={styles.chartPlaceholder}>
                 <span>[ 원형/방사형 차트 영역 ]</span>
               </div>
-            </div>
+            </Card>
           </div>
 
-          {/* 하단 3열: 지역별 참여도 및 우수 판매자 */}
+          {/* 하단 2열: 지역별 참여도 및 우수 판매자 */}
           <div className={styles.bottomGrid}>
-            <div className={styles.cardBox}>
-              <h3>지역별 참여도</h3>
+            <Card className={styles.bottomCard}>
+              <div className={styles.cardHeader}>
+                <h3>지역별 참여도</h3>
+              </div>
               <ul className={styles.regionList}>
-                {mockRegionData.map((reg, index) => (
+                {ParticipationData.map((reg, index) => (
                   <li key={index}>
                     <span>{reg.name}</span>
                     <div className={styles.regionVal}>
@@ -207,16 +239,18 @@ const AdminDashboard = () => {
                   </li>
                 ))}
               </ul>
-            </div>
+            </Card>
 
-            <div className={styles.cardBox}>
-              <h3>우수 판매자</h3>
+            <Card className={styles.bottomCard}>
+              <div className={styles.cardHeader}>
+                <h3>우수 판매자</h3>
+              </div>
               <div className={styles.sellerFlex}>
                 <div className={styles.donutPlaceholder}>
                   <span>[ 판매자 차트 영역 ]</span>
                 </div>
                 <ul className={styles.sellerList}>
-                  {mockSellers.map((seller, index) => (
+                  {topSellersData.map((seller, index) => (
                     <li key={index}>
                       <span className={styles.sellerName}>
                         <i className={styles.dot}></i> {seller.name}
@@ -237,7 +271,7 @@ const AdminDashboard = () => {
                   ))}
                 </ul>
               </div>
-            </div>
+            </Card>
           </div>
         </div>
       </main>

@@ -1,49 +1,18 @@
-/* 공통 변수 */
-$border-color: #e5e7eb;
-$bg-light: #f9fafb;
-$text-dark: #111827;
-$text-sub: #6b7280;
-$badge-red: #ef4444;
+@use "/src/scss/variables.scss" as *;
 
 .adminLayout {
   display: flex;
   min-height: 100vh;
-  background-color: #f3f4f6;
-  font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  color: $text-dark;
+  background-color: $grayscale-5;
+  font-family: $font-main;
+  color: $grayscale-90;
 }
 
-/* 메인 콘텐츠 영역 (사이드바 제외 순수 대시보드) */
 .mainContent {
   flex: 1;
   display: flex;
   flex-direction: column;
-
-  .topHeader {
-    height: 70px;
-    background-color: #ffffff;
-    border-bottom: 1px solid $border-color;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 24px;
-
-    .breadcrumb {
-      font-size: 18px;
-    }
-
-    .userModeBtn {
-      padding: 6px 12px;
-      background-color: #e5e7eb;
-      border: none;
-      border-radius: 4px;
-      font-size: 12px;
-      font-weight: 600;
-      color: #374151;
-      cursor: pointer;
-    }
-  }
+  width: 100%;
 
   .dashboardBody {
     padding: 24px;
@@ -51,6 +20,7 @@ $badge-red: #ef4444;
     flex-direction: column;
     gap: 20px;
 
+    /* 페이지 타이틀 */
     .pageTitleRow {
       display: flex;
       justify-content: space-between;
@@ -62,140 +32,150 @@ $badge-red: #ef4444;
         display: flex;
         align-items: center;
         gap: 8px;
+        color: $grayscale-100;
 
         .refreshIcon {
-          font-size: 16px;
           cursor: pointer;
         }
       }
 
       .timeInfo {
-        font-size: 12px;
-        color: #9ca3af;
+        font-size: 14px;
+        color: $grayscale-90;
       }
     }
   }
 }
 
-/* 카드 공통 규격 */
-.cardBox {
-  background-color: #ffffff;
-  border-radius: 8px;
-  border: 1px solid $border-color;
-  padding: 18px;
+/* 카드 내부 공통 헤더 스타일 */
+.cardHeader {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
 
-  .cardHeader {
+  h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: $grayscale-100;
+  }
+
+  .legend {
+    font-size: 11px;
+    color: $grayscale-50;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 12px;
+    gap: 6px;
 
-    h3 {
-      font-size: 15px;
-      font-weight: 600;
+    .dotDark,
+    .dotLight {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
     }
-
-    .legend {
-      font-size: 11px;
-      color: $text-sub;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-
-      .dotDark,
-      .dotLight {
-        display: inline-block;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-      }
-      .dotDark {
-        background-color: #4b5563;
-      }
-      .dotLight {
-        background-color: #d1d5db;
-      }
+    .dotDark {
+      background-color: $grayscale-90;
+    }
+    .dotLight {
+      background-color: $grayscale-20;
     }
   }
 }
 
-/* 상단 1열 레이아웃 Grid (카드 2x2 + 활동로그 + 미처리신고) */
+/* 1. 상단 2열 레이아웃 Grid (1 : 2 가변 비율) */
 .topGrid {
   display: grid;
-  grid-template-columns: 280px 320px 1fr;
+  grid-template-columns: 1fr 2fr;
   gap: 16px;
 
-  .statsContainer {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
+  /* 좌측 Column */
+  .leftColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 
-    .statCard {
-      background-color: #ffffff;
-      border: 1px solid $border-color;
-      border-radius: 8px;
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+    /* 2x2 요약 카드 Grid */
+    .statsContainer {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
 
-      .statTitle {
-        font-size: 12px;
-        color: $text-sub;
-      }
-
-      .statValRow {
+      .statCard {
+        height: 90px;
+        padding: 14px;
         display: flex;
+        flex-direction: column;
         justify-content: space-between;
-        align-items: flex-end;
-        margin-top: 8px;
 
-        .statVal {
-          font-size: 16px;
-          font-weight: 700;
+        .statTitle {
+          font-size: 12px;
+          color: $grayscale-50;
         }
 
-        .statRate {
-          font-size: 11px;
-          padding: 2px 6px;
-          border-radius: 4px;
-          font-weight: 600;
+        .statValRow {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-end;
+          margin-top: 8px;
 
-          &.plus {
-            background-color: #f3f4f6;
-            color: #374151;
+          .statVal {
+            font-size: 16px;
+            font-weight: 700;
+            color: $grayscale-100;
           }
-          &.minus {
-            background-color: #fef2f2;
-            color: $badge-red;
+
+          .statRate {
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+
+            &.plus {
+              background-color: $primary-5;
+              color: $primary-50;
+            }
+            &.minus {
+              background-color: $grayscale-5;
+              color: $dan-color;
+            }
           }
         }
       }
     }
-  }
 
-  .logBox {
-    .logList {
-      list-style: none;
-      padding: 0;
-      margin: 0;
+    /* 관리자 활동 로그 카드 */
+    .logCard {
+      height: 200px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      max-height: 220px;
-      overflow-y: auto;
 
-      li {
-        font-size: 12px;
-        color: #4b5563;
-        line-height: 1.4;
+      .logList {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-height: 130px;
+        overflow-y: auto;
+
+        li {
+          font-size: 12px;
+          color: $grayscale-90;
+          line-height: 1.4;
+        }
       }
     }
   }
 
-  .reportBox {
+  /* 우측 Column: 미처리 신고 카드 */
+  .reportCard {
+    height: 408px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
     .reportTable {
       width: 100%;
       border-collapse: collapse;
@@ -203,14 +183,14 @@ $badge-red: #ef4444;
 
       th {
         text-align: left;
-        color: $text-sub;
+        color: $grayscale-50;
         padding-bottom: 8px;
-        border-bottom: 1px solid $border-color;
+        border-bottom: 1px solid $grayscale-20;
       }
 
       td {
         padding: 8px 0;
-        border-bottom: 1px solid #f3f4f6;
+        border-bottom: 1px solid $grayscale-5;
 
         .userInfo {
           display: flex;
@@ -220,40 +200,44 @@ $badge-red: #ef4444;
           .avatar {
             width: 24px;
             height: 24px;
-            background-color: #e5e7eb;
+            background-color: $grayscale-10;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 12px;
+            color: $grayscale-90;
           }
 
           .userText {
             display: flex;
             flex-direction: column;
+
             strong {
               font-size: 12px;
+              color: $grayscale-100;
             }
+
             small {
               font-size: 10px;
-              color: $text-sub;
+              color: $grayscale-50;
             }
           }
         }
 
         .badge {
-          background-color: #f3f4f6;
+          background-color: $grayscale-5;
+          color: $grayscale-90;
           padding: 2px 6px;
           border-radius: 4px;
           font-size: 11px;
         }
 
         &.descTd {
-          max-width: 180px;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
-          color: $text-sub;
+          color: $grayscale-90;
         }
       }
     }
@@ -264,13 +248,14 @@ $badge-red: #ef4444;
       gap: 8px;
       margin-top: 12px;
       font-size: 12px;
-      color: $text-sub;
+      color: $grayscale-50;
 
       span {
         cursor: pointer;
+
         &.activePage {
           font-weight: 700;
-          color: $text-dark;
+          color: $grayscale-100;
           text-decoration: underline;
         }
       }
@@ -278,30 +263,38 @@ $badge-red: #ef4444;
   }
 }
 
-/* 중단 차트 3열 레이아웃 (자리만 확보) */
+/* 2. 중단 차트 3열 레이아웃 Grid */
 .middleGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 16px;
 
-  .chartPlaceholder {
-    height: 200px;
-    border: 1px dashed $border-color;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #9ca3af;
-    font-size: 13px;
-    background-color: #fafafa;
+  .chartCard {
+    height: 280px;
+
+    .chartPlaceholder {
+      height: 200px;
+      border: 1px dashed $grayscale-20;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: $grayscale-50;
+      font-size: 13px;
+      background-color: $background-5;
+    }
   }
 }
 
-/* 하단 2열 레이아웃 */
+/* 3. 하단 2열 레이아웃 Grid */
 .bottomGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, 1fr);
   gap: 16px;
+
+  .bottomCard {
+    height: 240px;
+  }
 
   .regionList {
     list-style: none;
@@ -315,12 +308,14 @@ $badge-red: #ef4444;
       display: flex;
       justify-content: space-between;
       font-size: 13px;
+      color: $grayscale-90;
 
       .regionVal {
         display: flex;
         gap: 8px;
+
         small {
-          color: $text-sub;
+          color: $grayscale-50;
         }
       }
     }
@@ -332,16 +327,16 @@ $badge-red: #ef4444;
     align-items: center;
 
     .donutPlaceholder {
-      flex: 1;
+      width: 240px;
       height: 160px;
-      border: 1px dashed $border-color;
+      border: 1px dashed $grayscale-20;
       border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #9ca3af;
+      color: $grayscale-50;
       font-size: 12px;
-      background-color: #fafafa;
+      background-color: $background-5;
     }
 
     .sellerList {
@@ -357,6 +352,7 @@ $badge-red: #ef4444;
         display: flex;
         justify-content: space-between;
         font-size: 12px;
+        color: $grayscale-90;
 
         .sellerName {
           display: flex;
@@ -366,7 +362,7 @@ $badge-red: #ef4444;
           .dot {
             width: 6px;
             height: 6px;
-            background-color: #9ca3af;
+            background-color: $grayscale-50;
             border-radius: 50%;
           }
         }
@@ -376,10 +372,10 @@ $badge-red: #ef4444;
           gap: 8px;
 
           .plus {
-            color: #374151;
+            color: $primary-50;
           }
           .minus {
-            color: $badge-red;
+            color: $dan-color;
           }
         }
       }
