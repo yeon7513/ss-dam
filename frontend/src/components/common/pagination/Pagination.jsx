@@ -7,7 +7,7 @@ function Pagination({ total, pages, isActive, onChangePage }) {
 
   return <div>
     <button type="button">이전</button>
-    {pages.map(page => (
+    {pages?.map(page => (
       <span>{page}</span>
     ))}
     <button type="button">다음</button>
