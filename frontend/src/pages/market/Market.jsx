@@ -19,11 +19,6 @@ const Market = () => {
   // 목록 데이터
   const { data: products, loading, error, message } = useLoadData(`/api/market/products`);
 
-  // 검색용 카테고리 조회
-  const { data: categories } = useLoadData("/api/market/categories");
-
-  console.log(categories);
-
   // 로딩 및 에러 처리
   if (loading) {
     return <div>다시쓰담 정보를 불러오고 있습니다.</div>;
@@ -31,8 +26,6 @@ const Market = () => {
   if (error) {
     return <div>에러가 발생했습니다. {error}, {message}</div>;
   }
-
-  console.log(products);
 
   const handleClickSort = (sort) => {
     setSort(sort);

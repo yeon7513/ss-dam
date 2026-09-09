@@ -9,8 +9,6 @@ function MarketSideNav() {
 
   const categories = data || [];
 
-  console.log(categories);
-
   if (loading) {
     return <div>카테고리를 불러오는 중입니다.</div>;
   }
