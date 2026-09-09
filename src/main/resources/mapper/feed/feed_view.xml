@@ -165,6 +165,6 @@
     LEFT JOIN FEED_HASHTAG fh ON f.code = fh.feed_code
     WHERE f.code = #{feedCode}
     AND f.mem_code = #{memberCode}
-  </select>
+  </select>  
 
 </mapper>

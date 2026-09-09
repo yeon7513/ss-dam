@@ -17,9 +17,7 @@ const Challenge = () => {
     const fetchChallenges = async () => {
       try {
         const url =
-          activeTab === "ALL"
-            ? "/api/user/challenge"
-            : "/api/user/challenge/popular";
+          activeTab === "ALL" ? "/api/challenge" : "/api/challenge/popular";
 
         const response = await fetch(url);
         if (response.ok) {
@@ -37,7 +35,7 @@ const Challenge = () => {
   useEffect(() => {
     const fetchRnking = async () => {
       try {
-        const response = await fetch("/api/user/challenge/ranking");
+        const response = await fetch("/api/challenge/ranking");
         if (response.ok) {
           const result = await response.json();
           setRanking(result.data || []);

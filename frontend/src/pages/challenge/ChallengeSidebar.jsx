@@ -15,7 +15,7 @@ const ChallengeSidebar = ({ selectedCode, onSelectChallenge }) => {
     const fetchChallenges = async () => {
       try {
         const response = await fetch(
-          `/api/user/challenge?progressStatus=${activeStatus}`,
+          `/api/challenge?progressStatus=${activeStatus}`,
         );
         const result = await response.json();
         console.log("사이드바 API 응답 결과:", result);

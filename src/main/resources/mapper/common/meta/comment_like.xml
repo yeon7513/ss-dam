@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="commentLike">
+
+	<!-- UPSERT -->
+	<insert id="updateCommentLike" parameterType="CommentLike">
+		INSERT INTO
+		COMMENT_LIKE(
+		CMT_CODE,
+		MEM_CODE,
+		CREATED_AT,
+		DELETE_YN
+		) VALUES (
+		#{cmtCode},
+		#{memCode},
+		NOW(),
+		'N'
+		)
+		ON DUPLICATE KEY UPDATE
+		DELETE_YN =	IF(DELETE_YN = 'N', 'Y', 'N')
+	</insert>
+
+	<select id="selectedIsLiked" parameterType="map"
+		resultType="boolean">
+		SELECT COUNT(*) > 0
+		FROM COMMENT_LIKE
+		WHERE CMT_CODE =
+		#{cmtCode}
+		AND MEM_CODE = #{memCode}
+		AND DELETE_YN = 'N'
+	</select>
+
+
+</mapper>

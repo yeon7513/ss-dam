@@ -42,7 +42,6 @@
     WHERE code = #{code}
   </update>
 
-
   <!-- 피드 수정 (관리자) -->
 
 </mapper>
