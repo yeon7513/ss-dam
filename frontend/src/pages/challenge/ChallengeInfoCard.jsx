@@ -28,7 +28,7 @@ const ChallengeInfoCard = ({
     if (!code) return;
 
     try {
-      const response = await fetch(`/api/user/challenge/${code}/info`, {
+      const response = await fetch(`/api/challenge/${code}/info`, {
         credentials: "include",
       });
 
@@ -98,14 +98,11 @@ const ChallengeInfoCard = ({
     }
     try {
       setJoining(true);
-      const response = await fetch(
-        `/api/user/challenge/${infoData.code}/join`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-        },
-      );
+      const response = await fetch(`/api/challenge/${infoData.code}/join`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
 
       const result = await response.json();
 

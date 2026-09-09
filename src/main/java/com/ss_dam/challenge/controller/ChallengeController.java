@@ -25,7 +25,7 @@ import com.ss_dam.common.ApiResponse;
 import jakarta.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping("/api/user/challenge")
+@RequestMapping("/api/challenge")
 public class ChallengeController {
 
 	@Autowired
