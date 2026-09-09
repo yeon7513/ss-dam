@@ -5,6 +5,8 @@ import { useLoadData } from "../../../hooks/useLoadData.js";
 import { useSubmitData } from "../../../hooks/useSubmitData.js";
 import { createFormData } from "../../../utils/createFormData.js";
 import CategorySelectBox from "../../../components/market/category-select-box/CategorySelectBox.jsx";
+import TextInput from "../../../components/forms/text-input/TextInput.jsx";
+import { handleSetField } from "../../../utils/changeHandler.js";
 
 const ProductRegister = () => {
   const navigate = useNavigate();
@@ -51,7 +53,16 @@ const ProductRegister = () => {
             />}
           cancelUrl="/market"
           submitText="물품 등록"
-        />
+        >
+          <div>
+            <label htmlFor="price">가격</label>
+            <TextInput
+              type="text"
+              name="price"
+              id="price"
+              onChange={(e) => handleSetField({ e, setPost })} />
+          </div>
+        </Editor>
       </form>
     </main>
   );
