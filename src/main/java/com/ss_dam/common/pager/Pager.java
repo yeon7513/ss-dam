@@ -10,18 +10,18 @@ public class Pager {
   private int perGroup = 5; // 기본 세팅
 
   // 검색용 키워드
-  private String search;
+  private String searchCode;
   private String keyword;
 
   // 쿼리스트링 설정
   public String getQuery() {
     String query = "";
     // 필터가 있을 경우
-    if (search != null && !search.isEmpty() && keyword != null && !keyword.isEmpty()) {
-      query = "&search=" + search + "&keyword=" + keyword;
+    if (searchCode != null && !searchCode.isEmpty() && keyword != null && !keyword.isEmpty()) {
+      query = "&searchCode=" + searchCode + "&keyword=" + keyword;
     }
     // 필터가 없을 경우
-    if ((search == null || search.isEmpty()) && keyword != null && !keyword.isEmpty()) {
+    if ((searchCode == null || searchCode.isEmpty()) && keyword != null && !keyword.isEmpty()) {
       query = "&keyword=" + keyword;
     }
     return query;
@@ -123,12 +123,12 @@ public class Pager {
     this.keyword = keyword;
   }
 
-  public String getSearch() {
-    return search;
+  public String getSearchCode() {
+    return searchCode;
   }
 
-  public void setSearch(String search) {
-    this.search = search;
+  public void setSearchCode(String searchCode) {
+    this.searchCode = searchCode;
   }
 
 }

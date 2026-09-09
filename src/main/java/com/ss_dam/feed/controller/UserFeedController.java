@@ -56,8 +56,6 @@ public class UserFeedController {
     // -> 로그인하지 않았을 경우는 처음부터 null을 넘겨 무조건 false가 나오게 처리
     Long memberCode = (loginUser != null) ? loginUser.getCode() : null;
 
-    System.out.println("memberCode: " + memberCode);
-
     List<UserFeedView> feeds = userFeedService.loadFeeds(pager, memberCode);
 
     return ResponseEntity.ok(ApiResponse.success("피드 정보 조회 성공", feeds));

@@ -12,8 +12,6 @@ function SearchBox({
   onSubmit,
 }) {
 
-  console.log("options: ", options);
-
   const handleChangeSearchKeyword = (e) => {
     const value = e.target.value;
     onKeywordChange(value);
@@ -28,6 +26,7 @@ function SearchBox({
     <div className={cn(styles.wrap, className)}>
       {options && (
         <SelectBox
+          name="searchCode"
           options={options}
           onChange={(e) => handleChangeSearchCode(e)}
         />
