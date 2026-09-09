@@ -7,6 +7,7 @@ import java.util.List;
 @JsonIgnoreProperties({"thumbnail"})
 public class ProductDetail extends UserProductView {
   private String content; // 본문
+
   private List<String> imagePaths; // 등록한 이미지의 경로 (화면 렌더링용)
 
   // GETTER, SETTER

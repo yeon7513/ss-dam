@@ -22,32 +22,55 @@ const FeedDetail = ({ code, onClose }) => {
 
   const detail = data || {};
 
-  console.log("code: ", code);
-  console.log("detail: ", detail);
+  // 댓글 부분 옮길 것...
+  // const { handleSubmit } = useSubmitData("/api/comments", "POST");
+  //
+  // const handleRegisterComment = async (e) => {
+  //   e.preventDefault();
+  //
+  //   const form = e.target.closest("form");
+  //
+  //   const newComment = {
+  //     feedCode: code,
+  //     content: form.comment.value,
+  //   }
+  //
+  //   try {
+  //     const { success } = await handleSubmit(newComment);
+  //
+  //     if (success) {
+  //       alert("댓글 등록 완료");
+  //     }
+  //
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }
 
-  const { handleSubmit } = useSubmitData("/api/comments", "POST");
+  // 피드 삭제 요청 훅
+  const { handleSubmit: handleSubmitDeleteFeed } = useSubmitData(`/api/feeds/${code}`, "DELETE");
 
-  const handleRegisterComment = async (e) => {
-    e.preventDefault();
+  // 피드 삭제 핸들러
+  const handleDeleteFeed = async () => {
+    const memCode = detail.memberProfile.code;
 
-    const form = e.target.closest("form");
+    if (confirm("삭제된 피드는 복구되지 않습니다. 정말 삭제하시겠습니까?")) {
+      try {
+        const { success } = await handleSubmitDeleteFeed(memCode, "DELETE");
 
-    const newComment = {
-      feedCode: code,
-      content: form.comment.value,
-    }
+        if (success) {
+          alert("피드 삭제에 성공했습니다.");
+          // 모달 닫기
+          onClose();
+          // 새로고침
+          window.location.reload();
+        }
 
-    try {
-      const result = await handleSubmit(newComment);
-
-      if (result) {
-        alert("댓글 등록 완료");
+      } catch (err) {
+        alert("서버와 통신에 실패했습니다.");
+        console.error(err);
       }
-
-    } catch (err) {
-      console.log(err);
     }
-
   }
 
   if (loading) {
@@ -99,7 +122,7 @@ const FeedDetail = ({ code, onClose }) => {
                 <Button type="button" onClick={() => navigate(`edit/${code}`)}>수정</Button>
               </li>
               <li>
-                <Button type="button">삭제</Button>
+                <Button type="button" onClick={handleDeleteFeed}>삭제</Button>
               </li>
             </ul>
           </div>
@@ -132,7 +155,7 @@ const FeedDetail = ({ code, onClose }) => {
                 //     : "로그인 후 댓글을 작성할 수 있습니다."
                 // }
               />
-              <Button className={styles.registerButton} type="submit" onClick={handleRegisterComment}>등록</Button>
+              <Button className={styles.registerButton} type="submit">등록</Button>
             </form>
 
             {/* 등록된 댓글 리스트 */}

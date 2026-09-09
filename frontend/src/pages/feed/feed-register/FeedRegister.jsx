@@ -1,23 +1,19 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Editor from "../../../components/common/editor/Editor";
 import Hashtag from "../../../components/feed/hashtag/Hashtag";
 import styles from "./FeedRegister.module.scss";
 import { useLoadData } from "../../../hooks/useLoadData.js";
 import { useSubmitData } from "../../../hooks/useSubmitData.js";
-import { createFeedFormData } from "../../../utils/createFeedFormData.js";
-
-// 초기값
-const initPost = {
-  title: "",
-  content: "",
-};
+import { createFormData } from "../../../utils/createFormData.js";
+import SelectBox from "../../../components/forms/select-box/SelectBox.jsx";
+import { handleSetField } from "../../../utils/changeHandler.js";
 
 /* 피드 등록 */
 const FeedRegister = () => {
   const navigate = useNavigate();
   const [hashs, setHashs] = useState([]);
-  const [post, setPost] = useState(initPost);
+  const [post, setPost] = useState({});
 
   // 등록이 가능한 챌린지 카테고리 조회 (현재 진행 중인 카테고리만)
   const { data: categories } = useLoadData("/api/challenge/categories");
@@ -44,7 +40,7 @@ const FeedRegister = () => {
       // 서버 전송용
       setPost((prev) => ({
         ...prev,
-        hashtags: [...prev.hashtags || [], { tagName: value }],
+        hashtags: [...prev.hashtags || [], value],
       }));
 
       e.target.value = "";
@@ -56,23 +52,25 @@ const FeedRegister = () => {
     setHashs(hashs.filter((hash) => hash !== tagName));
     setPost((prev) => ({
       ...prev,
-      hashtags: prev.hashtags.filter((hash) => hash.tagName !== tagName),
+      hashtags: prev.hashtags.filter((hash) => hash !== tagName),
     }));
   };
 
   // 서브밋 핸들러
   const handleRegisterFeed = async (newPost) => {
     try {
-      const formData = createFeedFormData(newPost);
-      const result = await handleSubmit(formData);
+      const formData = createFormData(newPost);
+      const { data: newCode, success } = await handleSubmit(formData);
 
       // 값이 있을 경우
-      if (result) {
+      if (success) {
         alert("등록되었습니다.");
-        navigate("/feed", { state: { code: result } });
+        navigate("/feed", { state: { code: newCode } });
+      } else {
+        alert("등록에 실패했습니다.");
       }
     } catch (err) {
-      alert("등록에 실패했습니다.");
+      alert("서버와 통신에 실패했습니다.");
       console.error(err);
     }
   };
@@ -86,7 +84,15 @@ const FeedRegister = () => {
           typeName="chalCode"
           post={post}
           setPost={setPost}
-          categories={categories}
+          selectCategoryBox={
+            <SelectBox
+              name="chalCode"
+              options={categories}
+              selectedValue={post?.chalCode}
+              placeholder="챌린지 선택"
+              onChange={e => handleSetField(e, setPost)}
+            />
+          }
           onSubmit={handleRegisterFeed}
         >
           <div className={styles.hash}>

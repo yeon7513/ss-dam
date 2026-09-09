@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="productCommand">
+
+  <!-- 거래글 수정 -->
+  <update id="updateProductPost">
+    UPDATE MARKET_PRODUCT
+    SET
+    title = #{title},
+    content = #{content},
+    updated_by = #{updatedBy},
+    updated_at = NOW(),
+    delete_yn = #{deleteYn}
+    WHERE code = #{code}
+  </update>
+
+  <!-- 거래글 삭제 (일반 작성자) -->
+  <update id="deleteProductPost">
+    UPDATE MARKET_PRODUCT
+    SET
+    delete_yn = 1,
+    status = 'DELETED',
+    updated_by = #{updatedBy},
+    updated_at = NOW()
+    WHERE code = #{prodCode}
+  </update>
+
+</mapper>

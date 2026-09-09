@@ -1,6 +1,7 @@
 import cn from "classnames";
 import placeholder from "../../../assets/images/placeholder.png";
 import styles from "./imageBox.module.scss";
+import { formatImagePath } from "../../../utils/formatImagePath.js";
 
 const ImageBox = ({ className, src, alt, ...props }) => {
   // 이미지 경로는 있지만, 이미지 파일이 없을 경우 엑박으로 뜸.
@@ -14,7 +15,7 @@ const ImageBox = ({ className, src, alt, ...props }) => {
   return (
     <img
       className={cn(styles.imageBox, className)}
-      src={src || placeholder}
+      src={formatImagePath(src) || placeholder}
       alt={alt}
       onError={handleError}
       {...props}

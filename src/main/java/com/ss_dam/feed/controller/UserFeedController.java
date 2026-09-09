@@ -56,12 +56,11 @@ public class UserFeedController {
     // -> 로그인하지 않았을 경우는 처음부터 null을 넘겨 무조건 false가 나오게 처리
     Long memberCode = (loginUser != null) ? loginUser.getCode() : null;
 
-    System.out.println("memberCode: " + memberCode);
-
     List<UserFeedView> feeds = userFeedService.loadFeeds(pager, memberCode);
 
     return ResponseEntity.ok(ApiResponse.success("피드 정보 조회 성공", feeds));
   }
+
 
   // 단일 피드 조회
   @GetMapping("/{feedCode}")
@@ -83,6 +82,7 @@ public class UserFeedController {
     return ResponseEntity.ok(ApiResponse.success("피드 상세 조회 성공", feedDetail));
   }
 
+
   // 피드 등록
   @PostMapping
   ResponseEntity<ApiResponse<Long>> registerFeed(FeedCreate feedCreate, HttpSession session) {
@@ -103,6 +103,7 @@ public class UserFeedController {
 
     return ResponseEntity.ok(ApiResponse.success("피드가 등록되었습니다.", newFeedCode));
   }
+
 
   // 수정할 피드 데이터 조회
   @GetMapping("/{feedCode}/edit")
@@ -126,13 +127,66 @@ public class UserFeedController {
     return ResponseEntity.ok(ApiResponse.success("피드 수정 데이터 조회 성공", feedDetailForEdit));
   }
 
+
   // 피드 수정
   @PutMapping("/{feedCode}")
   ResponseEntity<ApiResponse<Void>> updateFeed(@PathVariable Long feedCode, FeedUpdate feedUpdate,
       HttpSession session) {
 
+    // 데이터 위변조 방지를 위한 2차 방어 로직
+    // -> @PathVariable의 값과 FeedUpdate의 code값을 비교함
+    if (feedUpdate.getCode() == null || !feedCode.equals(feedUpdate.getCode())) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+          .body(ApiResponse.fail("잘못된 요청입니다. 피드 식별자가 일치하지 않습니다."));
+    }
+
+    //    Login loginUser = (Login) session.getAttribute("loginUser");
+    //    // -> 로그인하지 않은 사용자의 경우
+    //    if (loginUser == null) {
+    //      return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+    //          .body(ApiResponse.fail("로그인이 필요한 서비스입니다."));
+    //    }
+    //
+    //    // -> 로그인한 사용자 본인이 작성한 글이 맞는지 확인
+    //    if (!loginUser.getCode().equals(feedUpdate.getMemCode())) {
+    //      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponse.fail("수정 권한이 없습니다."));
+    //    }
+
+    // 임시로 하드 코딩!
+    feedUpdate.setMemCode(1L);
+    feedUpdate.setUpdatedBy("user01");
+
+    userFeedService.updateFeed(feedUpdate);
+
     return ResponseEntity.ok(ApiResponse.success("피드 수정 완료", null));
   }
 
+
+  // 피드 삭제
+  @DeleteMapping("/{feedCode}")
+  ResponseEntity<ApiResponse<Void>> deleteFeed(@PathVariable Long feedCode, Long memCode,
+      HttpSession session) {
+
+    //    Login loginUser = (Login) session.getAttribute("loginUser");
+    //    // -> 로그인하지 않은 사용자의 경우
+    //    if (loginUser == null) {
+    //      return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+    //          .body(ApiResponse.fail("로그인이 필요한 서비스입니다."));
+    //    }
+    //
+    //    // -> 로그인한 사용자 본인이 작성한 글이 맞는지 확인
+    //    if (!loginUser.getCode().equals(memCode)) {
+    //      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponse.fail("삭제 권한이 없습니다."));
+    //    }
+    //
+    //    String updatedBy = loginUser.getMemberId();
+
+    // 임시로 하드코딩
+    String updatedBy = "user01";
+
+    userFeedService.deleteFeed(feedCode, updatedBy);
+
+    return ResponseEntity.ok(ApiResponse.success("피드 삭제 완료", null));
+  }
 
 }
