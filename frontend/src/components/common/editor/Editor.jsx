@@ -28,6 +28,8 @@ function Editor({
       images: selectedImages,
     };
 
+    console.log("resultData: ", resultData);
+
     setPost(resultData);
     onSubmit(resultData);
   };

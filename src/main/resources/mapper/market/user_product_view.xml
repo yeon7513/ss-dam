@@ -26,7 +26,8 @@
   </resultMap>
 
   <!-- 거래글 수정용 데이터 조회 -->
-  <resultMap id="ProductEditViewMap" type="ProductEditView" autoMapping="true" extends="UserProductViewMap">
+  <resultMap id="ProductEditViewMap" type="ProductEditView" autoMapping="true">
+    <id column="code" property="code" />
     <!-- 등록한 이미지 리스트 -->
     <collection property="imagePaths" javaType="ArrayList" ofType="String">
       <result column="image_paths" />
@@ -56,9 +57,6 @@
     ON m.code = i.target_code AND i.TYPE = 'profile'
     ) AS writer
     ON writer.code = MP.mem_code
-    <!-- 대표 이미지 -->
-    LEFT JOIN IMAGES i
-    ON MP.code = i.target_code AND i.type = 'market' AND i.order_seq = 1
     <!-- Pick 개수 -->
     LEFT JOIN (
     SELECT pick.prod_code, count(*) AS cnt
@@ -106,6 +104,9 @@
     i.path AS thumbnail
     FROM MARKET_PRODUCT AS MP
     <include refid="ProductCommonJoins" />
+    <!-- 목록 전용 대표 이미지 JOIN -->
+    LEFT JOIN IMAGES i
+    ON MP.code = i.target_code AND i.type = 'market' AND i.order_seq = 1
     <!-- 조건 & 정렬 -->
     WHERE MP.post_status = 'active' AND MP.delete_yn = 0
     ORDER BY MP.created_at DESC, MP.code DESC
@@ -117,9 +118,13 @@
   <select id="findProductDetailByProdCode" resultMap="ProductDetailMap">
     SELECT
     <include refid="ProductBasicColumns" />,
+    MP.content,
     i.path AS image_paths
     FROM MARKET_PRODUCT AS MP
     <include refid="ProductCommonJoins" />
+    <!-- 단일 조회 전용 이미지 리스트 -->
+    LEFT JOIN IMAGES i
+    ON MP.code = i.target_code AND i.type = 'market'
     WHERE MP.code = #{prodCode}
   </select>
 
@@ -130,8 +135,20 @@
     p.title,
     p.content,
     p.price,
+    product_category.top_cate_code AS main_category_code,
+    product_category.sub_cate_code AS sub_category_code,
     i.path AS image_paths
     FROM MARKET_PRODUCT AS p
+    <!-- 상위 카테고리 & 하위 카테고리 -->
+    JOIN (
+    SELECT
+    top.code AS top_cate_code,
+    sub.code AS sub_cate_code
+    FROM MARKET_CATEGORY AS top, MARKET_CATEGORY AS sub
+    WHERE top.code = sub.main_cate
+    ) AS product_category
+    ON product_category.sub_cate_code = p.cate_code
+    <!-- 등록된 이미지 -->
     LEFT JOIN IMAGES i
     ON p.code = i.target_code AND i.type = 'market'
     WHERE p.code = #{prodCode}

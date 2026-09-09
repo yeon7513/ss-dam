@@ -3,14 +3,26 @@ import styles from "../market/Market.module.scss";
 import ProductCard from "../../components/market/product-card/ProductCard.jsx";
 import MarketSideNav from "../../components/market/side-nav/MarketSideNav.jsx";
 import SearchBox from "../../components/common/search-box/SearchBox.jsx";
+import TabMenus from "../../components/common/tab-manus/TabMenus.jsx";
+import { useState } from "react";
+
+const SORT_MENU = [
+  { label: "최신등록순", value: "createdAt" },
+  { label: "랭킹순", value: "ranking" },
+  { label: "낮은가격순", value: "lowPrice" },
+  { label: "높은가격순", value: "highPrice" },
+];
 
 const Market = () => {
+  const [sort, setSort] = useState(SORT_MENU[0].value);
 
-  const {
-    data, loading, error, message,
-  } = useLoadData(`/api/market/products`);
+  // 목록 데이터
+  const { data: products, loading, error, message } = useLoadData(`/api/market/products`);
 
-  const products = data || [];
+  // 검색용 카테고리 조회
+  const { data: categories } = useLoadData("/api/market/categories");
+
+  console.log(categories);
 
   // 로딩 및 에러 처리
   if (loading) {
@@ -22,6 +34,10 @@ const Market = () => {
 
   console.log(products);
 
+  const handleClickSort = (sort) => {
+    setSort(sort);
+  }
+
   return (
     <main className={styles.wrap}>
       <div>
@@ -29,7 +45,10 @@ const Market = () => {
       </div>
       {/* 목록 렌더링 */}
       <div className={styles.container}>
-        <SearchBox />
+        <div className={styles.filterBar}>
+          <TabMenus className={styles.sortTab} tabs={SORT_MENU} activeStatus={sort} onTabChange={handleClickSort} />
+          <SearchBox className={styles.searchBox} />
+        </div>
         <div className={styles.list}>
           {products.length > 0 ? (
             products.map((product) => <ProductCard key={product.code} product={product} />)

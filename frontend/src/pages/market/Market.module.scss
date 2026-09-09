@@ -8,6 +8,18 @@
 .container {
   flex: 1;
 
+  .filterBar {
+    @include mix.flex($jc: space-between);
+
+    .sortTab {
+      width: 40%;
+    }
+
+    .searchBar {
+      flex: 1;
+    }
+  }
+
 }
 
 .list {

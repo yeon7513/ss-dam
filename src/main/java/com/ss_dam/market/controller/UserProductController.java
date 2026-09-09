@@ -77,7 +77,7 @@ public class UserProductController {
           .body(ApiResponse.fail("존재하지 않는 피드 게시물입니다."));
     }
 
-    return ResponseEntity.ok(ApiResponse.success("거래글 수정 데이터 조회 성공", null));
+    return ResponseEntity.ok(ApiResponse.success("거래글 수정 데이터 조회 성공", productEditView));
   }
 
 

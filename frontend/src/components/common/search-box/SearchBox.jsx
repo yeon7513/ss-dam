@@ -1,8 +1,11 @@
 import SelectBox from "../../forms/select-box/SelectBox";
 import TextInput from "../../forms/text-input/TextInput";
 import Button from "./../button/Button";
+import cn from "classnames";
+import styles from "./SearchBox.module.scss";
 
 function SearchBox({
+  className,
   options = null,
   onSearchCodeChange = null,
   onKeywordChange,
@@ -22,7 +25,7 @@ function SearchBox({
   };
 
   return (
-    <div>
+    <div className={cn(styles.wrap, className)}>
       {options && (
         <SelectBox
           options={options}

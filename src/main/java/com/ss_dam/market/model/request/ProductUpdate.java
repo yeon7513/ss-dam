@@ -15,7 +15,6 @@ public class ProductUpdate {
   private String updatedAt; // 수정일
   private boolean deleteYn; // 삭제 여부
 
-
   // 이 부분은 공통 DTO로 만들고 상속받으면 될 듯?
   // -> 피드, 마켓 등 이미지가 들어가는 곳이면 모두 쓰일 것 같음.
   // 수정 시 새로 등록할 이미지 리스트 & 순서 배열
@@ -24,6 +23,7 @@ public class ProductUpdate {
 
   // 기존 이미지 경로 문자열 & 순서 배열
   private List<String> imagePaths;
+  private List<Integer> oldImageOrders;
 
   public List<Integer> getNewImageOrders() {
     return newImageOrders;
@@ -48,8 +48,6 @@ public class ProductUpdate {
   public void setOldImageOrders(List<Integer> oldImageOrders) {
     this.oldImageOrders = oldImageOrders;
   }
-
-  private List<Integer> oldImageOrders;
 
   public Long getCode() {
     return code;

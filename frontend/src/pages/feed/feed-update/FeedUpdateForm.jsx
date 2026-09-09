@@ -5,6 +5,8 @@ import Editor from "../../../components/common/editor/Editor.jsx";
 import styles from "../feed-register/FeedRegister.module.scss";
 import Hashtag from "../../../components/feed/hashtag/Hashtag.jsx";
 import { useNavigate } from "react-router-dom";
+import SelectBox from "../../../components/forms/select-box/SelectBox.jsx";
+import { handleSetField } from "../../../utils/changeHandler.js";
 
 // 수정용 폼 컴포넌트 -> 여기서 실제 데이터 가공과 전송이 이루어진다.
 function FeedUpdateForm({ initFeed, categories }) {
@@ -18,9 +20,9 @@ function FeedUpdateForm({ initFeed, categories }) {
   const { handleSubmit } = useSubmitData(`/api/feeds/${updatedFeed?.code}`, "PUT");
 
   // 피드 전송 핸들러
-  const handleSubmitUpdatedFeed = async () => {
+  const handleSubmitUpdatedFeed = async (resultData) => {
     try {
-      const formData = createFormData(updatedFeed);
+      const formData = createFormData(resultData);
       const { success } = await handleSubmit(formData);
 
       if (success) {
@@ -72,6 +74,7 @@ function FeedUpdateForm({ initFeed, categories }) {
     }));
   };
 
+
   return (
     <form>
       <Editor
@@ -79,8 +82,15 @@ function FeedUpdateForm({ initFeed, categories }) {
         typeName="chalCode"
         post={updatedFeed}
         setPost={setUpdatedFeed}
-        categories={categories}
-        selectedValue={updatedFeed?.chalCode}
+        selectCategoryBox={
+          <SelectBox
+            name="chalCode"
+            options={categories}
+            selectedValue={updatedFeed?.chalCode}
+            placeholder="챌린지 선택"
+            onChange={e => handleSetField(e, setUpdatedFeed)}
+          />
+        }
         onSubmit={handleSubmitUpdatedFeed}
       >
         <div className={styles.hash}>

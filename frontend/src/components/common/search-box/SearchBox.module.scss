@@ -1,0 +1,11 @@
+@use "/src/scss/variables.scss" as *;
+@use "/src/scss/mixin.scss" as mix;
+
+.wrap {
+  @include mix.flex;
+  gap: 0.5rem;
+
+  input {
+    width: 240px;
+  }
+}

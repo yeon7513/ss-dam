@@ -2,16 +2,25 @@
 export const createFormData = (data) => {
   const formData = new FormData();
 
-  Object.keys(data).forEach(([key, value]) => {
+  console.log("createFormData: ", data);
+
+  Object.entries(data).forEach(([key, value]) => {
     // 값이 falsy하다면 건너뜀
-    if (!value) return;
+    if (value === null || value === undefined) return;
+
+    // 이미지 수정 없이 처리할 경우 imagePaths는 제외
+    // -> imagePaths는 읽기 전용! 실제 전송은 images만
+    if (key === 'imagePaths' && data.images) {
+      return;
+    }
 
     // 이미지 처리
-    if (key === 'images') {
+    if (key === 'images' && Array.isArray(value)) {
       value.forEach((item, idx) => {
         // 배열(data.images)에 저장된 순서, 즉 IMAGES 테이블의 order_seq에 저장될 숫자
 
         const orderSeq = idx + 1;
+        console.log("orderSeq: ", orderSeq);
 
         if (typeof item === "string") {
           // item의 데이터 타입이 문자열이면?
@@ -33,6 +42,11 @@ export const createFormData = (data) => {
       formData.append(key, value);
     }
   });
+
+  console.log("imagePaths:", formData.getAll("imagePaths"));
+  console.log("oldImageOrders:", formData.getAll("oldImageOrders"));
+  console.log("images:", formData.getAll("images"));
+  console.log("newImageOrders:", formData.getAll("newImageOrders"));
 
   return formData;
 }
