@@ -91,7 +91,7 @@ const Feed = () => {
         </Modal>
 
         {/* 페이지네이션 */}
-        <Pagination page={currentPage} />
+        <Pagination />
       </div>
     </main>
   );
