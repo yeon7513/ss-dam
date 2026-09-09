@@ -10,6 +10,7 @@
 
   .filterBar {
     @include mix.flex($jc: space-between);
+    margin-bottom: 2rem;
 
     .sortTab {
       width: 40%;
