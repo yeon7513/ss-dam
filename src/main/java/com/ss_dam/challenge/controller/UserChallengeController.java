@@ -19,23 +19,26 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ss_dam.auth.login.Login;
 import com.ss_dam.challenge.Challenge;
 import com.ss_dam.challenge.ChallengeInfo;
-import com.ss_dam.challenge.service.ChallengeService;
+import com.ss_dam.challenge.service.UserChallengeService;
 import com.ss_dam.common.ApiResponse;
 
 import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api/challenge")
-public class ChallengeController {
+public class UserChallengeController {
+
+	//UserChallengController : 목록·상세·인기·최신·랭킹 조회, 챌린지 참여, 내 참여 정보
 
 	@Autowired
-	ChallengeService challengeService;
+	UserChallengeService userChallengeService;
 
+	
 	// 전체 챌린지 조회
 	@GetMapping
 	public ResponseEntity<ApiResponse<List<Challenge>>> searchChallenges(
 			@RequestParam(required = false) String progressStatus) {
-		List<Challenge> challenges = challengeService.searchChallenges(progressStatus);
+		List<Challenge> challenges = userChallengeService.searchChallenges(progressStatus);
 
 		return ResponseEntity.ok(ApiResponse.success("전체 챌린지 조회에 성공했습니다", challenges));
 	}
@@ -43,7 +46,7 @@ public class ChallengeController {
 	// 사용자 랭킹 조회
 	@GetMapping("/ranking")
 	public ResponseEntity<ApiResponse<List<Map<String, Object>>>> searchTopRankings(){
-		List<Map<String, Object>> rankings = challengeService.searchTopRankings();
+		List<Map<String, Object>> rankings = userChallengeService.searchTopRankings();
 		
 		return ResponseEntity.ok(ApiResponse.success("랭킹 목록 조회에 성공했습니다", rankings));
 	}
@@ -51,7 +54,7 @@ public class ChallengeController {
 	// 챌린지 상세 조회
 	@GetMapping("/{code}")
 	public ResponseEntity<ApiResponse<Challenge>> searchChallengeByCode(@PathVariable int code) {
-		Challenge challenge = challengeService.searchChallengeByCode(code);
+		Challenge challenge = userChallengeService.searchChallengeByCode(code);
 
 		if (challenge == null) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.fail("존재하지 않는 챌린지입니다"));
@@ -63,7 +66,7 @@ public class ChallengeController {
 	// 인기 챌린지 TOP 3
 	@GetMapping("/popular")
 	public ResponseEntity<ApiResponse<List<Challenge>>> searchPopularChallenges() {
-		List<Challenge> challenges = challengeService.searchPopularChallenges();
+		List<Challenge> challenges = userChallengeService.searchPopularChallenges();
 
 		return ResponseEntity.ok(ApiResponse.success("인기 챌린지 조회에 성공했습니다", challenges));
 	}
@@ -71,7 +74,7 @@ public class ChallengeController {
 	// 최신 등록 챌린지 1개
 	@GetMapping("/latest")
 	public ResponseEntity<ApiResponse<Challenge>> searchLatestChallenge() {
-		Challenge challenge = challengeService.searchLatestChallenge();
+		Challenge challenge = userChallengeService.searchLatestChallenge();
 		if (challenge == null) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.fail("최신 등록된 챌린지가 없습니다"));
 		}
@@ -82,7 +85,7 @@ public class ChallengeController {
 	// 챌린지 등록
 	@PostMapping
 	public ResponseEntity<ApiResponse<Void>> registerChallenge(@RequestBody Challenge challenge) {
-		challengeService.registerChallenge(challenge);
+		userChallengeService.registerChallenge(challenge);
 
 		return ResponseEntity.ok(ApiResponse.success("챌린지가 성공적으로 등록되었습니다", null));
 	}
@@ -92,7 +95,7 @@ public class ChallengeController {
 	public ResponseEntity<ApiResponse<Void>> updateChallenge(@PathVariable int code, @RequestBody Challenge challenge) {
 
 		challenge.setCode(code);
-		challengeService.updateChallenge(challenge);
+		userChallengeService.updateChallenge(challenge);
 
 		return ResponseEntity.ok(ApiResponse.success("챌린지가 성공적으로 수정되었습니다", null));
 	}
@@ -100,7 +103,7 @@ public class ChallengeController {
 	// 챌린지 삭제
 	@DeleteMapping("/{code}")
 	public ResponseEntity<ApiResponse<Void>> deleteChallenge(@PathVariable int code) {
-		challengeService.deleteChallenge(code);
+		userChallengeService.deleteChallenge(code);
 
 		return ResponseEntity.ok(ApiResponse.success("챌린지가 성공적으로 삭제되었습니다", null));
 	}
@@ -114,7 +117,7 @@ public class ChallengeController {
 		
 		int memCode = (loginUser != null) ? loginUser.getCode().intValue() : 0;
 		
-		ChallengeInfo challengeInfo = challengeService.searchChallengeInfoByCode(code, memCode);
+		ChallengeInfo challengeInfo = userChallengeService.searchChallengeInfoByCode(code, memCode);
 		
 		if(challengeInfo == null) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -138,7 +141,7 @@ public class ChallengeController {
 		
 		int memCode = loginUser.getCode().intValue();
 		
-		boolean isJoined = challengeService.joinChallenge(code, memCode);
+		boolean isJoined = userChallengeService.joinChallenge(code, memCode);
 		
 		if(!isJoined) {
 			return ResponseEntity.badRequest()

@@ -1,16 +1,18 @@
 package com.ss_dam.challenge.entry.service;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.ss_dam.challenge.entry.ChallengeEntry;
-import com.ss_dam.challenge.entry.dao.ChallengeEntryDao;
+import com.ss_dam.challenge.entry.dao.UserChallengeEntryDao;
 
 
 @Service
-public class ChallengeEntryServiceImpl implements ChallengeEntryService {	
+public class UserChallengeEntryServiceImpl implements UserChallengeEntryService {	
 	@Autowired
-	ChallengeEntryDao challengeEntryDao;
+	UserChallengeEntryDao challengeEntryDao;
 	
 	@Override
 	public List<ChallengeEntry> findAll(){

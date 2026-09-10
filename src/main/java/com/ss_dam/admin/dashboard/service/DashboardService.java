@@ -33,7 +33,7 @@ public interface DashboardService {
         LocalDate from, LocalDate to
     );
 
-    //거래 완료 금액 기준 우수 판매자 순위 조회
+    //조회 기간의 거래 완료 금액 기준 우수 판매자 순위 조회
     List<SellerRanking> getSellerRanking(
         LocalDate from, LocalDate to
     );

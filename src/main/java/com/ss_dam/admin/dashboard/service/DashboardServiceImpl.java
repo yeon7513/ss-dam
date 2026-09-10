@@ -230,6 +230,8 @@ public class DashboardServiceImpl implements DashboardService {
         return regions;
     }
 
+
+   //조회 기간의 거래 완료 금액 기준 우수 판매자 순위 조회 
    @Override
    public List<SellerRanking> getSellerRanking(
         LocalDate from, LocalDate to) {
