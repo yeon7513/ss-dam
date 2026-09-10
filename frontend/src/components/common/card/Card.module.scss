@@ -11,6 +11,12 @@
   flex-direction: column;
   box-sizing: border-box;
   overflow: hidden; /* 내부 요소가 모서리를 뚫고 나가지 않도록 방지 */
+
+  h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: $grayscale-90;
+  }
 }
 
 /* 카드 헤더 (필요시 사용) */
@@ -19,10 +25,4 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;
-
-  h3 {
-    font-size: 16px;
-    font-weight: 600;
-    color: $grayscale-100;
-  }
 }

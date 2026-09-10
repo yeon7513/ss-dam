@@ -1,12 +1,51 @@
-import React from "react";
+import React, { useState } from "react";
 import Card from "../../components/common/card/Card.jsx";
 import Sidebar from "../../layout/sidebar/Sidebar.jsx";
 import AdminHeader from "../../components/admin/AdminHeader.jsx";
 import styles from "./AdminDashboard.module.scss";
+import { FaArrowsRotate } from "react-icons/fa6";
 
-// 더미데이터
+// StatCard (2x2 요약 지표 전용 카드)
+const StatCard = ({ title, value, rate }) => (
+  <Card className={styles.statCard}>
+    <span className={styles.statTitle}>{title}</span>
+    <div className={styles.statValRow}>
+      <span className={styles.statVal}>{value}</span>
+      <span
+        className={`${styles.statRate} ${
+          rate.startsWith("-") ? styles.minus : styles.plus
+        }`}
+      >
+        {rate}
+      </span>
+    </div>
+  </Card>
+);
+
+// ChartCard (차트 전용 카드)
+const ChartCard = ({ title, legends, children }) => (
+  <Card className={styles.chartCard}>
+    <div className={styles.cardHeader}>
+      <h3>{title}</h3>
+      {legends && (
+        <div className={styles.legend}>
+          {legends.map((item, idx) => (
+            <React.Fragment key={idx}>
+              <span
+                className={item.isDark ? styles.dotDark : styles.dotLight}
+              ></span>
+              {item.label}{" "}
+            </React.Fragment>
+          ))}
+        </div>
+      )}
+    </div>
+    <div className={styles.chartPlaceholder}>{children}</div>
+  </Card>
+);
+
+// 더미 데이터
 const summaryData = [
-  // 요약 데이터
   { title: "전체 회원 수", value: "12,450명", rate: "+5.2%" },
   { title: "오늘 신규 가입", value: "128명", rate: "+12.0%" },
   { title: "진행 중 챌린지", value: "42개", rate: "-2.1%" },
@@ -14,7 +53,6 @@ const summaryData = [
 ];
 
 const adminLogsData = [
-  // 관리자활동로그 데이터
   "[14:20] admin1님이 신고 처리 완료",
   "[13:45] admin2님이 신규 챌린지 등록 승인",
   "[11:10] system 자동 백업 완료",
@@ -22,7 +60,6 @@ const adminLogsData = [
 ];
 
 const pendingReportsData = [
-  // 미처리신고 데이터
   {
     user: "김철수",
     role: "일반회원",
@@ -61,7 +98,6 @@ const pendingReportsData = [
 ];
 
 const ParticipationData = [
-  // 지역별참여도 데이터
   { name: "서울/경기", percent: "45%", count: "(5,600명)" },
   { name: "부산/경남", percent: "22%", count: "(2,740명)" },
   { name: "대구/경북", percent: "15%", count: "(1,860명)" },
@@ -69,52 +105,51 @@ const ParticipationData = [
 ];
 
 const topSellersData = [
-  // 우수판매자 데이터
   { name: "에코라이프", value: "1,240건", rate: "+12%" },
   { name: "클린마켓", value: "980건", rate: "+5%" },
   { name: "제로웨이스트", value: "850건", rate: "-1%" },
 ];
 
 const AdminDashboard = () => {
+  // 아이콘 회전 애니메이션 State
+  const [isSpinning, setIsSpinning] = useState(false);
+
+  const handleRefresh = () => {
+    if (isSpinning) return;
+    setIsSpinning(true);
+    setTimeout(() => {
+      setIsSpinning(false);
+    }, 1000);
+  };
+
   return (
     <div className={styles.adminLayout}>
-      {/* 사이드바 */}
       <Sidebar isFixed={false} />
 
-      {/* 우측 메인 콘텐츠 */}
       <main className={styles.mainContent}>
-        {/* 관리자 헤더 */}
         <AdminHeader />
 
         <div className={styles.dashboardBody}>
           {/* 페이지 타이틀 */}
           <div className={styles.pageTitleRow}>
             <h1>
-              운영 현황 <span className={styles.refreshIcon}>🔄</span>
+              운영 현황
+              <FaArrowsRotate
+                className={`${styles.refreshIcon} ${isSpinning ? styles.spinning : ""}`}
+                onClick={handleRefresh}
+                size={18}
+              />
             </h1>
             <span className={styles.timeInfo}>2026-04-10 14:00 기준</span>
           </div>
 
           {/* 상단 2열 레이아웃 */}
           <div className={styles.topGrid}>
-            {/* 좌측 Column 묶음 */}
             <div className={styles.leftColumn}>
-              {/* 2x2 요약 카드 영역 */}
+              {/* 2x2 요약 카드 */}
               <div className={styles.statsContainer}>
                 {summaryData.map((item, index) => (
-                  <Card key={index} className={styles.statCard}>
-                    <span className={styles.statTitle}>{item.title}</span>
-                    <div className={styles.statValRow}>
-                      <span className={styles.statVal}>{item.value}</span>
-                      <span
-                        className={`${styles.statRate} ${
-                          item.rate.startsWith("-") ? styles.minus : styles.plus
-                        }`}
-                      >
-                        {item.rate}
-                      </span>
-                    </div>
-                  </Card>
+                  <StatCard key={index} {...item} />
                 ))}
               </div>
 
@@ -131,7 +166,7 @@ const AdminDashboard = () => {
               </Card>
             </div>
 
-            {/* 우측 Column: 미처리 신고 */}
+            {/* 미처리 신고 카드 */}
             <Card className={styles.reportCard}>
               <div className={styles.cardHeader}>
                 <h3>미처리 신고 ↗</h3>
@@ -180,46 +215,37 @@ const AdminDashboard = () => {
             </Card>
           </div>
 
-          {/* 중단 3열: 차트 레이아웃 영역 */}
+          {/* 중단 3열: 차트 레이아웃 */}
           <div className={styles.middleGrid}>
-            <Card className={styles.chartCard}>
-              <div className={styles.cardHeader}>
-                <h3>월간 신규 회원</h3>
-                <div className={styles.legend}>
-                  <span className={styles.dotDark}></span> 올해
-                  <span className={styles.dotLight}></span> 지난해
-                </div>
-              </div>
-              <div className={styles.chartPlaceholder}>
-                <span>[ 월간 신규 회원 차트 영역 ]</span>
-              </div>
-            </Card>
+            <ChartCard
+              title="월간 신규 회원"
+              legends={[
+                { label: "올해", isDark: true },
+                { label: "지난해", isDark: false },
+              ]}
+            >
+              <span>[ 월간 신규 회원 차트 영역 ]</span>
+            </ChartCard>
 
-            <Card className={styles.chartCard}>
-              <div className={styles.cardHeader}>
-                <h3>전체 챌린지 달성률</h3>
-                <div className={styles.legend}>
-                  <span className={styles.dotDark}></span> 달성
-                  <span className={styles.dotLight}></span> 미달성
-                </div>
-              </div>
-              <div className={styles.chartPlaceholder}>
-                <span>[ 달성률 도넛 차트 영역 (67%) ]</span>
-              </div>
-            </Card>
+            <ChartCard
+              title="전체 챌린지 달성률"
+              legends={[
+                { label: "달성", isDark: true },
+                { label: "미달성", isDark: false },
+              ]}
+            >
+              <span>[ 달성률 도넛 차트 영역 (67%) ]</span>
+            </ChartCard>
 
-            <Card className={styles.chartCard}>
-              <div className={styles.cardHeader}>
-                <h3>챌린지 인기 순위</h3>
-                <div className={styles.legend}>
-                  <span className={styles.dotDark}></span> 높음
-                  <span className={styles.dotLight}></span> 낮음
-                </div>
-              </div>
-              <div className={styles.chartPlaceholder}>
-                <span>[ 원형/방사형 차트 영역 ]</span>
-              </div>
-            </Card>
+            <ChartCard
+              title="챌린지 인기 순위"
+              legends={[
+                { label: "높음", isDark: true },
+                { label: "낮음", isDark: false },
+              ]}
+            >
+              <span>[ 원형/방사형 차트 영역 ]</span>
+            </ChartCard>
           </div>
 
           {/* 하단 2열: 지역별 참여도 및 우수 판매자 */}

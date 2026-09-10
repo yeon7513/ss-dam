@@ -20,22 +20,37 @@
     flex-direction: column;
     gap: 20px;
 
-    /* 페이지 타이틀 */
+    // 페이지 타이틀
     .pageTitleRow {
       display: flex;
       justify-content: space-between;
       align-items: center;
 
       h1 {
-        font-size: 22px;
+        font-size: 24px;
         font-weight: 700;
         display: flex;
         align-items: center;
         gap: 8px;
-        color: $grayscale-100;
+        color: $grayscale-90;
 
         .refreshIcon {
           cursor: pointer;
+
+          color: $grayscale-90;
+
+          transition:
+            transform 0.1s ease,
+            color 0.3s ease;
+
+          &:hover {
+            color: $primary-40;
+          }
+
+          // React State(isSpinning)로 추가되는 회전 클래스
+          &.spinning {
+            animation: spin 1s linear infinite;
+          }
         }
       }
 
@@ -47,18 +62,12 @@
   }
 }
 
-/* 카드 내부 공통 헤더 스타일 */
+// 카드 내부 공통 헤더 스타일
 .cardHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;
-
-  h3 {
-    font-size: 15px;
-    font-weight: 600;
-    color: $grayscale-100;
-  }
 
   .legend {
     font-size: 11px;
@@ -83,26 +92,26 @@
   }
 }
 
-/* 1. 상단 2열 레이아웃 Grid (1 : 2 가변 비율) */
+// 상단 2열 레이아웃 Grid
 .topGrid {
   display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 16px;
+  grid-template-columns: 1fr 1.5fr; // 1:1.5 비율
+  gap: 20px;
 
-  /* 좌측 Column */
+  // 좌측 Column
   .leftColumn {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 10px;
 
-    /* 2x2 요약 카드 Grid */
+    // 2x2 요약 카드 Grid
     .statsContainer {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: 10px;
 
       .statCard {
-        height: 90px;
+        height: 100px; // 요약데이터 2*2 높이
         padding: 14px;
         display: flex;
         flex-direction: column;
@@ -122,7 +131,7 @@
           .statVal {
             font-size: 16px;
             font-weight: 700;
-            color: $grayscale-100;
+            color: $grayscale-90;
           }
 
           .statRate {
@@ -144,9 +153,9 @@
       }
     }
 
-    /* 관리자 활동 로그 카드 */
+    // 관리자 활동 로그 카드
     .logCard {
-      height: 200px;
+      height: 180px; // 관리자활동로그 높이
       display: flex;
       flex-direction: column;
 
@@ -169,9 +178,9 @@
     }
   }
 
-  /* 우측 Column: 미처리 신고 카드 */
+  // 우측 Column: 미처리 신고 카드
   .reportCard {
-    height: 408px;
+    height: 400px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -215,7 +224,7 @@
 
             strong {
               font-size: 12px;
-              color: $grayscale-100;
+              color: $grayscale-90;
             }
 
             small {
@@ -255,7 +264,7 @@
 
         &.activePage {
           font-weight: 700;
-          color: $grayscale-100;
+          color: $grayscale-90;
           text-decoration: underline;
         }
       }
@@ -263,17 +272,17 @@
   }
 }
 
-/* 2. 중단 차트 3열 레이아웃 Grid */
+// 중단 차트 3열 레이아웃 Grid
 .middleGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  grid-template-columns: 793.5px 1fr 1fr;
+  gap: 20px;
 
   .chartCard {
-    height: 280px;
+    height: 300px;
 
     .chartPlaceholder {
-      height: 200px;
+      height: 280px;
       border: 1px dashed $grayscale-20;
       border-radius: 6px;
       display: flex;
@@ -286,14 +295,14 @@
   }
 }
 
-/* 3. 하단 2열 레이아웃 Grid */
+// 하단 2열 레이아웃 Grid
 .bottomGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+  gap: 20px;
 
   .bottomCard {
-    height: 240px;
+    height: 200px;
   }
 
   .regionList {
@@ -327,8 +336,8 @@
     align-items: center;
 
     .donutPlaceholder {
-      width: 240px;
-      height: 160px;
+      width: 250px;
+      height: 136px;
       border: 1px dashed $grayscale-20;
       border-radius: 6px;
       display: flex;
@@ -380,5 +389,15 @@
         }
       }
     }
+  }
+}
+
+// 새로고침 아이콘 회전 Keyframes
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
