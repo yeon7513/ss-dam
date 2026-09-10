@@ -2,26 +2,26 @@
 @use "/src/scss/mixin.scss" as mix;
 
 .feedDetail {
-  padding: 32px 0;
+  padding: 32px;
 
   .title {
     @include mix.wrap($pd: 0);
-    display: flex;
     margin-bottom: 24px;
     outline: 1px dotted red;
   }
 }
 
 .container {
+  position: relative;
   @include mix.wrap($pd: 0);
-  display: flex;
   gap: 24px;
   outline: 1px dotted red;
 
   // 등록한 이미지
   .images {
-    width: 540px;
-    height: 600px;
+    position: sticky;
+    width: 50%;
+    height: 540px;
   }
 }
 
