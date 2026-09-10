@@ -19,10 +19,10 @@
 
   </resultMap>
 
-  <select id="countComment" resultType="Integer">
+  <select id="loadCommentsTotalCount" resultType="Float">
     SELECT IFNULL(count(*), 0)
     FROM COMMENTS
-    WHERE feed_code = #{feedCode}
+    WHERE feed_code = #{feedCode} AND status = 'active' AND delete_yn = 0
   </select>
 
   <select id="findCommentsByFeedCode" resultMap="UserCommentViewMap">

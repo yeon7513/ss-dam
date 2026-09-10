@@ -32,6 +32,7 @@ function SearchBox({
         />
       )}
       <TextInput
+        name="keyword"
         onChange={(e) => handleChangeSearchKeyword(e)}
         placeholder="검색어를 입력하세요."
       />
