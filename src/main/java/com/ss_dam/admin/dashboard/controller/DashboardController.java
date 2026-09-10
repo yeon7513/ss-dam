@@ -3,6 +3,7 @@ package com.ss_dam.admin.dashboard.controller;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ import com.ss_dam.admin.dashboard.model.response.DashboardSummary;
 import com.ss_dam.admin.dashboard.model.response.MemberStatistics;
 import com.ss_dam.admin.dashboard.model.response.RegionStatistics;
 import com.ss_dam.admin.dashboard.model.response.SellerRanking;
+import com.ss_dam.admin.dashboard.service.DashboardService;
 import com.ss_dam.common.ApiResponse;
 
 //관리자 대시보드
@@ -28,29 +30,41 @@ import com.ss_dam.common.ApiResponse;
 
 @RestController
 @RequestMapping("/api/admin/")
-public class AdminDashboardController {
+public class DashboardController {
 
-  
+@GetMapping("/check")
+public ResponseEntity<ApiResponse<Void>> checkAdmin(){
+        
+        return ResponseEntity.ok(ApiResponse.success("관리자 권한 확인 성공", null));
+}
 
-	@GetMapping("/check")
-	public ResponseEntity<ApiResponse<Void>> checkAdmin(){
-		
-		return ResponseEntity.ok(ApiResponse.success("관리자 권한 확인 성공", null));
-	}
+@Autowired
+  DashboardService dashboardService;
 
-  // GET /api/admin/dashboard/summary
-    // → 상단 카드의 건수와 증감률 조회
+// GET /api/admin/dashboard/summary
+// 요청 예시: GET /api/admin/dashboard/summary?from=2026-09-01&to=2026-09-09
+// → 상단 카드의 건수와 증감률 조회
+   
     @GetMapping("/dashboard/summary")
     public ResponseEntity<ApiResponse<DashboardSummary>> getDashboardSummary(
+
+            //쿼리파라미터 from을 받음
+            //"2026-09-01" 형식의 문자열을 LocalDate로 변환
             @RequestParam("from")
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
-            //2026-09-01 형태의 문자열을 LocalDate로 변환
+            
+            //쿼리파리미터 to를 받음
+            //LocalDate는 시간 없이 날짜만 표현!
             @RequestParam("to")
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
 
+        //통계 계산은 Service에 위임
+        //Controller는 요청을 받고 응답을 반환하는 역할을 담당
         DashboardSummary result =
                 dashboardService.getDashboardSummary(from, to);
 
+        //HTTP 상태 코드 200 OK와 함께 응답을 반환
+        //ApiResponse는 프로젝트에서 정의한 공통 응답 클래스
         return ResponseEntity.ok(
                 ApiResponse.success("대시보드 요약 조회 성공", result));
     }

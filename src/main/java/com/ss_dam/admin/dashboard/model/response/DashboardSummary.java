@@ -10,7 +10,7 @@ public class DashboardSummary {
   private long newFeedCount;     //조회 기간에 등록된 피드 수
   private long newTradeCount;    //조회 기간에 발생한 거래 수 (등록 건수 인지, 완료 건수 인지 정해야 함)
 
-  private Double totalMemberchangeRate; //전체 회원 수 증감률
+  private Double totalMemberChangeRate; //전체 회원 수 증감률
   private Double newMemberChangeRate;   //신규 가입자 수 증감률
   private Double newFeedChangeRate;     //신규 피드 수 증감률
   private Double newTradeChangeRate; // 이전 기간 대비 신규 거래 수
@@ -44,11 +44,11 @@ public class DashboardSummary {
   public void setNewTradeCount(long newTradeCount) {
     this.newTradeCount = newTradeCount;
   }
-  public Double getTotalMemberchangeRate() {
-    return totalMemberchangeRate;
+  public Double getTotalMemberChangeRate() {
+    return totalMemberChangeRate;
   }
-  public void setTotalMemberchangeRate(Double totalMemberchangeRate) {
-    this.totalMemberchangeRate = totalMemberchangeRate;
+  public void setTotalMemberChangeRate(Double totalMemberChangeRate) {
+    this.totalMemberChangeRate = totalMemberChangeRate;
   }
   public Double getNewMemberChangeRate() {
     return newMemberChangeRate;
