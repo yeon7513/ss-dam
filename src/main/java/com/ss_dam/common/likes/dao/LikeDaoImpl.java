@@ -43,7 +43,7 @@ public class LikeDaoImpl implements LikeDao {
 		params.put("cmtCode", cmtCode);
 		params.put("memCode", memCode);
 		
-		sql.insert("comment_like.upsertCommentLike", params);
+		sql.insert("commentLike.upsertCommentLike", params);
 		
 	}
 

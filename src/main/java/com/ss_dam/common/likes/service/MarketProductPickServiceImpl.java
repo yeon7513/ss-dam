@@ -11,8 +11,11 @@ public class MarketProductPickServiceImpl implements MarketProductPickService {
   MarketProductPickDao pickDao;
 
   @Override
-  public int countProductPick(Long prodCode) {
-    return pickDao.countProductPick(prodCode);
+  public boolean toggleProdPick(long prodCode, long memCode) {
+	  
+	  pickDao.upsertProductPick(prodCode, memCode);
+	  
+	return pickDao.selectIsProductPick(prodCode, memCode);
   }
 
 }

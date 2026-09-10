@@ -5,10 +5,29 @@
   
 <mapper namespace="pick">
 
-	<select id="countProductPick" resultType="Integer">
-		SELECT IFNULL(count(*), 0)
+	<insert id="upsertProdPick" parameterType="MarketProductPick">
+		INSERT INTO MARKET_PROD_PICK(
+		PROD_CODE,
+		MEM_CODE,
+		CREATED_AT,
+		DELETE_YN
+		) VALUES (
+		#{prodCode},
+		#{memCode},
+		NOW(),
+		0
+		) ON DUPLICATE KEY UPDATE 
+		DELETE_YN = IF(DELETE_YN = 0, 1, 0)
+	</insert>
+	
+	<select id="selectedIsPicked" parameterType="map"
+		resultType="boolean">
+		SELECT COUNT(*) > 0
 		FROM MARKET_PROD_PICK
-		WHERE prod_code = #{prodCode}
+		WHERE PROD_CODE =
+		#{prodCode}
+		AND MEM_CODE = #{memCode}
+		AND DELETE_YN = 0
 	</select>
 	
 </mapper>

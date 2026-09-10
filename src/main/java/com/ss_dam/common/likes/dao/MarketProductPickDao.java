@@ -1,7 +1,9 @@
 package com.ss_dam.common.likes.dao;
 
-public interface MarketProductPickDao {
+public interface MarketProductPickDao {  
 
-  int countProductPick(Long prodCode);
+  void upsertProductPick(long prodCode, long memCode);
+
+  boolean selectIsProductPick(long prodCode, long memCode);
 
 }

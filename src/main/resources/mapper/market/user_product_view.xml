@@ -61,12 +61,13 @@
     LEFT JOIN (
     SELECT pick.prod_code, count(*) AS cnt
     FROM MARKET_PROD_PICK AS pick
+    WHERE pick.delete_yn = 0
     GROUP BY pick.prod_code
     ) AS pick_cnt
     ON pick_cnt.prod_code = MP.code
     <!-- 로그인한 사용자의 Pick 여부 -->
     LEFT JOIN MARKET_PROD_PICK AS my_pick
-    ON my_pick.prod_code = MP.code AND my_pick.mem_code = #{memberCode}
+    ON my_pick.prod_code = MP.code AND my_pick.mem_code = #{memberCode} AND my_pick.delete_yn = 0
   </sql>
 
   <sql id="ProductBasicColumns">
