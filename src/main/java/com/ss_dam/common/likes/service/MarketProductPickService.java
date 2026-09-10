@@ -1,7 +1,7 @@
 package com.ss_dam.common.likes.service;
 
-public interface MarketProductPickService {
+public interface MarketProductPickService {  
 
-  int countProductPick(Long prodCode);
+  boolean toggleProdPick(long prodCode, long memCode);
 
 }
