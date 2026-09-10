@@ -103,7 +103,12 @@ const SignUp = () => {
           <ProfileImageSection setForm={setForm} />
 
           <div>
-            <Button className={styles.submitButton} type="submit">
+            <Button
+              className={styles.submitButton}
+              type="submit"
+              size="lg"
+              fullWidth
+            >
               회원가입
             </Button>
           </div>

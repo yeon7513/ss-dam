@@ -1,14 +1,72 @@
 @use "/src/scss/variables.scss" as *;
 
 .button {
-  padding: 1rem 1.5rem;
-  background-color: $grayscale-5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  font-family: inherit;
+  font-weight: 500;
+
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 
   &:disabled {
     cursor: not-allowed;
+    opacity: 0.9;
   }
 }
 
+/* ==========================================
+    BtnStyle Variants (스타일 종류)
+   ========================================== */
+
+// 채우기 스타일
 .fill {
-  background-color: yellow;
+  background-color: $grayscale-5;
+  color: $grayscale-90;
+
+  &:hover:not(:disabled) {
+    background-color: $grayscale-10;
+  }
+}
+
+// 아웃라인 스타일
+.outline {
+  background-color: $color-white;
+  border: 1px solid $grayscale-20;
+  color: $grayscale-90;
+
+  &:hover:not(:disabled) {
+    background-color: $grayscale-5;
+  }
+}
+
+/* ==========================================
+    Size Variants (크기)
+   ========================================== */
+
+.sm {
+  height: 2.4rem;
+  padding: 0 1rem;
+  font-size: 0.85rem;
+}
+
+.md {
+  height: 3rem;
+  padding: 0 1.25rem;
+  font-size: 0.9rem;
+}
+
+// 기존 폼 버튼 규격 (3.4rem)
+.lg {
+  height: 3.4rem;
+  padding: 0 1.5rem;
+  font-size: 0.9rem;
+}
+
+// 너비 100% 가득 채우기
+.fullWidth {
+  width: 100%;
 }

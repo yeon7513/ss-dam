@@ -1,7 +1,7 @@
 @use "/src/scss/variables.scss" as *;
 
 .loginPage {
-  display: flex;
+  display: flex; // 전체 가운데정렬
   justify-content: center;
   align-items: flex-start; // 하단 요소에 영향받지 않고 헤더와의 간격 고정
   padding: 6rem 2rem; // 헤더, 푸터와 간격 조정
@@ -23,31 +23,12 @@
 
   form {
     width: 100%;
-
-    > button {
-      width: 100%;
-      height: 3.4rem;
-      box-sizing: border-box;
-
-      //border: 1.5px solid $point-20;
-      background-color: $grayscale-5;
-
-      font-weight: 500;
-
-      cursor: pointer;
-    }
   }
 }
 
 .subTitle {
-  font-size: 1rem;
-  font-weight: 400;
-
   margin-top: -1.5rem;
   margin-bottom: 2rem;
-
-  text-align: center;
-  color: $grayscale-90;
 }
 
 .inputGroup {
@@ -59,44 +40,18 @@
 }
 
 .loginInput {
-  width: 100%;
   margin-bottom: 1.5rem;
 
   // 인풋박스 위에 있는 아이디, 비밀번호
   label {
-    font-size: 1rem;
-    font-weight: 400;
-
     display: block;
     margin-bottom: 0.5rem;
   }
 }
 
-.loginButton,
-.signupButton {
-  width: 100%;
-  height: 3.4rem;
-  box-sizing: border-box;
-
-  background-color: $grayscale-5;
-
-  font-size: 0.9rem;
-  font-weight: 500;
-
-  cursor: pointer;
-
-  &:hover {
-    background-color: $grayscale-10; // 원하는 색상으로 변경
-    transition: background-color 0.5s ease; // 모션을 서서히 나타나도록 함
-  }
-}
-
 .loginButton {
-  // 로그인 버튼과 회원가입 버튼 사이 상하 간격
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.8rem; // 로그인버튼과 회원가입버튼 사이 상하 간격
 }
-
-// 기존 SCSS 코드 제일 하단에 추가하세요.
 
 .ctaAuthLinks {
   display: flex;
@@ -106,9 +61,8 @@
   margin-top: 1rem;
 
   p {
-    font-size: 1rem;
     color: $grayscale-90; // 가지고 계신 회색조 변수에 맞춰 수정 가능
-    opacity: 0.6;
+    opacity: 0.6; // 그레이스케일 컬러 차이간격이 너무 커서 투명도로 조절함
   }
 
   .linkGroup {
@@ -117,12 +71,6 @@
     gap: 0.5rem;
 
     .subLink {
-      font-size: 1rem;
-      font-weight: 400;
-      color: $grayscale-90;
-      text-decoration: none;
-      cursor: pointer;
-
       &:hover {
         color: $point-50;
         font-weight: 600;
@@ -130,10 +78,10 @@
       }
     }
 
-    .divider {
-      font-size: 1rem;
-      color: $grayscale-90;
-      user-select: none;
-    }
+    // .divider {
+    //   font-size: 1rem;
+    //   color: $grayscale-90;
+    //   user-select: none;
+    // }
   }
 }

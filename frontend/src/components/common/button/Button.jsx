@@ -4,6 +4,8 @@ import styles from "./Button.module.scss";
 function Button({
   className,
   btnStyle = "fill",
+  size = "lg",
+  fullWidth = false,
   children,
   onClick,
   type = "button",
@@ -11,7 +13,13 @@ function Button({
 }) {
   return (
     <button
-      className={cn(styles.button, className, styles[btnStyle])}
+      className={cn(
+        styles.button,
+        styles[btnStyle],
+        styles[size],
+        { [styles.fullWidth]: fullWidth },
+        className,
+      )}
       type={type}
       onClick={onClick}
       {...props}

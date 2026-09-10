@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./AdminHeader.module.scss";
+import Button from "../common/button/Button";
 
 const AdminHeader = () => {
   const navigate = useNavigate();
@@ -23,13 +24,13 @@ const AdminHeader = () => {
         🏠
       </div>
 
-      <button
+      <Button
         type="button"
         className={styles.userModeBtn}
         onClick={handleSwitchToUserMode}
       >
         사용자 모드 전환
-      </button>
+      </Button>
     </header>
   );
 };

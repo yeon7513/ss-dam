@@ -81,14 +81,16 @@ const LogIn = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <Button className={styles.loginButton} type="submit">
+          <Button className={styles.loginButton} type="submit" fullWidth>
             로그인
           </Button>
 
           <Button
             className={styles.signupButton}
             type="button"
+            size="lg"
             onClick={() => navigate("/signup")}
+            fullWidth
           >
             회원가입
           </Button>

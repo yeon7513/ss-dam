@@ -19,14 +19,8 @@
   }
 
   .userModeBtn {
-    box-sizing: border-box;
     background-color: $grayscale-5;
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer;
-    height: 3.4rem;
-    padding: 16px 24px;
-    border: none;
+    border: 1px dashed red;
     color: $grayscale-90;
 
     &:hover {
