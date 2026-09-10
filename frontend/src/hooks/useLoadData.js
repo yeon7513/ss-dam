@@ -25,6 +25,8 @@ export const useLoadData = (url) => {
     // 실제 서버 전송용 로직
     fetch(url)
     .then(res => {
+      setLoading(true);
+
       if (!res.ok) {
         // 여기서 오류를 던지면 바로 catch절로 이동
         return res.json().then(err => {
