@@ -1,9 +1,9 @@
 package com.ss_dam.feed.service;
 
+import com.ss_dam.comment.model.response.UserCommentView;
 import com.ss_dam.comment.service.UserCommentService;
 import com.ss_dam.common.image.service.ImageService;
-import com.ss_dam.common.pager.PageQuery;
-import com.ss_dam.common.pager.PageResult;
+import com.ss_dam.common.pager.Pager;
 import com.ss_dam.feed.dao.UserFeedDao;
 import com.ss_dam.feed.model.core.FeedHashtag;
 import com.ss_dam.feed.model.request.FeedCreate;
@@ -36,31 +36,30 @@ public class UserFeedServiceImpl implements UserFeedService {
 
   // 피드 목록 조회
   @Override
-  public PageResult<UserFeedView> loadFeeds(PageQuery pageQuery, Long memberCode) {
+  public List<UserFeedView> loadFeeds(Pager pager, Long memberCode) {
     Map<String, Object> params = new HashMap<>();
 
     params.put("memberCode", memberCode);
-    params.put("offset", pageQuery.getOffset());
-    params.put("perPage", pageQuery.getPerPage());
-    params.put("searchCode", pageQuery.getSearchCode());
-    params.put("keyword", pageQuery.getKeyword());
+    params.put("offset", pager.getOffset());
+    params.put("perPage", pager.getPerPage());
 
-    List<UserFeedView> feeds = userFeedDao.loadFeeds(params);
-    float total = userFeedDao.loadFeedsTotalCount(pageQuery);
-
-    return PageResult.of(feeds, pageQuery, total);
+    return userFeedDao.loadFeeds(params);
   }
 
 
   // 피드 단일 상세 조회 -> 아무나 볼 수 있는 단순 게시글
   @Override
-  public FeedDetail findFeedDetailByFeedCode(Long FeedCode, Long memberCode) {
+  public FeedDetail findFeedDetailByFeedCode(Long FeedCode, Pager pager, Long memberCode) {
 
     Map<String, Object> params = new HashMap<>();
     params.put("memberCode", memberCode);
     params.put("feedCode", FeedCode);
 
     FeedDetail feedDetail = userFeedDao.findFeedDetailByFeedCode(params);
+    List<UserCommentView> comments =
+        userCommentService.findCommentsByFeedCode(FeedCode, pager, memberCode);
+
+    feedDetail.setComments(comments);
 
     return feedDetail;
   }

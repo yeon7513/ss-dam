@@ -1,10 +1,10 @@
 package com.ss_dam.comment.dao;
 
-import com.ss_dam.comment.model.request.CommentCreate;
-import com.ss_dam.comment.model.response.UserCommentView;
-
 import java.util.List;
 import java.util.Map;
+
+import com.ss_dam.comment.model.request.CommentCreate;
+import com.ss_dam.comment.model.response.UserCommentView;
 
 public interface UserCommentDao {
 
@@ -20,5 +20,4 @@ public interface UserCommentDao {
   //댓글 삭제
   int deleteComment(Map<String, Object> params);
 
-  float loadCommentsTotalCount(Long feedCode);
 }

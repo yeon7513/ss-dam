@@ -12,13 +12,13 @@
 		CREATED_AT,
 		DELETE_YN
 		)VALUES(
-		#{feedCode},
-		#{memCode},
+		{feedCode},
+		{memCode},
 		NOW(),
-		0
+		'N'
 		)
 		ON DUPLICATE KEY UPDATE
-		DELETE_YN = IF(DELETE_YN = 0, 1, 0)
+		DELETE_YN = IF(DELETE_YN = 'N', 'Y', 'N')
 	</insert>
 
 	<select id="selectedIsLiked" parameterType="map"
@@ -28,7 +28,7 @@
 		WHERE FEED_CODE =
 		#{feedCode}
 		AND MEM_CODE = #{memCode}
-		AND DELETE_YN = 0
+		AND DELETE_YN = 'N'
 	</select>
 
 </mapper>

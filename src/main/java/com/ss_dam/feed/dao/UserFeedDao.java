@@ -1,6 +1,5 @@
 package com.ss_dam.feed.dao;
 
-import com.ss_dam.common.pager.PageQuery;
 import com.ss_dam.feed.model.core.FeedHashtag;
 import com.ss_dam.feed.model.request.FeedCreate;
 import com.ss_dam.feed.model.request.FeedUpdate;
@@ -27,6 +26,4 @@ public interface UserFeedDao {
   void updateFeed(FeedUpdate feedUpdate);
 
   void deleteFeed(Map<String, Object> params);
-
-  float loadFeedsTotalCount(PageQuery pageQuery);
 }

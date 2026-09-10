@@ -1,6 +1,7 @@
 package com.ss_dam.feed.model.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.ss_dam.comment.model.response.UserCommentView;
 
 import java.util.List;
 
@@ -20,6 +21,9 @@ public class FeedDetail extends UserFeedView {
   private String content;
   private List<String> imagePaths;
 
+  // 댓글 리스트
+  private List<UserCommentView> comments;
+
   // GETTER, SETTER
   public String getContent() {
     return content;
@@ -35,5 +39,13 @@ public class FeedDetail extends UserFeedView {
 
   public void setImagePaths(List<String> imagePaths) {
     this.imagePaths = imagePaths;
+  }
+
+  public List<UserCommentView> getComments() {
+    return comments;
+  }
+
+  public void setComments(List<UserCommentView> comments) {
+    this.comments = comments;
   }
 }

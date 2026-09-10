@@ -27,15 +27,15 @@ public class AdminProductServiceImpl implements AdminProductService {
     //Objects는 유틸리티 클래스라서 String 값을 넣을 수 없습니다. 다음처럼 **단수형 Object**로 수정
 
     //검색 조건
-    //    params.put("searchCode", pager.getSearchCode());
-    //    params.put("keyword", pager.getKeyword());
+    params.put("searchCode", pager.getSearchCode());
+    params.put("keyword", pager.getKeyword());
 
     //검색 조건에 해당하는 전체 상품 수
     int total = adminProductDao.countProducts(params);
     pager.setTotal(total);
 
     //페이지네이션
-    //    params.put("offset", pager.getOffset());
+    params.put("offset", pager.getOffset());
     params.put("perPage", pager.getPerPage());
 
     return adminProductDao.loadProducts(params);

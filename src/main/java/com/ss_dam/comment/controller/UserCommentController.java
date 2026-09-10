@@ -1,13 +1,10 @@
 package com.ss_dam.comment.controller;
 
-import com.ss_dam.auth.login.Login;
 import com.ss_dam.comment.model.request.CommentCreate;
 import com.ss_dam.comment.model.request.CommentUpdate;
-import com.ss_dam.comment.model.response.UserCommentView;
 import com.ss_dam.comment.service.UserCommentService;
 import com.ss_dam.common.ApiResponse;
-import com.ss_dam.common.pager.PageQuery;
-import com.ss_dam.common.pager.PageResult;
+import com.ss_dam.common.category.challenge.controller.AdminChallengeCategoryController;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,22 +15,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/comments")
 public class UserCommentController {
 
+  private final AdminChallengeCategoryController adminChallengeCategoryController;
+  
   @Autowired
   UserCommentService userCommentService;
 
-  // 댓글 목록 조회
-  @GetMapping("/{feedCode}")
-  public ResponseEntity<ApiResponse<PageResult<UserCommentView>>> findCommentsByFeedCode(
-      @PathVariable Long feedCode, PageQuery pageQuery, HttpSession session) {
-
-    // 로그인한 사용자의 좋아요 여부 확인
-    Login loginUser = (Login) session.getAttribute("loginUser");
-    Long memberCode = (loginUser != null) ? loginUser.getCode() : null;
-
-    PageResult<UserCommentView> comments =
-        userCommentService.findCommentsByFeedCode(pageQuery, feedCode, memberCode);
-
-    return ResponseEntity.ok(ApiResponse.success("댓글 목록 조회 성공", comments));
+  UserCommentController(AdminChallengeCategoryController adminChallengeCategoryController) {
+    this.adminChallengeCategoryController = adminChallengeCategoryController;
   }
 
   //댓글 등록 (임시)

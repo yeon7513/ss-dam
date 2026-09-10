@@ -1,6 +1,5 @@
 package com.ss_dam.feed.dao;
 
-import com.ss_dam.common.pager.PageQuery;
 import com.ss_dam.feed.model.core.FeedHashtag;
 import com.ss_dam.feed.model.request.FeedCreate;
 import com.ss_dam.feed.model.request.FeedUpdate;
@@ -59,10 +58,5 @@ public class UserFeedDaoImpl implements UserFeedDao {
   @Override
   public void deleteFeed(Map<String, Object> params) {
     sql.update("feedCommand.deleteFeed", params);
-  }
-
-  @Override
-  public float loadFeedsTotalCount(PageQuery pageQuery) {
-    return sql.selectOne("feedView.loadFeedsTotalCount", pageQuery);
   }
 }

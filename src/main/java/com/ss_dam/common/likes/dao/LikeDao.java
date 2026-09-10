@@ -1,12 +1,24 @@
 package com.ss_dam.common.likes.dao;
 
-public interface LikeDao {  
+import com.ss_dam.common.likes.FeedLike;
 
-	void upsertFeedLike(long feedCode, long memCode);
+public interface LikeDao {
 
-	boolean selectIsFeedLiked(long feedCode, long memCode);
+    // 피드 좋아요 개수 조회
+    int countFeedLike(Long feedCode);
 
-	void upsertCommentLike(long cmtCode, long memCode);
+    // 댓글 좋아요 개수 조회
+    int countCommentLike(Long cmtCode);
 
-	boolean selectIsCommentLike(long cmtCode, long memCode);
+    // 특정 회원의 피드 좋아요 기록 조회
+    FeedLike searchFeedLike(FeedLike feedLike);
+
+    // 피드 좋아요 등록
+    int registerFeedLike(FeedLike feedLike);
+
+    // 취소된 피드 좋아요 다시 활성화
+    int updateFeedLike(FeedLike feedLike);
+
+    // 피드 좋아요 취소
+    int deleteFeedLike(FeedLike feedLike);
 }

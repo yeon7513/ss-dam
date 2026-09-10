@@ -47,17 +47,10 @@ const Feed = () => {
     error,
   } = useLoadData(`/api/feeds?${queryParams}`);
 
-  console.log(data);
-
   // 검색용 챌린지 카테고리 조회
   const { data: categories } = useLoadData("/api/challenge/categories");
 
-  const feeds = data?.content || [];
-
-  // 검색 핸들러
-  const handleSearch = () => {
-
-  }
+  const feeds = data || [];
 
   // 로딩 및 에러 처리
   if (loading) {
@@ -66,6 +59,9 @@ const Feed = () => {
   if (error) {
     return <div>에러가 발생했습니다. {error}</div>;
   }
+
+  console.log("selectedFeedCode: ", selectedFeedCode);
+  console.log(feeds);
 
   return (
     <main className={styles.wrap}>
@@ -95,7 +91,7 @@ const Feed = () => {
         </Modal>
 
         {/* 페이지네이션 */}
-        <Pagination pager={data?.pager} />
+        <Pagination page={currentPage} />
       </div>
     </main>
   );

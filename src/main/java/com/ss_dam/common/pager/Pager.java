@@ -3,19 +3,28 @@ package com.ss_dam.common.pager;
 import java.util.ArrayList;
 import java.util.List;
 
-// 이 클래스는 서버가 클라이언트로 넘겨줄 때 쓰이는 DTO
-// 즉, 최종적으로 이 클래스의 형식으로 페이지네이션이 만들어진다.
 public class Pager {
   private float total;
   private int page = 1; // 기본 세팅
   private int perPage = 10; // 기본 세팅
   private int perGroup = 5; // 기본 세팅
 
-  public Pager(PageQuery pageQuery, float total) {
-    this.page = pageQuery.getPage();
-    this.perPage = pageQuery.getPerPage();
-    this.perGroup = pageQuery.getPerGroup();
-    this.total = total;
+  // 검색용 키워드
+  private String searchCode;
+  private String keyword;
+
+  // 쿼리스트링 설정
+  public String getQuery() {
+    String query = "";
+    // 필터가 있을 경우
+    if (searchCode != null && !searchCode.isEmpty() && keyword != null && !keyword.isEmpty()) {
+      query = "&searchCode=" + searchCode + "&keyword=" + keyword;
+    }
+    // 필터가 없을 경우
+    if ((searchCode == null || searchCode.isEmpty()) && keyword != null && !keyword.isEmpty()) {
+      query = "&keyword=" + keyword;
+    }
+    return query;
   }
 
   // 이전 & 다음 이동
@@ -32,7 +41,6 @@ public class Pager {
     return next < last ? next : last;
   }
 
-  // 페이지네이션의 숫자 그룹 리스트
   public List<Integer> getList() {
     ArrayList<Integer> list = new ArrayList<Integer>();
 
@@ -67,7 +75,12 @@ public class Pager {
     return (int) Math.ceil(total / perPage);
   }
 
-  // GETTER, SETTER
+  // 어디서 부터 건너뛸 지
+  public int getOffset() {
+    return (page - 1) * perPage;
+  }
+
+  // getter & setter
   public float getTotal() {
     return total;
   }
@@ -100,6 +113,22 @@ public class Pager {
 
   public void setPerGroup(int perGroup) {
     this.perGroup = perGroup;
+  }
+
+  public String getKeyword() {
+    return keyword;
+  }
+
+  public void setKeyword(String keyword) {
+    this.keyword = keyword;
+  }
+
+  public String getSearchCode() {
+    return searchCode;
+  }
+
+  public void setSearchCode(String searchCode) {
+    this.searchCode = searchCode;
   }
 
 }
