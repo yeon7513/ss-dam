@@ -1,17 +1,18 @@
 @use "/src/scss/variables.scss" as *;
 
+// ==========================================
+// 페이지 & 메인 컨테이너
+// ==========================================
 .signUpPage {
-  min-height: 80rem;
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding: 32px;
+  align-items: flex-start; // 하단 요소에 영향받지 않고 헤더와의 간격 고정
+  padding: 6rem 2rem; // 헤더, 푸터와 간격 조정
 }
 
 .signUpContainer {
   width: 100%;
   max-width: 26rem;
-
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -24,215 +25,48 @@
 
   form {
     width: 100%;
-
-    > button {
-      width: 100%;
-      height: 3.4rem;
-      box-sizing: border-box;
-
-      //border: 1.5px solid $point-20;
-      background-color: $grayscale-5;
-
-      font-size: 1rem;
-      font-weight: 500;
-
-      cursor: pointer;
-    }
   }
-}
 
-.idGroup,
-.passwordGroup,
-.basicInfoGroup,
-.phoneGroup,
-.profileImgGroup {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  margin-bottom: 1.5rem;
-
-  // 인풋박스 위에 있는 아이디, 비밀번호
+  // 폼 내부 공통 Label & Input 기본 스타일
   label {
     font-size: 1rem;
     font-weight: 400;
-
     display: block;
     margin-bottom: 0.5rem;
   }
+}
 
-  // 아이디, 비밀번호 인풋박스
-  input {
-    width: 100%;
-    height: 3.4rem; // 인풋 높이
-    padding: 0 1rem; // 좌우 여백
+// ==========================================
+// 회원가입 제출 버튼
+// ==========================================
+.submitButton {
+  box-sizing: border-box;
+  background-color: $grayscale-5;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  width: 100%;
+  height: 3.4rem;
+  margin-bottom: 0.6rem;
 
-    font-size: 0.9rem;
-    font-weight: 500;
-
-    box-sizing: border-box;
-    border: 1.5px solid $point-20;
-
-    // 모션을 서서히 나타나도록 함
+  &:hover {
+    background-color: $grayscale-10;
     transition: background-color 0.5s ease;
-
-    // "아이디 입력", "비밀번호 입력" 속성
-    &::placeholder {
-      color: $grayscale-50; // 선택 전 옅은 회색 글자
-      font-weight: 400;
-      font-size: 0.9rem;
-    }
-
-    // 인풋박스 클릭 시
-    &:focus {
-      border: 1.5px solid $point-20;
-      background-color: $point-5;
-      outline: none;
-
-      &::placeholder {
-        color: $grayscale-90; // 선택 시 회색 글자 더 진하게
-      }
-    }
   }
 }
 
-.passwordGroup,
-.basicInfoGroup {
-  width: 100%;
-
-  > div {
-    flex: 1;
-    min-width: 0; // 가로너비 1:1 비율
-  }
-}
-
-.phoneGroup,
-.profileImgGroup {
-  width: 100%;
-
-  > div {
-    width: 100%;
-  }
-}
-
-.idGroup {
-  width: 100%;
-  align-items: flex-end; // 버튼을 인풋박스 기준 가로축 정렬
-
-  > div {
-    flex: 1;
-    width: 100%;
-  }
-
-  button {
-    flex-shrink: 0;
-    height: 3.4rem; // input 높이와 동일하게 맞춤
-    white-space: nowrap; // 글자 줄바꿈 방지
-  }
-}
-
-// .passwordGroup {
-// }
-
-// .basicInfoGroup {
-// }
-
-// .phoneGroup {
-// }
-
-.addressGroup {
-  display: flex;
-  flex-direction: column; /* 💡 세로로 배치하여 라벨을 위로 올려줌 */
-  align-items: flex-start;
-
-  margin-bottom: 1.5rem;
-
-  // 인풋박스 위에 있는 아이디, 비밀번호
-  label {
-    font-size: 1rem;
-    font-weight: 400;
-
-    display: block;
-    margin-bottom: 0.5rem;
-  }
-
-  // 아이디, 비밀번호 인풋박스
-  input {
-    width: 100%;
-    height: 3.4rem; // 인풋 높이
-    padding: 0 1rem; // 좌우 여백
-
-    font-size: 0.9rem;
-    font-weight: 500;
-
-    box-sizing: border-box;
-    border: 1.5px solid $point-20;
-
-    // 모션을 서서히 나타나도록 함
-    transition: background-color 0.5s ease;
-
-    // "아이디 입력", "비밀번호 입력" 속성
-    &::placeholder {
-      color: $grayscale-50; // 선택 전 옅은 회색 글자
-      font-weight: 400;
-      font-size: 0.9rem;
-    }
-
-    // 인풋박스 클릭 시
-    &:focus {
-      border: 1.5px solid $point-20;
-      background-color: $point-5;
-      outline: none;
-
-      &::placeholder {
-        color: $grayscale-90; // 선택 시 회색 글자 더 진하게
-      }
-    }
-  }
-}
-
-// .profileImgGroup {
-// }
-
+// ==========================================
+// 하단 로그인 안내 영역
+// ==========================================
 .ctaLogin {
   display: flex;
   align-items: center;
-  gap: 8px;
-}
+  gap: 0.5rem;
 
-.checkButton {
-  width: 8rem;
-  height: 3.4rem;
-  box-sizing: border-box;
-
-  background-color: $grayscale-5;
-
-  font-size: 0.9rem;
-  font-weight: 500;
-
-  cursor: pointer;
-
-  &:hover {
-    background-color: $grayscale-10; // 원하는 색상으로 변경
-    transition: background-color 0.5s ease; // 모션을 서서히 나타나도록 함
-  }
-}
-
-// 회원가입 버튼
-.submitButton {
-  width: 100%;
-  height: 3.4rem;
-  box-sizing: border-box;
-
-  background-color: $grayscale-5;
-
-  font-size: 0.9rem;
-  font-weight: 500;
-
-  cursor: pointer;
-
-  &:hover {
-    background-color: $grayscale-10; // 원하는 색상으로 변경
-    transition: background-color 0.5s ease; // 모션을 서서히 나타나도록 함
+  .loginLink {
+    color: $point-50;
+    text-decoration: underline;
+    font-size: 1rem;
+    font-weight: 600;
   }
 }

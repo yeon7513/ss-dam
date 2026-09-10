@@ -3,7 +3,12 @@ import styles from "./Sidebar.module.scss";
 
 function Sidebar({ children, isFixed = true, className }) {
   return (
-    <div className={isFixed ? cn(styles.fixed, className) : className}>
+    // isFixed가 false여도 styles.sidebar 기본 클래스가 적용되도록 수정
+    <div
+      className={
+        isFixed ? cn(styles.fixed, className) : cn(styles.sidebar, className)
+      }
+    >
       <ul>{children}</ul>
     </div>
   );

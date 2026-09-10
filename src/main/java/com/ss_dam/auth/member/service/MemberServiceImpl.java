@@ -39,5 +39,11 @@ public class MemberServiceImpl implements MemberService {
     return memberDao.searchMemberByCode(code);
   }
 
+  // [추가] 아이디 중복 확인 (중복 시 true, 사용 가능 시 false)
+  @Override
+  public boolean isIdDuplicated(String id) {
+    return memberDao.countById(id) > 0;
+  }
+
 
 }

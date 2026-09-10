@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ss_dam.auth.member.Member;
@@ -16,8 +17,8 @@ import com.ss_dam.auth.member.service.MemberService;
 import com.ss_dam.common.ApiResponse;
 
 @RestController
-@RequestMapping("/api/admin/member")
-public class MemberController {
+@RequestMapping("/api/member")
+public class UserMemberController {
 
 	@Autowired
 	MemberService memberService;
@@ -60,5 +61,18 @@ public class MemberController {
 		}
 
 	}
+
+	// 아이디 중복 확인
+  @GetMapping("/check-id")
+  public ResponseEntity<ApiResponse<Boolean>> checkId(@RequestParam("id") String id) {
+    
+    boolean isDuplicated = memberService.isIdDuplicated(id);
+    
+    if (isDuplicated) {
+      return ResponseEntity.ok(ApiResponse.success("이미 사용 중인 아이디입니다", true));
+    }
+    
+    return ResponseEntity.ok(ApiResponse.success("사용 가능한 아이디입니다", false));
+  }
 
 }

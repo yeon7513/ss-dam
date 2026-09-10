@@ -2,7 +2,7 @@
 @use "/src/scss/mixin.scss" as mix;
 
 //rem : 상대크기로 설정. 웬만하면 margin, padding도 rem으로 설정.
-//border : 무조건 px로 설정.
+//border : 무조건 px로 설정. //어 뭐야. 이걸 여기에 써놨었네
 
 .main {
   display: flex; //왼쪽 고정제목 영역과 오른쪽 콘텐츠 영역 나란히 배치

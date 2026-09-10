@@ -26,9 +26,9 @@
 
   <insert id="registerMember">
     INSERT INTO MEMBER_ACCOUNT
-    (id, password, name, phone, address, rating, ranking, point, status, created_at, delete_yn)
+    (id, password, name, phone, address, rating, point, status, created_at, delete_yn) <!-- ranking 컬럼 삭제 -->
     VALUES
-    (#{id}, #{password}, #{name}, #{phone}, #{address}, 0, 0, 0, 'ACTIVE', now(), 0)
+    (#{id}, #{password}, #{name}, #{phone}, #{address}, 0, 0, 'ACTIVE', now(), 0) <!-- ranking 컬럼 삭제하면서 '0' 1개 삭제 -->
 
     <selectKey keyProperty="code" resultType="long" order="AFTER">
       SELECT LAST_INSERT_ID()
@@ -58,4 +58,13 @@
     WHERE EMP_ID = #{id}
     AND PASSWORD = #{password}
   </select>
+
+  <!-- 아이디 중복 확인 쿼리 (삭제되지 않은 계정 기준) -->
+  <select id="countById" parameterType="String" resultType="int">
+    SELECT COUNT(*)
+    FROM MEMBER_ACCOUNT
+    WHERE ID = #{id}
+    AND DELETE_YN = 0
+  </select>
+
 </mapper>
