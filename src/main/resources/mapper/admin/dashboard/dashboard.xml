@@ -74,6 +74,192 @@
 
   </select>
 
+  <!-- 종료된 챌린지의 참여 건수와 달성 건수-->
+  <select id="findChallengeStatistics"
+          parameterType="map"
+          resultType="ChallengeStatistics">
+      SELECT
+        COUNT(*) AS totalParticipationCount,
+        COUNT(
+          CASE
+            WHEN ce.STATUS = 'COMPLETED' THEN 1
+          END
+        ) AS completedParticipationCount
+      FROM CHALLENGE c
+      INNER JOIN CHALLENGE_ENTRY ce
+        ON ce.CHAL_CODE = c.CODE
+       WHERE c.END_DATE &gt;= #{start}
+        AND c.END_DATE &lt; #{end}
+        AND c.END_DATE &lt; CURRENT_TIMESTAMP
+        AND c.DELETE_YN = FALSE
+        AND ce.STATUS != 'CANCELED'
+        AND ce.CANCELED_AT IS NULL
+  <!-- COUNT(CASE ...)는 조건에 맞는 참여만 카운트 -->
+  <!-- GROUP BY 없는 집계라서 대상 데이터가 없어도 전체 0건, 달성 0건인 한 행이 반환 -->
+  <!-- END_DATE를 실제 종료 시각으로 취급합니다. 
+  만약 종료일을 00:00으로 저장하면서 그날 하루까지 진행하는 정책이라면 종료 판정 조건을 맞춰야 함-->
+  </select>
+
+    <!-- 조회 기간 내 참여자 수 기준 챌린지 인기 순위 -->
+  <select id="findChallengeRanking"
+          parameterType="map"
+          resultType="ChallengeRanking">
+
+      SELECT
+          c.CODE AS challengeCode,
+          c.TITLE AS title,
+          COUNT(DISTINCT ce.MEM_CODE) AS participantCount
+      FROM CHALLENGE c
+      INNER JOIN CHALLENGE_ENTRY ce
+          ON ce.CHAL_CODE = c.CODE
+      WHERE ce.JOINED_AT &gt;= #{start}
+        AND ce.JOINED_AT &lt; #{end}
+        AND c.DELETE_YN = FALSE
+        AND ce.STATUS != 'CANCELED'
+        AND ce.CANCELED_AT IS NULL
+      GROUP BY
+          c.CODE,
+          c.TITLE
+      ORDER BY
+          participantCount DESC,
+          c.CODE ASC
+  <!-- COUNT(DISTINCT ce.MEM_CODE)는 챌린지별 중복을 제외한 회원 수를 계산
+   참여자 수가 같으면 챌린지 번호순으로 표시하지만, 서비스에서는 같은 순위를 부여-->
+
+  </select>
+
+  <!-- 지역별 챌린지 참여 건수 -->
+<select id="findRegionStatistics"
+        parameterType="map"
+        resultType="RegionStatistics">
+
+    SELECT
+        CASE
+            WHEN TRIM(m.ADDRESS) LIKE '서울%' THEN '서울'
+            WHEN TRIM(m.ADDRESS) LIKE '부산%' THEN '부산'
+            WHEN TRIM(m.ADDRESS) LIKE '대구%' THEN '대구'
+            WHEN TRIM(m.ADDRESS) LIKE '인천%' THEN '인천'
+            WHEN TRIM(m.ADDRESS) LIKE '광주%' THEN '광주'
+            WHEN TRIM(m.ADDRESS) LIKE '대전%' THEN '대전'
+            WHEN TRIM(m.ADDRESS) LIKE '울산%' THEN '울산'
+            WHEN TRIM(m.ADDRESS) LIKE '세종%' THEN '세종'
+            WHEN TRIM(m.ADDRESS) LIKE '경기%' THEN '경기'
+            WHEN TRIM(m.ADDRESS) LIKE '강원%' THEN '강원'
+
+            WHEN TRIM(m.ADDRESS) LIKE '충북%'
+              OR TRIM(m.ADDRESS) LIKE '충청북%' THEN '충북'
+
+            WHEN TRIM(m.ADDRESS) LIKE '충남%'
+              OR TRIM(m.ADDRESS) LIKE '충청남%' THEN '충남'
+
+            WHEN TRIM(m.ADDRESS) LIKE '전북%'
+              OR TRIM(m.ADDRESS) LIKE '전라북%' THEN '전북'
+
+            WHEN TRIM(m.ADDRESS) LIKE '전남%'
+              OR TRIM(m.ADDRESS) LIKE '전라남%' THEN '전남'
+
+            WHEN TRIM(m.ADDRESS) LIKE '경북%'
+              OR TRIM(m.ADDRESS) LIKE '경상북%' THEN '경북'
+
+            WHEN TRIM(m.ADDRESS) LIKE '경남%'
+              OR TRIM(m.ADDRESS) LIKE '경상남%' THEN '경남'
+
+            WHEN TRIM(m.ADDRESS) LIKE '제주%' THEN '제주'
+
+            ELSE '미상'
+        END AS regionName,
+
+        COUNT(*) AS participationCount
+
+    FROM CHALLENGE_ENTRY ce
+    INNER JOIN CHALLENGE c
+        ON c.CODE = ce.CHAL_CODE
+    LEFT JOIN MEMBER_ACCOUNT m
+        ON m.CODE = ce.MEM_CODE
+
+    WHERE ce.JOINED_AT &gt;= #{start}
+      AND ce.JOINED_AT &lt; #{end}
+      AND c.DELETE_YN = FALSE
+      AND ce.STATUS != 'CANCELED'
+      AND ce.CANCELED_AT IS NULL
+
+    GROUP BY regionName
+    ORDER BY participationCount DESC, regionName ASC
 
 
+<!-- 주소 처리 부분의 의미
+- TRIM() : 주소 앞뒤 공백 제거
+- SUBSTRING_INDEX(..., ' ', 1) : 첫 번째 공백 앞의 지역명 추출 (사용X)
+- LIKE 'OO%'사용 , LIKE는 조건을 검사하므로, 같은 지역명으로 묶으려면 CASE와 함께 사용
+- NULLIF(..., '') : 빈 문자열을 NULL로 변환
+- COALESCE(..., '미상') : NULL이면 "미상" 사용
+- 회원 정보가 없는 참여 기록도 "미상"에 포함하도록 LEFT JOIN을 사용-->
+
+</select>
+
+<!-- 판매자 순위와 내부 프로필 객체 매핑 -->
+<resultMap id="sellerRankingMap" type="SellerRanking">
+
+    <result property="completedTradeCount"
+            column="completedTradeCount"/>
+
+    <result property="totalSalesAmount"
+            column="totalSalesAmount"/>
+
+    <association property="memberProfile"
+                javaType="com.ss_dam.auth.member.MemberProfile">
+
+        <id property="id" column="sellerId"/>
+        <result property="code" column="memberCode"/>
+        <result property="rating" column="memberRating"/>
+        <result property="profileImage" column="profileImage"/>
+
+    </association>
+
+</resultMap>
+
+<!-- 거래 금액 기준 판매자 실적 조회 -->
+<select id="findSellerRanking"
+        parameterType="map"
+        resultMap="sellerRankingMap">
+
+    SELECT
+        sales.sellerId,
+        sales.completedTradeCount,
+        sales.totalSalesAmount,
+        m.CODE AS memberCode,
+        m.RATING AS memberRating,
+        (
+            SELECT i.PATH
+            FROM IMAGES i
+            WHERE i.TARGET_CODE = m.CODE
+              AND i.TYPE = 'profile'
+              AND i.DELETE_YN = FALSE
+            ORDER BY i.ORDER_SEQ ASC, i.PATH ASC
+            LIMIT 1
+        ) AS profileImage
+        <!--이미지 순서가 가장 앞인 프로필 사진 한 개 가져옴 ,
+        순서가 같으면 경로순으로 선택-->
+    FROM (
+        SELECT
+            SELLER_ID AS sellerId,
+            COUNT(*) AS completedTradeCount,
+            SUM(PRICE) AS totalSalesAmount
+        FROM MARKET_DEAL_LOG
+        WHERE CREATED_AT &gt;= #{start}
+          AND CREATED_AT &lt; #{end}
+        GROUP BY SELLER_ID
+    ) sales
+    LEFT JOIN MEMBER_ACCOUNT m
+        ON m.ID = sales.sellerId
+    ORDER BY
+        sales.totalSalesAmount DESC,
+        sales.sellerId ASC
+<!-- 안쪽 쿼리에서 판매자별 거래 건수와 금액을 먼저 합산하고, 바깥쪽에서 회원 정보를 붙입니다. 
+  프로필 이미지는 번호가 가장 큰 유효 이미지 한 개를 가져옵니다.
+  rank와 salesChangeRate는 서비스에서 계산하므로 SQL매핑에 넣지 않음, 판매 순위는 서비스에서 계산
+  memberProfile.ranking은 회원의 기존 랭킹
+  바깥쪽 rank는 이번에 계산한 판매 순위-->
+</select>
+  
 </mapper>
