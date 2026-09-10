@@ -1,8 +1,6 @@
 import { IoChatbubbleEllipses, IoHeartSharp } from "react-icons/io5";
 import Button from "../../../components/common/button/Button";
-import Comment from "../../../components/feed/comment/Comment";
 import Hashtag from "../../../components/feed/hashtag/Hashtag";
-import TextInput from "../../../components/forms/text-input/TextInput";
 import ProfileCard from "../../../components/profile-card/ProfileCard";
 import { formatCreatedAt } from "../../../utils/formatDate";
 import styles from "./FeedDetail.module.scss";
@@ -11,41 +9,15 @@ import cn from "classnames";
 import { useLoadData } from "../../../hooks/useLoadData.js";
 import { useNavigate } from "react-router-dom";
 import { useSubmitData } from "../../../hooks/useSubmitData.js";
+import Comments from "../../../components/feed/comment/Comments.jsx";
 
 const FeedDetail = ({ code, onClose }) => {
   const navigate = useNavigate();
-
-  // 임시로 로그인 관련 세션 설정 -> 나중에 변경할 것!
-  const isLoggedIn = sessionStorage.getItem("userName") !== null;
 
   const { data, loading, error } = useLoadData(`/api/feeds/${code}`);
 
   const detail = data || {};
 
-  // 댓글 부분 옮길 것...
-  // const { handleSubmit } = useSubmitData("/api/comments", "POST");
-  //
-  // const handleRegisterComment = async (e) => {
-  //   e.preventDefault();
-  //
-  //   const form = e.target.closest("form");
-  //
-  //   const newComment = {
-  //     feedCode: code,
-  //     content: form.comment.value,
-  //   }
-  //
-  //   try {
-  //     const { success } = await handleSubmit(newComment);
-  //
-  //     if (success) {
-  //       alert("댓글 등록 완료");
-  //     }
-  //
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }
 
   // 피드 삭제 요청 훅
   const { handleSubmit: handleSubmitDeleteFeed } = useSubmitData(`/api/feeds/${code}`, "DELETE");
@@ -141,28 +113,7 @@ const FeedDetail = ({ code, onClose }) => {
           </div>
 
           {/* 댓글 */}
-          <div className={cn(styles.content, styles.comment)}>
-            {/* 댓글 등록 */}
-            <form className={styles.postComment}>
-              <TextInput
-                className={styles.field}
-                id="comment"
-                name="comment"
-                // disabled={!isLoggedIn}
-                // placeholder={
-                //   isLoggedIn
-                //     ? "댓글을 작성해주세요."
-                //     : "로그인 후 댓글을 작성할 수 있습니다."
-                // }
-              />
-              <Button className={styles.registerButton} type="submit">등록</Button>
-            </form>
-
-            {/* 등록된 댓글 리스트 */}
-            <div className={styles.comments}>
-              <Comment comments={detail.comments} />
-            </div>
-          </div>
+          <Comments targetCode={code} />
         </div>
       </div>
     </div>
