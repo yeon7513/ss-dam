@@ -6,7 +6,7 @@ import java.util.Map;
 import com.ss_dam.challenge.Challenge;
 import com.ss_dam.challenge.ChallengeInfo;
 
-public interface ChallengeService {
+public interface UserChallengeService {
 
     // 전체 챌린지 조회
     List<Challenge> searchChallenges(String progressStatus);

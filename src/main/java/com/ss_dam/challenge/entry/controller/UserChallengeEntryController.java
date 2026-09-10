@@ -9,15 +9,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ss_dam.challenge.entry.ChallengeEntry;
-import com.ss_dam.challenge.entry.service.ChallengeEntryService;
+import com.ss_dam.challenge.entry.service.UserChallengeEntryService;
 import com.ss_dam.common.ApiResponse;
 
 @RestController
 @RequestMapping ("/chal_entry")
-public class ChallengeEntryController {
+public class UserChallengeEntryController {
 
 	@Autowired
-	ChallengeEntryService challengeEntryService;
+	UserChallengeEntryService challengeEntryService;
 	
 	@GetMapping
 	public ResponseEntity<ApiResponse<List<ChallengeEntry>>> getAllEntries() {

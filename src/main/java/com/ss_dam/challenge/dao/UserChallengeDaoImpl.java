@@ -12,7 +12,7 @@ import com.ss_dam.challenge.Challenge;
 import com.ss_dam.challenge.ChallengeInfo;
 
 @Repository
-public class ChallengeDaoImpl implements ChallengeDao {
+public class UserChallengeDaoImpl implements UserChallengeDao {
 
 	@Autowired
 	SqlSession sql;
