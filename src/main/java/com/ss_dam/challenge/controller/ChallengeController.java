@@ -28,9 +28,12 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/api/challenge")
 public class ChallengeController {
 
+	//UserChallengController : 목록·상세·인기·최신·랭킹 조회, 챌린지 참여, 내 참여 정보
+
 	@Autowired
 	ChallengeService challengeService;
 
+	
 	// 전체 챌린지 조회
 	@GetMapping
 	public ResponseEntity<ApiResponse<List<Challenge>>> searchChallenges(

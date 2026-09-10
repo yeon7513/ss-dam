@@ -90,9 +90,6 @@ public class AdminProductController {
   //관리자 권한 확인 추가 
   
 
-
-
- 
   //상품 판매 중지 및 재개 (판매 중지시 사유 판매자에게 전달)
   //상품 판매 숨김(판매자와 관리자 조회 가능)
   //+처리 사유 입력 및 변경 이력 확인
@@ -105,6 +102,60 @@ public class AdminProductController {
   //관리자가 목록에서 체크박스로 상품 여러 개를 선택해 한 번에 처리하는 기능
   //상품 검색·필터·페이지네이션
 
+
+
+  /*
+  // 전체 상품 조회
+// GET /api/admin/products
+// 정상 상품 조회
+// GET /api/admin/products?status=ACTIVE
+// 비공개 상품 조회
+// GET /api/admin/products?status=PRIVATE
+// 숨김 상품 조회
+// GET /api/admin/products?status=BLINDED
+// 신고된 상품 조회
+// GET /api/admin/products?status=REPORTED
+// 삭제된 상품 조회
+// GET /api/admin/products?status=DELETED
+
+// 판매 중 상품 조회
+// GET /api/admin/products?dealStatus=ON_SALE
+// 예약 중 상품 조회
+// GET /api/admin/products?dealStatus=IN_PROGRESS
+// 판매 완료 상품 조회
+// GET /api/admin/products?dealStatus=SOLD
+
+// 필터 조합: 정상 노출 중이면서 판매 중인 상품
+// GET /api/admin/products?status=ACTIVE&dealStatus=ON_SALE
+// 위 필터는 같은 @GetMapping에서 @RequestParam으로 받음
+@GetMapping
+
+// 상품 상세 조회 (비공개·숨김·삭제 상태 포함)
+@GetMapping("/{prodCode}")
+
+// 상품 숨김
+@PatchMapping("/{prodCode}/hide")
+
+// 상품 숨김 해제
+@PatchMapping("/{prodCode}/unhide")
+
+// 상품 판매 중지
+@PatchMapping("/{prodCode}/suspend")
+
+// 상품 판매 중지 해제
+@PatchMapping("/{prodCode}/resume")
+
+// 상품 삭제
+@DeleteMapping("/{prodCode}")
+
+// 삭제된 상품 복구
+@PatchMapping("/{prodCode}/restore")
+
+// 상품 관리 처리 이력 조회
+@GetMapping("/{prodCode}/logs")
+ */
+//필터와 추가 API는 구현할 구성안이에요. 현재 DealStatus에는 판매 중지 상태가 없으므로, 
+//판매 중지·해제를 구현하려면 별도의 중지 여부 필드 등도 필요
 }
   
 
