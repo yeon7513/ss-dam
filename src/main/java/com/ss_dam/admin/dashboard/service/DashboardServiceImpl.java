@@ -3,6 +3,7 @@ package com.ss_dam.admin.dashboard.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.ss_dam.admin.dashboard.dao.DashboardDao;
 import com.ss_dam.admin.dashboard.model.response.DashboardSummary;
+import com.ss_dam.admin.dashboard.model.response.MemberStatistics;
 
 @Service //구현 클래스를 Spring Bean으로 등록
 @Transactional(readOnly = true) //조회용 트랜잭션 적용
@@ -20,16 +23,25 @@ public class DashboardServiceImpl implements DashboardService {
     @Autowired 
     private DashboardDao dashboardDao;
 
+    //조회 기간에 해당하는 대시보드 통계 반환
     @Override 
     public DashboardSummary getDashboardSummary(
         LocalDate from,
         LocalDate to) {
 
         //1. 날짜 검증
-        if(from == null || to == null) {
+        if (from == null || to == null) {
             throw new ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
                 "시작일과 종료일은 필수입니다"
+            );
+        }
+
+        //날짜 시작일과 종료일 순서 검증
+        if (from.isAfter(to)) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "시작일은 종료일보다 늦을 수 없습니다"
             );
         }
 
@@ -52,7 +64,7 @@ public class DashboardServiceImpl implements DashboardService {
 
         //4. 각 기간에 가입한 신규 회원 수
         long newMemberCount = dashboardDao.countNewMembers(start, end);
-        long previousNewMemberCount = dashboardDao.countNewMembers(start, end);
+        long previousNewMemberCount = dashboardDao.countNewMembers(previousStart, previousEnd);
 
         //5. 각 기간에 등록된 신규 피드 수
         long newFeedCount = dashboardDao.countNewFeeds(start, end);
@@ -81,7 +93,7 @@ public class DashboardServiceImpl implements DashboardService {
 
         summary.setNewFeedChangeRate(
             calculateChangeRate(
-                newMemberCount, previousNewFeedCount));
+                newFeedCount, previousNewFeedCount));
         
         summary.setNewTradeChageRate(
             calculateChangeRate(
@@ -90,6 +102,37 @@ public class DashboardServiceImpl implements DashboardService {
         return summary;
 
     }
+
+    //조회 기간의 월별 신규 가입 회원 수
+    @Override 
+    public List<MemberStatistics> getMemberStatistics(
+        LocalDate from, LocalDate to) {
+
+        //1.날짜 필수값 검증
+        if (from == null || to == null) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "시작일과 종료일은 필수입니다"
+            );
+        }
+        
+        //2.날짜 순서 검증
+        if (from.isAfter(to)) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "시작일은 종료일보다 늦을 수 없습니다"
+            );
+        }
+
+        //3.시작일 00:00 이상 ~ 종료일 다음 날 00:00 미만
+        LocalDateTime start = from.atStartOfDay();
+        LocalDateTime end = to.plusDays(1).atStartOfDay();
+
+        //4.월별 신규 가입 회원 수 조회
+        return dashboardDao.findMemberStatistics(start, end);
+    }
+
+
 
     //증감률 계산은 DB 조회가 아닌 비즈니스 로직이므로,
     //DAO가 아닌 ServiceImpl에서 처리

@@ -11,12 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ss_dam.admin.dashboard.model.response.ChallengeRanking;
-import com.ss_dam.admin.dashboard.model.response.ChallengeStatistics;
 import com.ss_dam.admin.dashboard.model.response.DashboardSummary;
 import com.ss_dam.admin.dashboard.model.response.MemberStatistics;
-import com.ss_dam.admin.dashboard.model.response.RegionStatistics;
-import com.ss_dam.admin.dashboard.model.response.SellerRanking;
 import com.ss_dam.admin.dashboard.service.DashboardService;
 import com.ss_dam.common.ApiResponse;
 
@@ -69,8 +65,8 @@ public ResponseEntity<ApiResponse<Void>> checkAdmin(){
                 ApiResponse.success("대시보드 요약 조회 성공", result));
     }
 
-    // GET /api/admin/dashboard/statistics/members
-    // → 월별 신규 회원 수 조회
+// GET /api/admin/dashboard/statistics/members
+// → 월별 신규 회원 수 조회
     @GetMapping("/dashboard/statistics/members")
     public ResponseEntity<ApiResponse<List<MemberStatistics>>> getMemberStatistics(
             @RequestParam("from")
@@ -85,67 +81,67 @@ public ResponseEntity<ApiResponse<Void>> checkAdmin(){
                 ApiResponse.success("회원 통계 조회 성공", result));
     }
 
-    // GET /api/admin/dashboard/statistics/challenges
-    // → 종료된 챌린지의 참여 건수와 달성률 조회
-    @GetMapping("/dashboard/statistics/challenges")
-    public ResponseEntity<ApiResponse<ChallengeStatistics>> getChallengeStatistics(
-            @RequestParam("from")
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
-            @RequestParam("to")
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
+//     // GET /api/admin/dashboard/statistics/challenges
+//     // → 종료된 챌린지의 참여 건수와 달성률 조회
+//     @GetMapping("/dashboard/statistics/challenges")
+//     public ResponseEntity<ApiResponse<ChallengeStatistics>> getChallengeStatistics(
+//             @RequestParam("from")
+//             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+//             @RequestParam("to")
+//             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
 
-        ChallengeStatistics result =
-                dashboardService.getChallengeStatistics(from, to);
+//         ChallengeStatistics result =
+//                 dashboardService.getChallengeStatistics(from, to);
 
-        return ResponseEntity.ok(
-                ApiResponse.success("챌린지 통계 조회 성공", result));
-    }
+//         return ResponseEntity.ok(
+//                 ApiResponse.success("챌린지 통계 조회 성공", result));
+//     }
 
-    // GET /api/admin/dashboard/statistics/challenges/ranking
-    // → 참여자 수 기준 챌린지 인기 순위 조회
-    @GetMapping("/dashboard/statistics/challenges/ranking")
-    public ResponseEntity<ApiResponse<List<ChallengeRanking>>> getChallengeRanking(
-            @RequestParam("from")
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
-            @RequestParam("to")
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
+//     // GET /api/admin/dashboard/statistics/challenges/ranking
+//     // → 참여자 수 기준 챌린지 인기 순위 조회
+//     @GetMapping("/dashboard/statistics/challenges/ranking")
+//     public ResponseEntity<ApiResponse<List<ChallengeRanking>>> getChallengeRanking(
+//             @RequestParam("from")
+//             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+//             @RequestParam("to")
+//             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
 
-        List<ChallengeRanking> result =
-                dashboardService.getChallengeRanking(from, to);
+//         List<ChallengeRanking> result =
+//                 dashboardService.getChallengeRanking(from, to);
 
-        return ResponseEntity.ok(
-                ApiResponse.success("챌린지 인기 순위 조회 성공", result));
-    }
+//         return ResponseEntity.ok(
+//                 ApiResponse.success("챌린지 인기 순위 조회 성공", result));
+//     }
 
-    // GET /api/admin/dashboard/statistics/regions
-    // → 지역별 챌린지 참여 건수와 비율 조회
-    @GetMapping("/dashboard/statistics/regions")
-    public ResponseEntity<ApiResponse<List<RegionStatistics>>> getRegionStatistics(
-            @RequestParam("from")
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
-            @RequestParam("to")
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
+//     // GET /api/admin/dashboard/statistics/regions
+//     // → 지역별 챌린지 참여 건수와 비율 조회
+//     @GetMapping("/dashboard/statistics/regions")
+//     public ResponseEntity<ApiResponse<List<RegionStatistics>>> getRegionStatistics(
+//             @RequestParam("from")
+//             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+//             @RequestParam("to")
+//             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
 
-        List<RegionStatistics> result =
-                dashboardService.getRegionStatistics(from, to);
+//         List<RegionStatistics> result =
+//                 dashboardService.getRegionStatistics(from, to);
 
-        return ResponseEntity.ok(
-                ApiResponse.success("지역별 참여 통계 조회 성공", result));
-    }
+//         return ResponseEntity.ok(
+//                 ApiResponse.success("지역별 참여 통계 조회 성공", result));
+//     }
 
-    // GET /api/admin/dashboard/statistics/sellers/ranking
-    // → 거래 완료 금액 기준 우수 판매자 순위 조회
-    @GetMapping("/dashboard/statistics/sellers/ranking")
-    public ResponseEntity<ApiResponse<List<SellerRanking>>> getSellerRanking(
-            @RequestParam("from")
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
-            @RequestParam("to")
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
+//     // GET /api/admin/dashboard/statistics/sellers/ranking
+//     // → 거래 완료 금액 기준 우수 판매자 순위 조회
+//     @GetMapping("/dashboard/statistics/sellers/ranking")
+//     public ResponseEntity<ApiResponse<List<SellerRanking>>> getSellerRanking(
+//             @RequestParam("from")
+//             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+//             @RequestParam("to")
+//             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
 
-        List<SellerRanking> result =
-                dashboardService.getSellerRanking(from, to);
+//         List<SellerRanking> result =
+//                 dashboardService.getSellerRanking(from, to);
 
-        return ResponseEntity.ok(
-                ApiResponse.success("우수 판매자 순위 조회 성공", result));
-    }
+//         return ResponseEntity.ok(
+//                 ApiResponse.success("우수 판매자 순위 조회 성공", result));
+//     }
 }
