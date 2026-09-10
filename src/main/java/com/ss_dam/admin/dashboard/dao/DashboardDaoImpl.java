@@ -9,7 +9,11 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.ss_dam.admin.dashboard.model.response.ChallengeRanking;
+import com.ss_dam.admin.dashboard.model.response.ChallengeStatistics;
 import com.ss_dam.admin.dashboard.model.response.MemberStatistics;
+import com.ss_dam.admin.dashboard.model.response.RegionStatistics;
+import com.ss_dam.admin.dashboard.model.response.SellerRanking;
 
 @Repository //DAO 구현 클래스를 Spring Bean으로 등록
 public class DashboardDaoImpl implements DashboardDao {
@@ -42,6 +46,42 @@ public class DashboardDaoImpl implements DashboardDao {
                 createPeriodParams(start, end)
             );
         }
+
+    @Override
+    public ChallengeStatistics findChallengeStatistics(
+        LocalDateTime start, LocalDateTime end) {
+
+        return sql.selectOne("dashboard.findChallengeStatistics", createPeriodParams(start, end));
+        
+        }
+    
+    @Override
+    public List<ChallengeRanking> findChallengeRanking(
+        LocalDateTime start, LocalDateTime end) {
+        
+        return sql.selectList("dashboard.findChallengeRanking", createPeriodParams(start, end));
+        
+        }
+
+    @Override
+    public List<RegionStatistics> findRegionStatistics(
+        LocalDateTime start, LocalDateTime end) {
+
+        return sql.selectList("dashboard.findRegionStatistics", createPeriodParams(start, end));
+        }
+
+    @Override
+    public List<SellerRanking> findSellerRanking(
+        LocalDateTime start, LocalDateTime end) {
+        
+        return sql.selectList(
+            "dashboard.findSellerRanking",
+            createPeriodParams(start, end)
+        );
+    }
+    
+    
+
 
 
    @Override 
