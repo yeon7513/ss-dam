@@ -99,6 +99,7 @@
     LEFT JOIN (
     SELECT fl.feed_code, count(*) AS cnt
     FROM FEED_LIKE fl
+    WHERE fl.delete_yn = 0
     GROUP BY fl.feed_code
     ) AS cnt_like ON cnt_like.feed_code = f.code
     <!-- 댓글 개수 -->
@@ -110,7 +111,7 @@
     ) AS cnt_comment ON cnt_comment.feed_code = f.code
     <!-- 로그인한 사용자의 좋아요 여부 -->
     LEFT JOIN FEED_LIKE my_like
-    ON my_like.feed_code = f.code AND my_like.mem_code = #{memberCode}
+    ON my_like.feed_code = f.code AND my_like.mem_code = #{memberCode} AND my_like.delete_yn = 0
   </sql>
 
   <!-- 공통 피드 기본 컬럼 -->
