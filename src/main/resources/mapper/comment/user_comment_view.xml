@@ -19,10 +19,10 @@
 
   </resultMap>
 
-  <select id="countComment" resultType="Integer">
+  <select id="loadCommentsTotalCount" resultType="Float">
     SELECT IFNULL(count(*), 0)
     FROM COMMENTS
-    WHERE feed_code = #{feedCode}
+    WHERE feed_code = #{feedCode} AND status = 'active' AND delete_yn = 0
   </select>
 
   <select id="findCommentsByFeedCode" resultMap="UserCommentViewMap">
@@ -50,12 +50,13 @@
     LEFT JOIN (
     SELECT cl.cmt_code, count(*) AS cnt
     FROM COMMENT_LIKE cl
+    WHERE cl.delete_yn = 0
     GROUP BY cl.cmt_code
     ) AS cnt_like
     ON cnt_like.cmt_code = c.code
     <!-- 로그인한 사용자의 좋아요 여부 -->
     LEFT JOIN COMMENT_LIKE my_like
-    ON my_like.cmt_code = c.code AND my_like.mem_code = #{memberCode}
+    ON my_like.cmt_code = c.code AND my_like.mem_code = #{memberCode} AND my_like.delete_yn = 0
     <!-- 조건 & 정렬 -->
     WHERE c.feed_code = #{feedCode} AND c.status = 'active' AND c.delete_yn = 0
     ORDER BY c.created_at DESC, c.code DESC

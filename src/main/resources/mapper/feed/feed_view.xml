@@ -34,6 +34,7 @@
     <collection property="imagePaths" javaType="ArrayList" ofType="String">
       <result column="image_paths" />
     </collection>
+
     <!-- 해시태그를 문자열 리스트로 받아오기 -->
     <collection property="hashtags" javaType="ArrayList" ofType="String">
       <result column="hashtags" />
@@ -48,6 +49,7 @@
     <collection property="imagePaths" javaType="ArrayList" ofType="String">
       <result column="image_paths" />
     </collection>
+
     <!-- 해시태그를 문자열 리스트로 받아오기 -->
     <collection property="hashtags" javaType="ArrayList" ofType="String">
       <result column="hashtags" />
@@ -58,7 +60,24 @@
 
   <!-- 사용자가 사용하는 검색 필터 -->
   <sql id="UserSearchFiller">
-
+    <where>
+      f.status = 'active' AND f.delete_yn = 0
+      <if test="searchCode != null and searchCode != 0">
+        AND f.chal_code = #{searchCode}
+      </if>
+      <if test="keyword != null and keyword.trim() != ''">
+        AND (
+        f.title LIKE CONCAT('%', #{keyword}, '%')
+        OR f.content LIKE CONCAT('%', #{keyword}, '%')
+        <!-- 해시태그 검색을 EXISTS 서브쿼리로 처리하여 1:N 조인 중복 방지 -->
+        OR EXISTS (
+        SELECT 1
+        FROM FEED_HASHTAG fh
+        WHERE fh.feed_code = f.code
+        AND fh.tag_name LIKE CONCAT('%', #{keyword}, '%')
+        ))
+      </if>
+    </where>
   </sql>
 
   <!-- 관리자가 사용하는 검색 필터 -->
@@ -80,6 +99,7 @@
     LEFT JOIN (
     SELECT fl.feed_code, count(*) AS cnt
     FROM FEED_LIKE fl
+    WHERE fl.delete_yn = 0
     GROUP BY fl.feed_code
     ) AS cnt_like ON cnt_like.feed_code = f.code
     <!-- 댓글 개수 -->
@@ -91,7 +111,7 @@
     ) AS cnt_comment ON cnt_comment.feed_code = f.code
     <!-- 로그인한 사용자의 좋아요 여부 -->
     LEFT JOIN FEED_LIKE my_like
-    ON my_like.feed_code = f.code AND my_like.mem_code = #{memberCode}
+    ON my_like.feed_code = f.code AND my_like.mem_code = #{memberCode} AND my_like.delete_yn = 0
   </sql>
 
   <!-- 공통 피드 기본 컬럼 -->
@@ -115,11 +135,10 @@
   <!-- ================================================= -->
 
   <!-- 피드 전체 개수 -->
-  <select id="totalCountFeed" resultType="Integer">
+  <select id="loadFeedsTotalCount" resultType="Float">
     SELECT count(*)
     FROM FEED f
-    WHERE f.status = 'active' AND f.delete_yn = 0
-    <!-- 검색용 쿼리 나중에 추가할 것 -->
+    <include refid="UserSearchFiller" />
   </select>
 
   <!-- 피드 전체 목록 조회 -->
@@ -127,15 +146,21 @@
     SELECT
     <include refid="FeedBasicColumns" />,
     i.path AS thumbnail
-    FROM FEED f
+    FROM (
+    <!-- 부모 테이블을 정확히 perPage만큼 끊어서 가져온 후 조인  -->
+    SELECT *
+    FROM FEED
+    WHERE status = 'active' AND delete_yn = 0
+    ORDER BY created_at DESC, code DESC
+    LIMIT #{offset}, #{perPage}
+    ) AS f
     <include refid="FeedCommonJoins" />
     <!-- 목록 전용 대표 이미지 JOIN -->
     LEFT JOIN IMAGES i ON f.code = i.target_code AND i.type = 'feed' AND i.order_seq = 1
     <!-- 해시태그 -->
-    LEFT JOIN FEED_HASHTAG fh ON f.code = fh.feed_code
-    WHERE f.status = 'active' AND f.delete_yn = 0
+    LEFT JOIN FEED_HASHTAG AS fh ON f.code = fh.feed_code
+    <include refid="UserSearchFiller" />
     ORDER BY f.created_at DESC, f.code DESC
-    LIMIT #{offset}, #{perPage}
   </select>
 
   <!-- 피드 상세 조회 -->

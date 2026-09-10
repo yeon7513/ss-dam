@@ -6,7 +6,7 @@
 <mapper namespace="commentLike">
 
 	<!-- UPSERT -->
-	<insert id="updateCommentLike" parameterType="CommentLike">
+	<insert id="upsertCommentLike" parameterType="CommentLike">
 		INSERT INTO
 		COMMENT_LIKE(
 		CMT_CODE,
@@ -17,10 +17,10 @@
 		#{cmtCode},
 		#{memCode},
 		NOW(),
-		'N'
+		0
 		)
 		ON DUPLICATE KEY UPDATE
-		DELETE_YN =	IF(DELETE_YN = 'N', 'Y', 'N')
+		DELETE_YN =	IF(DELETE_YN = 0, 1, 0)
 	</insert>
 
 	<select id="selectedIsLiked" parameterType="map"
@@ -30,7 +30,7 @@
 		WHERE CMT_CODE =
 		#{cmtCode}
 		AND MEM_CODE = #{memCode}
-		AND DELETE_YN = 'N'
+		AND DELETE_YN = 0
 	</select>
 
 

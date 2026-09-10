@@ -4,7 +4,8 @@ package com.ss_dam.feed.controller;
 
 import com.ss_dam.auth.login.Login;
 import com.ss_dam.common.ApiResponse;
-import com.ss_dam.common.pager.Pager;
+import com.ss_dam.common.pager.PageQuery;
+import com.ss_dam.common.pager.PageResult;
 import com.ss_dam.feed.model.request.FeedCreate;
 import com.ss_dam.feed.model.request.FeedUpdate;
 import com.ss_dam.feed.model.response.FeedDetail;
@@ -16,8 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 
 // @RestController 어노테이션 붙이면
@@ -35,7 +34,10 @@ public class UserFeedController {
 
   // 전체 피드 목록 조회
   @GetMapping
-  ResponseEntity<ApiResponse<List<UserFeedView>>> loadFeeds(Pager pager, HttpSession session) {
+  ResponseEntity<ApiResponse<PageResult<UserFeedView>>> loadFeeds(PageQuery pageQuery,
+      HttpSession session) {
+
+    System.out.println("searchCode: " + pageQuery.getPerPage());
 
     //    System.out.println("=== 세션 디버깅 시작 ===");
     //    // 1. 현재 세션의 고유 ID 확인
@@ -56,7 +58,7 @@ public class UserFeedController {
     // -> 로그인하지 않았을 경우는 처음부터 null을 넘겨 무조건 false가 나오게 처리
     Long memberCode = (loginUser != null) ? loginUser.getCode() : null;
 
-    List<UserFeedView> feeds = userFeedService.loadFeeds(pager, memberCode);
+    PageResult<UserFeedView> feeds = userFeedService.loadFeeds(pageQuery, memberCode);
 
     return ResponseEntity.ok(ApiResponse.success("피드 정보 조회 성공", feeds));
   }
@@ -65,14 +67,11 @@ public class UserFeedController {
   // 단일 피드 조회
   @GetMapping("/{feedCode}")
   ResponseEntity<ApiResponse<FeedDetail>> findFeedDetailByFeedCode(@PathVariable Long feedCode,
-      HttpSession session, Pager pager) {
-    // 단일 조회지만 Pager를 받아온 이유?
-    // -> 댓글 부분에 사용하기 위해..
-
+      HttpSession session) {
     Login loginUser = (Login) session.getAttribute("loginUser");
     Long memberCode = (loginUser != null) ? loginUser.getCode() : null;
 
-    FeedDetail feedDetail = userFeedService.findFeedDetailByFeedCode(feedCode, pager, memberCode);
+    FeedDetail feedDetail = userFeedService.findFeedDetailByFeedCode(feedCode, memberCode);
 
     if (feedDetail == null) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND)

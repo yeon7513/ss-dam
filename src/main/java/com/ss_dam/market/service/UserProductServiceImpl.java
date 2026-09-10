@@ -32,7 +32,7 @@ public class UserProductServiceImpl implements UserProductService {
     Map<String, Object> params = new HashMap<>();
 
     params.put("memberCode", memberCode);
-    params.put("offset", pager.getOffset());
+    //    params.put("offset", pager.getOffset());
     params.put("perPage", pager.getPerPage());
 
     return userProductDao.loadProducts(params);
