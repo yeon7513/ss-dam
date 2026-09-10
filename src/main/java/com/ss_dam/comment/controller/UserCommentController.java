@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserCommentController {
 
   private final AdminChallengeCategoryController adminChallengeCategoryController;
+  
   @Autowired
   UserCommentService userCommentService;
 

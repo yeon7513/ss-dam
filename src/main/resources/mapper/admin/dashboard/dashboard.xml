@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!-- 서비스의 "등록된 신규 거래"를 MARKET_PRODUCT에 등록된 상품 수로 해석-->
+<!-- 거래 이력 건 수는 MARKET_DEAL_LOG 사용하면 됨-->
+<!-- 삭제, 탈퇴 상태 필터 미포함-->
+
+<mapper namespace="dashboard">
+
+  
+  <!-- 종료 시점 이전까지 가입한 누적 회원 수 -->
+  <select id="countTotalMembers"
+         parameterType="map"
+         resultType="long">
+      SELECT COUNT(*)
+      FROM MEMBER_ACCOUNT
+      WHERE CREATED_AT &lt; #{end}
+  </select>
+  <!-- &lt;는 <, &gt;=는 >= -->
+  <!-- 서비스에서 계산한 시작일 이상, 종료일 다음 날 미만 조건으로 조회 가능 -->
+
+  <!-- 기간 내 신규 회원 수 -->
+  <select id="countNewMembers"
+          parameterType="map"
+          resultType="long">
+      SELECT COUNT(*)
+      FROM MEMBER_ACCOUNT
+      WHERE CREATED_AT &gt;= #{start}
+        AND CREATED_AT &lt; #{end}
+      <!-- 종료 조건은 &lt; 뒤에 =을 붙이지 않아야,
+       다음 날 00:00 데이터가 포함되지 않음-->
+  </select>
+
+  <!-- 기간 내 신규 피드 수 -->
+  <select id="countNewFeeds"
+          parameterType="map"
+          resultType="long">
+      SELECT COUNT(*)
+      FROM FEED
+      WHERE CREATED_AT &gt;= #{start}
+        AND CREATED_AT &lt; #{end}
+  </select>
+
+  <!-- 기간 내 신규 거래 상품 등록 수 
+  -> 거래 상품 등록 건수 기준 ) -->
+  <select id="countNewTrades"
+          parameterType="map"
+          resultType="long">
+      SELECT COUNT(*)
+      FROM MARKET_PRODUCT
+      WHERE CREATED_AT &gt;= #{start}
+        AND CREATED_AT &lt; #{end}
+  </select>
+
+  <!-- 조회 기간의 월별 신규 회원 수 -->
+  <select id="findMemberStatistics"
+          parameterType="map"
+          resultType="com.ss_dam.admin.dashboard.model.response.MemberStatistics">
+          <!--월별 회원 통계는 연월과 회원 수를 함께 조회-->
+          <!--예를 들어 결과 한 행에 "2026-09"와 10이 함께 있으므로,
+           두 필드를 가진 객체로 받아야 함-->
+
+      SELECT
+          DATE_FORMAT(CREATED_AT, '%Y-%m') AS yearMonth,
+          COUNT(*) AS newMemberCount
+      FROM MEMBER_ACCOUNT
+      WHERE CREATED_AT &gt;= #{start}
+        AND CREATED_AT &lt; #{end}
+      GROUP BY DATE_FORMAT(CREATED_AT, '%Y-%m')
+      ORDER BY yearMonth ASC
+
+  </select>
+
+
+
+</mapper>
