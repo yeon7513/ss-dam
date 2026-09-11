@@ -3,26 +3,30 @@ package com.ss_dam.market.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.ss_dam.admin.log.response.AdminActivity;
+import com.ss_dam.market.model.response.AdminProductDetail;
 import com.ss_dam.market.model.response.AdminProductView;
-import com.ss_dam.market.model.response.ProductDetail;
 
 public interface AdminProductDao {
 
-  //관리자 - 상품 목록 전체 개수
+  // 검색 조건에 해당하는 상품 수
   int countProducts(Map<String, Object> params);
 
-  //관리자 - 상품 목록 조회
-  List<AdminProductView> loadProducts(Map<String, Object> params);
+   // 상품 목록
+    List<AdminProductView> loadProducts(Map<String, Object> params);
 
-  //관리자 - 상품 상세 조회
-  ProductDetail loadProduct(Long prodCode);
+    // 상품 상세
+    AdminProductDetail loadProduct(Long prodCode);
 
-  //관리자 - 선택 상품 삭제
-    //상품 단건 삭제 
-      //상품 논리 삭제
-      int deleteProduct(Long prodCode);
+    // 논리 삭제
+    int deleteProduct(Long prodCode);
 
-      //관리자 삭제 로그 저장
-      int insertDeleteLog(Map<String, Object> params);
-  
-} 
+    // 삭제 복구
+    int restoreProduct(Long prodCode);
+
+    // 관리자 처리 이력 저장
+    int insertActivityLog(Map<String, Object> params);
+
+    // 상품별 관리자 처리 이력 조회
+    List<AdminActivity> loadProductLogs(Long prodCode);
+}
