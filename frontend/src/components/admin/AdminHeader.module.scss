@@ -19,13 +19,6 @@
   }
 
   .userModeBtn {
-    background-color: $grayscale-5;
-    border: 1px dashed red;
-    color: $grayscale-90;
-
-    &:hover {
-      background-color: $grayscale-10;
-      transition: background-color 0.5s ease;
-    }
+    width: 9rem;
   }
 }

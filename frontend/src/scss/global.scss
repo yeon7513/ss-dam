@@ -1,13 +1,13 @@
 @charset "utf-8";
 
-@use './variables.scss' as *;
+@use "./variables.scss" as *;
 
 /* reset */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Pretendard', sans-serif;
+  font-family: "Pretendard", sans-serif;
 }
 
 a {

@@ -14,13 +14,7 @@
 }
 
 .checkButton {
-  box-sizing: border-box;
-  background-color: $grayscale-5;
-  font-size: 0.9rem;
-  font-weight: 500;
-  cursor: pointer;
-  // width: 8rem; // 버튼 너비 조절!!!
-  height: 3.4rem;
+  width: 8rem; // 버튼 너비 조절!!!
 
   &:hover {
     background-color: $grayscale-10;

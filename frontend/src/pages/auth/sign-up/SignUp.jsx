@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { sendToSignup } from "../../../api/member";
 
-import IdSection from "../../../components/auth/id/IdSection";
+import IdSection from "../../../components/auth/Id/IdSection";
 import PasswordSection from "../../../components/auth/password/PasswordSection";
 import UserInfoSection from "../../../components/auth/userInfo/UserInfoSection";
 import AddressSection from "../../../components/auth/address/AddressSection";

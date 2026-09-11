@@ -11,7 +11,7 @@ const AdminHeader = () => {
   };
 
   const handleSwitchToUserMode = () => {
-    navigate("/mypage");
+    navigate("/mypage"); // 사용자 페이지로 변경 예정
   };
 
   return (
@@ -26,6 +26,8 @@ const AdminHeader = () => {
 
       <Button
         type="button"
+        btnStyle="danger"
+        size="sm"
         className={styles.userModeBtn}
         onClick={handleSwitchToUserMode}
       >

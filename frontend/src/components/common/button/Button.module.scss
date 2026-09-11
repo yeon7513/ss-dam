@@ -7,6 +7,7 @@
   border: none;
   font-family: inherit;
   font-weight: 500;
+  font-size: 0.9rem; // 버튼 폰트 사이즈
 
   transition:
     background-color 0.3s ease,
@@ -34,12 +35,22 @@
 
 // 아웃라인 스타일
 .outline {
-  background-color: $color-white;
-  border: 1px solid $grayscale-20;
+  //background-color: $color-white;
   color: $grayscale-90;
+  border: 1.5px solid $grayscale-50;
 
   &:hover:not(:disabled) {
     background-color: $grayscale-5;
+  }
+}
+
+// 위험/삭제 스타일
+.danger {
+  background-color: $dan-color; // 빨간색 계열 변수
+  color: $color-white;
+
+  &:hover:not(:disabled) {
+    background-color: $grayscale-50;
   }
 }
 
@@ -50,20 +61,16 @@
 .sm {
   height: 2.4rem;
   padding: 0 1rem;
-  font-size: 0.85rem;
 }
 
 .md {
   height: 3rem;
   padding: 0 1.25rem;
-  font-size: 0.9rem;
 }
 
-// 기존 폼 버튼 규격 (3.4rem)
 .lg {
   height: 3.4rem;
   padding: 0 1.5rem;
-  font-size: 0.9rem;
 }
 
 // 너비 100% 가득 채우기
