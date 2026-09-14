@@ -149,8 +149,8 @@
     FROM (
     <!-- 부모 테이블을 정확히 perPage만큼 끊어서 가져온 후 조인  -->
     SELECT *
-    FROM FEED
-    WHERE status = 'active' AND delete_yn = 0
+    FROM FEED f
+    <include refid="UserSearchFiller" />
     ORDER BY created_at DESC, code DESC
     LIMIT #{offset}, #{perPage}
     ) AS f
@@ -159,7 +159,6 @@
     LEFT JOIN IMAGES i ON f.code = i.target_code AND i.type = 'feed' AND i.order_seq = 1
     <!-- 해시태그 -->
     LEFT JOIN FEED_HASHTAG AS fh ON f.code = fh.feed_code
-    <include refid="UserSearchFiller" />
     ORDER BY f.created_at DESC, f.code DESC
   </select>
 

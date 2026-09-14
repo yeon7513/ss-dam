@@ -3,41 +3,49 @@ import TextInput from "../../forms/text-input/TextInput";
 import Button from "./../button/Button";
 import cn from "classnames";
 import styles from "./SearchBox.module.scss";
+import { useState } from "react";
 
 function SearchBox({
   className,
+  initSearchCode = 0,
+  initKeyword = '',
   options = null,
-  onSearchCodeChange = null,
-  onKeywordChange,
   onSubmit,
 }) {
-
-  const handleChangeSearchKeyword = (e) => {
-    const value = e.target.value;
-    onKeywordChange(value);
-  };
+  const [searchCode, setSearchCode] = useState(initSearchCode);
+  const [keyword, setKeyword] = useState(initKeyword);
 
   const handleChangeSearchCode = (e) => {
-    const value = e.target.value;
-    onSearchCodeChange(value);
-  };
+    setSearchCode(e.target.value);
+    onSubmit(e.target.value, keyword);
+  }
+
+  // 검색 조건 서브밋 핸들러
+  const handleSubmitSearch = (e) => {
+    e.preventDefault();
+
+    onSubmit(searchCode, keyword);
+  }
 
   return (
-    <div className={cn(styles.wrap, className)}>
+    <form className={cn(styles.wrap, className)} onSubmit={handleSubmitSearch}>
       {options && (
         <SelectBox
           name="searchCode"
           options={options}
+          selectedValue={searchCode}
+          placeholder="전체"
           onChange={(e) => handleChangeSearchCode(e)}
         />
       )}
       <TextInput
         name="keyword"
-        onChange={(e) => handleChangeSearchKeyword(e)}
+        value={keyword}
+        onChange={(e) => setKeyword(e.target.value)}
         placeholder="검색어를 입력하세요."
       />
-      <Button onClick={() => onSubmit}>검색</Button>
-    </div>
+      <Button type="submit">검색</Button>
+    </form>
   );
 }
 
