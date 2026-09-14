@@ -11,4 +11,7 @@ public interface MemberService {
 
   Member searchMemberByCode(Long memberCode);
 
+  // 중복이면 true, 사용 가능하면 false 반환
+    boolean isIdDuplicated(String id);
+
 }

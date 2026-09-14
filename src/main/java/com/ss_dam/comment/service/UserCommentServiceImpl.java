@@ -1,18 +1,18 @@
 package com.ss_dam.comment.service;
 
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.ss_dam.comment.dao.UserCommentDao;
 import com.ss_dam.comment.model.request.CommentCreate;
 import com.ss_dam.comment.model.request.CommentUpdate;
 import com.ss_dam.comment.model.response.UserCommentView;
-import com.ss_dam.common.pager.Pager;
+import com.ss_dam.common.pager.PageQuery;
+import com.ss_dam.common.pager.PageResult;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserCommentServiceImpl implements UserCommentService {
@@ -22,22 +22,27 @@ public class UserCommentServiceImpl implements UserCommentService {
 
   // 피드에서 호출하는 댓글리스트
   @Override
-  public List<UserCommentView> findCommentsByFeedCode(Long feedCode, Pager pager, Long memberCode) {
+  public PageResult<UserCommentView> findCommentsByFeedCode(PageQuery pageQuery, Long feedCode,
+      Long memberCode) {
 
     Map<String, Object> params = new HashMap<>();
 
+
     params.put("memberCode", memberCode);
     params.put("feedCode", feedCode);
-    params.put("offset", pager.getOffset());
-    params.put("perPage", pager.getPerPage());
+    params.put("offset", pageQuery.getOffset());
+    params.put("perPage", pageQuery.getPerPage());
 
-    return userCommentDao.findCommentsByFeedCode(params);
+    List<UserCommentView> comments = userCommentDao.findCommentsByFeedCode(params);
+    float total = userCommentDao.loadCommentsTotalCount(feedCode);
+
+    return PageResult.of(comments, pageQuery, total);
   }
 
   //댓글 등록 (임시)
   @Override
   public CommentCreate registerComment(CommentCreate comment) {
-    if (comment == null){
+    if (comment == null) {
       throw new IllegalArgumentException("댓글 정보가 필요합니다");
     }
     if (comment.getFeedCode() == null) {
@@ -67,85 +72,67 @@ public class UserCommentServiceImpl implements UserCommentService {
   }
 
   //댓글 수정
-    @Override
-    public void updateComment(
-        Long commentCode,
-        Long memCode,
-        CommentUpdate request) {
+  @Override
+  public void updateComment(Long commentCode, Long memCode, CommentUpdate request) {
 
-      //댓글 번호 검증
-      if (commentCode == null) {
-        throw new IllegalArgumentException(
-            "댓글 번호가 필요합니다"
-        );
-      }
-
-      //회원 번호 검증
-      if(memCode == null){
-        throw new IllegalArgumentException(
-          "회원 번호가 필요합니다"
-        );
-      }
-
-      // 요청 객체 검증
-      if (request == null) {
-        throw new IllegalArgumentException(
-            "댓글 수정 정보가 필요합니다."
-        );
-      }
-
-      // 댓글 내용 검증
-      if (request.getContent() == null ||
-          request.getContent().isBlank()) {
-        throw new IllegalArgumentException(
-            "댓글 내용을 입력해주세요."
-        );
-      }
-
-      String content =
-          request.getContent().trim();
-
-      Map<String, Object> params = new HashMap<>();
-      params.put("commentCode", commentCode);
-      params.put("memCode", memCode);
-      params.put("content", content);
-
-      int updatedRows =
-          userCommentDao.updateComment(params);
-
-      if (updatedRows != 1) {
-        throw new IllegalStateException(
-        "댓글이 없거나 수정 권한이 없습니다."
-        );
-      }
+    //댓글 번호 검증
+    if (commentCode == null) {
+      throw new IllegalArgumentException("댓글 번호가 필요합니다");
     }
 
-    //댓글 삭제
-    @Override
-    public void deleteComment(Long commentCode, Long memCode){
+    //회원 번호 검증
+    if (memCode == null) {
+      throw new IllegalArgumentException("회원 번호가 필요합니다");
+    }
 
-      if(commentCode == null) {
-        throw new IllegalArgumentException("댓글 번호가 필요합니다");
-      }
+    // 요청 객체 검증
+    if (request == null) {
+      throw new IllegalArgumentException("댓글 수정 정보가 필요합니다.");
+    }
 
-      if(memCode == null){
-        throw new IllegalArgumentException("회원 번호가 필요합니다");
-      }
+    // 댓글 내용 검증
+    if (request.getContent() == null || request.getContent().isBlank()) {
+      throw new IllegalArgumentException("댓글 내용을 입력해주세요.");
+    }
 
-      Map<String, Object> params = new HashMap<>();
-      params.put("commentCode", commentCode);
-      params.put("memCode", memCode);
+    String content = request.getContent().trim();
 
-      int updatedRows = userCommentDao.deleteComment(params);
+    Map<String, Object> params = new HashMap<>();
+    params.put("commentCode", commentCode);
+    params.put("memCode", memCode);
+    params.put("content", content);
 
-      if(updatedRows != 1){
-        throw new IllegalStateException(
-          "댓글이 없거나 삭제 권한이 없습니다"
-        );
-      }
+    int updatedRows = userCommentDao.updateComment(params);
 
+    if (updatedRows != 1) {
+      throw new IllegalStateException("댓글이 없거나 수정 권한이 없습니다.");
     }
   }
+
+  //댓글 삭제
+  @Override
+  public void deleteComment(Long commentCode, Long memCode) {
+
+    if (commentCode == null) {
+      throw new IllegalArgumentException("댓글 번호가 필요합니다");
+    }
+
+    if (memCode == null) {
+      throw new IllegalArgumentException("회원 번호가 필요합니다");
+    }
+
+    Map<String, Object> params = new HashMap<>();
+    params.put("commentCode", commentCode);
+    params.put("memCode", memCode);
+
+    int updatedRows = userCommentDao.deleteComment(params);
+
+    if (updatedRows != 1) {
+      throw new IllegalStateException("댓글이 없거나 삭제 권한이 없습니다");
+    }
+
+  }
+}
   
 
 

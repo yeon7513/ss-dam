@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import TabMenus from "../../components/common/tab-menus/TabMenus";
 import styles from "./Challenge.module.scss";
 import { CHALLENGE_TABS } from "../../lib/challengeTabs";
+import LikeButton from "../../components/common/button/LikeButton";
 
 const MAIN_TABS = [
   { label: "전체 챌린지", value: "ALL" },
@@ -87,6 +88,13 @@ const Challenge = () => {
         {ranking.length === 0 && (
           <p className={styles.emptyMsg}>랭킹 데이터가 존재하지 않습니다.</p>
         )}
+        {/* 테스트 용 버튼 */}
+        <LikeButton
+          targetType="feeds"
+          targetCode={1}
+          initialIsLiked={false}
+          initialLikeCount={5}
+        />
       </section>
     </div>
   );

@@ -1,0 +1,28 @@
+@use "/src/scss/variables.scss" as *;
+@use "/src/scss/mixin.scss" as mix;
+
+.pagination {
+  @include mix.flex;
+  gap: 2rem;
+  margin-top: 2rem;
+
+  .pages {
+    @include mix.flex;
+    gap: 1rem;
+
+    .pageNumber {
+
+      outline: 1px dotted red;
+
+      > button {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+
+        &.active {
+          background-color: $point-5;
+        }
+      }
+    }
+  }
+}

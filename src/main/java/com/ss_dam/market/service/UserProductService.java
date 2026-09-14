@@ -1,15 +1,14 @@
 package com.ss_dam.market.service;
 
-import com.ss_dam.common.pager.Pager;
+import com.ss_dam.common.pager.PageQuery;
+import com.ss_dam.common.pager.PageResult;
 import com.ss_dam.market.model.request.ProductUpdate;
 import com.ss_dam.market.model.response.ProductDetail;
 import com.ss_dam.market.model.response.ProductEditView;
 import com.ss_dam.market.model.response.UserProductView;
 
-import java.util.List;
-
 public interface UserProductService {
-  List<UserProductView> loadProducts(Pager pager, Long memberCode);
+  PageResult<UserProductView> loadProducts(PageQuery pageQuery, Long memberCode);
 
   ProductDetail findProductDetailByProdCode(Long prodCode, Long memberCode);
 

@@ -1,6 +1,30 @@
+@use "/src/scss/variables.scss" as *;
+
 .wrap {
   > input {
-    padding: 8px;
-    border: 1px solid #000;
+    width: 100%;
+    height: 3.4rem;
+    padding: 0 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    box-sizing: border-box;
+    border: 1.5px solid $point-20;
+    transition: background-color 0.5s ease;
+
+    &::placeholder {
+      color: $grayscale-50;
+      font-weight: 400;
+      font-size: 0.9rem;
+    }
+
+    &:focus {
+      border: 1.5px solid $point-20;
+      background-color: $point-5;
+      outline: none;
+
+      &::placeholder {
+        color: $grayscale-90;
+      }
+    }
   }
 }

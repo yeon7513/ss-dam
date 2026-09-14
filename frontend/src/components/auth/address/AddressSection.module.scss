@@ -1,5 +1,12 @@
 @use "/src/scss/variables.scss" as *;
 
+.addressGroup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
 .address {
   display: flex;
   flex-direction: column;
@@ -13,12 +20,9 @@
 
     > div {
       flex: 1;
-      width: 100%;
-
-      //margin-bottom: 10rem;
     }
 
-    Button {
+    button {
       width: 8rem;
       height: 3.4rem;
       box-sizing: border-box;
@@ -31,8 +35,8 @@
       cursor: pointer;
 
       &:hover {
-        background-color: $grayscale-10; // 원하는 색상으로 변경
-        transition: background-color 0.5s ease; // 모션을 서서히 나타나도록 함
+        background-color: $grayscale-10;
+        transition: background-color 0.5s ease;
       }
     }
   }
@@ -43,7 +47,7 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba($color-black, 0.3); // 배경 어둡게 처리
     display: flex;
     justify-content: center;
     align-items: center;
@@ -53,9 +57,7 @@
   .modalContent {
     width: 500px;
     height: 470px;
-    background-color: #fff;
+    background-color: $color-white; // 대신 변수 사용
     padding: 10px;
-    border: 8px;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
   }
 }

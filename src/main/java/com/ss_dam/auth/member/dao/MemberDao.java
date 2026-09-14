@@ -11,4 +11,7 @@ public interface MemberDao {
 
   Member searchMemberByCode(Long code);
 
+  // 아이디 중복 확인 쿼리 호출
+  int countById(String id);
+
 }
