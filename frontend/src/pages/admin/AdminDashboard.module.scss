@@ -68,6 +68,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;
+  flex-shrink: 0;
 
   .legend {
     font-size: 11px;
@@ -185,6 +186,13 @@
     flex-direction: column;
     justify-content: space-between;
 
+    // 테이블 오버플로우 방지를 위한 스크롤 래퍼 영역 추가
+    .tableWrapper {
+      flex: 1; // 헤더와 페이지네이션 사이 남은 공간 채우기
+      overflow-y: auto; // 데이터가 자라나도 스크롤 처리
+      margin-bottom: 12px; // 하단 페이지네이션과의 간격
+    }
+
     .reportTable {
       width: 100%;
       border-collapse: collapse;
@@ -255,9 +263,9 @@
       display: flex;
       justify-content: center;
       gap: 8px;
-      margin-top: 12px;
       font-size: 12px;
       color: $grayscale-50;
+      flex-shrink: 0;
 
       span {
         cursor: pointer;
@@ -282,7 +290,8 @@
     height: 300px;
 
     .chartPlaceholder {
-      height: 280px;
+      flex: 1;
+      //height: 280px;
       border: 1px dashed $grayscale-20;
       border-radius: 6px;
       display: flex;
@@ -303,6 +312,8 @@
 
   .bottomCard {
     height: 200px;
+    display: flex;
+    flex-direction: column;
   }
 
   .regionList {
@@ -312,6 +323,8 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+    flex: 1;
+    overflow-y: auto; // 항목이 늘어나면 카드 이탈 대신 스크롤 생성
 
     li {
       display: flex;
@@ -334,6 +347,8 @@
     display: flex;
     gap: 16px;
     align-items: center;
+    flex: 1;
+    overflow: hidden;
 
     .donutPlaceholder {
       width: 250px;
@@ -346,6 +361,7 @@
       color: $grayscale-50;
       font-size: 12px;
       background-color: $background-5;
+      flex-shrink: 0;
     }
 
     .sellerList {
@@ -356,6 +372,8 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
+      max-height: 136px;
+      overflow-y: auto;
 
       li {
         display: flex;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Card from "../../components/common/card/Card.jsx";
 import Sidebar from "../../layout/sidebar/Sidebar.jsx";
 import AdminHeader from "../../components/admin/AdminHeader.jsx";
@@ -61,39 +61,39 @@ const adminLogsData = [
 
 const pendingReportsData = [
   {
+    date: "2026-04-10",
     user: "김철수",
     role: "일반회원",
     reason: "부적절한 게시글",
-    desc: "광고성 도배글 작성...",
-    date: "2026-04-10",
+    desc: "광고성 도배글 작성 광고성 도배글 작성 광고 도배글 작성...",
   },
   {
+    date: "2026-04-09",
     user: "이영희",
     role: "판매자",
     reason: "허위 정보",
-    desc: "상품 정보 다름...",
-    date: "2026-04-09",
+    desc: "상품 정보 다름 상품 정보 다름 상품 정보 다름 상품 정보 다름...",
   },
   {
+    date: "2026-04-09",
     user: "박민수",
     role: "일반회원",
     reason: "욕설/비방",
-    desc: "댓글 내 욕설 포함...",
-    date: "2026-04-09",
+    desc: "댓글 내 욕설 포함 댓글 내 욕설 포함 댓글 내 욕설 포함...",
   },
   {
+    date: "2026-04-09",
     user: "최민수",
     role: "일반회원",
     reason: "욕설/비방",
-    desc: "댓글 내 욕설 포함...",
-    date: "2026-04-09",
+    desc: "댓글 내 욕설 포함 댓글 내 욕설 포함 댓글 내 욕설 포함...",
   },
   {
+    date: "2026-04-09",
     user: "이민수",
     role: "일반회원",
     reason: "욕설/비방",
-    desc: "댓글 내 욕설 포함...",
-    date: "2026-04-09",
+    desc: "댓글 내 욕설 포함 댓글 내 욕설 포함 댓글 내 욕설 포함...",
   },
 ];
 
@@ -114,12 +114,41 @@ const AdminDashboard = () => {
   // 아이콘 회전 애니메이션 State
   const [isSpinning, setIsSpinning] = useState(false);
 
-  const handleRefresh = () => {
+  // 현재 시각 저장 State
+  const [lastUpdated, setLastUpdated] = useState("");
+
+  // 현재 시각 갱신 함수
+  const updateCurrentTime = () =>
+    setLastUpdated(`${new Date().toLocaleString("sv-SE")} 기준`);
+
+  // 초기 렌더링 시 현재 시각 설정
+  useEffect(() => {
+    updateCurrentTime();
+
+    // 1분(60,000ms)마다 시각을 자동 갱신
+    const timer = setInterval(() => {
+      updateCurrentTime();
+    }, 60000);
+
+    // 컴포넌트 언마운트 시 메모리 누수 방지
+    return () => clearInterval(timer);
+  }, []);
+
+  const handleRefresh = async () => {
     if (isSpinning) return;
     setIsSpinning(true);
-    setTimeout(() => {
-      setIsSpinning(false);
-    }, 1000);
+
+    try {
+      // 데이터 갱신 시 시각 업데이트
+      updateCurrentTime();
+      console.log("데이터 갱신 완료");
+    } catch (error) {
+      console.error("데이터 갱신 실패:", error);
+    } finally {
+      setTimeout(() => {
+        setIsSpinning(false);
+      }, 1000);
+    }
   };
 
   return (
@@ -140,7 +169,8 @@ const AdminDashboard = () => {
                 size={18}
               />
             </h1>
-            <span className={styles.timeInfo}>2026-04-10 14:00 기준</span>
+            {/* 동적으로 업데이트되는 시각 바인딩 */}
+            <span className={styles.timeInfo}>{lastUpdated}</span>
           </div>
 
           {/* 상단 2열 레이아웃 */}
@@ -174,15 +204,16 @@ const AdminDashboard = () => {
               <table className={styles.reportTable}>
                 <thead>
                   <tr>
-                    <th>대상 회원</th>
+                    <th>날짜</th>
+                    <th>회원 구분</th>
                     <th>사유</th>
                     <th>설명</th>
-                    <th>날짜</th>
                   </tr>
                 </thead>
                 <tbody>
                   {pendingReportsData.map((item, index) => (
                     <tr key={index}>
+                      <td>{item.date}</td>
                       <td>
                         <div className={styles.userInfo}>
                           <div className={styles.avatar}>👤</div>
@@ -196,7 +227,6 @@ const AdminDashboard = () => {
                         <span className={styles.badge}>{item.reason}</span>
                       </td>
                       <td className={styles.descTd}>{item.desc}</td>
-                      <td>{item.date}</td>
                     </tr>
                   ))}
                 </tbody>
