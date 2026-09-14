@@ -1,4 +1,4 @@
-package com.ss_dam.report.controller;
+package com.ss_dam.admin.report.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
