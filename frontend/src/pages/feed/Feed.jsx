@@ -8,12 +8,34 @@ import Pagination from "../../components/common/pagination/Pagination.jsx";
 import Modal from "../../components/common/modal/Modal.jsx";
 import FeedDetail from "./feed-detail/FeedDetail.jsx";
 import { useLocation } from "react-router-dom";
+import TabMenus from "../../components/common/tab-menus/TabMenus.jsx";
+import { useSearchQuery } from "../../hooks/useSearchQuery.js";
+
+const SORT_MENU = [
+  { label: "최신순", value: "createdAt" },
+  { label: "인기순", value: "popular" },
+]
 
 const Feed = () => {
-  // 페이지네이션 관련 state
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchCode, setSearchCode] = useState(null);
-  const [keyword, setKeyword] = useState(null);
+  // 페이지네이션 & 검색 관련
+  const { queryString, handleChangePages, handleSearch, searchFilter } = useSearchQuery({
+    page: 1,
+    perPage: 12,
+    chalCode: 0,
+    keyword: '',
+    sortTarget: 'createdAt',
+  });
+  // 피드 목록 조회 (커스텀 훅 적용)
+  const { data, loading, error } = useLoadData(`/api/feeds${queryString}`);
+  // 검색용 챌린지 카테고리 조회
+  const { data: categories } = useLoadData("/api/challenge/categories");
+
+  const feeds = data?.content || [];
+
+  const [sort, setSort] = useState(SORT_MENU[0].value);
+  const handleClickSort = (sort) => {
+    setSort(sort);
+  }
 
   // 등록 및 수정 시 바로 띄워줄 code값
   // -> 완료 후 작성 또는 수정된 피드를 바로 모달로 띄우기 위해 사용
@@ -32,48 +54,26 @@ const Feed = () => {
     setSelectedFeedCode(null);
   };
 
-  // 쿼리스트링 생성
-  const queryParams = new URLSearchParams({
-    page: currentPage,
-    perPage: 12,
-    ...(searchCode && { search: searchCode }),
-    ...(keyword && { keyword: keyword }),
-  }).toString();
-
-  // 피드 목록 조회 (커스텀 훅 적용)
-  const {
-    data,
-    loading,
-    error,
-  } = useLoadData(`/api/feeds?${queryParams}`);
-
-  // 검색용 챌린지 카테고리 조회
-  const { data: categories } = useLoadData("/api/challenge/categories");
-
-  const feeds = data || [];
-
-  // 로딩 및 에러 처리
-  if (loading) {
-    return <div>피드 정보를 불러오고 있습니다.</div>;
-  }
-  if (error) {
-    return <div>에러가 발생했습니다. {error}</div>;
-  }
-
-  console.log("selectedFeedCode: ", selectedFeedCode);
-  console.log(feeds);
-
   return (
     <main className={styles.wrap}>
       <SideNav />
       <div className={styles.container}>
-        {/* 검색 */}
-        <SearchBox
-          options={categories}
-          onSearchCodeChange={setSearchCode}
-          onKeywordChange={setKeyword}
-          onSubmit={() => setCurrentPage(1)} // 검색 핸들러 아직 작성 안함!! (테스트 안해봄)
-        />
+        <div className={styles.filterBar}>
+          {/* 정렬 */}
+          <TabMenus
+            className={styles.sortTab}
+            tabs={SORT_MENU}
+            activeStatus={sort}
+            onTabChange={handleClickSort} />
+          {/* 검색 */}
+          <SearchBox
+            name={"chalCode"}
+            initSelectValue={searchFilter.chalCode}
+            initKeyword={searchFilter.keyword}
+            options={categories}
+            onSubmit={handleSearch}
+          />
+        </div>
         {/* 목록 렌더링 */}
         <div className={styles.list}>
           {feeds.length > 0 ? (
@@ -84,14 +84,17 @@ const Feed = () => {
         </div>
 
         {/* 피드가 선택되었을 때만 모달 렌더링 */}
-        <Modal isOpen={selectedFeedCode !== null} onClose={handleCloseDetail}>
+        <Modal
+          // isOpen={true}
+          isOpen={selectedFeedCode !== null}
+          onClose={handleCloseDetail}>
           {selectedFeedCode && (
             <FeedDetail code={selectedFeedCode || newCode} onClose={handleCloseDetail} />
           )}
         </Modal>
 
         {/* 페이지네이션 */}
-        <Pagination page={currentPage} />
+        <Pagination pager={data?.pager} onChangePage={handleChangePages} />
       </div>
     </main>
   );

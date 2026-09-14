@@ -1,7 +1,8 @@
 package com.ss_dam.market.service;
 
 import com.ss_dam.common.image.service.ImageService;
-import com.ss_dam.common.pager.Pager;
+import com.ss_dam.common.pager.PageQuery;
+import com.ss_dam.common.pager.PageResult;
 import com.ss_dam.market.dao.UserProductDao;
 import com.ss_dam.market.model.request.ProductUpdate;
 import com.ss_dam.market.model.response.ProductDetail;
@@ -28,14 +29,19 @@ public class UserProductServiceImpl implements UserProductService {
 
   // 목록 조회
   @Override
-  public List<UserProductView> loadProducts(Pager pager, Long memberCode) {
+  public PageResult<UserProductView> loadProducts(PageQuery pageQuery, Long memberCode) {
     Map<String, Object> params = new HashMap<>();
 
     params.put("memberCode", memberCode);
-    params.put("offset", pager.getOffset());
-    params.put("perPage", pager.getPerPage());
+    params.put("offset", pageQuery.getOffset());
+    params.put("perPage", pageQuery.getPerPage());
+    //    params.put("searchCode", pageQuery.getSearchCode());
+    //    params.put("keyword", pageQuery.getKeyword());
 
-    return userProductDao.loadProducts(params);
+    List<UserProductView> products = userProductDao.loadProducts(params);
+    float total = userProductDao.loadProductsTotalCount(pageQuery);
+
+    return PageResult.of(products, pageQuery, total);
   }
 
 

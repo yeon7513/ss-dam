@@ -1,0 +1,29 @@
+@use "/src/scss/variables.scss" as *;
+
+.idGroup {
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+
+  > div {
+    flex: 1;
+    width: 100%;
+  }
+}
+
+.checkButton {
+  box-sizing: border-box;
+  background-color: $grayscale-5;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  width: 8rem;
+  height: 3.4rem;
+
+  &:hover {
+    background-color: $grayscale-10;
+    transition: background-color 0.5s ease;
+  }
+}

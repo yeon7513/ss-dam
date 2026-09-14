@@ -1,11 +1,11 @@
 package com.ss_dam.feed.service;
 
-import com.ss_dam.comment.model.response.UserCommentView;
 import com.ss_dam.comment.service.UserCommentService;
 import com.ss_dam.common.image.service.ImageService;
-import com.ss_dam.common.pager.Pager;
+import com.ss_dam.common.pager.PageResult;
 import com.ss_dam.feed.dao.UserFeedDao;
 import com.ss_dam.feed.model.core.FeedHashtag;
+import com.ss_dam.feed.model.filter.UserFeedSearchFilter;
 import com.ss_dam.feed.model.request.FeedCreate;
 import com.ss_dam.feed.model.request.FeedUpdate;
 import com.ss_dam.feed.model.response.FeedDetail;
@@ -36,30 +36,31 @@ public class UserFeedServiceImpl implements UserFeedService {
 
   // 피드 목록 조회
   @Override
-  public List<UserFeedView> loadFeeds(Pager pager, Long memberCode) {
+  public PageResult<UserFeedView> loadFeeds(UserFeedSearchFilter filter, Long memberCode) {
     Map<String, Object> params = new HashMap<>();
 
     params.put("memberCode", memberCode);
-    params.put("offset", pager.getOffset());
-    params.put("perPage", pager.getPerPage());
+    params.put("offset", filter.getOffset());
+    params.put("perPage", filter.getPerPage());
+    params.put("chalCode", filter.getChalCode());
+    params.put("keyword", filter.getKeyword());
 
-    return userFeedDao.loadFeeds(params);
+    List<UserFeedView> feeds = userFeedDao.loadFeeds(params);
+    float total = userFeedDao.loadFeedsTotalCount(filter);
+
+    return PageResult.of(feeds, filter, total);
   }
 
 
   // 피드 단일 상세 조회 -> 아무나 볼 수 있는 단순 게시글
   @Override
-  public FeedDetail findFeedDetailByFeedCode(Long FeedCode, Pager pager, Long memberCode) {
+  public FeedDetail findFeedDetailByFeedCode(Long FeedCode, Long memberCode) {
 
     Map<String, Object> params = new HashMap<>();
     params.put("memberCode", memberCode);
     params.put("feedCode", FeedCode);
 
     FeedDetail feedDetail = userFeedDao.findFeedDetailByFeedCode(params);
-    List<UserCommentView> comments =
-        userCommentService.findCommentsByFeedCode(FeedCode, pager, memberCode);
-
-    feedDetail.setComments(comments);
 
     return feedDetail;
   }

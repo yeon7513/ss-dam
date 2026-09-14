@@ -12,10 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.ss_dam.admin.log.response.AdminActivity;
-import com.ss_dam.common.pager.Pager;
 import com.ss_dam.market.dao.AdminProductDao;
 import com.ss_dam.market.model.response.AdminProductDetail;
-import com.ss_dam.market.model.response.AdminProductView;
 
 @Service
 public class AdminProductServiceImpl implements AdminProductService {
@@ -27,22 +25,16 @@ public class AdminProductServiceImpl implements AdminProductService {
     private static final Set<String> ALLOWED_STATUSES = Set.of(
             "ACTIVE", "PRIVATE", "BLINDED", "REPORTED", "DELETED");
 
-    private static final Set<String> ALLOWED_DEAL_STATUSES = Set.of(
-            "ON_SALE", "IN_PROGRESS", "SOLD");
-  
-   //관리자 - 상품 목록 조회
-   @Override
-    public List<AdminProductView> loadProducts(
-            Pager pager, String status, String dealStatus) {
+    //검색 조건
+    //    params.put("searchCode", pager.getSearchCode());
+    //    params.put("keyword", pager.getKeyword());
 
         validateFilter(status, ALLOWED_STATUSES, "상품 상태");
         validateFilter(dealStatus, ALLOWED_DEAL_STATUSES, "거래 상태");
 
-        if (pager.getPerPage() <= 0) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "페이지당 조회 개수는 1 이상이어야 합니다.");
-        }
+    //페이지네이션
+    //    params.put("offset", pager.getOffset());
+    params.put("perPage", pager.getPerPage());
 
         Map<String, Object> params = new HashMap<>();
 
