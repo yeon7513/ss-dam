@@ -1,7 +1,7 @@
 package com.ss_dam.feed.service;
 
-import com.ss_dam.common.pager.PageQuery;
 import com.ss_dam.common.pager.PageResult;
+import com.ss_dam.feed.model.filter.UserFeedSearchFilter;
 import com.ss_dam.feed.model.request.FeedCreate;
 import com.ss_dam.feed.model.request.FeedUpdate;
 import com.ss_dam.feed.model.response.FeedDetail;
@@ -9,7 +9,7 @@ import com.ss_dam.feed.model.response.FeedEditView;
 import com.ss_dam.feed.model.response.UserFeedView;
 
 public interface UserFeedService {
-  PageResult<UserFeedView> loadFeeds(PageQuery pageQuery, Long memberCode);
+  PageResult<UserFeedView> loadFeeds(UserFeedSearchFilter filter, Long memberCode);
 
   FeedDetail findFeedDetailByFeedCode(Long FeedCode, Long memberCode);
 

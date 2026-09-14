@@ -25,6 +25,15 @@
     flex: 1;
     //width: 75%;
     outline: 1px dotted red;
+
+    .filterBar {
+      @include mix.flex($jc: space-between);
+      margin-bottom: 2rem;
+
+      .sortTab {
+        width: 30%;
+      }
+    }
   }
 
   /* media - mobile */
