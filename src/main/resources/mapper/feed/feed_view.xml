@@ -62,20 +62,35 @@
   <sql id="UserSearchFiller">
     <where>
       f.status = 'active' AND f.delete_yn = 0
-      <if test="searchCode != null and searchCode != 0">
-        AND f.chal_code = #{searchCode}
+      <!-- 챌린지별 검색 -->
+      <if test="chalCode != null and chalCode != 0">
+        AND f.chal_code = #{chalCode}
       </if>
+      <!-- 키워드 검색 -->
       <if test="keyword != null and keyword.trim() != ''">
         AND (
         f.title LIKE CONCAT('%', #{keyword}, '%')
-        OR f.content LIKE CONCAT('%', #{keyword}, '%')
-        <!-- 해시태그 검색을 EXISTS 서브쿼리로 처리하여 1:N 조인 중복 방지 -->
-        OR EXISTS (
-        SELECT 1
+        OR f.content LIKE CONCAT('%', #{keyword}, '%'))
+      </if>
+      <!-- 해시태그별 조회 -->
+      <if test="tagName != null and tagName.trim() != ''">
+        AND f.code IN (
+        SELECT fh.feed_code
         FROM FEED_HASHTAG fh
-        WHERE fh.feed_code = f.code
-        AND fh.tag_name LIKE CONCAT('%', #{keyword}, '%')
-        ))
+        WHERE fh.tag_name = #{tagName}
+        )
+      </if>
+      <!-- 내가 작성한 피드만 조회 -->
+      <if test="myFeedsOnly != null and myFeedsOnly == true">
+        AND f.mem_code = #{memCode}
+      </if>
+      <!-- 내가 "좋아요"한 피드만 조회 -->
+      <if test="myLikesOnly != null and myLikesOnly == true">
+        AND f.code IN (
+        SELECT fl.feed_code
+        FROM FEED_LIKE fl
+        WHERE fl.mem_code = #{memCode}
+        )
       </if>
     </where>
   </sql>
@@ -151,7 +166,21 @@
     SELECT *
     FROM FEED f
     <include refid="UserSearchFiller" />
-    ORDER BY created_at DESC, code DESC
+    <!-- 정렬 조건 (최신순, 인기순) -->
+    <choose>
+      <!-- 인기순 정렬 (좋아요수 + 조회수) -->
+      <when test="sortTarget == 'POPULAR' or sortTarget == 'popular'">
+        ORDER BY (
+        f.hitcount + (
+        SELECT COUNT(*)
+        FROM FEED_LIKE
+        WHERE feed_code = f.code ) * 2) DESC, f.code DESC
+      </when>
+      <!-- 기본값(최신순 정렬) -->
+      <otherwise>
+        ORDER BY f.created_at DESC, f.code DESC
+      </otherwise>
+    </choose>
     LIMIT #{offset}, #{perPage}
     ) AS f
     <include refid="FeedCommonJoins" />
@@ -159,7 +188,18 @@
     LEFT JOIN IMAGES i ON f.code = i.target_code AND i.type = 'feed' AND i.order_seq = 1
     <!-- 해시태그 -->
     LEFT JOIN FEED_HASHTAG AS fh ON f.code = fh.feed_code
-    ORDER BY f.created_at DESC, f.code DESC
+    <choose>
+      <when test="sortTarget == 'POPULAR' or sortTarget == 'popular'">
+        ORDER BY (
+        f.hitcount + (
+        SELECT COUNT(*)
+        FROM FEED_LIKE
+        WHERE feed_code = f.code ) * 2) DESC, f.code DESC
+      </when>
+      <otherwise>
+        ORDER BY f.created_at DESC, f.code DESC
+      </otherwise>
+    </choose>
   </select>
 
   <!-- 피드 상세 조회 -->

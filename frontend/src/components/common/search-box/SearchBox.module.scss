@@ -5,7 +5,18 @@
   @include mix.flex;
   gap: 0.5rem;
 
-  input {
+  input[type='text'] {
     width: 240px;
   }
+
+  .radioGroup {
+    @include mix.flex;
+    gap: 1rem;
+
+    > label {
+      @include mix.flex;
+      gap: 0.3rem;
+    }
+  }
+
 }
