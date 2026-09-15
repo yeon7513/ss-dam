@@ -1,0 +1,50 @@
+.like-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #65676b;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  :global(.heart-icon) {
+    width: 24px;
+    height: 24px;
+    fill: transparent;
+    stroke: #65676b;
+    stroke-width: 2;
+    transition:
+      fill 0.2s ease,
+      stroke 0.2s ease;
+  }
+
+  .like-count {
+    font-weight: 600;
+    line-height: 1;
+    user-select: none;
+  }
+
+  &.liked {
+    color: #ff385c;
+
+    .heart-icon {
+      fill: #ff385c;
+      stroke: #ff385c;
+    }
+  }
+}

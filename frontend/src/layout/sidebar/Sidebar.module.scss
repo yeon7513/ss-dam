@@ -1,0 +1,20 @@
+@use "/src/scss/variables.scss" as *;
+
+// isFixed={false}일 때 기본 영역 차지
+.sidebar {
+  width: 250px;
+  flex-shrink: 0; // 메인 콘텐츠가 늘어나도 240px 영역 유지
+  min-height: 100vh;
+  background-color: $color-white;
+  border-right: 1px solid $grayscale-20;
+}
+
+// isFixed={true}일 때 (기본값)
+.fixed {
+  @extend .sidebar;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 100;
+}

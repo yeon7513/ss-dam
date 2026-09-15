@@ -2,7 +2,7 @@ package com.ss_dam.common.likes;
 
 public class CommentLike {
   private Long cmtCode; // 댓글 고유 번호
-  private String memCode; // 회원 고유 번호
+  private Long memCode; // 회원 고유 번호
   private String createdAt; // 좋아요 등록일
   private boolean deleteYn; // 삭제 여부
 
@@ -14,11 +14,11 @@ public class CommentLike {
     this.cmtCode = cmtCode;
   }
 
-  public String getMemCode() {
+  public Long getMemCode() {
     return memCode;
   }
 
-  public void setMemCode(String memCode) {
+  public void setMemCode(Long memCode) {
     this.memCode = memCode;
   }
 

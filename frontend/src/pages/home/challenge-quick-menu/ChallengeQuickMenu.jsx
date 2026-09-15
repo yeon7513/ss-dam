@@ -13,7 +13,7 @@ const ChallengeQuickMenu = () => {
     const fetchQuickMenu = async () => {
       try {
         // method 지정 안해놓으면 GET 방식
-        const response = await fetch("/api/user/challenge/popular");
+        const response = await fetch("/api/challenge/popular");
 
         if (response.ok) {
           const result = await response.json();

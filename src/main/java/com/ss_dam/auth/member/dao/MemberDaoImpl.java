@@ -29,4 +29,10 @@ public class MemberDaoImpl implements MemberDao {
     return sql.selectOne("member.searchMemberByCode", code);
   }
 
+  // 아이디 중복 확인
+  @Override
+  public int countById(String id) {
+    return sql.selectOne("member.countById", id);
+  }
+
 }

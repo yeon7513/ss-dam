@@ -12,7 +12,7 @@ const ChallengeDetail = () => {
     const fetchMainDetail = async (code) => {
       if (!code) return;
       try {
-        const response = await fetch(`/api/user/challenge/${code}`);
+        const response = await fetch(`/api/challenge/${code}`);
         const result = await response.json();
 
         if (response.ok && result.success) {
