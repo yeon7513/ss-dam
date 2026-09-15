@@ -37,7 +37,7 @@ const ProductDetail = () => {
       <div className={styles.container}>
         {/* 브레드크럼 */}
         <div>
-          <button type="button" onClick={() => navigate("/market")}>목록으로</button>
+          <button type="button" onClick={() => navigate(-1)}>목록으로</button>
           브레드크럼
         </div>
 
