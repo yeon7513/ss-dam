@@ -1,4 +1,4 @@
-package com.ss_dam.admin.dashboard.model.response;
+package com.ss_dam.admin.stats.model.response;
 
 import com.ss_dam.auth.member.MemberProfile;
 

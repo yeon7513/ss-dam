@@ -1,4 +1,4 @@
-package com.ss_dam.admin.dashboard.model.response;
+package com.ss_dam.admin.stats.model.response;
 
 // 지역별 챌린지 참여 건수와 비율을 담는 통계 DTO
 

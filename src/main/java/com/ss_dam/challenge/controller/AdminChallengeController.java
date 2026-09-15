@@ -1,24 +1,4 @@
-// package com.ss_dam.challenge.controller;
-
-// import java.util.List;
-
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.http.ResponseEntity;
-// import org.springframework.web.bind.annotation.DeleteMapping;
-// import org.springframework.web.bind.annotation.GetMapping;
-// import org.springframework.web.bind.annotation.PatchMapping;
-// import org.springframework.web.bind.annotation.PathVariable;
-// import org.springframework.web.bind.annotation.PostMapping;
-// import org.springframework.web.bind.annotation.PutMapping;
-// import org.springframework.web.bind.annotation.RequestBody;
-// import org.springframework.web.bind.annotation.RequestMapping;
-// import org.springframework.web.bind.annotation.RequestParam;
-// import org.springframework.web.bind.annotation.RestController;
-
-// import com.ss_dam.common.ApiResponse;
-
-
-// //AdminChallengController : 등록·수정·삭제, 관리자용 목록·상세 조회, 숨김·복구 등 운영 기능
+package com.ss_dam.challenge.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ss_dam.common.ApiResponse;
 
-//- AdminChallengeController - 챌린지 목록·상세, 등록·수정, 삭제·복구, 참여자 목록
+
+//- AdminChallengController - 등록·수정·삭제, 관리자용 목록·상세 조회, 숨김·복구 등 운영 기능
+
+
 
 @RestController
 @RequestMapping("/api/admin/challenge")
