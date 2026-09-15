@@ -18,7 +18,7 @@ function FeedSideNav({ className, isLoggedIn = true }) {
   });
 
   return (
-    <Sidebar className={cn(styles.feedNav, className)}>
+    <Sidebar className={cn(styles.feedNav, className)} isFixed={false}>
       <li>
         {isLoggedIn ? (
           <>
