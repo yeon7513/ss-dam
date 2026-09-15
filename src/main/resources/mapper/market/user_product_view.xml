@@ -91,14 +91,30 @@
 
   <!-- 사용자용 검색 필터 -->
   <sql id="UserSearchFiller">
+    <!-- 대분류 카테고리별 -->
+    <if test="categoryCode != null and categoryCode > 0">
+      JOIN MARKET_CATEGORY AS MC
+      ON MP.cate_code = MC.code
+    </if>
+
     <where>
       MP.post_status = 'active' AND MP.delete_yn = 0
-      <if test="searchCode != null and searchCode != 0 and searchCode == 1">
+      <!-- 소분류 카테고리별 -->
+      <if test="categoryCode != null and categoryCode > 0">
+        AND (
+        MP.cate_code = #{categoryCode}
+        OR MC.main_cate = #{categoryCode}
+        )
+      </if>
+      <!-- 판매 상태 -> 판매중/예약중 -->
+      <if test="dealStatus != null and dealStatus.trim() != '' and dealStatus == 'on_sale'">
         AND MP.deal_status IN('ON_SALE', 'IN_PROGRESS')
       </if>
-      <if test="searchCode != null and searchCode != 0 and searchCode == 2">
+      <!-- 판매상태 -> 판매 완료 -->
+      <if test="dealStatus != null and dealStatus.trim() != '' and dealStatus == 'sold'">
         AND MP.deal_status = 'SOLD'
       </if>
+      <!-- 키워드 검색 -->
       <if test="keyword != null and keyword.trim() != ''">
         AND (
         MP.title LIKE CONCAT('%', #{keyword}, '%')
@@ -123,10 +139,30 @@
     <include refid="ProductBasicColumns" />,
     i.path AS thumbnail
     FROM (
-    SELECT *
+    SELECT MP.*
     FROM MARKET_PRODUCT AS MP
+    <!-- 검색 조건 -->
     <include refid="UserSearchFiller" />
-    ORDER BY MP.created_at DESC, MP.code DESC
+    <!-- 정렬 조건 (최신순, 랭킹순, 낮은가격순, 높은가격순) -->
+    <choose>
+      <when test="sortTarget == 'ranking' or sortTarget == 'RANKING'">
+        ORDER BY (
+        MP.hitcount + (
+        SELECT COUNT(*)
+        FROM MARKET_PROD_PICK
+        WHERE prod_code = MP.code) * 2) DESC, MP.created_at DESC, MP.code DESC
+      </when>
+      <when test="sortTarget == 'highPrice'">
+        ORDER BY MP.price DESC, MP.created_at DESC, MP.code DESC
+      </when>
+      <when test="sortTarget == 'lowPrice'">
+        ORDER BY MP.price ASC, MP.created_at DESC, MP.code DESC
+      </when>
+      <!-- 기본값 (최신순 정렬) -->
+      <otherwise>
+        ORDER BY MP.created_at DESC, MP.code DESC
+      </otherwise>
+    </choose>
     <!-- 페이지네이션 -->
     LIMIT #{offset}, #{perPage}
     ) AS MP
@@ -134,7 +170,25 @@
     <!-- 목록 전용 대표 이미지 JOIN -->
     LEFT JOIN IMAGES i
     ON MP.code = i.target_code AND i.type = 'market' AND i.order_seq = 1
-    ORDER BY MP.created_at DESC, MP.code DESC
+    <choose>
+      <when test="sortTarget == 'ranking' or sortTarget == 'RANKING'">
+        ORDER BY (
+        MP.hitcount + (
+        SELECT COUNT(*)
+        FROM MARKET_PROD_PICK
+        WHERE prod_code = MP.code) * 2) DESC, MP.code DESC
+      </when>
+      <when test="sortTarget == 'highPrice'">
+        ORDER BY MP.price DESC, MP.code DESC
+      </when>
+      <when test="sortTarget == 'lowPrice'">
+        ORDER BY MP.price ASC, MP.code DESC
+      </when>
+      <!-- 기본값 (최신순 정렬) -->
+      <otherwise>
+        ORDER BY MP.created_at DESC, MP.code DESC
+      </otherwise>
+    </choose>
   </select>
 
   <!-- 거래 게시글 단일 조회 -->

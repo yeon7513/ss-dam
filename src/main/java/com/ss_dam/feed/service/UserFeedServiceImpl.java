@@ -44,6 +44,7 @@ public class UserFeedServiceImpl implements UserFeedService {
     params.put("perPage", filter.getPerPage());
     params.put("chalCode", filter.getChalCode());
     params.put("keyword", filter.getKeyword());
+    params.put("sortTarget", filter.getSortTarget());
 
     List<UserFeedView> feeds = userFeedDao.loadFeeds(params);
     float total = userFeedDao.loadFeedsTotalCount(filter);

@@ -1,9 +1,9 @@
 package com.ss_dam.market.service;
 
 import com.ss_dam.common.image.service.ImageService;
-import com.ss_dam.common.pager.PageQuery;
 import com.ss_dam.common.pager.PageResult;
 import com.ss_dam.market.dao.UserProductDao;
+import com.ss_dam.market.model.filter.UserProductSearchFilter;
 import com.ss_dam.market.model.request.ProductUpdate;
 import com.ss_dam.market.model.response.ProductDetail;
 import com.ss_dam.market.model.response.ProductEditView;
@@ -29,19 +29,25 @@ public class UserProductServiceImpl implements UserProductService {
 
   // 목록 조회
   @Override
-  public PageResult<UserProductView> loadProducts(PageQuery pageQuery, Long memberCode) {
+  public PageResult<UserProductView> loadProducts(UserProductSearchFilter filter, Long memberCode) {
     Map<String, Object> params = new HashMap<>();
 
     params.put("memberCode", memberCode);
-    params.put("offset", pageQuery.getOffset());
-    params.put("perPage", pageQuery.getPerPage());
-    //    params.put("searchCode", pageQuery.getSearchCode());
-    //    params.put("keyword", pageQuery.getKeyword());
+
+    // 페이지네이션
+    params.put("offset", filter.getOffset());
+    params.put("perPage", filter.getPerPage());
+
+    // 검색 필터
+    params.put("categoryCode", filter.getCategoryCode());
+    params.put("sortTarget", filter.getSortTarget());
+    params.put("dealStatus", filter.getDealStatus());
+    params.put("keyword", filter.getKeyword());
 
     List<UserProductView> products = userProductDao.loadProducts(params);
-    float total = userProductDao.loadProductsTotalCount(pageQuery);
+    float total = userProductDao.loadProductsTotalCount(filter);
 
-    return PageResult.of(products, pageQuery, total);
+    return PageResult.of(products, filter, total);
   }
 
 

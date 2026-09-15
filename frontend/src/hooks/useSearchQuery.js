@@ -41,6 +41,9 @@ export const useSearchQuery = (defaultParams = {}) => {
     setSearchParams(nextQuery); // URL 변경 -> 자동으로 API 재요청 & UI 업데이트
   };
 
+  // 완성된 쿼리스트링 확인용 console.log
+  // console.log(searchParams.toString());
+
   return {
     searchFilter, // 자식 컴포넌트에 내려줄 현재 조건 객체
     queryString: buildQueryString(searchFilter), // API 호출용 쿼리스트링

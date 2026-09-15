@@ -5,7 +5,7 @@ import { FEED_MENU } from "../../../lib/sideMenu";
 import ProfileCard from "../../profile-card/ProfileCard";
 import styles from "./FeedSideNav.module.scss";
 
-function SideNav({ className, isLoggedIn = true }) {
+function FeedSideNav({ className, isLoggedIn = true }) {
   const filteringMenuItems = FEED_MENU.filter((item) => {
     if (item.authMode === "always") {
       return true;
@@ -53,4 +53,4 @@ function SideNav({ className, isLoggedIn = true }) {
   );
 }
 
-export default SideNav;
+export default FeedSideNav;
