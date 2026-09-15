@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="adminMember">
+
+    <!-- 회원 목록 응답 매핑 -->
+    <resultMap id="adminMemberViewMap"
+               type="com.ss_dam.auth.member.model.response.AdminMemberView">
+
+        <id column="CODE" property="code"/>
+        <result column="ID" property="id"/>
+        <result column="NAME" property="name"/>
+        <result column="ADDRESS" property="address"/>
+        <result column="STATUS" property="status"/>
+        <result column="RATING" property="rating"/>
+        <result column="CREATED_AT" property="createdAt"/>
+        <result column="DELETE_YN" property="deleteYn"/>
+    </resultMap>
+
+    <!-- 목록·건수 조회에 공통 적용할 검색 조건 -->
+    <sql id="memberSearchConditions">
+        <where>
+
+            <!-- 아이디·이름 검색 -->
+            <if test="filter.keyword != null
+                      and filter.keyword.trim() != ''">
+                AND (
+                    m.ID LIKE CONCAT('%', #{filter.keyword}, '%')
+                    OR m.NAME LIKE CONCAT('%', #{filter.keyword}, '%')
+                )
+            </if>
+
+            <!-- 회원 구분: null이면 전체 -->
+            <if test="filter.status != null">
+                <choose>
+
+                    <!-- 일반 -->
+                    <when test="filter.status.name() == 'NORMAL'">
+                        AND m.STATUS = 'ACTIVE'
+                        AND m.DELETE_YN = 0
+                    </when>
+
+                    <!-- 정지 -->
+                    <when test="filter.status.name() == 'SUSPENDED'">
+                        AND m.STATUS = 'SUSPENDED'
+                        AND m.DELETE_YN = 0
+                    </when>
+
+                    <!-- 탈퇴를 soft delete로 관리하는 기준 -->
+                    <when test="filter.status.name() == 'WITHDRAWN'">
+                        AND m.DELETE_YN = 1
+                    </when>
+
+                </choose>
+            </if>
+
+            <!-- 가입일 시작일 포함 -->
+            <if test="filter.joinedFrom != null">
+                AND m.CREATED_AT &gt;= #{filter.joinedFrom}
+            </if>
+
+            <!-- 가입일 종료일 당일까지 포함 -->
+            <if test="filter.joinedTo != null">
+                AND m.CREATED_AT &lt;
+                    DATE_ADD(#{filter.joinedTo}, INTERVAL 1 DAY)
+            </if>
+
+            <!-- 등급 -->
+            <if test="filter.rating != null">
+                AND m.RATING = #{filter.rating}
+            </if>
+
+        </where>
+    </sql>
+
+    <!-- 검색 조건에 맞는 전체 회원 수 -->
+    <select id="countMembers"
+            parameterType="map"
+            resultType="int">
+
+        SELECT COUNT(*)
+        FROM MEMBER_ACCOUNT m
+
+        <include refid="memberSearchConditions"/>
+    </select>
+
+    <!-- 회원 목록 조회 -->
+    <select id="loadMembers"
+            parameterType="map"
+            resultMap="adminMemberViewMap">
+
+        SELECT
+            m.CODE,
+            m.ID,
+            m.NAME,
+            m.ADDRESS,
+            m.STATUS,
+            m.RATING,
+            m.CREATED_AT,
+            m.DELETE_YN
+        FROM MEMBER_ACCOUNT m
+
+        <include refid="memberSearchConditions"/>
+
+        ORDER BY m.CREATED_AT DESC, m.CODE DESC
+        LIMIT #{perPage} OFFSET #{offset}
+    </select>
+
+
+    <!-- 회원 상세 정보 매핑 -->
+<resultMap id="adminMemberDetailViewMap"
+           type="com.ss_dam.auth.member.model.response.AdminMemberDetailView">
+
+    <id column="CODE" property="code"/>
+    <result column="ID" property="id"/>
+    <result column="NAME" property="name"/>
+    <result column="PHONE" property="phone"/>
+    <result column="ADDRESS" property="address"/>
+    <result column="RATING" property="rating"/>
+    <result column="POINT" property="point"/>
+    <result column="STATUS" property="status"/>
+    <result column="CREATED_AT" property="createdAt"/>
+    <result column="UPDATED_AT" property="updatedAt"/>
+    <result column="LOGGED_AT" property="loggedAt"/>
+    <result column="DELETE_YN" property="deleteYn"/>
+    <result column="PROFILE_PATH" property="path"/>
+</resultMap>
+
+<!-- 관리자 회원 상세 조회 -->
+<select id="loadMember"
+        parameterType="long"
+        resultMap="adminMemberDetailViewMap">
+
+    SELECT
+        m.CODE,
+        m.ID,
+        m.NAME,
+        m.PHONE,
+        m.ADDRESS,
+        m.RATING,
+        m.POINT,
+        m.STATUS,
+        m.CREATED_AT,
+        m.UPDATED_AT,
+        m.LOGGED_AT,
+        m.DELETE_YN,
+
+        (
+            SELECT i.PATH
+            FROM IMAGES i
+            WHERE i.TARGET_CODE = m.CODE
+              AND i.TYPE = 'profile'
+              AND i.DELETE_YN = 0
+            ORDER BY i.ORDER_SEQ ASC, i.PATH ASC
+            LIMIT 1
+        ) AS PROFILE_PATH
+
+    FROM MEMBER_ACCOUNT m
+    WHERE m.CODE = #{memberCode}
+
+</select>
+<!--사진은 서브쿼리로 한 건만 가져옴
+- 사진이 여러 개여도 회원 정보가 중복되지 않고, 사진이 없으면 path가 null로 반환
+- 순서가 가장 작은 사진을 선택하고, 같은 순서면 경로순으로 선택-->
+
+</mapper>
+
+<!--지역은 우선 ADDRESS를 반환, 랭킹 컬럼 없음?-->

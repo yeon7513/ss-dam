@@ -1,4 +1,4 @@
-package com.ss_dam.admin.dashboard.model.response;
+package com.ss_dam.admin.stats.model.response;
 
 // 월별 신규 회원 수를 담는 통계 DTO
 

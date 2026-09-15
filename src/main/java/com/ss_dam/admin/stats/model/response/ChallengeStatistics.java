@@ -1,4 +1,4 @@
-package com.ss_dam.admin.dashboard.model.response;
+package com.ss_dam.admin.stats.model.response;
 
 //종료된 챌린지의 참여 건수와 달성률을 담는 통계 DTO
 //전체 참여건수, 달성·미달성 수, 달성률
