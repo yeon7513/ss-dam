@@ -1,116 +1,37 @@
 import React, { useEffect, useState } from "react";
 import Card from "../../components/common/card/Card.jsx";
+import StatCard from "../../components/common/card/StatCard.jsx";
+import ChartCard from "../../components/common/card/ChartCard.jsx";
 import Sidebar from "../../layout/sidebar/Sidebar.jsx";
 import AdminHeader from "../../components/admin/AdminHeader.jsx";
 import styles from "./AdminDashboard.module.scss";
 import { FaArrowsRotate } from "react-icons/fa6";
 
-// StatCard (2x2 요약 지표 전용 카드)
-const StatCard = ({ title, value, rate }) => (
-  <Card className={styles.statCard}>
-    <span className={styles.statTitle}>{title}</span>
-    <div className={styles.statValRow}>
-      <span className={styles.statVal}>{value}</span>
-      <span
-        className={`${styles.statRate} ${
-          rate.startsWith("-") ? styles.minus : styles.plus
-        }`}
-      >
-        {rate}
-      </span>
-    </div>
-  </Card>
-);
-
-// ChartCard (차트 전용 카드)
-const ChartCard = ({ title, legends, children }) => (
-  <Card className={styles.chartCard}>
-    <div className={styles.cardHeader}>
-      <h3>{title}</h3>
-      {legends && (
-        <div className={styles.legend}>
-          {legends.map((item, idx) => (
-            <React.Fragment key={idx}>
-              <span
-                className={item.isDark ? styles.dotDark : styles.dotLight}
-              ></span>
-              {item.label}{" "}
-            </React.Fragment>
-          ))}
-        </div>
-      )}
-    </div>
-    <div className={styles.chartPlaceholder}>{children}</div>
-  </Card>
-);
-
-// 더미 데이터
-const summaryData = [
-  { title: "전체 회원 수", value: "12,450명", rate: "+5.2%" },
-  { title: "오늘 신규 가입", value: "128명", rate: "+12.0%" },
-  { title: "진행 중 챌린지", value: "42개", rate: "-2.1%" },
-  { title: "일일 참여 건수", value: "1,890건", rate: "+8.4%" },
-];
-
-const adminLogsData = [
-  "[14:20] admin1님이 신고 처리 완료",
-  "[13:45] admin2님이 신규 챌린지 등록 승인",
-  "[11:10] system 자동 백업 완료",
-  "[09:30] admin1님이 회원 상태 변경 (제재)",
-];
-
-const pendingReportsData = [
-  {
-    date: "2026-04-10",
-    user: "김철수",
-    role: "일반회원",
-    reason: "부적절한 게시글",
-    desc: "광고성 도배글 작성 광고성 도배글 작성 광고 도배글 작성...",
-  },
-  {
-    date: "2026-04-09",
-    user: "이영희",
-    role: "판매자",
-    reason: "허위 정보",
-    desc: "상품 정보 다름 상품 정보 다름 상품 정보 다름 상품 정보 다름...",
-  },
-  {
-    date: "2026-04-09",
-    user: "박민수",
-    role: "일반회원",
-    reason: "욕설/비방",
-    desc: "댓글 내 욕설 포함 댓글 내 욕설 포함 댓글 내 욕설 포함...",
-  },
-  {
-    date: "2026-04-09",
-    user: "최민수",
-    role: "일반회원",
-    reason: "욕설/비방",
-    desc: "댓글 내 욕설 포함 댓글 내 욕설 포함 댓글 내 욕설 포함...",
-  },
-  {
-    date: "2026-04-09",
-    user: "이민수",
-    role: "일반회원",
-    reason: "욕설/비방",
-    desc: "댓글 내 욕설 포함 댓글 내 욕설 포함 댓글 내 욕설 포함...",
-  },
-];
-
-const ParticipationData = [
-  { name: "서울/경기", percent: "45%", count: "(5,600명)" },
-  { name: "부산/경남", percent: "22%", count: "(2,740명)" },
-  { name: "대구/경북", percent: "15%", count: "(1,860명)" },
-  { name: "인천/강원", percent: "18%", count: "(2,250명)" },
-];
-
-const topSellersData = [
-  { name: "에코라이프", value: "1,240건", rate: "+12%" },
-  { name: "클린마켓", value: "980건", rate: "+5%" },
-  { name: "제로웨이스트", value: "850건", rate: "-1%" },
-];
-
 const AdminDashboard = () => {
+  // 백엔드 요청에 필요한 기본 조회 기간 설정 (예: 이번 달 1일 ~ 오늘)
+  const [fromDate] = useState("2026-09-01");
+  const [toDate] = useState("2026-09-15");
+
+  // 2*2요약 카드
+  const [summaryData, setSummaryData] = useState([
+    { title: "전체 회원 수", value: "0명", rate: "+0%" },
+    { title: "오늘 신규 가입", value: "0명", rate: "+0%" },
+    { title: "진행 중 챌린지", value: "0개", rate: "+0%" },
+    { title: "일일 참여 건수", value: "0건", rate: "+0%" },
+  ]);
+
+  // 관리자 활동 로그
+  const [adminLogsData] = useState([]);
+
+  // 미처리 신고
+  const [pendingReportsData] = useState([]);
+
+  // 지역별 참여도
+  const [participationData, setParticipationData] = useState([]);
+
+  // 우수판매자
+  const [topSellersData, setTopSellersData] = useState([]);
+
   // 아이콘 회전 애니메이션 State
   const [isSpinning, setIsSpinning] = useState(false);
 
@@ -121,25 +42,92 @@ const AdminDashboard = () => {
   const updateCurrentTime = () =>
     setLastUpdated(`${new Date().toLocaleString("sv-SE")} 기준`);
 
-  // 초기 렌더링 시 현재 시각 설정
-  useEffect(() => {
-    updateCurrentTime();
+  // 데이터 통합 Fetch 함수
+  const fetchAdminDashboardData = async () => {
+    const queryParam = `?from=${fromDate}&to=${toDate}`;
 
-    // 1분(60,000ms)마다 시각을 자동 갱신
-    const timer = setInterval(() => {
-      updateCurrentTime();
-    }, 60000);
+    try {
+      // 대시보드 요약 조회
+      const summaryRes = await fetch(
+        `/api/admin/dashboard/summary${queryParam}`,
+      );
+      if (summaryRes.ok) {
+        const result = await summaryRes.json();
+        if (result.data) {
+          const data = result.data;
 
-    // 컴포넌트 언마운트 시 메모리 누수 방지
-    return () => clearInterval(timer);
-  }, []);
+          setSummaryData([
+            {
+              title: "전체 회원 수",
+              value: `${data.totalMembers ?? 0}명`,
+              rate: data.memberRate ?? "+0%",
+            },
+            {
+              title: "오늘 신규 가입",
+              value: `${data.todayNewMembers ?? 0}명`,
+              rate: data.todayRate ?? "+0%",
+            },
+            {
+              title: "진행 중 챌린지",
+              value: `${data.activeChallenges ?? 0}개`,
+              rate: data.challengeRate ?? "+0%",
+            },
+            {
+              title: "일일 참여 건수",
+              value: `${data.dailyParticipations ?? 0}건`,
+              rate: data.participationRate ?? "+0%",
+            },
+          ]);
+        }
+      }
 
+      // 지역별 참여 통계 조회
+      const regionRes = await fetch(
+        `/api/admin/dashboard/statistics/regions${queryParam}`,
+      );
+      if (regionRes.ok) {
+        const result = await regionRes.json();
+        if (result.data) {
+          // 백엔드 RegionStatistics 응답 배열을 프론트 형태에 맞게 변환
+          const formattedRegions = result.data.map((reg) => ({
+            name: reg.regionName,
+            percent: `${reg.percentage}%`,
+            count: `(${reg.count}명)`,
+          }));
+          setParticipationData(formattedRegions);
+        }
+      }
+
+      // 우수 판매자 순위 조회
+      const sellersRes = await fetch(
+        `/api/admin/dashboard/statistics/sellers/ranking${queryParam}`,
+      );
+      if (sellersRes.ok) {
+        const result = await sellersRes.json();
+        if (result.data) {
+          // 백엔드 SellerRanking 응답 배열을 프론트 형태에 맞게 변환
+          const formattedSellers = result.data.map((seller) => ({
+            name: seller.sellerName,
+            value: `${seller.totalPrice.toLocaleString()}원`,
+            rate: seller.growthRate
+              ? `${seller.growthRate > 0 ? "+" : ""}${seller.growthRate}%`
+              : "0%",
+          }));
+          setTopSellersData(formattedSellers);
+        }
+      }
+    } catch (error) {
+      console.error("어드민 대시보드 데이터 조회 실패", error);
+    }
+  };
+
+  // 새로고침 버튼 핸들러
   const handleRefresh = async () => {
     if (isSpinning) return;
     setIsSpinning(true);
 
     try {
-      // 데이터 갱신 시 시각 업데이트
+      await fetchAdminDashboardData();
       updateCurrentTime();
       console.log("데이터 갱신 완료");
     } catch (error) {
@@ -150,6 +138,21 @@ const AdminDashboard = () => {
       }, 1000);
     }
   };
+
+  // 초기 렌더링 시 현재 시각 설정
+  useEffect(() => {
+    updateCurrentTime();
+    fetchAdminDashboardData(); // 데이터 패치 함수
+
+    // 1분(60,000ms)마다 시각을 자동 갱신
+    const timer = setInterval(() => {
+      updateCurrentTime();
+    }, 60000);
+
+    // 컴포넌트 언마운트 시 메모리 누수 방지
+    return () => clearInterval(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className={styles.adminLayout}>
@@ -285,7 +288,7 @@ const AdminDashboard = () => {
                 <h3>지역별 참여도</h3>
               </div>
               <ul className={styles.regionList}>
-                {ParticipationData.map((reg, index) => (
+                {participationData.map((reg, index) => (
                   <li key={index}>
                     <span>{reg.name}</span>
                     <div className={styles.regionVal}>
