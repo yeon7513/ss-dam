@@ -50,6 +50,7 @@
 
   <select id="findAdminForLogin" parameterType="map" resultType="Login">
     SELECT
+    CODE AS code,
     EMP_ID AS memberId,
     PASSWORD AS password,
     NAME AS name,
