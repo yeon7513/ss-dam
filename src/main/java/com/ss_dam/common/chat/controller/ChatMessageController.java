@@ -1,8 +1,15 @@
 package com.ss_dam.common.chat.controller;
 
 import com.ss_dam.common.chat.model.request.ChatMessageCreate;
+import com.ss_dam.common.chat.model.response.ChatMessageView;
+import com.ss_dam.common.chat.service.ChatService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+
+import java.util.Map;
 
 // STOMP 컨트롤러
 // 각각의 메시지를 DB에 저장하고,
@@ -10,6 +17,9 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class ChatMessageController {
 
+  @Autowired
+  ChatService chatService;
+  SimpMessagingTemplate messagingTemplate;
 
   // @MessageMapping
   // 클라이언트가 특정 엔드포인트로 전송한 메시지를
@@ -21,17 +31,35 @@ public class ChatMessageController {
   // 지금은 사용하지 않음. 이 어노테이션을 사용하면
   // 한 곳으로만 흘러가기 때문에 각자 다른 roomCode로 보내줘야함!
 
+  // 클라이언트에서 새로운 메시지를 보낼 경우,
+  // 엔드포인트는 "/pub/send"로 요청
   @MessageMapping("/send")
-  public String sendMessage(Long roomCode, ChatMessageCreate chatMessageCreate) {
-    // roomCode: 어떤 채팅방인지
-    // inputMessage: 들어온 메시지 (텍스트)
+  public void sendMessage(ChatMessageCreate chatMessageCreate,
+      SimpMessageHeaderAccessor headerAccessor) {
 
-    // 세션에서 현재 로그인한 사용자의 정보를 가져와
-    // 누가 메시지를 전송했는지 DB에 저장
+    // HttpSessionHandshakeInterceptor를 통해
+    // WebSocket attribute로 복사된 로그인한 사용자의 PK를 가져옴
+    Map<String, Object> sessionAttributes = headerAccessor.getSessionAttributes();
 
-    //    chatService.registerChatMessage(roomCode, inputMessage);
+    // 인터셉터를 걸었어도 혹시모를 상황에 대비해 2차 방어
+    if (sessionAttributes == null) {
+      return;
+    }
 
-    // 실제 출력은 입력된 메시지를 반환
-    return chatMessageCreate.getMessage();
+    Long senderCode = (Long) sessionAttributes.get("code");
+    chatMessageCreate.setSenderCode(senderCode);
+
+    // 전송된 메시지를 DB에 저장
+    ChatMessageView chatMessageView = chatService.registerChatMessage(chatMessageCreate);
+
+    // 해당 채팅방을 구독 중인 클라이언트들에게 실시간으로 전송
+    String roomCode = chatMessageCreate.getRoomCode().toString();
+    String endpoint = "/sub/chat/room/" + roomCode;
+
+    // 즉 이 endpoint를 구독 중인 사용자들에게 전송하는 것!
+    // 각각의 채팅방에 있는 사용자를 구분하기 위해...
+    // 백엔드 컨트롤러가 아닌, 프론트엔드의 엔드포인트로 넘어감.
+    messagingTemplate.convertAndSend(endpoint, chatMessageView);
+
   }
 }

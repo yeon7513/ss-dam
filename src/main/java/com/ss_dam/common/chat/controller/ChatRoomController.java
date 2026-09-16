@@ -5,6 +5,7 @@ import com.ss_dam.common.chat.model.request.ChatRoomCreate;
 import com.ss_dam.common.chat.service.ChatService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/chat")
 public class ChatRoomController {
 
+  @Autowired
   private ChatService chatService;
 
   // 기존 채팅방이 있는지 확인 후 roomCode를 반환받아야 함.
