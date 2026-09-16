@@ -16,5 +16,19 @@ public interface AdminMemberDao {
 
   // 관리자 회원 상세 조회 — 기본 정보 및 프로필 사진
   AdminMemberDetailView loadMember(Long memberCode);
+
+  //상단 통계 - 신고 누적 수
+  long countReceivedReports(Long memberCode);
+
+  //상단 통계 - 피드 활동 (회원이 작성한 피드 수)
+  long countMemberFeeds(Long memberCode);
+
+  //상단 통계 - 거래 활동 (회원이 작성한 거래 수)
+  long countMemberTrades(Long memberCode);
+
+  //상단 통계 - 로그인 횟수
+  long countMemberLogins(Long memberCode);
+
   
+
 }

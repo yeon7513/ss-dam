@@ -12,4 +12,6 @@ public interface LoginDao {
 	Login findMemberForLogin(Map<String, String> paramMap);
 	Login findAdminForLogin(Map<String, String> paramMap);
 
+	int insertLoginActivity(Map<String, Object> params);
+
 }

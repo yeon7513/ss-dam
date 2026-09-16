@@ -26,8 +26,26 @@ public class AdminMemberDetailView {
     private LocalDateTime loggedAt;    // 마지막 로그인
     private Boolean deleteYn;          // 삭제 여부
 
+
     // IMAGES 테이블에서 조회한 프로필 사진 경로
     private String path;
+
+    /*상단 통계 부분 (신고 누적 수, 피드 활동, 거래 활동, 로그인 횟수)*/
+
+    //상단 통계 - 신고 누적 수
+    private Long receivedReportCount;
+
+
+    //상단 통계 - 피드 활동 (회원이 작성한 피드 수)
+    private Long feedCount;
+
+    //상단 통계 - 거래 활동 (회원이 작성한 거래 수) 
+    private Long tradeCount;
+
+    //상단 통계 - 로그인 횟수 
+    public Long loginCount;
+    
+
 
     public Long getCode() {
         return code;
@@ -132,4 +150,37 @@ public class AdminMemberDetailView {
     public void setPath(String path) {
         this.path = path;
     }
+
+    public Long getFeedCount() {
+        return feedCount;
+    }
+
+    public void setFeedCount(Long feedCount) {
+        this.feedCount = feedCount;
+    }
+
+    public Long getReceivedReportCount() {
+        return receivedReportCount;
+    }
+
+    public void setReceivedReportCount(Long receivedReportCount) {
+        this.receivedReportCount = receivedReportCount;
+    }
+
+    public Long getTradeCount() {
+        return tradeCount;
+    }
+
+    public void setTradeCount(Long tradeCount) {
+        this.tradeCount = tradeCount;
+    }
+
+    public Long getLoginCount() {
+    return loginCount;
+    }
+
+    public void setLoginCount(Long loginCount) {
+        this.loginCount = loginCount;
+    }
+        
 }

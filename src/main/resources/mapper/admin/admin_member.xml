@@ -7,7 +7,7 @@
 
     <!-- 회원 목록 응답 매핑 -->
     <resultMap id="adminMemberViewMap"
-               type="com.ss_dam.auth.member.model.response.AdminMemberView">
+               type="AdminMemberView">
 
         <id column="CODE" property="code"/>
         <result column="ID" property="id"/>
@@ -23,13 +23,13 @@
     <sql id="memberSearchConditions">
         <where>
 
-            <!-- 아이디·이름 검색 -->
+            <!-- 아이디 검색 -->
             <if test="filter.keyword != null
                       and filter.keyword.trim() != ''">
-                AND (
+                AND 
                     m.ID LIKE CONCAT('%', #{filter.keyword}, '%')
-                    OR m.NAME LIKE CONCAT('%', #{filter.keyword}, '%')
-                )
+                    
+                
             </if>
 
             <!-- 회원 구분: null이면 전체 -->
@@ -164,6 +164,97 @@
 <!--사진은 서브쿼리로 한 건만 가져옴
 - 사진이 여러 개여도 회원 정보가 중복되지 않고, 사진이 없으면 path가 null로 반환
 - 순서가 가장 작은 사진을 선택하고, 같은 순서면 경로순으로 선택-->
+
+<!-- 상세 조회 - 상단 통계 - 상단 통계 - 
+삭제 되지 않은 회원이 작성한 피드 수 (비공개까지 포함)-->
+<select id="countMemberFeeds"
+        parameterType="long"
+        resultType="long">
+
+    SELECT COUNT(*)
+    FROM FEED
+    WHERE MEM_CODE = #{memberCode}
+      AND DELETE_YN = 0
+
+</select>
+
+<!--
+    받은 신고 누적 수
+    feed, comment는 실제 TARGET_TYPE 값 확인 필요
+-->
+<select id="countReceivedReports"
+        parameterType="long"
+        resultType="long">
+
+    SELECT COUNT(*)
+    FROM REPORT r
+    WHERE
+        (
+            r.TARGET_TYPE = 'feed'
+            AND EXISTS (
+                SELECT 1
+                FROM FEED f
+                WHERE f.CODE = r.TARGET_CODE
+                  AND f.MEM_CODE = #{memberCode}
+            )
+        )
+        OR
+        (
+            r.TARGET_TYPE = 'comment'
+            AND EXISTS (
+                SELECT 1
+                FROM COMMENTS c
+                WHERE c.CODE = r.TARGET_CODE
+                  AND c.MEM_CODE = #{memberCode}
+            )
+        )
+        OR
+        (
+            r.TARGET_TYPE = 'market'
+            AND EXISTS (
+                SELECT 1
+                FROM MARKET_PRODUCT p
+                WHERE p.CODE = r.TARGET_CODE
+                  AND p.MEM_CODE = #{memberCode}
+            )
+        )
+<!--신고 한 건을 1회로 계산
+ 처리 상태와 관계없이 집계하고, 대상 글이 soft delete된 경우도 포함-->
+</select>
+
+<!-- 회원이 구매자 또는 판매자로 참여한 거래 이력 수 -->
+<select id="countMemberTrades"
+        parameterType="long"
+        resultType="long">
+
+    SELECT COUNT(*)
+    FROM MARKET_DEAL_LOG d
+    WHERE EXISTS (
+        SELECT 1
+        FROM MEMBER_ACCOUNT m
+        WHERE m.CODE = #{memberCode}
+          AND (
+              d.SELLER_ID = m.ID
+              OR d.BUYER_ID = m.ID
+          )
+    )
+<!--MARKET_DEAL_LOG 조회 쿼리-->
+</select>
+
+<!-- 회원 로그인 성공 횟수 -->
+<select id="countMemberLogins"
+        parameterType="long"
+        resultType="long">
+
+    SELECT COUNT(*)
+    FROM MEMBER_ACTIVITY_LOG
+    WHERE MEM_CODE = #{memberCode}
+      AND ACTION_TYPE = 'LOGIN_SUCCESS'
+
+<!--MEMBER_ACTIVITY_LOG 활용-->
+</select>
+
+
 
 </mapper>
 

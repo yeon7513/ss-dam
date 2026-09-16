@@ -4,7 +4,8 @@ package com.ss_dam.auth.member.enums;
 public enum MemberActivityType {
   SIGNUP_WELCOME_POINT("신규 가입 웰컴 포인트 지급"),
   USER_PROFILE_UPDATE("사용자 프로필 변경"),
-  ADMIN_LEVEL_ADJUST("관리자에 의한 등급 조정");
+  ADMIN_LEVEL_ADJUST("관리자에 의한 등급 조정"),
+  LOGIN_SUCCESS("로그인 성공");
 
   private String description;
 

@@ -67,8 +67,29 @@ public class AdminMemberServiceImpl implements AdminMemberService{
                     "존재하지 않는 회원입니다.");
         }
 
+
+        //상단 통계 - 신고 누적 수
+        long receivedReportCount =
+                adminMemberDao.countReceivedReports(memberCode);
+        member.setReceivedReportCount(receivedReportCount);
+
+    
+
+        //상단 통계 - 피드 활동 수
+        long feedCount = adminMemberDao.countMemberFeeds(memberCode);
+        member.setFeedCount(feedCount);
+
+        //상단 통계 - 거래 활동 수
+        long tradeCount = adminMemberDao.countMemberTrades(memberCode);
+        member.setTradeCount(tradeCount);
+
+        //상단 통계 - 로그인 횟수
+        long loginCount = adminMemberDao.countMemberLogins(memberCode);
+        member.setLoginCount(loginCount);
+
         return member;
-    }
-  
-  
+
+        }
+
+        
 }

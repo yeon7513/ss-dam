@@ -39,4 +39,37 @@ public class AdminMemberDaoImpl implements AdminMemberDao {
                 "adminMember.loadMember",
                 memberCode);
     }
+
+    //상단 통계 - 신고 누적 수
+    public long countReceivedReports(Long memberCode) {
+        return sql.selectOne("adminMember.countReceivedReports",
+            memberCode);
+    }
+
+    //상단 통계 - 피드 활동 (회원이 작성한 피드 수)
+    @Override 
+    public long countMemberFeeds(Long memberCode) {
+        return sql.selectOne(
+                "adminMember.countMemberFeeds",
+                memberCode);
+    }
+
+    //상단 통계 - 거래 활동 (회원이 작성한 거래 수)
+    @Override 
+    public long countMemberTrades(Long memberCode) {
+        return sql.selectOne(
+                "adminMember.countMemberTrades",
+                memberCode);
+    }
+
+    //상단 통계 - 로그인 횟수 
+    
+    @Override 
+    public long countMemberLogins(Long memberCode) {
+        return sql.selectOne(
+            "adminMember.countMemberLogins",
+            memberCode);
+        
+    }
+
 }
