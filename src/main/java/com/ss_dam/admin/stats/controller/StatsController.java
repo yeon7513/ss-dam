@@ -29,7 +29,7 @@ import com.ss_dam.common.ApiResponse;
 //-> GET /api/admin/dashboard/summary?from=2026-09-01&to=2026-09-30
 
 @RestController
-@RequestMapping("/api/admin/")
+@RequestMapping("/api/admin/stats")
 public class StatsController {
 
 @GetMapping("/check")
@@ -45,7 +45,7 @@ public ResponseEntity<ApiResponse<Void>> checkAdmin(){
 // 요청 예시: GET /api/admin/dashboard/summary?from=2026-09-01&to=2026-09-09
 // → 상단 카드의 건수와 증감률 조회
    
-    @GetMapping("/stats/summary")
+    @GetMapping("/summary")
     public ResponseEntity<ApiResponse<DashboardSummary>> getDashboardSummary(
 
             //쿼리파라미터 from을 받음
@@ -71,7 +71,7 @@ public ResponseEntity<ApiResponse<Void>> checkAdmin(){
 
 // GET /api/admin/dashboard/statistics/members
 // → 월별 신규 회원 수 조회
-    @GetMapping("/stats/members")
+    @GetMapping("/members")
     public ResponseEntity<ApiResponse<List<MemberStatistics>>> getMemberStatistics(
             @RequestParam("from")
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
@@ -95,7 +95,7 @@ public ResponseEntity<ApiResponse<Void>> checkAdmin(){
 * 취소·삭제된 참여와 삭제된 챌린지는 제외
 * 나머지 참여는 미달성으로 계산 
 */
-        @GetMapping("/stats/challenges")
+        @GetMapping("/challenges")
         public ResponseEntity<ApiResponse<ChallengeStatistics>> getChallengeStatistics(
             @RequestParam("from")
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
@@ -121,7 +121,7 @@ public ResponseEntity<ApiResponse<Void>> checkAdmin(){
  *기간 내 참여자가 있는 챌린지만 반환 
  */ 
 
-        @GetMapping("/stats/challenges/ranking")
+        @GetMapping("/challenges/ranking")
         public ResponseEntity<ApiResponse<List<ChallengeRanking>>> getChallengeRanking(
                 @RequestParam("from")
                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
@@ -149,7 +149,7 @@ public ResponseEntity<ApiResponse<Void>> checkAdmin(){
  * 같은 회원이 챌린지 3개에 참여하면 3건
  * 취소된 참여와 삭제된 챌린지는 제외
 */
-    @GetMapping("/stats/regions")
+    @GetMapping("/regions")
     public ResponseEntity<ApiResponse<List<RegionStatistics>>> getRegionStatistics(
             @RequestParam("from")
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
@@ -191,7 +191,7 @@ public ResponseEntity<ApiResponse<Void>> checkAdmin(){
 //현재 SQL은 취소·환불을 별도로 제외하지 않습니다. 
 //거래 이력에 취소·환불 건도 남는 구조라면 그 상태를 구분하는 조건이 필요
 
-    @GetMapping("/stats/sellers/ranking")
+    @GetMapping("/sellers/ranking")
     public ResponseEntity<ApiResponse<List<SellerRanking>>> getSellerRanking(
             @RequestParam("from")
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
