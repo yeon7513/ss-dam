@@ -1,6 +1,6 @@
 import React from "react";
 import Card from "./Card.jsx";
-import styles from "../../../pages/admin/AdminDashboard.module.scss";
+import styles from "../../../pages/admin/OperationStatus.module.scss";
 
 // 차트 카드
 const ChartCard = ({ title, legends, children }) => (

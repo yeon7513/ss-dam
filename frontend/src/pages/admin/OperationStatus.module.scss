@@ -1,63 +1,48 @@
 @use "/src/scss/variables.scss" as *;
 
-.adminLayout {
-  display: flex;
-  min-height: 100vh;
-  background-color: $grayscale-5;
-  font-family: $font-main;
-  color: $grayscale-90;
-}
-
-.mainContent {
-  flex: 1;
+.dashboardBody {
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  width: 100%;
+  gap: 20px;
 
-  .dashboardBody {
-    padding: 24px;
+  // 페이지 타이틀
+  .pageTitleRow {
     display: flex;
-    flex-direction: column;
-    gap: 20px;
+    justify-content: space-between;
+    align-items: center;
 
-    // 페이지 타이틀
-    .pageTitleRow {
+    h1 {
+      font-size: 24px;
+      font-weight: 700;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      gap: 8px;
+      color: $grayscale-90;
 
-      h1 {
-        font-size: 24px;
-        font-weight: 700;
-        display: flex;
-        align-items: center;
-        gap: 8px;
+      .refreshIcon {
+        cursor: pointer;
+
         color: $grayscale-90;
 
-        .refreshIcon {
-          cursor: pointer;
+        transition:
+          transform 0.1s ease,
+          color 0.3s ease;
 
-          color: $grayscale-90;
+        &:hover {
+          color: $primary-40;
+        }
 
-          transition:
-            transform 0.1s ease,
-            color 0.3s ease;
-
-          &:hover {
-            color: $primary-40;
-          }
-
-          // React State(isSpinning)로 추가되는 회전 클래스
-          &.spinning {
-            animation: spin 1s linear infinite;
-          }
+        // React State(isSpinning)로 추가되는 회전 클래스
+        &.spinning {
+          animation: spin 1s linear infinite;
         }
       }
+    }
 
-      .timeInfo {
-        font-size: 14px;
-        color: $grayscale-90;
-      }
+    .timeInfo {
+      font-size: 14px;
+      color: $grayscale-90;
     }
   }
 }
