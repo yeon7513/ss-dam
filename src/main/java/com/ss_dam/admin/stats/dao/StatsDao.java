@@ -1,15 +1,15 @@
-package com.ss_dam.admin.dashboard.dao;
+package com.ss_dam.admin.stats.dao;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.ss_dam.admin.dashboard.model.response.ChallengeRanking;
-import com.ss_dam.admin.dashboard.model.response.ChallengeStatistics;
-import com.ss_dam.admin.dashboard.model.response.MemberStatistics;
-import com.ss_dam.admin.dashboard.model.response.RegionStatistics;
-import com.ss_dam.admin.dashboard.model.response.SellerRanking;
+import com.ss_dam.admin.stats.model.response.ChallengeRanking;
+import com.ss_dam.admin.stats.model.response.ChallengeStatistics;
+import com.ss_dam.admin.stats.model.response.MemberStatistics;
+import com.ss_dam.admin.stats.model.response.RegionStatistics;
+import com.ss_dam.admin.stats.model.response.SellerRanking;
 
-public interface DashboardDao {
+public interface StatsDao {
 
   //종료 시점 이전까지 가입한 누적 회원 수
   long countTotalMembers(LocalDateTime end);

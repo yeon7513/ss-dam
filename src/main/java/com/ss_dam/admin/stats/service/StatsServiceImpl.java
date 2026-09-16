@@ -1,4 +1,4 @@
-package com.ss_dam.admin.dashboard.service;
+package com.ss_dam.admin.stats.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,21 +13,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.ss_dam.admin.dashboard.dao.DashboardDao;
-import com.ss_dam.admin.dashboard.model.response.ChallengeRanking;
-import com.ss_dam.admin.dashboard.model.response.ChallengeStatistics;
-import com.ss_dam.admin.dashboard.model.response.DashboardSummary;
-import com.ss_dam.admin.dashboard.model.response.MemberStatistics;
-import com.ss_dam.admin.dashboard.model.response.RegionStatistics;
-import com.ss_dam.admin.dashboard.model.response.SellerRanking;
+import com.ss_dam.admin.stats.dao.StatsDao;
+import com.ss_dam.admin.stats.model.response.ChallengeRanking;
+import com.ss_dam.admin.stats.model.response.ChallengeStatistics;
+import com.ss_dam.admin.stats.model.response.DashboardSummary;
+import com.ss_dam.admin.stats.model.response.MemberStatistics;
+import com.ss_dam.admin.stats.model.response.RegionStatistics;
+import com.ss_dam.admin.stats.model.response.SellerRanking;
 
 @Service //구현 클래스를 Spring Bean으로 등록
 @Transactional(readOnly = true) //조회용 트랜잭션 적용
-public class DashboardServiceImpl implements DashboardService {
+public class StatsServiceImpl implements StatsService {
 
     //Spring이 DashboardDaoImpl 객체를 찾아 주입
     @Autowired 
-    private DashboardDao dashboardDao;
+    private StatsDao dashboardDao;
 
     //조회 기간에 해당하는 대시보드 통계 반환
     @Override 

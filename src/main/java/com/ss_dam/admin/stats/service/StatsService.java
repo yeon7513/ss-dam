@@ -1,16 +1,16 @@
-package com.ss_dam.admin.dashboard.service;
+package com.ss_dam.admin.stats.service;
 
 import java.time.LocalDate;
 import java.util.List;
 
-import com.ss_dam.admin.dashboard.model.response.ChallengeRanking;
-import com.ss_dam.admin.dashboard.model.response.ChallengeStatistics;
-import com.ss_dam.admin.dashboard.model.response.DashboardSummary;
-import com.ss_dam.admin.dashboard.model.response.MemberStatistics;
-import com.ss_dam.admin.dashboard.model.response.RegionStatistics;
-import com.ss_dam.admin.dashboard.model.response.SellerRanking;
+import com.ss_dam.admin.stats.model.response.ChallengeRanking;
+import com.ss_dam.admin.stats.model.response.ChallengeStatistics;
+import com.ss_dam.admin.stats.model.response.DashboardSummary;
+import com.ss_dam.admin.stats.model.response.MemberStatistics;
+import com.ss_dam.admin.stats.model.response.RegionStatistics;
+import com.ss_dam.admin.stats.model.response.SellerRanking;
 
-public interface DashboardService {
+public interface StatsService {
 
     //조회 기간에 해당하는 대시보드 통계 반환
     DashboardSummary getDashboardSummary(LocalDate from, LocalDate to);

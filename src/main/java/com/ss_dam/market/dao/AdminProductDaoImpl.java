@@ -7,55 +7,63 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.ss_dam.admin.log.response.AdminActivity;
+import com.ss_dam.market.model.response.AdminProductDetail;
 import com.ss_dam.market.model.response.AdminProductView;
-import com.ss_dam.market.model.response.ProductDetail;
 
 @Repository
 public class AdminProductDaoImpl implements AdminProductDao {
 
-  @Autowired
-  private SqlSession sql;
+    @Autowired
+    private SqlSession sql;
 
-  //관리자 상품 목록 전체 개수
-  @Override
-  public int countProducts(Map<String, Object> params) {
-    return sql.selectOne(
-        "adminProductView.countProducts", params);
-  }
-  
-  //관리자 상품 목록 조회
-  @Override
-  public List<AdminProductView> loadProducts(Map<String, Object> params) {
+    @Override
+    public int countProducts(Map<String, Object> params) {
+        return sql.selectOne(
+                "adminProductView.countProducts", params);
+    }
 
-    return sql.selectList(
-        "adminProductView.loadProducts", params);
-  }
+    @Override
+    public List<AdminProductView> loadProducts(
+            Map<String, Object> params) {
 
-  //관리자 상품 상세 조회
-  @Override
-  public ProductDetail loadProduct(Long prodCode){
-    return sql.selectOne(
-      "adminProductView.loadProduct", prodCode);
-  }
+        return sql.selectList(
+                "adminProductView.loadProducts", params);
+    }
 
-  //관리자 - 상품 선택 삭제
-    //상품 단건 삭제
-      //상품 논리 삭제
-      @Override
-      public int deleteProduct(Long prodCode) {
-          return sql.update(
-              "adminProductView.deleteProduct",
-              prodCode
-          );
-      }
-      
-      //삭제 로그 저장
-      @Override 
-      public int insertDeleteLog(Map<String, Object> params) {
+    @Override
+    public AdminProductDetail loadProduct(Long prodCode) {
+        return sql.selectOne(
+                "adminProductView.loadProduct",
+                Map.of("prodCode", prodCode));
+    }
+
+    @Override
+    public int deleteProduct(Long prodCode) {
+        return sql.update(
+                "adminProductView.deleteProduct",
+                Map.of("prodCode", prodCode));
+    }
+
+    @Override
+    public int restoreProduct(Long prodCode) {
+        return sql.update(
+                "adminProductView.restoreProduct",
+                Map.of("prodCode", prodCode));
+    }
+
+    @Override
+    public int insertActivityLog(Map<String, Object> params) {
         return sql.insert(
-          "adminProductView.insertDeleteLog",
-          params
-        );
-      }
+                "adminProductView.insertActivityLog", params);
+    }
 
+    @Override
+    public List<AdminActivity> loadProductLogs(Long prodCode) {
+        return sql.selectList(
+                "adminProductView.loadProductLogs",
+                Map.of("prodCode", prodCode));
+    }
 }
+
+//prodCode는 XML의 #{prodCode}와 명확하게 연결되도록 Map에 담음
