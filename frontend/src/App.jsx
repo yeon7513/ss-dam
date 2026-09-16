@@ -4,7 +4,7 @@ import Layout from "./layout/Layout";
 import About from "./pages/about/About";
 import ChallengeGuide from "./pages/about/challenge-guide/ChallengeGuide.jsx";
 import MarketGuide from "./pages/about/market-guide/MarketGuide.jsx";
-import AdminDashboard from "./pages/admin/AdminDashboard";
+import OperationStatus from "./pages/admin/OperationStatus";
 import ChallengeManage from "./pages/admin/ChallengeManage";
 import FeedManage from "./pages/admin/FeedManage";
 import MarketManage from "./pages/admin/MarketManage";
@@ -112,7 +112,7 @@ function App() {
       {/* 관리자 - 대시보드 */}
       <Route element={<AdminRoute />}>
         <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<AdminDashboard />} />
+          <Route index element={<OperationStatus />} />
           <Route path="user_manage" element={<UserManage />} />
           <Route path="feed_manage" element={<FeedManage />} />
           <Route path="market_manage" element={<MarketManage />} />
