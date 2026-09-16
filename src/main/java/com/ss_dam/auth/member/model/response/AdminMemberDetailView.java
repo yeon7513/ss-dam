@@ -30,6 +30,9 @@ public class AdminMemberDetailView {
     // IMAGES 테이블에서 조회한 프로필 사진 경로
     private String path;
 
+    //완료한 챌린지 수
+    private Long completedChallengeCount;
+
     /*상단 통계 부분 (신고 누적 수, 피드 활동, 거래 활동, 로그인 횟수)*/
 
     //상단 통계 - 신고 누적 수
@@ -182,5 +185,13 @@ public class AdminMemberDetailView {
     public void setLoginCount(Long loginCount) {
         this.loginCount = loginCount;
     }
-        
+
+    public Long getCompletedChallengeCount() {
+        return completedChallengeCount;
+    }
+
+    public void setCompletedChallengeCount(Long completedChallengeCount) {
+        this.completedChallengeCount = completedChallengeCount;
+    }
+            
 }

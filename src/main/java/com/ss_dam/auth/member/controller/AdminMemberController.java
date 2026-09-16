@@ -7,15 +7,25 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
+import com.ss_dam.admin.log.response.AdminActivity;
+import com.ss_dam.auth.login.Login;
 import com.ss_dam.auth.member.model.filter.AdminMemberSearchFilter;
+import com.ss_dam.auth.member.model.request.MemberStatusChangeRequest;
 import com.ss_dam.auth.member.model.response.AdminMemberDetailView;
+import com.ss_dam.auth.member.model.response.AdminMemberFeedsView;
 import com.ss_dam.auth.member.model.response.AdminMemberView;
 import com.ss_dam.auth.member.service.AdminMemberService;
 import com.ss_dam.common.ApiResponse;
+import com.ss_dam.common.pager.PageQuery;
 import com.ss_dam.common.pager.PageResult;
+
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 // - AdminMemberController -
 // 회원 목록·검색·상세, 이용 제한·해제, 처리 사유·이력
@@ -36,9 +46,8 @@ public class AdminMemberController {
     @Autowired 
     private AdminMemberService adminMemberService;
 
-    // 관리자 회원 목록 조회 및 검색
+    // 관리자 회원 목록 조회 및 검색 -> AdminMemberView확인
     // 회원 목록: 아이디, 이름, 지역, 상태, 등급, 가입일 
-    // -> AdminMemberView확인
 
     @GetMapping
     public ResponseEntity<ApiResponse<PageResult<AdminMemberView>>> loadMember(
@@ -52,24 +61,17 @@ public class AdminMemberController {
         );
       }
     
-    // 관리자 회원 상세 조회
-    // 피그마 관리자 대시보드 - 서비스 관리 - 회원정보 - 상세 페이지에 맞춰서
+    // 관리자 회원 상세 조회 ->AdminMemberDetailView 확인
+    // 기능 구현은 피그마 관리자 대시보드 - 서비스 관리 - 회원정보 - 상세 페이지 참조
     
-    //->AdminMemberDetailView 확인
 
-    // 기본 정보·사진 
-    // 상단 통계 (신고 누적 수, 피드 활동, 거래 활동, 로그인 횟수) -> 서비스에서 
-    // 관리자 로그 
-    // -> 작성 피드,신고내역,거래내역,챌린지인증 탭
-
-    /* 회원 상태 변경은 별도 처리  
-    상태와 사유 입력
-    → 변경 API 요청
-    → 서비스에서 상태 변경 + 관리자 로그 저장
-    → 성공하면 프론트에서 회원 정보와 관리자 로그 다시 조회*/ 
+    // 기본 정보 및 프로필 사진 -> controller부터
+    // 상단 통계 (신고 누적 수, 피드 활동, 거래 활동, 로그인 횟수) -> service에서 
+    // 회원 상태 변경(회원 이용 제한, 회원 이용 제한 해제), 권한 확인 및 회원 관리 이력 조회 -> controller부터
+    //작성 피드,신고내역,거래내역,챌린지인증 탭 -> controller부터
 
     
-      // 관리자 회원 상세 조회 — 기본 정보 및 프로필 사진
+      // 관리자 회원 상세 조회 — 기본 정보, 사진, 요약 통계
       @GetMapping("/{memberCode}")
       public ResponseEntity<ApiResponse<AdminMemberDetailView>> loadMember(
         @PathVariable Long memberCode) {
@@ -82,80 +84,107 @@ public class AdminMemberController {
         }
 
 
-     //+ 활동 이력: 상세 화면에서 별도 목록으로 조회하고 페이지네이션 적용
-     //활동 이력은 별도 API로 분리
-     //GET /api/admin/members/1/activities?page=1&perPage=10
-     //이후 프로필 변경 같은 실제 처리 코드에서 이력 저장도 함께 구현해야 기록이 쌓임
+         // 회원 이용 제한
+        @PatchMapping("/{memberCode}/restrict")
+        public ResponseEntity<ApiResponse<Void>> restrictMember(
+                @PathVariable Long memberCode,
+                @Valid @RequestBody MemberStatusChangeRequest request,
+                HttpSession session) {
+                
+                Login admin = requireAdmin(session);
 
-    // 회원 이용 제한
-    @PatchMapping("/{memberCode}/restrict")
-    public ResponseEntity<ApiResponse<Void>> restrictMember(
-            @PathVariable Long memberCode) {
+                adminMemberService.restrictMember(
+                        memberCode,
+                        request.getReason(),
+                        admin.getCode());
+                
+        
+                return ResponseEntity.ok(
+                        ApiResponse.<Void>success("회원 이용을 제한했습니다", null));
+                
+        }
 
-        // TODO: 처리 사유 요청 DTO와 인증된 관리자 정보 연결
-        // TODO: 회원 존재 여부 및 현재 이용 제한 상태 확인
-        // TODO: 회원 이용 제한 상태 변경
-        // TODO: 상태 변경과 처리 이력 저장을 같은 트랜잭션으로 처리
-        return notImplemented();
-    }
+        // 회원 이용 제한 해제
+        @PatchMapping("/{memberCode}/release")
+        public ResponseEntity<ApiResponse<Void>> releaseMember(
+                @PathVariable Long memberCode,
+                @Valid @RequestBody MemberStatusChangeRequest request,
+                HttpSession session) {
 
-    // 회원 이용 제한 해제
-    @PatchMapping("/{memberCode}/release")
-    public ResponseEntity<ApiResponse<Void>> releaseMember(
-            @PathVariable Long memberCode) {
+        Login admin = requireAdmin(session);
 
-        // TODO: 처리 사유 요청 DTO와 인증된 관리자 정보 연결
-        // TODO: 회원 존재 여부 및 현재 이용 제한 상태 확인
-        // TODO: 회원 이용 제한 해제
-        // TODO: 상태 변경과 처리 이력 저장을 같은 트랜잭션으로 처리
-        return notImplemented();
-    }
+        adminMemberService.releaseMember(
+                memberCode,
+                request.getReason(),
+                admin.getCode());
 
-    // 회원 관리 처리 이력 조회
-    @GetMapping("/{memberCode}/logs")
-    public ResponseEntity<ApiResponse<Void>> loadMemberLogs(
-            @PathVariable Long memberCode) {
+        return ResponseEntity.ok(
+                ApiResponse.<Void>success("회원 이용 제한을 해제했습니다.", null));
+        }
 
-        // TODO: 이용 제한·해제 사유, 처리 관리자, 처리 일시 조회
-        // TODO: 페이지네이션 연결
-        return notImplemented();
-    }
+        // 로그인 및 관리자 권한 확인
+        private Login requireAdmin(HttpSession session) {
 
-    // 미구현 API 공통 응답
-    private ResponseEntity<ApiResponse<Void>> notImplemented() {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED)
-                .body(ApiResponse.<Void>fail(
-                        "아직 구현되지 않은 기능입니다."));
-    }
+        Login user = (Login) session.getAttribute("loginUser");
+
+        if (user == null) {
+                throw new ResponseStatusException(
+                        HttpStatus.UNAUTHORIZED,
+                        "로그인이 필요합니다.");
+        }
+
+        if (!"ROLE_SUPER".equals(user.getRole())
+                && !"ROLE_MANAGER".equals(user.getRole())) {
+
+                throw new ResponseStatusException(
+                        HttpStatus.FORBIDDEN,
+                        "회원 상태를 변경할 권한이 없습니다.");
+        }
+
+        if (user.getCode() == null) {
+                throw new ResponseStatusException(
+                        HttpStatus.UNAUTHORIZED,
+                        "관리자 정보가 없습니다. 다시 로그인해주세요.");
+        }
+
+        return user;
+        }
+    
+
+        // 회원 관리 처리 이력 조회
+        //admin/log/response/AdminActivity DTO 사용
+        @GetMapping("/{memberCode}/logs")
+        public ResponseEntity<ApiResponse<PageResult<AdminActivity>>> loadMembersLogs(
+                @PathVariable Long memberCode,
+                @ModelAttribute PageQuery pageQuery) {
+
+                PageResult<AdminActivity> logs = 
+                        adminMemberService.loadMemberLogs(memberCode, pageQuery);
+                return ResponseEntity.ok(
+                        ApiResponse.success("회원 관리 처리 이력 조회 성공", logs));
+                }
+
+        // 관리자 회원 상세 - 작성 피드 탭
+        // 해당 회원의 피드 목록과 전체 등록·좋아요·조회수 통계 반환
+        @GetMapping("/{memberCode}/feeds")
+        public ResponseEntity<ApiResponse<AdminMemberFeedsView>> loadMemberFeeds(
+                @PathVariable Long memberCode,
+                @ModelAttribute PageQuery pageQuery,
+                HttpSession session) {
+
+        // 기존 관리자 권한 확인 메서드 사용
+        requireAdmin(session);
+
+        AdminMemberFeedsView result =
+                adminMemberService.loadMemberFeeds(memberCode, pageQuery);
+
+        return ResponseEntity.ok(
+                ApiResponse.success("회원 작성 피드 조회 성공", result));
+        }
+        
 }
 
-/*
- * 요청 예시
- *
- * 전체 회원
- * GET /api/admin/members
- *
- * 닉네임·이메일 검색
- * GET /api/admin/members?keyword=검색어
- *
- * 정상 이용 회원
- * GET /api/admin/members?status=ACTIVE
- *
- * 이용 제한 회원
- * GET /api/admin/members?status=RESTRICTED
- *
- * 검색어와 이용 제한 상태를 함께 적용
- * GET /api/admin/members?keyword=검색어&status=RESTRICTED
- *
- * 회원 상세
- * GET /api/admin/members/1
- *
- * 회원 이용 제한
- * PATCH /api/admin/members/1/restrict
- *
- * 회원 이용 제한 해제
- * PATCH /api/admin/members/1/release
- *
- * 회원 관리 처리 이력
- * GET /api/admin/members/1/logs
- */
+
+
+
+

@@ -165,18 +165,31 @@
 - 사진이 여러 개여도 회원 정보가 중복되지 않고, 사진이 없으면 path가 null로 반환
 - 순서가 가장 작은 사진을 선택하고, 같은 순서면 경로순으로 선택-->
 
-<!-- 상세 조회 - 상단 통계 - 상단 통계 - 
-삭제 되지 않은 회원이 작성한 피드 수 (비공개까지 포함)-->
-<select id="countMemberFeeds"
+<!-- 회원이 완료한 챌린지 수 -->
+<select id="countCompletedChallenges"
         parameterType="long"
         resultType="long">
 
-    SELECT COUNT(*)
-    FROM FEED
-    WHERE MEM_CODE = #{memberCode}
-      AND DELETE_YN = 0
+    SELECT COUNT(DISTINCT ce.CHAL_CODE)
+    FROM CHALLENGE_ENTRY ce
+
+    INNER JOIN CHALLENGE c
+        ON c.CODE = ce.CHAL_CODE
+
+    WHERE ce.MEM_CODE = #{memberCode}
+      AND ce.STATUS = 'COMPLETED'
+      AND ce.CANCELED_AT IS NULL
+      AND c.DELETE_YN = 0
+
+<!-- CHALLENGE 자체의 DELETE_YN은 유지하고,
+ 참여 기록은 STATUS = 'COMPLETED'와 CANCELED_AT IS NULL로 
+ 유효한 완료 기록을 판단-->      
+<!--COUNT(DISTINCT ce.CHAL_CODE)는 같은 챌린지의 완료 기록이 여러 개여도 한 번만 - 여기서는 종료일 대신 참여 상태 COMPLETED를 완료 기준으로 사용-->
 
 </select>
+
+
+<!-- 상세 조회 - 상단 통계 -->
 
 <!--
     받은 신고 누적 수
@@ -222,6 +235,19 @@
  처리 상태와 관계없이 집계하고, 대상 글이 soft delete된 경우도 포함-->
 </select>
 
+<!--삭제 되지 않은 회원이 작성한 피드 수 (비공개까지 포함)-->
+<select id="countMemberFeeds"
+        parameterType="long"
+        resultType="long">
+
+    SELECT COUNT(*)
+    FROM FEED
+    WHERE MEM_CODE = #{memberCode}
+      AND DELETE_YN = 0
+
+</select>
+
+
 <!-- 회원이 구매자 또는 판매자로 참여한 거래 이력 수 -->
 <select id="countMemberTrades"
         parameterType="long"
@@ -254,7 +280,247 @@
 <!--MEMBER_ACTIVITY_LOG 활용-->
 </select>
 
+<!--
+    정지: ACTIVE → SUSPENDED
+    해제: SUSPENDED → ACTIVE
+    삭제 여부는 변경하지 않음
+-->
+<update id="updateMemberStatus" parameterType="map">
 
+    UPDATE MEMBER_ACCOUNT
+    SET STATUS = #{afterStatus},
+        UPDATED_AT = NOW()
+    WHERE CODE = #{memberCode}
+      AND STATUS = #{beforeStatus}
+      AND DELETE_YN = 0
+
+</update>
+
+<!-- 관리자 회원 상태 변경 이력 -->
+<insert id="insertMemberStatusLog" parameterType="map">
+
+    INSERT INTO ADMIN_ACTIVITY_LOG (
+        ADM_CODE,
+        TARGET_TYPE,
+        TARGET_CODE,
+        PROCESS_TYPE,
+        MEMO,
+        CREATED_AT
+    )
+    VALUES (
+        #{adminCode},
+        'member',
+        #{memberCode},
+        #{processType},
+        #{reason},
+        NOW()
+    )
+
+</insert>
+
+<!-- 관리자 회원 로그 응답 매핑 -->
+<resultMap id="adminMemberLogViewMap"
+           type="AdminActivity">
+
+    <id column="CODE" property="code"/>
+    <result column="ADMIN_ID" property="empId"/>
+    <result column="TARGET_TYPE" property="targetType"/>
+    <result column="TARGET_CODE" property="targetCode"/>
+    <result column="PROCESS_TYPE" property="processType"/>
+    <result column="MEMO" property="memo"/>
+    <result column="CREATED_AT" property="createdAt"/>
+</resultMap>
+
+<!-- 로그 목록과 건수에 동일한 조건 적용 -->
+<sql id="memberLogConditions">
+    WHERE l.TARGET_TYPE = 'member'
+      AND l.TARGET_CODE = #{memberCode}
+      AND l.PROCESS_TYPE IN ('RESTRICT', 'RELEASE')
+</sql>
+
+<!-- 회원 정지·해제 로그 전체 건수 -->
+<select id="countMemberLogs"
+        parameterType="map"
+        resultType="int">
+
+    SELECT COUNT(*)
+    FROM ADMIN_ACTIVITY_LOG l
+
+    <include refid="memberLogConditions"/>
+</select>
+
+<!-- 회원 정지·해제 로그 목록 -->
+<select id="loadMemberLogs"
+        parameterType="map"
+        resultMap="adminMemberLogViewMap">
+
+        SELECT
+        l.CODE,
+        a.EMP_ID AS ADMIN_ID,
+        l.TARGET_TYPE,
+        l.TARGET_CODE,
+        l.PROCESS_TYPE,
+        l.MEMO,
+        l.CREATED_AT
+    FROM ADMIN_ACTIVITY_LOG l
+    LEFT JOIN ADMIN_ACCOUNT a
+        ON a.CODE = l.ADM_CODE
+
+    <include refid="memberLogConditions"/>
+
+    ORDER BY l.CREATED_AT DESC, l.CODE DESC
+    LIMIT #{perPage} OFFSET #{offset}
+</select>
+<!-- LEFT JOIN으로 관리자 이름과 아이디를 함께 가져옴
+- 관리자 계정이 삭제 처리되어도 과거 로그는 보여야 하므로 ,관리자 DELETE_YN 조건은 넣지 않음
+- 이름은 현재 관리자 정보를 기준으로 표시-->
+
+<!-- 작성 피드, 신고 내역, 거래 내역, 챌린지 인증 오른쪽 통계 정보 매핑 -->
+<resultMap id="memberFeedSummaryMap"
+           type="com.ss_dam.auth.member.model.response.AdminMemberFeedsView">
+
+    <result column="total_feed_count" property="totalFeedCount"/>
+    <result column="total_like_count" property="totalLikeCount"/>
+    <result column="total_hit_count" property="totalHitCount"/>
+</resultMap>
+
+<!-- 피드 카드 매핑 -->
+<resultMap id="memberFeedCardMap"
+           type="com.ss_dam.feed.model.response.UserFeedView">
+
+    <id column="code" property="code"/>
+    <result column="title" property="title"/>
+    <result column="challenge_name" property="challengeName"/>
+    <result column="hitcount" property="hitcount"/>
+    <result column="created_at" property="createdAt"/>
+    <result column="updated_at" property="updatedAt"/>
+    <result column="thumbnail" property="thumbnail"/>
+    <result column="count_feed_like" property="countFeedLike"/>
+    <result column="count_feed_comment" property="countFeedComment"/>
+
+    <!-- 작성자 프로필은 단일 객체 -->
+    <association property="memberProfile"
+                 javaType="com.ss_dam.auth.member.MemberProfile">
+        <id column="member_code" property="code"/>
+        <result column="member_id" property="id"/>
+        <result column="member_rating" property="rating"/>
+        <result column="profile_image" property="profileImage"/>
+    </association>
+
+    <collection property="hashtags" ofType="java.lang.String">
+        <result column="tag_name"/>
+    </collection>
+</resultMap>
+
+<!-- 목록과 통계의 공통 대상 조건 -->
+<sql id="memberFeedConditions">
+    WHERE f.MEM_CODE = #{memberCode}
+      AND f.DELETE_YN = 0
+</sql>
+
+<!-- 전체 등록 수·좋아요 수·조회수 -->
+<select id="loadMemberFeedSummary"
+        parameterType="map"
+        resultMap="memberFeedSummaryMap">
+
+    SELECT
+        COUNT(*) AS total_feed_count,
+        COALESCE(SUM(likes.like_count), 0) AS total_like_count,
+        COALESCE(SUM(f.HITCOUNT), 0) AS total_hit_count
+    FROM FEED f
+
+    LEFT JOIN (
+        SELECT FEED_CODE, COUNT(*) AS like_count
+        FROM FEED_LIKE
+        WHERE DELETE_YN = 0
+        GROUP BY FEED_CODE
+    ) likes ON likes.FEED_CODE = f.CODE
+
+    <include refid="memberFeedConditions"/>
+</select>
+
+<!-- 해당 회원의 작성 피드 목록 -->
+<select id="loadMemberFeeds"
+        parameterType="map"
+        resultMap="memberFeedCardMap">
+
+    SELECT
+        f.CODE AS code,
+        f.TITLE AS title,
+        f.HITCOUNT AS hitcount,
+        f.CREATED_AT AS created_at,
+        f.UPDATED_AT AS updated_at,
+        ch.TITLE AS challenge_name,
+
+        m.CODE AS member_code,
+        m.ID AS member_id,
+        m.RATING AS member_rating,
+
+        <!-- 프로필 사진 한 건 -->
+        (
+            SELECT i.PATH
+            FROM IMAGES i
+            WHERE i.TARGET_CODE = m.CODE
+              AND i.TYPE = 'profile'
+              AND i.DELETE_YN = 0
+            ORDER BY i.ORDER_SEQ ASC, i.PATH ASC
+            LIMIT 1
+        ) AS profile_image,
+
+        <!-- 피드 대표 사진 한 건 -->
+        (
+            SELECT i.PATH
+            FROM IMAGES i
+            WHERE i.TARGET_CODE = f.CODE
+              AND i.TYPE = 'feed'
+              AND i.DELETE_YN = 0
+            ORDER BY i.ORDER_SEQ ASC, i.PATH ASC
+            LIMIT 1
+        ) AS thumbnail,
+
+        <!-- 피드별 유효 좋아요 수 -->
+        (
+            SELECT COUNT(*)
+            FROM FEED_LIKE fl
+            WHERE fl.FEED_CODE = f.CODE
+              AND fl.DELETE_YN = 0
+        ) AS count_feed_like,
+
+        <!-- 기존 사용자 카드와 같은 공개 댓글 집계 기준 -->
+        (
+            SELECT COUNT(*)
+            FROM COMMENTS c
+            WHERE c.FEED_CODE = f.CODE
+              AND c.DELETE_YN = 0
+              AND UPPER(c.STATUS) = 'ACTIVE'
+        ) AS count_feed_comment,
+
+        fh.TAG_NAME AS tag_name
+
+    FROM (
+        <!-- 피드부터 페이지 단위로 자른 후 연결 -->
+        SELECT f.*
+        FROM FEED f
+
+        <include refid="memberFeedConditions"/>
+
+        ORDER BY f.CREATED_AT DESC, f.CODE DESC
+        LIMIT #{perPage} OFFSET #{offset}
+    ) f
+
+    JOIN MEMBER_ACCOUNT m
+        ON m.CODE = f.MEM_CODE
+
+    LEFT JOIN CHALLENGE ch
+        ON ch.CODE = f.CHAL_CODE
+
+    LEFT JOIN FEED_HASHTAG fh
+        ON fh.FEED_CODE = f.CODE
+
+    ORDER BY f.CREATED_AT DESC, f.CODE DESC, fh.TAG_NAME ASC
+</select>
+<!--재사용한 DTO의 likedYn과 프로필의 ranking은 이번 SQL에서 조회 X-->
+<!--피드를 먼저 페이지 단위로 조회한 뒤 해시태그를 연결하므로, 태그가 여러 개여도 페이지당 피드 수가 줄어들지 않습니다. resultMap이 같은 피드번호의 행을 한 카드로 묶습니다.-->
 
 </mapper>
 
