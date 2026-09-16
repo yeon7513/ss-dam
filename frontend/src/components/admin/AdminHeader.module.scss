@@ -19,19 +19,6 @@
   }
 
   .userModeBtn {
-    box-sizing: border-box;
-    background-color: $grayscale-5;
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer;
-    height: 3.4rem;
-    padding: 16px 24px;
-    border: none;
-    color: $grayscale-90;
-
-    &:hover {
-      background-color: $grayscale-10;
-      transition: background-color 0.5s ease;
-    }
+    width: 9rem;
   }
 }

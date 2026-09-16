@@ -2,18 +2,16 @@
 
 /* 카드 박스 외곽 기본 스타일 */
 .card {
-  width: 100%;
   background-color: $color-white;
   border: 1px solid $grayscale-20;
   border-radius: 8px;
-  padding: 16px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
   overflow: hidden; /* 내부 요소가 모서리를 뚫고 나가지 않도록 방지 */
 
   h3 {
-    font-size: 20px;
+    font-size: 1.25rem;
     font-weight: 600;
     color: $grayscale-90;
   }

@@ -27,7 +27,7 @@
       align-items: center;
 
       h1 {
-        font-size: 24px;
+        font-size: 1.5rem;
         font-weight: 700;
         display: flex;
         align-items: center;
@@ -55,7 +55,7 @@
       }
 
       .timeInfo {
-        font-size: 14px;
+        font-size: 0.9rem;
         color: $grayscale-90;
       }
     }
@@ -70,7 +70,7 @@
   margin-bottom: 12px;
 
   .legend {
-    font-size: 11px;
+    font-size: 0.9rem;
     color: $grayscale-50;
     display: flex;
     align-items: center;
@@ -112,14 +112,14 @@
 
       .statCard {
         height: 100px; // 요약데이터 2*2 높이
-        padding: 14px;
+        padding: 20px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
 
         .statTitle {
-          font-size: 12px;
-          color: $grayscale-50;
+          font-size: 1rem;
+          color: $grayscale-90;
         }
 
         .statValRow {
@@ -129,14 +129,14 @@
           margin-top: 8px;
 
           .statVal {
-            font-size: 16px;
+            font-size: 1.25rem;
             font-weight: 700;
             color: $grayscale-90;
           }
 
           .statRate {
-            font-size: 11px;
-            padding: 2px 6px;
+            font-size: 0.8rem;
+            padding: 4px 10px;
             border-radius: 4px;
             font-weight: 600;
 
@@ -145,7 +145,7 @@
               color: $primary-50;
             }
             &.minus {
-              background-color: $grayscale-5;
+              background-color: $grayscale-10;
               color: $dan-color;
             }
           }
@@ -165,12 +165,12 @@
         margin: 0;
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: 0.5rem; // 관리자활동로그 리스트 상하간격
         max-height: 130px;
         overflow-y: auto;
 
         li {
-          font-size: 12px;
+          font-size: 1rem; // 관리자활동로그 리스트 폰트 사이즈
           color: $grayscale-90;
           line-height: 1.4;
         }
@@ -178,7 +178,7 @@
     }
   }
 
-  // 우측 Column: 미처리 신고 카드
+  // 미처리 신고
   .reportCard {
     height: 400px;
     display: flex;
@@ -188,58 +188,89 @@
     .reportTable {
       width: 100%;
       border-collapse: collapse;
-      font-size: 12px;
+      table-layout: fixed; // 열 너비를 비율대로 고정
+
+      th,
+      td {
+        padding: 0.6rem 0;
+        vertical-align: middle;
+
+        // 컬럼 비율 설정 (1 : 1 : 1 : 3 = 총 6개 파트)
+        &:nth-child(1) {
+          width: 16.66%;
+        } // 날짜 (1)
+        &:nth-child(2) {
+          width: 16.66%;
+        } // 대상 회원 (1)
+        &:nth-child(3) {
+          width: 16.66%;
+        } // 사유 (1)
+        &:nth-child(4) {
+          width: 50%;
+        } // 설명 (3)
+      }
 
       th {
+        // 표 제목
+        font-size: 1rem;
         text-align: left;
-        color: $grayscale-50;
-        padding-bottom: 8px;
+        color: $grayscale-90;
         border-bottom: 1px solid $grayscale-20;
       }
 
       td {
-        padding: 8px 0;
+        // 내용
+        font-size: 1rem;
         border-bottom: 1px solid $grayscale-5;
+
+        &.dateTd {
+          color: $grayscale-50;
+          font-size: 1rem;
+        }
 
         .userInfo {
           display: flex;
           align-items: center;
           gap: 8px;
 
+          // 프로필 기본이미지
           .avatar {
             width: 24px;
             height: 24px;
-            background-color: $grayscale-10;
-            border-radius: 50%;
+            background-color: $grayscale-5;
+            border-radius: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
-            color: $grayscale-90;
+            font-size: 1rem;
           }
 
+          // 프로필 기본이미지 옆 이름 정보
           .userText {
             display: flex;
             flex-direction: column;
 
+            // 이름
             strong {
-              font-size: 12px;
+              font-size: 0.8rem;
               color: $grayscale-90;
             }
 
+            // 회원구분
             small {
-              font-size: 10px;
+              font-size: 0.7rem;
               color: $grayscale-50;
             }
           }
         }
 
+        // 사유 태그
         .badge {
           background-color: $grayscale-5;
           color: $grayscale-90;
           padding: 2px 6px;
           border-radius: 4px;
-          font-size: 11px;
+          font-size: 0.9rem;
         }
 
         &.descTd {
@@ -251,6 +282,7 @@
       }
     }
 
+    // 페이지네이션 컴포넌트로 변경 예정
     .pagination {
       display: flex;
       justify-content: center;
@@ -289,7 +321,7 @@
       align-items: center;
       justify-content: center;
       color: $grayscale-50;
-      font-size: 13px;
+      font-size: 1rem;
       background-color: $background-5;
     }
   }
@@ -302,21 +334,22 @@
   gap: 20px;
 
   .bottomCard {
-    height: 200px;
+    height: 280px; // 지역별참여도, 우수판매자 카드 높이
   }
 
+  // 지역별참여도
   .regionList {
     list-style: none;
     padding: 0;
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 0.5rem;
 
     li {
       display: flex;
       justify-content: space-between;
-      font-size: 13px;
+      font-size: 1rem;
       color: $grayscale-90;
 
       .regionVal {
@@ -330,21 +363,22 @@
     }
   }
 
+  // 우수판매자
   .sellerFlex {
     display: flex;
     gap: 16px;
     align-items: center;
 
     .donutPlaceholder {
-      width: 250px;
-      height: 136px;
+      width: 280px;
+      height: 200px;
       border: 1px dashed $grayscale-20;
       border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: $grayscale-50;
-      font-size: 12px;
+      font-size: 1rem;
       background-color: $background-5;
     }
 
@@ -355,18 +389,18 @@
       margin: 0;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
 
       li {
         display: flex;
         justify-content: space-between;
-        font-size: 12px;
+        font-size: 1rem;
         color: $grayscale-90;
 
         .sellerName {
           display: flex;
           align-items: center;
-          gap: 6px;
+          gap: 10px;
 
           .dot {
             width: 6px;
@@ -378,7 +412,7 @@
 
         .sellerVal {
           display: flex;
-          gap: 8px;
+          gap: 10px;
 
           .plus {
             color: $primary-50;

@@ -1,14 +1,79 @@
 @use "/src/scss/variables.scss" as *;
 
 .button {
-  padding: 1rem 1.5rem;
-  background-color: $grayscale-5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  font-family: inherit;
+  font-weight: 500;
+  font-size: 0.9rem; // 버튼 폰트 사이즈
+
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 
   &:disabled {
     cursor: not-allowed;
+    opacity: 0.9;
   }
 }
 
+/* ==========================================
+    BtnStyle Variants (스타일 종류)
+   ========================================== */
+
+// 채우기 스타일
 .fill {
-  background-color: yellow;
+  background-color: $grayscale-5;
+  color: $grayscale-90;
+
+  &:hover:not(:disabled) {
+    background-color: $grayscale-10;
+  }
+}
+
+// 아웃라인 스타일
+.outline {
+  //background-color: $color-white;
+  color: $grayscale-90;
+  border: 1.5px solid $grayscale-50;
+
+  &:hover:not(:disabled) {
+    background-color: $grayscale-5;
+  }
+}
+
+// 위험/삭제 스타일
+.danger {
+  background-color: $dan-color; // 빨간색 계열 변수
+  color: $color-white;
+
+  &:hover:not(:disabled) {
+    background-color: $grayscale-50;
+  }
+}
+
+/* ==========================================
+    Size Variants (크기)
+   ========================================== */
+
+.sm {
+  height: 2.4rem;
+  padding: 0 1rem;
+}
+
+.md {
+  height: 3rem;
+  padding: 0 1.25rem;
+}
+
+.lg {
+  height: 3.4rem;
+  padding: 0 1.5rem;
+}
+
+// 너비 100% 가득 채우기
+.fullWidth {
+  width: 100%;
 }
