@@ -1,6 +1,6 @@
 package com.ss_dam.market.controller;
 
-import java.util.List;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ss_dam.common.ApiResponse;
-import com.ss_dam.common.pager.Pager;
+import com.ss_dam.common.pager.PageResult;
+import com.ss_dam.market.model.filter.AdminProductSearchFilter;
 import com.ss_dam.market.model.request.ProductDelete;
 import com.ss_dam.market.model.response.AdminProductView;
 import com.ss_dam.market.model.response.ProductDetail;
@@ -32,11 +33,10 @@ public class AdminProductController {
 
   //관리자 - 상품 목록 조회
   @GetMapping
-  public ResponseEntity<ApiResponse<List<AdminProductView>>> loadProducts(
-    Pager pager){
+  public ResponseEntity<ApiResponse<PageResult<AdminProductView>>> loadProducts(AdminProductSearchFilter filter){
     //pager는 쿼리스트링 값을 자동으로 받아줌
 
-    List<AdminProductView> products = adminProductService.loadProducts(pager);
+    PageResult<AdminProductView> products = adminProductService.loadProducts(filter);
 
     return ResponseEntity.ok(
       ApiResponse.success("관리자 상품 목록 조회 성공", products)

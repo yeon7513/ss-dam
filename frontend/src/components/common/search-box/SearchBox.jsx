@@ -26,7 +26,7 @@ function SearchBox({
       [name]: selectValue,
       keyword,
     });
-  }
+  };
 
   // 검색 조건 드롭다운 변경 시
   const handleChangeSearchCode = (e) => {
@@ -38,8 +38,8 @@ function SearchBox({
     onSubmit({
       [name]: value,
       keyword: "",
-    })
-  }
+    });
+  };
 
   // 검색어 입력 시
   const handleChangeKeyword = (e) => {
@@ -60,7 +60,7 @@ function SearchBox({
     }
 
     setKeyword(value);
-  }
+  };
 
   // 라디오 or 드롭다운 렌더링 분기 처리
   const renderFilters = () => {
@@ -70,21 +70,19 @@ function SearchBox({
     if (isRadio) {
       return (
         <div className={styles.radioGroup}>
-          {
-            options.map((option) => (
-              <RadioInput
-                key={option.code}
-                id={option.code}
-                name={name}
-                value={option.code}
-                label={option.name}
-                checked={option.code === Number(selectValue)}
-                onChange={e => handleChangeSearchCode(e)}
-              />
-            ))
-          }
+          {options.map((option) => (
+            <RadioInput
+              key={option.code}
+              id={option.code}
+              name={name}
+              value={option.code}
+              label={option.name}
+              checked={option.code === Number(selectValue)}
+              onChange={(e) => handleChangeSearchCode(e)}
+            />
+          ))}
         </div>
-      )
+      );
     }
 
     // 그 외에는 드롭다운(select)으로 선택하는 조건 렌더링
@@ -96,8 +94,8 @@ function SearchBox({
         placeholder="전체"
         onChange={(e) => handleChangeSearchCode(e)}
       />
-    )
-  }
+    );
+  };
 
   return (
     <form className={cn(styles.wrap, className)} onSubmit={handleSubmitSearch}>

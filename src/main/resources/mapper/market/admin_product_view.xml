@@ -44,6 +44,14 @@
 
   <!-- 관리자 상품 검색 조건 -->
   <sql id="AdminProductSearchFilter">
+	<if test="status != null and status != ''">
+		AND UPPER(MP.post_status) = UPPER(#{status})
+	</if>  
+	
+	<if test="deleteYn != null and deleteYn != ''">
+		AND MP.delete_yn = #{deleteYn}
+	</if>
+    
     <if test="keyword != null and keyword != ''">
       <choose>
 
@@ -79,7 +87,7 @@
     SELECT COUNT(*)
     FROM MARKET_PRODUCT MP
 
-    JOIN MEMBER_ACCOUNT writer
+    LEFT JOIN MEMBER_ACCOUNT writer
     ON writer.code = MP.mem_code
 
     WHERE 1 = 1
@@ -126,7 +134,7 @@
     FROM MARKET_PRODUCT MP
 
     <!-- 하위 카테고리 -->
-    JOIN MARKET_CATEGORY sub_category
+    LEFT JOIN MARKET_CATEGORY sub_category
     ON sub_category.code = MP.cate_code
 
     <!-- 상위 카테고리 -->
@@ -134,7 +142,7 @@
     ON main_category.code = sub_category.main_cate
 
     <!-- 작성자 -->
-    JOIN MEMBER_ACCOUNT writer
+    LEFT JOIN MEMBER_ACCOUNT writer
     ON writer.code = MP.mem_code
 
     <!-- 작성자 프로필 이미지 -->
@@ -243,7 +251,7 @@
     FROM MARKET_PRODUCT MP
 
     <!-- 하위 카테고리 -->
-    JOIN MARKET_CATEGORY sub_category
+    LEFT JOIN MARKET_CATEGORY sub_category
     ON sub_category.code = MP.cate_code
 
     <!-- 상위 카테고리 -->
@@ -251,7 +259,7 @@
     ON main_category.code = sub_category.main_cate
 
     <!-- 작성자 -->
-    JOIN MEMBER_ACCOUNT writer
+    LEFT JOIN MEMBER_ACCOUNT writer
     ON writer.code = MP.mem_code
 
     <!-- 작성자 프로필 이미지 -->

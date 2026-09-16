@@ -1,18 +1,20 @@
 package com.ss_dam.market.service;
 
-import com.ss_dam.common.pager.Pager;
-import com.ss_dam.market.dao.AdminProductDao;
-import com.ss_dam.market.model.response.AdminProductView;
-import com.ss_dam.market.model.response.ProductDetail;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.ss_dam.common.pager.PageResult;
+import com.ss_dam.market.dao.AdminProductDao;
+import com.ss_dam.market.model.filter.AdminProductSearchFilter;
+import com.ss_dam.market.model.response.AdminProductView;
+import com.ss_dam.market.model.response.ProductDetail;
 
 @Service
 public class AdminProductServiceImpl implements AdminProductService {
@@ -22,23 +24,16 @@ public class AdminProductServiceImpl implements AdminProductService {
 
   //관리자 - 상품 목록 조회
   @Override
-  public List<AdminProductView> loadProducts(Pager pager) {
-    Map<String, Object> params = new HashMap<>();
+  public PageResult <AdminProductView> loadProducts(AdminProductSearchFilter filter) {    
     //Objects는 유틸리티 클래스라서 String 값을 넣을 수 없습니다. 다음처럼 **단수형 Object**로 수정
 
-    //검색 조건
-    //    params.put("searchCode", pager.getSearchCode());
-    //    params.put("keyword", pager.getKeyword());
-
     //검색 조건에 해당하는 전체 상품 수
-    int total = adminProductDao.countProducts(params);
-    pager.setTotal(total);
+    List<AdminProductView> products = adminProductDao.loadProducts(filter);
+    
+    int total = adminProductDao.countProducts(filter);   
 
-    //페이지네이션
-    //    params.put("offset", pager.getOffset());
-    params.put("perPage", pager.getPerPage());
 
-    return adminProductDao.loadProducts(params);
+    return PageResult.of(products, filter, (float) total);
 
   }
 
