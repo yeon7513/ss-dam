@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.ss_dam.market.model.filter.AdminProductSearchFilter;
 import com.ss_dam.market.model.response.AdminProductView;
-import com.ss_dam.market.model.response.ProductDetail;
 
 public interface AdminProductDao {
 

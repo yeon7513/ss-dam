@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import com.ss_dam.market.model.filter.AdminProductSearchFilter;
 import com.ss_dam.market.model.response.AdminProductView;
-import com.ss_dam.market.model.response.ProductDetail;
 
 @Repository
 public class AdminProductDaoImpl implements AdminProductDao {
@@ -52,4 +51,12 @@ public class AdminProductDaoImpl implements AdminProductDao {
 
 	
 
+    @Override
+    public List<AdminActivity> loadProductLogs(Long prodCode) {
+        return sql.selectList(
+                "adminProductView.loadProductLogs",
+                Map.of("prodCode", prodCode));
+    }
 }
+
+//prodCode는 XML의 #{prodCode}와 명확하게 연결되도록 Map에 담음

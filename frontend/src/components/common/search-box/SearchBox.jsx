@@ -13,7 +13,7 @@ function SearchBox({
   initSelectValue,
   initKeyword,
   options = null,
-  onSubmit,
+  onSearch,
 }) {
   const [selectValue, setSelectValue] = useState(initSelectValue);
   const [keyword, setKeyword] = useState(initKeyword);
@@ -22,20 +22,21 @@ function SearchBox({
   const handleSubmitSearch = (e) => {
     e.preventDefault();
 
-    onSubmit({
+    onSearch({
       [name]: selectValue,
       keyword,
     });
   };
 
-  // 검색 조건 드롭다운 변경 시
+  // 검색 조건 드롭다운 or 라디오 변경 시
   const handleChangeSearchCode = (e) => {
     const value = e.target.value;
+
     setSelectValue(value);
     // 키워드 input 초기화
     setKeyword("");
 
-    onSubmit({
+    onSearch({
       [name]: value,
       keyword: "",
     });
@@ -48,12 +49,12 @@ function SearchBox({
     // 키워드 input 값이 없어질 경우
     // 검색된 결과 초기화
     if (value.trim() === "") {
-      onSubmit({
+      onSearch({
         [name]: "",
         keyword: "",
       });
     } else {
-      onSubmit({
+      onSearch({
         [name]: selectValue,
         keyword: "",
       });
@@ -72,12 +73,12 @@ function SearchBox({
         <div className={styles.radioGroup}>
           {options.map((option) => (
             <RadioInput
-              key={option.code}
-              id={option.code}
+              key={option.value}
+              id={option.value}
               name={name}
-              value={option.code}
+              value={option.value}
               label={option.name}
-              checked={option.code === Number(selectValue)}
+              isChecked={option.value === selectValue}
               onChange={(e) => handleChangeSearchCode(e)}
             />
           ))}

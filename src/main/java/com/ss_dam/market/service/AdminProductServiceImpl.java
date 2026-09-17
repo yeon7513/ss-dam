@@ -77,6 +77,129 @@ public class AdminProductServiceImpl implements AdminProductService {
 
   }
 
+    // 페이지네이션
+    params.put("offset", pageQuery.getOffset());
+    params.put("perPage", pageQuery.getPerPage());
 
+    List<AdminProductView> products =
+            adminProductDao.loadProducts(params);
 
+    return PageResult.of(products, pageQuery, total);
 }
+
+    // 관리자 상품 상세 조회
+    @Override
+    public AdminProductDetail loadProduct(Long prodCode) {
+        return requireProduct(prodCode);
+    }
+
+    // 상품 논리 삭제 + 처리 이력 저장
+    @Transactional
+    @Override
+    public void deleteProduct(
+            Long prodCode, String reason, Long admCode) {
+
+        requireProduct(prodCode);
+
+        int updatedCount = adminProductDao.deleteProduct(prodCode);
+
+        requireUpdated(
+                updatedCount,
+                "이미 삭제되었거나 삭제할 수 없는 상품입니다.");
+
+        saveActivityLog(prodCode, reason, admCode, "DELETE");
+    }
+
+    // 삭제된 상품 복구 + 처리 이력 저장
+    @Transactional
+    @Override
+    public void restoreProduct(
+            Long prodCode, String reason, Long admCode) {
+
+        requireProduct(prodCode);
+
+        int updatedCount = adminProductDao.restoreProduct(prodCode);
+
+        requireUpdated(
+                updatedCount,
+                "삭제된 상품만 복구할 수 있습니다.");
+
+        saveActivityLog(prodCode, reason, admCode, "RESTORE");
+    }
+
+    // 상품 관리 처리 이력 조회
+    @Override
+    public List<AdminActivity> loadProductLogs(Long prodCode) {
+
+        requireProduct(prodCode);
+
+        return adminProductDao.loadProductLogs(prodCode);
+    }
+
+    // 필터 값 검증: null이면 해당 필터 생략
+    private void validateFilter(
+            String value,
+            Set<String> allowedValues,
+            String fieldName) {
+
+        if (value != null && !allowedValues.contains(value)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "지원하지 않는 " + fieldName + "입니다.");
+        }
+    }
+
+    // 상품 조회 및 존재 여부 확인
+    private AdminProductDetail requireProduct(Long prodCode) {
+
+        AdminProductDetail product =
+                adminProductDao.loadProduct(prodCode);
+
+        if (product == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "상품이 존재하지 않습니다.");
+        }
+
+        return product;
+    }
+
+    // 실제 변경 건수 확인
+    private void requireUpdated(int updatedCount, String message) {
+
+        if (updatedCount == 0) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT, message);
+        }
+
+        if (updatedCount != 1) {
+            throw new IllegalStateException(
+                    "상품 변경 건수가 올바르지 않습니다.");
+        }
+    }
+
+    // 관리자 처리 이력 저장
+    private void saveActivityLog(
+            Long prodCode,
+            String reason,
+            Long admCode,
+            String processType) {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("prodCode", prodCode);
+        params.put("admCode", admCode);
+        params.put("reason", reason);
+        params.put("processType", processType);
+
+        int insertedCount = adminProductDao.insertActivityLog(params);
+
+        if (insertedCount != 1) {
+            throw new IllegalStateException(
+                    "상품 관리 이력 저장에 실패했습니다.");
+        }
+    }
+}
+
+
+
+

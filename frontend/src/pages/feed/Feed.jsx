@@ -1,5 +1,5 @@
 import { useState } from "react";
-import SideNav from "../../components/feed/side-nav/FeedSideNav";
+import FeedSideNav from "../../components/feed/side-nav/FeedSideNav";
 import styles from "./Feed.module.scss";
 import FeedCard from "../../components/feed/feed-card/FeedCard.jsx";
 import { useLoadData } from "../../hooks/useLoadData.js";
@@ -21,7 +21,7 @@ const Feed = () => {
   const { queryString, handleChangePages, handleSearch, searchFilter } = useSearchQuery({
     page: 1,
     perPage: 12,
-    chalCode: 0,
+    chalCode: null,
     keyword: '',
     sortTarget: 'createdAt',
   });
@@ -35,6 +35,9 @@ const Feed = () => {
   const [sort, setSort] = useState(SORT_MENU[0].value);
   const handleClickSort = (sort) => {
     setSort(sort);
+    handleSearch({
+      sortTarget: sort,
+    })
   }
 
   // 등록 및 수정 시 바로 띄워줄 code값
@@ -56,7 +59,7 @@ const Feed = () => {
 
   return (
     <main className={styles.wrap}>
-      <SideNav />
+      <FeedSideNav />
       <div className={styles.container}>
         <div className={styles.filterBar}>
           {/* 정렬 */}
@@ -67,11 +70,11 @@ const Feed = () => {
             onTabChange={handleClickSort} />
           {/* 검색 */}
           <SearchBox
-            name={"chalCode"}
+            name="chalCode"
             initSelectValue={searchFilter.chalCode}
             initKeyword={searchFilter.keyword}
             options={categories}
-            onSubmit={handleSearch}
+            onSearch={handleSearch}
           />
         </div>
         {/* 목록 렌더링 */}

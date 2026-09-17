@@ -50,6 +50,7 @@
 
   <select id="findAdminForLogin" parameterType="map" resultType="Login">
     SELECT
+    CODE AS code,
     EMP_ID AS memberId,
     PASSWORD AS password,
     NAME AS name,
@@ -66,5 +67,27 @@
     WHERE ID = #{id}
     AND DELETE_YN = 0
   </select>
+
+  <!-- 일반 회원 로그인 성공 이력 저장 -->
+  <insert id="insertLoginActivity" parameterType="map">
+
+      INSERT INTO MEMBER_ACTIVITY_LOG (
+          MEM_CODE,
+          ACTION_TYPE,
+          ACTION_REASON,
+          ACTIONED_BY,
+          ACTIONED_IP,
+          CREATED_AT
+      )
+      VALUES (
+          #{memberCode},
+          #{actionType},
+          #{actionReason},
+          #{actionedBy},
+          #{actionedIp},
+          NOW()
+      )
+
+  </insert>
 
 </mapper>
