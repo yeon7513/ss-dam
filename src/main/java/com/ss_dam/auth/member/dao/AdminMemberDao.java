@@ -7,7 +7,10 @@ import com.ss_dam.admin.log.response.AdminActivity;
 import com.ss_dam.admin.report.model.response.ReportView;
 import com.ss_dam.auth.member.model.response.AdminMemberDetailView;
 import com.ss_dam.auth.member.model.response.AdminMemberFeedsView;
+import com.ss_dam.auth.member.model.response.AdminMemberProofsView;
 import com.ss_dam.auth.member.model.response.AdminMemberReportsView;
+import com.ss_dam.auth.member.model.response.AdminMemberTradeView;
+import com.ss_dam.auth.member.model.response.AdminMemberTradesView;
 import com.ss_dam.auth.member.model.response.AdminMemberView;
 import com.ss_dam.feed.model.response.UserFeedView;
 
@@ -61,6 +64,22 @@ public interface AdminMemberDao {
 
   // 회원이 받은 신고 페이지 목록
   List<ReportView> loadMemberReports(
+          Map<String, Object> params);
+
+  // 회원 전체 거래 통계
+  AdminMemberTradesView loadMemberTradeSummary(
+          Map<String, Object> params);
+
+  // 회원 거래 페이지 목록
+  List<AdminMemberTradeView> loadMemberTrades(
+          Map<String, Object> params);
+
+  // 전체 인증글 / 인증한 챌린지 / 최근 30일 인증글
+  AdminMemberProofsView loadMemberProofSummary(
+          Map<String, Object> params);
+
+  // 현재 페이지 인증글 목록
+  List<UserFeedView> loadMemberProofs(
           Map<String, Object> params);
 
 }

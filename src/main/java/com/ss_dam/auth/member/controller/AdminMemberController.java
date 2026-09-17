@@ -18,7 +18,9 @@ import com.ss_dam.auth.member.model.filter.AdminMemberSearchFilter;
 import com.ss_dam.auth.member.model.request.MemberStatusChangeRequest;
 import com.ss_dam.auth.member.model.response.AdminMemberDetailView;
 import com.ss_dam.auth.member.model.response.AdminMemberFeedsView;
+import com.ss_dam.auth.member.model.response.AdminMemberProofsView;
 import com.ss_dam.auth.member.model.response.AdminMemberReportsView;
+import com.ss_dam.auth.member.model.response.AdminMemberTradesView;
 import com.ss_dam.auth.member.model.response.AdminMemberView;
 import com.ss_dam.auth.member.service.AdminMemberService;
 import com.ss_dam.common.ApiResponse;
@@ -199,16 +201,49 @@ public class AdminMemberController {
 
                 return ResponseEntity.ok(
                         ApiResponse.success("회원 신고내역 조회 성공", result));
+
+                //우측 상단 통계 : 전체 신고 / 처리 대기 / 처리 완료
+                //- 전체 신고: 모든 상태 포함
+                //- 처리 대기: PENDING, IN_REVIEW
+                //- 처리 완료: RESOLVED
+                // * 기각(REJECTED)은 전체 신고에만 포함
                 
                 }
         
 
-        //우측 상단 통계 : 전체 신고 / 처리 대기 / 처리 완료
-        //- 전체 신고: 모든 상태 포함
-        //- 처리 대기: PENDING, IN_REVIEW
-        //- 처리 완료: RESOLVED
-        // * 기각(REJECTED)은 전체 신고에만 포함
 
+
+        // 관리자 회원 상세 - 거래내역 탭
+        @GetMapping("/{memberCode}/trades")
+        public ResponseEntity<ApiResponse<AdminMemberTradesView>> loadMemberTrades(
+                @PathVariable Long memberCode,
+                @ModelAttribute PageQuery pageQuery,
+                HttpSession session) {
+
+        requireAdmin(session);
+
+        AdminMemberTradesView result =
+                adminMemberService.loadMemberTrades(memberCode, pageQuery);
+
+        return ResponseEntity.ok(
+                ApiResponse.success("회원 거래내역 조회 성공", result));
+        }
+
+        // 관리자 회원 상세 - 챌린지 인증 탭
+        @GetMapping("/{memberCode}/proofs")
+        public ResponseEntity<ApiResponse<AdminMemberProofsView>> loadMemberProofs(
+                @PathVariable Long memberCode,
+                @ModelAttribute PageQuery pageQuery,
+                HttpSession session) {
+
+        requireAdmin(session);
+
+        AdminMemberProofsView result =
+                adminMemberService.loadMemberProofs(memberCode, pageQuery);
+
+        return ResponseEntity.ok(
+                ApiResponse.success("회원 챌린지 인증내역 조회 성공", result));
+        }
         
 }
 

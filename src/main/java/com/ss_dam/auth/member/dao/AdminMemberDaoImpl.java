@@ -11,7 +11,10 @@ import com.ss_dam.admin.log.response.AdminActivity;
 import com.ss_dam.admin.report.model.response.ReportView;
 import com.ss_dam.auth.member.model.response.AdminMemberDetailView;
 import com.ss_dam.auth.member.model.response.AdminMemberFeedsView;
+import com.ss_dam.auth.member.model.response.AdminMemberProofsView;
 import com.ss_dam.auth.member.model.response.AdminMemberReportsView;
+import com.ss_dam.auth.member.model.response.AdminMemberTradeView;
+import com.ss_dam.auth.member.model.response.AdminMemberTradesView;
 import com.ss_dam.auth.member.model.response.AdminMemberView;
 import com.ss_dam.feed.model.response.UserFeedView;
 
@@ -155,6 +158,46 @@ public class AdminMemberDaoImpl implements AdminMemberDao {
 
         return sql.selectList(
                 "adminMember.loadMemberReports",
+                params);
+    }
+
+    // 회원 전체 거래 통계
+    @Override
+    public AdminMemberTradesView loadMemberTradeSummary(
+            Map<String, Object> params) {
+
+        return sql.selectOne(
+                "adminMember.loadMemberTradeSummary",
+                params);
+    }
+
+    // 회원 거래 페이지 목록
+    @Override
+    public List<AdminMemberTradeView> loadMemberTrades(
+            Map<String, Object> params) {
+
+        return sql.selectList(
+                "adminMember.loadMemberTrades",
+                params);
+    }
+
+    // 인증글 통계
+    @Override
+    public AdminMemberProofsView loadMemberProofSummary(
+            Map<String, Object> params) {
+
+        return sql.selectOne(
+                "adminMember.loadMemberProofSummary",
+                params);
+    }
+
+    // 인증글 페이지 목록
+    @Override
+    public List<UserFeedView> loadMemberProofs(
+            Map<String, Object> params) {
+
+        return sql.selectList(
+                "adminMember.loadMemberProofs",
                 params);
     }
 

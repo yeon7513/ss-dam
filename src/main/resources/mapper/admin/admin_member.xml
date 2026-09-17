@@ -7,19 +7,17 @@
 
     <!-- 회원 목록 응답 매핑 -->
     <resultMap id="adminMemberViewMap"
-               type="AdminMemberView">
-
+               type="AdminMemberView"
+               autoMapping="true">
         <id column="CODE" property="code"/>
-        <result column="ID" property="id"/>
-        <result column="NAME" property="name"/>
-        <result column="ADDRESS" property="address"/>
-        <result column="STATUS" property="status"/>
-        <result column="RATING" property="rating"/>
-        <result column="CREATED_AT" property="createdAt"/>
-        <result column="DELETE_YN" property="deleteYn"/>
     </resultMap>
 
+  
     <!-- 목록·건수 조회에 공통 적용할 검색 조건 -->
+
+    <!-- 여러 쿼리에서 반복되는 조건을 이름 붙여 저장하는 MyBatis 공통 SQL  조각-->
+    <!-- 실행할 때, <include>자리에 위의 WHERE(...)전체가 들어가므로 기존쿼리와 동일하게 동작 -->
+
     <sql id="memberSearchConditions">
         <where>
 
@@ -111,28 +109,18 @@
 
     <!-- 회원 상세 정보 매핑 -->
 <resultMap id="adminMemberDetailViewMap"
-           type="com.ss_dam.auth.member.model.response.AdminMemberDetailView">
+           type="AdminMemberDetailView"
+           autoMapping="true">
 
     <id column="CODE" property="code"/>
-    <result column="ID" property="id"/>
-    <result column="NAME" property="name"/>
-    <result column="PHONE" property="phone"/>
-    <result column="ADDRESS" property="address"/>
-    <result column="RATING" property="rating"/>
-    <result column="POINT" property="point"/>
-    <result column="STATUS" property="status"/>
-    <result column="CREATED_AT" property="createdAt"/>
-    <result column="UPDATED_AT" property="updatedAt"/>
-    <result column="LOGGED_AT" property="loggedAt"/>
-    <result column="DELETE_YN" property="deleteYn"/>
-    <result column="PROFILE_PATH" property="path"/>
+    <!--DTO필드명이 profilePath로 변환되는 path는 AS path-->
 </resultMap>
 
 <!-- 관리자 회원 상세 조회 -->
+<!--경로 하나만 필요해서 LEFT JOIN으로 쓰면 코드가 복잡해져서 서브쿼리 유지 -->
 <select id="loadMember"
         parameterType="long"
         resultMap="adminMemberDetailViewMap">
-
     SELECT
         m.CODE,
         m.ID,
@@ -146,7 +134,6 @@
         m.UPDATED_AT,
         m.LOGGED_AT,
         m.DELETE_YN,
-
         (
             SELECT i.PATH
             FROM IMAGES i
@@ -155,15 +142,16 @@
               AND i.DELETE_YN = 0
             ORDER BY i.ORDER_SEQ ASC, i.PATH ASC
             LIMIT 1
-        ) AS PROFILE_PATH
-
+        ) AS path
     FROM MEMBER_ACCOUNT m
     WHERE m.CODE = #{memberCode}
 
+    <!--사진은 서브쿼리로 한 건만 가져옴
+    - 사진이 여러 개여도 회원 정보가 중복되지 않고, 사진이 없으면 path가 null로 반환
+    - 순서가 가장 작은 사진을 선택하고, 같은 순서면 경로순으로 선택-->
+
 </select>
-<!--사진은 서브쿼리로 한 건만 가져옴
-- 사진이 여러 개여도 회원 정보가 중복되지 않고, 사진이 없으면 path가 null로 반환
-- 순서가 가장 작은 사진을 선택하고, 같은 순서면 경로순으로 선택-->
+
 
 <!-- 회원이 완료한 챌린지 수 -->
 <select id="countCompletedChallenges"
@@ -190,13 +178,23 @@
 
 
 <!-- 상세 조회 - 상단 통계 -->
+  <!-- 해당 회원이 받은 신고를 찾는 공통 조건-->
+    <!-- 여러 쿼리에서 반복되는 조건을 이름 붙여 저장하는 MyBatis 공통 SQL  조각-->
+    <!-- 실행할 때, <include>자리에 위의 WHERE(...)전체가 들어가므로 기존쿼리와 동일하게 동작. 
+    신고 통계와 목록에서 같은 조건을 쓸 수 있고, 조건이 바뀌면 <sql> 한 곳만 수정-->
+    <!-- 상세 조회 하단의 신고 내역 탭에서도 불러와야 돼서 공통으로 묶음-->
 
-<!-- 해당 회원이 받은 신고를 찾는 공통 조건 -->
-<!-- 여러 쿼리에서 반복되는 조건을 이름 붙여 저장하는 MyBatis 공통 SQL 조각-->
-<!-- 상세 조회 하단의 신고 내역 탭에서도 불러와야 돼서 공통으로 묶어놓음-->
-<!-- 실행할 때 <include> 자리에 위의 WHERE (...) 전체가 들어가므로 기존 쿼리와 동일하게 동작. 신고 통계와 목록에서도 같은 조건을 쓸 수 있고, 조건이 바뀌면 <sql> 부분 한 곳만 수정-->
-<sql id="memberReceivedReportConditions">
-    WHERE (
+<!--
+    받은 신고 누적 수
+    feed, comment는 실제 TARGET_TYPE 값 확인 필요
+-->
+<select id="countReceivedReports"
+        parameterType="long"
+        resultType="long">
+
+    SELECT COUNT(*)
+    FROM REPORT r
+    WHERE
         (
             r.TARGET_TYPE = 'feed'
             AND EXISTS (
@@ -226,21 +224,6 @@
                   AND p.MEM_CODE = #{memberCode}
             )
         )
-    )
-</sql>
-
-
-<!-- 받은 신고 누적 수
-     처리 상태와 관계없이 집계
-     소프트 삭제된 대상의 신고도 포함 -->
-<select id="countReceivedReports"
-        parameterType="long"
-        resultType="long">
-
-    SELECT COUNT(*)
-    FROM REPORT r
-
-    <include refid="memberReceivedReportConditions"/>
 <!--신고 한 건을 1회로 계산
  처리 상태와 관계없이 집계하고, 대상 글이 soft delete된 경우도 포함-->
 </select>
@@ -387,7 +370,7 @@
 
 <!-- 작성 피드, 신고 내역, 거래 내역, 챌린지 인증 오른쪽 통계 정보 매핑 -->
 <resultMap id="memberFeedSummaryMap"
-           type="com.ss_dam.auth.member.model.response.AdminMemberFeedsView">
+           type="AdminMemberFeedsView">
 
     <result column="total_feed_count" property="totalFeedCount"/>
     <result column="total_like_count" property="totalLikeCount"/>
@@ -396,27 +379,25 @@
 
 <!-- 피드 카드 매핑 -->
 <resultMap id="memberFeedCardMap"
-           type="com.ss_dam.feed.model.response.UserFeedView">
+           type="UserFeedView"
+           autoMapping="true">
 
     <id column="code" property="code"/>
-    <result column="title" property="title"/>
-    <result column="challenge_name" property="challengeName"/>
-    <result column="hitcount" property="hitcount"/>
-    <result column="created_at" property="createdAt"/>
-    <result column="updated_at" property="updatedAt"/>
-    <result column="thumbnail" property="thumbnail"/>
-    <result column="count_feed_like" property="countFeedLike"/>
-    <result column="count_feed_comment" property="countFeedComment"/>
 
-    <!-- 작성자 프로필은 단일 객체 -->
+    <!-- 작성자 프로필 (단일 객체) -->
     <association property="memberProfile"
-                 javaType="com.ss_dam.auth.member.MemberProfile">
+                 javaType="MemberProfile"
+                 autoMapping="true">
+
         <id column="member_code" property="code"/>
+
+        <!--이름 달라서 직접 매핑-->
         <result column="member_id" property="id"/>
         <result column="member_rating" property="rating"/>
         <result column="profile_image" property="profileImage"/>
     </association>
 
+    <!--해시태그 목록-->
     <collection property="hashtags" ofType="java.lang.String">
         <result column="tag_name"/>
     </collection>
@@ -488,33 +469,23 @@
             LIMIT 1
         ) AS thumbnail,
 
-        <!-- 피드별 유효 좋아요 수 -->
-        (
-            SELECT COUNT(*)
-            FROM FEED_LIKE fl
-            WHERE fl.FEED_CODE = f.CODE
-              AND fl.DELETE_YN = 0
-        ) AS count_feed_like,
-
-        <!-- 기존 사용자 카드와 같은 공개 댓글 집계 기준 -->
-        (
-            SELECT COUNT(*)
-            FROM COMMENTS c
-            WHERE c.FEED_CODE = f.CODE
-              AND c.DELETE_YN = 0
-              AND UPPER(c.STATUS) = 'ACTIVE'
-        ) AS count_feed_comment,
+        <!-- JOIN으로 집계한 좋아요·댓글 수 -->
+        COALESCE(likes.like_count, 0) AS count_feed_like,
+        COALESCE(comments.comment_count, 0) AS count_feed_comment,
 
         fh.TAG_NAME AS tag_name
 
     FROM (
-        <!-- 피드부터 페이지 단위로 자른 후 연결 -->
+        <!-- 피드를 먼저 페이지 단위로 조회 -->
         SELECT f.*
         FROM FEED f
 
         <include refid="memberFeedConditions"/>
 
-        ORDER BY f.CREATED_AT DESC, f.CODE DESC
+        ORDER BY
+            f.CREATED_AT DESC,
+            f.CODE DESC
+
         LIMIT #{perPage} OFFSET #{offset}
     ) f
 
@@ -524,47 +495,103 @@
     LEFT JOIN CHALLENGE ch
         ON ch.CODE = f.CHAL_CODE
 
+    <!-- 피드별 유효 좋아요 수 -->
+    LEFT JOIN (
+        SELECT
+            fl.FEED_CODE,
+            COUNT(*) AS like_count
+        FROM FEED_LIKE fl
+        WHERE fl.DELETE_YN = 0
+        GROUP BY fl.FEED_CODE
+    ) likes
+        ON likes.FEED_CODE = f.CODE
+
+    <!-- 피드별 공개 댓글 수 -->
+    LEFT JOIN (
+        SELECT
+            c.FEED_CODE,
+            COUNT(*) AS comment_count
+        FROM COMMENTS c
+        WHERE c.DELETE_YN = 0
+          AND UPPER(c.STATUS) = 'ACTIVE'
+        GROUP BY c.FEED_CODE
+    ) comments
+        ON comments.FEED_CODE = f.CODE
+
+    <!-- 해시태그 -->
     LEFT JOIN FEED_HASHTAG fh
         ON fh.FEED_CODE = f.CODE
 
-    ORDER BY f.CREATED_AT DESC, f.CODE DESC, fh.TAG_NAME ASC
+    ORDER BY
+        f.CREATED_AT DESC,
+        f.CODE DESC,
+        fh.TAG_NAME ASC
+
 </select>
+
+<!--COALESCE(..., 0): 좋아요나 댓글이 없어 연결 결과가 NULL이면 0으로 반환-->
 <!--재사용한 DTO의 likedYn과 프로필의 ranking은 이번 SQL에서 조회 X-->
 <!--피드를 먼저 페이지 단위로 조회한 뒤 해시태그를 연결하므로, 태그가 여러 개여도 페이지당 피드 수가 줄어들지 않습니다. resultMap이 같은 피드번호의 행을 한 카드로 묶습니다.-->
 
+<!--
+프로필·대표 사진 → 서브쿼리로 한 장 조회
+좋아요·댓글 수 → JOIN으로 연결
+챌린지 정보·해시태그 → JOIN으로 연결
+-->
 
-<!-- 회원 신고 통계 매핑 -->
+<!-- 신고 통계 -->
 <resultMap id="memberReportSummaryMap"
-           type="com.ss_dam.auth.member.model.response.AdminMemberReportsView">
-
-    <result column="total_report_count"
-            property="totalReportCount"/>
-
-    <result column="pending_report_count"
-            property="pendingReportCount"/>
-
-    <result column="resolved_report_count"
-            property="resolvedReportCount"/>
+           type="AdminMemberReportsView"
+           autoMapping="true">
 </resultMap>
 
-
-<!-- 신고 한 건 매핑: 공통 ReportView 재사용 -->
+<!-- 신고 한 건 -->
 <resultMap id="memberReportMap"
-           type="com.ss_dam.admin.report.model.response.ReportView">
+           type="ReportView"
+           autoMapping="true">
 
     <id column="CODE" property="code"/>
 
+    <!-- MEM_CODE는 reporterCode와 이름이 달라 직접 매핑 -->
     <result column="MEM_CODE" property="reporterCode"/>
-    <result column="TARGET_TYPE" property="targetType"/>
-    <result column="TARGET_CODE" property="targetCode"/>
-    <result column="REASON_TYPE" property="reasonType"/>
-    <result column="CONTENT" property="content"/>
-    <result column="STATUS" property="status"/>
-    <result column="CREATED_AT" property="createdAt"/>
 </resultMap>
 
+<!-- 해당 회원이 받은 신고 조건: 한 번만 정의 -->
+<sql id="memberReceivedReportConditions">
+    WHERE (
+        (
+            r.TARGET_TYPE = 'feed'
+            AND EXISTS (
+                SELECT 1
+                FROM FEED f
+                WHERE f.CODE = r.TARGET_CODE
+                  AND f.MEM_CODE = #{memberCode}
+            )
+        )
+        OR
+        (
+            r.TARGET_TYPE = 'comment'
+            AND EXISTS (
+                SELECT 1
+                FROM COMMENTS c
+                WHERE c.CODE = r.TARGET_CODE
+                  AND c.MEM_CODE = #{memberCode}
+            )
+        )
+        OR
+        (
+            r.TARGET_TYPE = 'market'
+            AND EXISTS (
+                SELECT 1
+                FROM MARKET_PRODUCT p
+                WHERE p.CODE = r.TARGET_CODE
+                  AND p.MEM_CODE = #{memberCode}
+            )
+        )
+    )
+</sql>
 
-<!-- 오른쪽 상단 통계: 전체 신고 / 처리 대기 / 처리 완료 -->
+<!-- 전체 신고 / 처리 대기 / 처리 완료 -->
 <select id="loadMemberReportSummary"
         parameterType="map"
         resultMap="memberReportSummaryMap">
@@ -572,35 +599,26 @@
     SELECT
         COUNT(*) AS total_report_count,
 
-        COALESCE(
-            SUM(
-                CASE
-                    WHEN r.STATUS IN ('PENDING', 'IN_REVIEW')
-                    THEN 1
-                    ELSE 0
-                END
-            ),
-            0
-        ) AS pending_report_count,
+        COALESCE(SUM(
+            CASE
+                WHEN r.STATUS IN ('PENDING', 'IN_REVIEW') THEN 1
+                ELSE 0
+            END
+        ), 0) AS pending_report_count,
 
-        COALESCE(
-            SUM(
-                CASE
-                    WHEN r.STATUS = 'RESOLVED'
-                    THEN 1
-                    ELSE 0
-                END
-            ),
-            0
-        ) AS resolved_report_count
+        COALESCE(SUM(
+            CASE
+                WHEN r.STATUS = 'RESOLVED' THEN 1
+                ELSE 0
+            END
+        ), 0) AS resolved_report_count
 
     FROM REPORT r
 
     <include refid="memberReceivedReportConditions"/>
 </select>
 
-
-<!-- 현재 페이지의 신고 목록 -->
+<!-- 신고 목록 + 페이지네이션 -->
 <select id="loadMemberReports"
         parameterType="map"
         resultMap="memberReportMap">
@@ -621,16 +639,233 @@
 
     ORDER BY r.CREATED_AT DESC, r.CODE DESC
     LIMIT #{perPage} OFFSET #{offset}
+</select>
 
-<!--
-신고내역 : 회원이 받은 신고 기준으로
-REPORT.MEM_CODE는 신고한 회원 번호이므로 회원 조건으로 사용X ->. 해당 회원이 받은 신고를 찾으려면 피드·댓글·상품의 작성자 번호를 확인
- -->
+<!-- 거래 통계 매핑 -->
+<resultMap id="memberTradeSummaryMap"
+           type="AdminMemberTradesView"
+           autoMapping="true">
+</resultMap>
 
-<!--DELETE_YN 조건을 넣지 않았으므로 소프트 삭제된 게시물의 신고도 유지
- 대상 행이 DB에서 완전히 삭제되면 작성자를 확인할 수 없어 이 조회에서는 제외-->
+
+<!-- 거래 한 건 + 함께 조회한 상품 상세 매핑 -->
+<resultMap id="memberTradeMap"
+           type="AdminMemberTradeView"
+           autoMapping="true">
+    <id column="trade_code" property="code"/>
+</resultMap>
+
+
+<!-- 해당 회원이 구매자 또는 판매자인 거래 -->
+<sql id="memberTradeConditions">
+    WHERE (
+        d.BUYER_ID = m.ID
+        OR d.SELLER_ID = m.ID
+    )
+</sql>
+
+
+<!-- 오른쪽 통계: 전체 거래 / 구매 내역 / 판매 내역 -->
+<select id="loadMemberTradeSummary"
+        parameterType="map"
+        resultMap="memberTradeSummaryMap">
+
+    SELECT
+        COUNT(*) AS total_trade_count,
+
+        COALESCE(SUM(
+            CASE
+                WHEN d.BUYER_ID = m.ID THEN 1
+                ELSE 0
+            END
+        ), 0) AS purchase_count,
+
+        COALESCE(SUM(
+            CASE
+                WHEN d.SELLER_ID = m.ID THEN 1
+                ELSE 0
+            END
+        ), 0) AS sale_count
+
+    FROM MARKET_DEAL_LOG d
+
+    JOIN MEMBER_ACCOUNT m
+        ON m.CODE = #{memberCode}
+
+    <include refid="memberTradeConditions"/>
+</select>
+
+
+<!-- 현재 페이지 거래와 상품 상세를 한 쿼리로 조회 -->
+<!-- 변경: 거래 정보와 상품 번호만 조회하고, 상품 상세는 클릭 시 별도 조회 -->
+<select id="loadMemberTrades"
+        parameterType="map"
+        resultMap="memberTradeMap">
+
+    SELECT
+        d.CODE AS trade_code,
+        d.PROD_CODE AS product_code,
+        d.PRICE AS trade_price,
+        d.CREATED_AT AS traded_at,
+
+        CASE
+            WHEN d.BUYER_ID = m.ID
+                 AND d.SELLER_ID = m.ID
+                THEN 'BOTH'
+            WHEN d.BUYER_ID = m.ID
+                THEN 'BUY'
+            ELSE 'SELL'
+        END AS trade_type
+
+    FROM MARKET_DEAL_LOG d
+
+    JOIN MEMBER_ACCOUNT m
+        ON m.CODE = #{memberCode}
+
+    <include refid="memberTradeConditions"/>
+
+    ORDER BY d.CREATED_AT DESC, d.CODE DESC
+    LIMIT #{perPage} OFFSET #{offset}
 
 </select>
+
+<!-- 인증글 통계 자동 매핑 -->
+<resultMap id="memberProofSummaryMap"
+           type="AdminMemberProofsView"
+           autoMapping="true">
+</resultMap>
+
+
+<!-- 통계와 목록의 공통 조건 -->
+<sql id="memberProofConditions">
+    WHERE f.MEM_CODE = #{memberCode}
+      AND f.DELETE_YN = 0
+      AND EXISTS (
+          SELECT 1
+          FROM CHALLENGE ch
+          WHERE ch.CODE = f.CHAL_CODE
+      )
+</sql>
+
+
+<!-- 전체 인증글 / 인증한 챌린지 / 최근 30일 인증글 -->
+<select id="loadMemberProofSummary"
+        parameterType="map"
+        resultMap="memberProofSummaryMap">
+
+    SELECT
+        COUNT(*) AS total_proof_count,
+
+        COUNT(DISTINCT f.CHAL_CODE) AS proof_challenge_count,
+
+        COALESCE(SUM(
+            CASE
+                WHEN f.CREATED_AT BETWEEN
+                     DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()
+                THEN 1
+                ELSE 0
+            END
+        ), 0) AS recent_proof_count
+
+    FROM FEED f
+
+    <include refid="memberProofConditions"/>
+</select>
+
+
+<!-- 기존 피드 카드 매핑 재사용 -->
+<select id="loadMemberProofs"
+        parameterType="map"
+        resultMap="memberFeedCardMap">
+
+    SELECT
+        f.CODE AS code,
+        f.TITLE AS title,
+        f.HITCOUNT AS hitcount,
+        f.CREATED_AT AS created_at,
+        f.UPDATED_AT AS updated_at,
+        ch.TITLE AS challenge_name,
+
+        m.CODE AS member_code,
+        m.ID AS member_id,
+        m.RATING AS member_rating,
+
+        <!-- 작성자 프로필 사진 -->
+        (
+            SELECT i.PATH
+            FROM IMAGES i
+            WHERE i.TARGET_CODE = m.CODE
+              AND i.TYPE = 'profile'
+              AND i.DELETE_YN = 0
+            ORDER BY i.ORDER_SEQ ASC, i.PATH ASC
+            LIMIT 1
+        ) AS profile_image,
+
+        <!-- 인증글 대표 사진 -->
+        (
+            SELECT i.PATH
+            FROM IMAGES i
+            WHERE i.TARGET_CODE = f.CODE
+              AND i.TYPE = 'feed'
+              AND i.DELETE_YN = 0
+            ORDER BY i.ORDER_SEQ ASC, i.PATH ASC
+            LIMIT 1
+        ) AS thumbnail,
+
+        COALESCE(likes.like_count, 0) AS count_feed_like,
+        COALESCE(comments.comment_count, 0) AS count_feed_comment,
+
+        fh.TAG_NAME AS tag_name
+
+    FROM (
+        <!-- 해시태그 연결 전에 인증글부터 페이지 단위로 조회 -->
+        SELECT f.*
+        FROM FEED f
+
+        <include refid="memberProofConditions"/>
+
+        ORDER BY f.CREATED_AT DESC, f.CODE DESC
+        LIMIT #{perPage} OFFSET #{offset}
+    ) f
+
+    JOIN MEMBER_ACCOUNT m
+        ON m.CODE = f.MEM_CODE
+
+    JOIN CHALLENGE ch
+        ON ch.CODE = f.CHAL_CODE
+
+    <!-- 피드별 좋아요 수 -->
+    LEFT JOIN (
+        SELECT
+            fl.FEED_CODE,
+            COUNT(*) AS like_count
+        FROM FEED_LIKE fl
+        WHERE fl.DELETE_YN = 0
+        GROUP BY fl.FEED_CODE
+    ) likes
+        ON likes.FEED_CODE = f.CODE
+
+    <!-- 피드별 공개 댓글 수 -->
+    LEFT JOIN (
+        SELECT
+            c.FEED_CODE,
+            COUNT(*) AS comment_count
+        FROM COMMENTS c
+        WHERE c.DELETE_YN = 0
+          AND UPPER(c.STATUS) = 'ACTIVE'
+        GROUP BY c.FEED_CODE
+    ) comments
+        ON comments.FEED_CODE = f.CODE
+
+    LEFT JOIN FEED_HASHTAG fh
+        ON fh.FEED_CODE = f.CODE
+
+    ORDER BY
+        f.CREATED_AT DESC,
+        f.CODE DESC,
+        fh.TAG_NAME ASC
+</select>
+
 
 </mapper>
 

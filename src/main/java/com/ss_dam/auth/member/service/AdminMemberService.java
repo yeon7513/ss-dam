@@ -4,7 +4,9 @@ import com.ss_dam.admin.log.response.AdminActivity;
 import com.ss_dam.auth.member.model.filter.AdminMemberSearchFilter;
 import com.ss_dam.auth.member.model.response.AdminMemberDetailView;
 import com.ss_dam.auth.member.model.response.AdminMemberFeedsView;
+import com.ss_dam.auth.member.model.response.AdminMemberProofsView;
 import com.ss_dam.auth.member.model.response.AdminMemberReportsView;
+import com.ss_dam.auth.member.model.response.AdminMemberTradesView;
 import com.ss_dam.auth.member.model.response.AdminMemberView;
 import com.ss_dam.common.pager.PageQuery;
 import com.ss_dam.common.pager.PageResult;
@@ -36,7 +38,13 @@ public interface AdminMemberService {
   AdminMemberReportsView loadMemberReports(
       Long memberCode, PageQuery pageQuery);
   
-  //
+  // 회원 거래 통계와 페이지 목록
+  AdminMemberTradesView loadMemberTrades(
+      Long memberCode, PageQuery pageQuery);
+
+  // 회원 인증글 통계와 페이지 목록
+  AdminMemberProofsView loadMemberProofs(
+        Long memberCode, PageQuery pageQuery);
 
   
 }
