@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.ss_dam.admin.log.response.AdminActivity;
+import com.ss_dam.admin.report.model.response.ReportView;
 import com.ss_dam.auth.member.model.response.AdminMemberDetailView;
 import com.ss_dam.auth.member.model.response.AdminMemberFeedsView;
+import com.ss_dam.auth.member.model.response.AdminMemberReportsView;
 import com.ss_dam.auth.member.model.response.AdminMemberView;
 import com.ss_dam.feed.model.response.UserFeedView;
 
@@ -53,5 +55,12 @@ public interface AdminMemberDao {
   // 회원 작성 피드 페이지 목록
   List<UserFeedView> loadMemberFeeds(Map<String, Object> params);
   
+  // 회원이 받은 전체 신고 통계
+  AdminMemberReportsView loadMemberReportSummary(
+          Map<String, Object> params);
+
+  // 회원이 받은 신고 페이지 목록
+  List<ReportView> loadMemberReports(
+          Map<String, Object> params);
 
 }

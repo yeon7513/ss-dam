@@ -18,6 +18,7 @@ import com.ss_dam.auth.member.model.filter.AdminMemberSearchFilter;
 import com.ss_dam.auth.member.model.request.MemberStatusChangeRequest;
 import com.ss_dam.auth.member.model.response.AdminMemberDetailView;
 import com.ss_dam.auth.member.model.response.AdminMemberFeedsView;
+import com.ss_dam.auth.member.model.response.AdminMemberReportsView;
 import com.ss_dam.auth.member.model.response.AdminMemberView;
 import com.ss_dam.auth.member.service.AdminMemberService;
 import com.ss_dam.common.ApiResponse;
@@ -181,6 +182,33 @@ public class AdminMemberController {
         return ResponseEntity.ok(
                 ApiResponse.success("회원 작성 피드 조회 성공", result));
         }
+
+        //관리자 회원 상세 - 신고내역 탭
+
+        @GetMapping("/{memberCode}/reports")
+        public ResponseEntity<ApiResponse<AdminMemberReportsView>> loadMemberReports(
+                @PathVariable Long memberCode,
+                @ModelAttribute PageQuery pageQuery,
+                HttpSession session) {
+
+                //기존 관리자 권한 확인 메서드 재사용
+                requireAdmin(session);
+
+                AdminMemberReportsView result = 
+                        adminMemberService.loadMemberReports(memberCode, pageQuery);
+
+                return ResponseEntity.ok(
+                        ApiResponse.success("회원 신고내역 조회 성공", result));
+                
+                }
+        
+
+        //우측 상단 통계 : 전체 신고 / 처리 대기 / 처리 완료
+        //- 전체 신고: 모든 상태 포함
+        //- 처리 대기: PENDING, IN_REVIEW
+        //- 처리 완료: RESOLVED
+        // * 기각(REJECTED)은 전체 신고에만 포함
+
         
 }
 
