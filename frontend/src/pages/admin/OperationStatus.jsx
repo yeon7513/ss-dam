@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Card from "../../components/common/card/Card.jsx";
 import StatCard from "../../components/common/card/StatCard.jsx";
 import ChartCard from "../../components/common/card/ChartCard.jsx";
-//import AdminLayout from "../../layout/AdminLayout.jsx";
+import AdminLayout from "../../layout/AdminLayout.jsx";
 import styles from "./OperationStatus.module.scss";
 import { FaArrowsRotate } from "react-icons/fa6";
 
