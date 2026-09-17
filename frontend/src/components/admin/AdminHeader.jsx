@@ -1,11 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./AdminHeader.module.scss";
-<<<<<<< Updated upstream
 import Button from "../common/button/Button";
-=======
 import { FiHome } from "react-icons/fi";
->>>>>>> Stashed changes
 
 const AdminHeader = () => {
   const navigate = useNavigate();
