@@ -68,6 +68,14 @@
 
     <!-- 검색 및 상태 필터 -->
     <sql id="AdminProductSearchFilter">
+    
+    	<if test="status != null and status != ''">
+    		AND UPPER(MP.post_status) = UPPER(#{status})
+    	</if>
+    	
+    	<if test="deleteYn != null and deleteYn != ''">
+    		AND MP.delete_yn = #{deleteYn}
+    	</if>
 
         <if test="keyword != null and keyword != ''">
             <choose>
@@ -94,6 +102,14 @@
                         OR writer.id LIKE CONCAT('%', #{keyword}, '%')
                     )
                 </otherwise>
+                
+                <if test="tagName != null and tagName != ''">
+                	AND MP.tag_name = #{tagName}
+                </if>
+                
+                <if test="prodCode != null">
+                	AND MP.code = #{prodCode}
+                </if>
 
             </choose>
         </if>
@@ -169,13 +185,13 @@
     <!-- 목록·상세 공통 JOIN -->
     <sql id="AdminProductJoins">
 
-        JOIN MARKET_CATEGORY sub_category
+        LEFT JOIN MARKET_CATEGORY sub_category
             ON sub_category.code = MP.cate_code
 
         LEFT JOIN MARKET_CATEGORY main_category
             ON main_category.code = sub_category.main_cate
 
-        JOIN MEMBER_ACCOUNT writer
+        LEFT JOIN MEMBER_ACCOUNT writer
             ON writer.code = MP.mem_code
 
         <!-- 프로필 이미지 -->
@@ -236,10 +252,10 @@
         SELECT COUNT(*)
         FROM MARKET_PRODUCT MP
 
-        JOIN MARKET_CATEGORY sub_category
+        LEFT JOIN MARKET_CATEGORY sub_category
             ON sub_category.code = MP.cate_code
 
-        JOIN MEMBER_ACCOUNT writer
+        LEFT JOIN MEMBER_ACCOUNT writer
             ON writer.code = MP.mem_code
 
         WHERE 1 = 1
