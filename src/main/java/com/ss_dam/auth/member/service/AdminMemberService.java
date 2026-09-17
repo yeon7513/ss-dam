@@ -4,6 +4,7 @@ import com.ss_dam.admin.log.response.AdminActivity;
 import com.ss_dam.auth.member.model.filter.AdminMemberSearchFilter;
 import com.ss_dam.auth.member.model.response.AdminMemberDetailView;
 import com.ss_dam.auth.member.model.response.AdminMemberFeedsView;
+import com.ss_dam.auth.member.model.response.AdminMemberReportsView;
 import com.ss_dam.auth.member.model.response.AdminMemberView;
 import com.ss_dam.common.pager.PageQuery;
 import com.ss_dam.common.pager.PageResult;
@@ -30,6 +31,12 @@ public interface AdminMemberService {
   // 관리자 회원 상세 - 작성 피드 탭
   AdminMemberFeedsView loadMemberFeeds(
         Long memberCode, PageQuery pageQuery);
+  
+  //관리자 회원 상세 - 신고 내역 탭
+  AdminMemberReportsView loadMemberReports(
+      Long memberCode, PageQuery pageQuery);
+  
+  //
 
   
 }

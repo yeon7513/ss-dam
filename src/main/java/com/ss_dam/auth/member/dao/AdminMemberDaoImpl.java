@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.ss_dam.admin.log.response.AdminActivity;
+import com.ss_dam.admin.report.model.response.ReportView;
 import com.ss_dam.auth.member.model.response.AdminMemberDetailView;
 import com.ss_dam.auth.member.model.response.AdminMemberFeedsView;
+import com.ss_dam.auth.member.model.response.AdminMemberReportsView;
 import com.ss_dam.auth.member.model.response.AdminMemberView;
 import com.ss_dam.feed.model.response.UserFeedView;
 
@@ -133,6 +135,26 @@ public class AdminMemberDaoImpl implements AdminMemberDao {
 
         return sql.selectList(
                 "adminMember.loadMemberFeeds",
+                params);
+    }
+
+    // 회원이 받은 전체 신고 통계
+    @Override
+    public AdminMemberReportsView loadMemberReportSummary(
+            Map<String, Object> params) {
+
+        return sql.selectOne(
+                "adminMember.loadMemberReportSummary",
+                params);
+    }
+
+    // 회원이 받은 신고 페이지 목록
+    @Override
+    public List<ReportView> loadMemberReports(
+            Map<String, Object> params) {
+
+        return sql.selectList(
+                "adminMember.loadMemberReports",
                 params);
     }
 

@@ -191,17 +191,12 @@
 
 <!-- 상세 조회 - 상단 통계 -->
 
-<!--
-    받은 신고 누적 수
-    feed, comment는 실제 TARGET_TYPE 값 확인 필요
--->
-<select id="countReceivedReports"
-        parameterType="long"
-        resultType="long">
-
-    SELECT COUNT(*)
-    FROM REPORT r
-    WHERE
+<!-- 해당 회원이 받은 신고를 찾는 공통 조건 -->
+<!-- 여러 쿼리에서 반복되는 조건을 이름 붙여 저장하는 MyBatis 공통 SQL 조각-->
+<!-- 상세 조회 하단의 신고 내역 탭에서도 불러와야 돼서 공통으로 묶어놓음-->
+<!-- 실행할 때 <include> 자리에 위의 WHERE (...) 전체가 들어가므로 기존 쿼리와 동일하게 동작. 신고 통계와 목록에서도 같은 조건을 쓸 수 있고, 조건이 바뀌면 <sql> 부분 한 곳만 수정-->
+<sql id="memberReceivedReportConditions">
+    WHERE (
         (
             r.TARGET_TYPE = 'feed'
             AND EXISTS (
@@ -231,6 +226,21 @@
                   AND p.MEM_CODE = #{memberCode}
             )
         )
+    )
+</sql>
+
+
+<!-- 받은 신고 누적 수
+     처리 상태와 관계없이 집계
+     소프트 삭제된 대상의 신고도 포함 -->
+<select id="countReceivedReports"
+        parameterType="long"
+        resultType="long">
+
+    SELECT COUNT(*)
+    FROM REPORT r
+
+    <include refid="memberReceivedReportConditions"/>
 <!--신고 한 건을 1회로 계산
  처리 상태와 관계없이 집계하고, 대상 글이 soft delete된 경우도 포함-->
 </select>
@@ -521,6 +531,106 @@
 </select>
 <!--재사용한 DTO의 likedYn과 프로필의 ranking은 이번 SQL에서 조회 X-->
 <!--피드를 먼저 페이지 단위로 조회한 뒤 해시태그를 연결하므로, 태그가 여러 개여도 페이지당 피드 수가 줄어들지 않습니다. resultMap이 같은 피드번호의 행을 한 카드로 묶습니다.-->
+
+
+<!-- 회원 신고 통계 매핑 -->
+<resultMap id="memberReportSummaryMap"
+           type="com.ss_dam.auth.member.model.response.AdminMemberReportsView">
+
+    <result column="total_report_count"
+            property="totalReportCount"/>
+
+    <result column="pending_report_count"
+            property="pendingReportCount"/>
+
+    <result column="resolved_report_count"
+            property="resolvedReportCount"/>
+</resultMap>
+
+
+<!-- 신고 한 건 매핑: 공통 ReportView 재사용 -->
+<resultMap id="memberReportMap"
+           type="com.ss_dam.admin.report.model.response.ReportView">
+
+    <id column="CODE" property="code"/>
+
+    <result column="MEM_CODE" property="reporterCode"/>
+    <result column="TARGET_TYPE" property="targetType"/>
+    <result column="TARGET_CODE" property="targetCode"/>
+    <result column="REASON_TYPE" property="reasonType"/>
+    <result column="CONTENT" property="content"/>
+    <result column="STATUS" property="status"/>
+    <result column="CREATED_AT" property="createdAt"/>
+</resultMap>
+
+
+<!-- 오른쪽 상단 통계: 전체 신고 / 처리 대기 / 처리 완료 -->
+<select id="loadMemberReportSummary"
+        parameterType="map"
+        resultMap="memberReportSummaryMap">
+
+    SELECT
+        COUNT(*) AS total_report_count,
+
+        COALESCE(
+            SUM(
+                CASE
+                    WHEN r.STATUS IN ('PENDING', 'IN_REVIEW')
+                    THEN 1
+                    ELSE 0
+                END
+            ),
+            0
+        ) AS pending_report_count,
+
+        COALESCE(
+            SUM(
+                CASE
+                    WHEN r.STATUS = 'RESOLVED'
+                    THEN 1
+                    ELSE 0
+                END
+            ),
+            0
+        ) AS resolved_report_count
+
+    FROM REPORT r
+
+    <include refid="memberReceivedReportConditions"/>
+</select>
+
+
+<!-- 현재 페이지의 신고 목록 -->
+<select id="loadMemberReports"
+        parameterType="map"
+        resultMap="memberReportMap">
+
+    SELECT
+        r.CODE,
+        r.MEM_CODE,
+        r.TARGET_TYPE,
+        r.TARGET_CODE,
+        r.REASON_TYPE,
+        r.CONTENT,
+        r.STATUS,
+        r.CREATED_AT
+
+    FROM REPORT r
+
+    <include refid="memberReceivedReportConditions"/>
+
+    ORDER BY r.CREATED_AT DESC, r.CODE DESC
+    LIMIT #{perPage} OFFSET #{offset}
+
+<!--
+신고내역 : 회원이 받은 신고 기준으로
+REPORT.MEM_CODE는 신고한 회원 번호이므로 회원 조건으로 사용X ->. 해당 회원이 받은 신고를 찾으려면 피드·댓글·상품의 작성자 번호를 확인
+ -->
+
+<!--DELETE_YN 조건을 넣지 않았으므로 소프트 삭제된 게시물의 신고도 유지
+ 대상 행이 DB에서 완전히 삭제되면 작성자를 확인할 수 없어 이 조회에서는 제외-->
+
+</select>
 
 </mapper>
 
