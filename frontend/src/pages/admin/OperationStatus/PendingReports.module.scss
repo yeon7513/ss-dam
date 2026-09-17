@@ -1,0 +1,147 @@
+@use "/src/scss/variables.scss" as *;
+
+// 미처리 신고 카드
+.reportCard {
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    flex-shrink: 0;
+
+    h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: $grayscale-90;
+    }
+  }
+
+  // 테이블 오버플로우 방지를 위한 스크롤 래퍼 영역 추가
+  .tableWrapper {
+    flex: 1; // 헤더와 페이지네이션 사이 남은 공간 채우기
+    overflow-y: auto; // 데이터가 자라나도 스크롤 처리
+    margin-bottom: 12px; // 하단 페이지네이션과의 간격
+  }
+
+  .reportTable {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; // 열 너비를 비율대로 고정
+
+    th,
+    td {
+      padding: 0.6rem 0;
+      vertical-align: middle;
+
+      // 컬럼 비율 설정 (1 : 1 : 1 : 3 = 총 6개 파트)
+      &:nth-child(1) {
+        width: 16.66%;
+      } // 날짜 (1)
+      &:nth-child(2) {
+        width: 16.66%;
+      } // 대상 회원 (1)
+      &:nth-child(3) {
+        width: 16.66%;
+      } // 사유 (1)
+      &:nth-child(4) {
+        width: 50%;
+      } // 설명 (3)
+    }
+
+    th {
+      // 표 제목
+      font-size: 1rem;
+      text-align: left;
+      color: $grayscale-90;
+      border-bottom: 1px solid $grayscale-20;
+    }
+
+    td {
+      // 내용
+      font-size: 1rem;
+      border-bottom: 1px solid $grayscale-5;
+
+      &.dateTd {
+        color: $grayscale-50;
+        font-size: 1rem;
+      }
+
+      .userInfo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        // 프로필 기본이미지
+        .avatar {
+          width: 24px;
+          height: 24px;
+          background-color: $grayscale-5;
+          border-radius: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1rem;
+        }
+
+        // 프로필 기본이미지 옆 이름 정보
+        .userText {
+          display: flex;
+          flex-direction: column;
+
+          // 이름
+          strong {
+            font-size: 0.8rem;
+            color: $grayscale-90;
+          }
+
+          // 회원구분
+          small {
+            font-size: 0.7rem;
+            color: $grayscale-50;
+          }
+        }
+      }
+
+      // 사유 태그
+      .badge {
+        background-color: $grayscale-5;
+        color: $grayscale-90;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.9rem;
+      }
+
+      &.descTd {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: $grayscale-90;
+      }
+    }
+  }
+
+  // 페이지네이션 컴포넌트로 변경 예정
+  .pagination {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    font-size: 12px;
+    color: $grayscale-50;
+    flex-shrink: 0;
+
+    span {
+      cursor: pointer;
+
+      &.activePage {
+        font-weight: 700;
+        color: $grayscale-90;
+        text-decoration: underline;
+      }
+    }
+  }
+}

@@ -1,0 +1,55 @@
+@use "/src/scss/variables.scss" as *;
+
+.chartCard {
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+
+  .cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    flex-shrink: 0;
+
+    h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: $grayscale-90;
+    }
+
+    .legend {
+      font-size: 0.9rem;
+      color: $grayscale-50;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
+      .dotDark,
+      .dotLight {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+      }
+      .dotDark {
+        background-color: $grayscale-90;
+      }
+      .dotLight {
+        background-color: $grayscale-20;
+      }
+    }
+  }
+
+  .chartPlaceholder {
+    flex: 1;
+    border: 1px dashed $grayscale-20;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $grayscale-50;
+    font-size: 1rem;
+    background-color: $background-5;
+  }
+}

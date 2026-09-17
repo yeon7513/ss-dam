@@ -1,0 +1,8 @@
+@use "/src/scss/variables.scss" as *;
+
+// 2x2 요약 카드 Grid
+.statsContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}

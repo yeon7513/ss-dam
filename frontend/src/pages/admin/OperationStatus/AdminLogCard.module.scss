@@ -1,0 +1,25 @@
+@use "/src/scss/variables.scss" as *;
+
+// 관리자 활동 로그 카드
+.logCard {
+  height: 180px; // 관리자활동로그 높이
+  display: flex;
+  flex-direction: column;
+
+  .logList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem; // 관리자활동로그 리스트 상하간격
+    max-height: 130px;
+    overflow-y: auto;
+
+    li {
+      font-size: 1rem; // 관리자활동로그 리스트 폰트 사이즈
+      color: $grayscale-90;
+      line-height: 1.4;
+    }
+  }
+}

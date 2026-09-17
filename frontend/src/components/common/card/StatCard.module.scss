@@ -1,0 +1,43 @@
+@use "/src/scss/variables.scss" as *;
+
+.statCard {
+  height: 100px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .statTitle {
+    font-size: 1rem;
+    color: $grayscale-90;
+  }
+
+  .statValRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 8px;
+
+    .statVal {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: $grayscale-90;
+    }
+
+    .statRate {
+      font-size: 0.8rem;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-weight: 600;
+
+      &.plus {
+        background-color: $primary-5;
+        color: $primary-50;
+      }
+      &.minus {
+        background-color: $grayscale-10;
+        color: $dan-color;
+      }
+    }
+  }
+}
