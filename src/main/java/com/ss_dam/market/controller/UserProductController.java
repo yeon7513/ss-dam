@@ -2,7 +2,8 @@ package com.ss_dam.market.controller;
 
 import com.ss_dam.auth.login.Login;
 import com.ss_dam.common.ApiResponse;
-import com.ss_dam.common.pager.Pager;
+import com.ss_dam.common.pager.PageResult;
+import com.ss_dam.market.model.filter.UserProductSearchFilter;
 import com.ss_dam.market.model.request.ProductUpdate;
 import com.ss_dam.market.model.response.ProductDetail;
 import com.ss_dam.market.model.response.ProductEditView;
@@ -14,8 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/market/products")
 public class UserProductController {
@@ -26,14 +25,16 @@ public class UserProductController {
 
   // 거래글 목록 조회
   @GetMapping
-  ResponseEntity<ApiResponse<List<UserProductView>>> loadProducts(Pager pager,
-      HttpSession session) {
+  ResponseEntity<ApiResponse<PageResult<UserProductView>>> loadProducts(
+      UserProductSearchFilter filter, HttpSession session) {
 
     // 로그인한 사용자의 Pick 여부를 받아오기 위해 세션에서 로그인 정보를 가져옴.
     Login loginUser = (Login) session.getAttribute("loginUser");
     Long memberCode = (loginUser != null) ? loginUser.getCode() : null;
 
-    List<UserProductView> products = userProductService.loadProducts(pager, memberCode);
+    System.out.println("dealStatus: " + filter.getDealStatus());
+
+    PageResult<UserProductView> products = userProductService.loadProducts(filter, memberCode);
 
     return ResponseEntity.ok(ApiResponse.success("다시쓰담 거래글 조회 성공", products));
   }

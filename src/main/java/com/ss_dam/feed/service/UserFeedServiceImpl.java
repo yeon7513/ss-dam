@@ -2,10 +2,10 @@ package com.ss_dam.feed.service;
 
 import com.ss_dam.comment.service.UserCommentService;
 import com.ss_dam.common.image.service.ImageService;
-import com.ss_dam.common.pager.PageQuery;
 import com.ss_dam.common.pager.PageResult;
 import com.ss_dam.feed.dao.UserFeedDao;
 import com.ss_dam.feed.model.core.FeedHashtag;
+import com.ss_dam.feed.model.filter.UserFeedSearchFilter;
 import com.ss_dam.feed.model.request.FeedCreate;
 import com.ss_dam.feed.model.request.FeedUpdate;
 import com.ss_dam.feed.model.response.FeedDetail;
@@ -36,19 +36,20 @@ public class UserFeedServiceImpl implements UserFeedService {
 
   // 피드 목록 조회
   @Override
-  public PageResult<UserFeedView> loadFeeds(PageQuery pageQuery, Long memberCode) {
+  public PageResult<UserFeedView> loadFeeds(UserFeedSearchFilter filter, Long memberCode) {
     Map<String, Object> params = new HashMap<>();
 
     params.put("memberCode", memberCode);
-    params.put("offset", pageQuery.getOffset());
-    params.put("perPage", pageQuery.getPerPage());
-    params.put("searchCode", pageQuery.getSearchCode());
-    params.put("keyword", pageQuery.getKeyword());
+    params.put("offset", filter.getOffset());
+    params.put("perPage", filter.getPerPage());
+    params.put("chalCode", filter.getChalCode());
+    params.put("keyword", filter.getKeyword());
+    params.put("sortTarget", filter.getSortTarget());
 
     List<UserFeedView> feeds = userFeedDao.loadFeeds(params);
-    float total = userFeedDao.loadFeedsTotalCount(pageQuery);
+    float total = userFeedDao.loadFeedsTotalCount(filter);
 
-    return PageResult.of(feeds, pageQuery, total);
+    return PageResult.of(feeds, filter, total);
   }
 
 

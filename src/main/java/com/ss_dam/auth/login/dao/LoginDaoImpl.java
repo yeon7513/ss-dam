@@ -33,5 +33,10 @@ public class LoginDaoImpl implements LoginDao {
 		return sql.selectOne("member.findAdminForLogin", paramMap);
 	}
 
+	@Override 
+	public int insertLoginActivity(Map<String, Object> params) {
+		return sql.insert("member.insertLoginActivity", params);
+	}
+
 }
 

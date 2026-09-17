@@ -5,353 +5,368 @@
 
 <mapper namespace="adminProductView">
 
-  <!-- 관리자 상품 목록 DTO 매핑 -->
-  <resultMap id="AdminProductViewMap"
-             type="AdminProductView"
-             extends="userProductView.UserProductViewMap"
-             autoMapping="true">
-
-    <result column="status" property="status" />
-
-    <!-- 최근 관리자 활동 로그 -->
-    <association property="adminActivitySummary"
-                 javaType="AdminActivitySummary"
-                 columnPrefix="a_"
-                 autoMapping="true">
-      <id column="target_code" property="targetCode" />
-    </association>
-  </resultMap>
-
-  <!-- 관리자 상품 상세 DTO 매핑 -->
-  <resultMap id="AdminProductDetailMap"
-             type="ProductDetail"
-             extends="AdminProductViewMap"
-             autoMapping="true">
-
-    <!-- type : 조회결과를 담을 javaDTO 타입 -->
-    <!--AdminProductViewMap에는 status, adminActivitySummary 
-    같은 관리자용 속성 매핑이 있습니다. 
-    그런데 ProductDetail에 해당 필드나 setter가 없으면
-    실행할 때 다음과 같은 오류가 날 수 있습니다.-->
-
-    <!-- 상품 이미지 목록 -->
-    <collection property="imagePaths"
-                javaType="ArrayList"
-                ofType="String">
-      <result column="image_paths" />
-    </collection>
-  </resultMap>
-
-  <!-- 관리자 상품 검색 조건 -->
-  <sql id="AdminProductSearchFilter">
-    <if test="keyword != null and keyword != ''">
-      <choose>
-
-        <!-- 제목 검색 -->
-        <when test="search == 'title'">
-          AND MP.title LIKE CONCAT('%', #{keyword}, '%')
-        </when>
-
-        <!-- 작성자 아이디 검색 -->
-        <when test="search == 'author'">
-          AND writer.id LIKE CONCAT('%', #{keyword}, '%')
-        </when>
-
-        <!-- 게시글 상태 검색 -->
-        <when test="search == 'status'">
-          AND UPPER(MP.post_status) = UPPER(#{keyword})
-        </when>
-
-        <!-- 검색 종류가 없으면 제목과 작성자 모두 검색 -->
-        <otherwise>
-          AND (
-          MP.title LIKE CONCAT('%', #{keyword}, '%')
-          OR writer.id LIKE CONCAT('%', #{keyword}, '%')
-          )
-        </otherwise>
-
-      </choose>
-    </if>
-  </sql>
-
-  <!-- 검색 조건에 해당하는 전체 상품 수 -->
-  <select id="countProducts" resultType="Integer">
-    SELECT COUNT(*)
-    FROM MARKET_PRODUCT MP
-
-    JOIN MEMBER_ACCOUNT writer
-    ON writer.code = MP.mem_code
-
-    WHERE 1 = 1
-
-    <include refid="AdminProductSearchFilter" />
-  </select>
-
-  <!-- 관리자 상품 목록 조회 -->
-  <select id="loadProducts" resultMap="AdminProductViewMap">
-    SELECT
-    MP.code,
-    MP.title,
-    MP.price,
-    MP.hitcount,
-    MP.deal_status,
-    MP.created_at,
-    MP.updated_at,
-
-    UPPER(MP.post_status) AS status,
-    MP.delete_yn,
-    MP.created_by,
-    MP.updated_by,
-
-    main_category.name AS main_category_name,
-    sub_category.name AS sub_category_name,
-
-    writer.code AS m_code,
-    writer.id AS m_id,
-    writer.rating AS m_rating,
-    profile_image.path AS m_profile_image,
-
-    thumbnail.path AS thumbnail,
-
-    IFNULL(pick_count.cnt, 0) AS count_pick,
-    IFNULL(product_report.cnt, 0) AS count_product_report,
-    writer.status AS author_status,
-    IFNULL(author_report.cnt, 0) AS count_author_report,
-
-    activity.target_type AS a_target_type,
-    activity.target_code AS a_target_code,
-    activity.process_type AS a_process_type,
-    activity.created_at AS a_created_at
-
-    FROM MARKET_PRODUCT MP
-
-    <!-- 하위 카테고리 -->
-    JOIN MARKET_CATEGORY sub_category
-    ON sub_category.code = MP.cate_code
-
-    <!-- 상위 카테고리 -->
-    LEFT JOIN MARKET_CATEGORY main_category
-    ON main_category.code = sub_category.main_cate
-
-    <!-- 작성자 -->
-    JOIN MEMBER_ACCOUNT writer
-    ON writer.code = MP.mem_code
-
-    <!-- 작성자 프로필 이미지 -->
-    LEFT JOIN IMAGES profile_image
-    ON profile_image.target_code = writer.code
-    AND profile_image.type = 'profile'
-
-    <!-- 상품 대표 이미지 -->
-    LEFT JOIN IMAGES thumbnail
-    ON thumbnail.target_code = MP.code
-    AND thumbnail.type = 'market'
-    AND thumbnail.order_seq = 1
-
-    <!-- 상품 Pick 수 -->
-    LEFT JOIN (
-    SELECT prod_code, COUNT(*) AS cnt
-    FROM MARKET_PROD_PICK
-    GROUP BY prod_code
-    ) pick_count
-    ON pick_count.prod_code = MP.code
-
-    <!-- 해당 상품 신고 수 -->
-    LEFT JOIN (
-    SELECT target_code, COUNT(*) AS cnt
-    FROM REPORT
-    WHERE target_type = 'market'
-    GROUP BY target_code
-    ) product_report
-    ON product_report.target_code = MP.code
-
-    <!-- 작성자가 등록한 상품의 전체 신고 수 -->
-    LEFT JOIN (
-    SELECT product.mem_code, COUNT(*) AS cnt
-    FROM REPORT report
-
-    JOIN MARKET_PRODUCT product
-    ON product.code = report.target_code
-
-    WHERE report.target_type = 'market'
-
-    GROUP BY product.mem_code
-    ) author_report
-    ON author_report.mem_code = MP.mem_code
-
-    <!-- 상품의 가장 최근 관리자 활동 -->
-    LEFT JOIN ADMIN_ACTIVITY_LOG activity
-    ON activity.code = (
-    SELECT activity_detail.code
-    FROM ADMIN_ACTIVITY_LOG activity_detail
-    WHERE activity_detail.target_type = 'market'
-    AND activity_detail.target_code = MP.code
-    ORDER BY activity_detail.created_at DESC,
-    activity_detail.code DESC
-    LIMIT 1
-    )
-
-    WHERE 1 = 1
-
-    <include refid="AdminProductSearchFilter" />
-
-    ORDER BY MP.created_at DESC, MP.code DESC
-
-    LIMIT #{offset}, #{perPage}
-  </select>
-
-  <!-- 관리자 상품 상세 조회 -->
-  <select id="loadProduct"
-          parameterType="Long"
-          resultMap="AdminProductDetailMap">
-
-    SELECT
-    MP.code,
-    MP.title,
-    MP.price,
-    MP.hitcount,
-    MP.content,
-    MP.deal_status,
-    MP.created_at,
-    MP.updated_at,
-
-    UPPER(MP.post_status) AS status,
-    MP.delete_yn,
-    MP.created_by,
-    MP.updated_by,
-
-    main_category.name AS main_category_name,
-    sub_category.name AS sub_category_name,
-
-    writer.code AS m_code,
-    writer.id AS m_id,
-    writer.rating AS m_rating,
-    profile_image.path AS m_profile_image,
-
-    product_image.path AS image_paths,
-
-    IFNULL(pick_count.cnt, 0) AS count_pick,
-    IFNULL(product_report.cnt, 0) AS count_product_report,
-    writer.status AS author_status,
-    IFNULL(author_report.cnt, 0) AS count_author_report,
-
-    activity.target_type AS a_target_type,
-    activity.target_code AS a_target_code,
-    activity.process_type AS a_process_type,
-    activity.created_at AS a_created_at
-
-    FROM MARKET_PRODUCT MP
-
-    <!-- 하위 카테고리 -->
-    JOIN MARKET_CATEGORY sub_category
-    ON sub_category.code = MP.cate_code
-
-    <!-- 상위 카테고리 -->
-    LEFT JOIN MARKET_CATEGORY main_category
-    ON main_category.code = sub_category.main_cate
-
-    <!-- 작성자 -->
-    JOIN MEMBER_ACCOUNT writer
-    ON writer.code = MP.mem_code
-
-    <!-- 작성자 프로필 이미지 -->
-    LEFT JOIN IMAGES profile_image
-    ON profile_image.target_code = writer.code
-    AND profile_image.type = 'profile'
-
-    <!-- 상품에 등록된 전체 이미지 -->
-    LEFT JOIN IMAGES product_image
-    ON product_image.target_code = MP.code
-    AND product_image.type = 'market'
-
-    <!-- 상품 Pick 수 -->
-    LEFT JOIN (
-    SELECT prod_code, COUNT(*) AS cnt
-    FROM MARKET_PROD_PICK
-    GROUP BY prod_code
-    ) pick_count
-    ON pick_count.prod_code = MP.code
-
-    <!-- 해당 상품 신고 수 -->
-    LEFT JOIN (
-    SELECT target_code, COUNT(*) AS cnt
-    FROM REPORT
-    WHERE target_type = 'market'
-    GROUP BY target_code
-    ) product_report
-    ON product_report.target_code = MP.code
-
-    <!-- 작성자가 등록한 상품의 전체 신고 수 -->
-    LEFT JOIN (
-    SELECT product.mem_code, COUNT(*) AS cnt
-    FROM REPORT report
-
-    JOIN MARKET_PRODUCT product
-    ON product.code = report.target_code
-
-    WHERE report.target_type = 'market'
-
-    GROUP BY product.mem_code
-    ) author_report
-    ON author_report.mem_code = MP.mem_code
-
-    <!-- 상품의 가장 최근 관리자 활동 -->
-    LEFT JOIN ADMIN_ACTIVITY_LOG activity
-    ON activity.code = (
-    SELECT activity_detail.code
-    FROM ADMIN_ACTIVITY_LOG activity_detail
-    WHERE activity_detail.target_type = 'market'
-    AND activity_detail.target_code = MP.code
-    ORDER BY activity_detail.created_at DESC,
-    activity_detail.code DESC
-    LIMIT 1
-    )
-
-    WHERE MP.code = #{prodCode}
-
-    ORDER BY product_image.order_seq ASC
-  </select>
-
-  <!--관리자 - 상품 단건 삭제 - 상품 논리 삭제-->
-  <update id="deleteProduct" parameterType="java.lang.Long">
-    UPDATE MARKET_PRODUCT
-    SET delete_yn = 1,
-    updated_at = CURRENT_TIMESTAMP
-    WHERE code = #{prodCode}
-    AND delete_yn = 0
-  </update>
-
-  <!--관리자 -상품 단건 삭제 - 관리자 삭제 로그 저장-->
-  <insert id="insertDeleteLog" parameterType="map">
-    INSERT INTO ADMIN_ACTIVITY_LOG (
-    ADM_CODE,
-    TARGET_TYPE,
-    TARGET_CODE,
-    PROCESS_TYPE,
-    MEMO,
-    CREATED_AT
-    )
-    VALUES (
-    #{admCode},
-    'market',
-    #{prodCode},
-    'DELETE',
-    #{reason},
-    CURRENT_TIMESTAMP
-    )
-  </insert>
-  <!--CODE는 스키마에서 자동증가로 설정돼 있어서 INSERT 생략-->
-
-
-  <!--
-   현재 관리자 상품 조회에서 삭제 상품까지 전체 조회 가능
-
-   화면 상에 보이게 하려면...?
-   나중에 관리자 화면에서는 delete_yn 값에 따라 정상 / 삭제됨을 표시하고,
-   삭제된 상품은 삭제 버튼을 비활성화
-   화면에서 구분하려면 응답 DTO에도 삭제 여부가 포함되어야 함
-   나중에는 관리자 목록에 전체 / 미삭제 / 삭제됨 필터를 추가
-  -->
-
+    <!-- 관리자 상품 목록 DTO 매핑 -->
+    <resultMap id="AdminProductViewMap"
+               type="com.ss_dam.market.model.response.AdminProductView"
+               extends="userProductView.UserProductViewMap"
+               autoMapping="true">
+
+        <id column="code" property="code" />
+
+        <result column="status" property="status" />
+        <result column="delete_yn" property="deleteYn" />
+        <result column="created_by" property="createdBy" />
+        <result column="updated_by" property="updatedBy" />
+
+        <result column="count_product_report"
+                property="countProductReport" />
+
+        <result column="author_status"
+                property="authorStatus" />
+
+        <result column="count_author_report"
+                property="countAuthorReport" />
+
+        <association property="adminActivitySummary"
+                     javaType="com.ss_dam.admin.log.response.AdminActivitySummary"
+                     columnPrefix="a_"
+                     autoMapping="true">
+
+            <id column="target_code" property="targetCode" />
+        </association>
+    </resultMap>
+
+    <!-- 관리자 상품 상세 DTO 매핑 -->
+    <resultMap id="AdminProductDetailMap"
+               type="com.ss_dam.market.model.response.AdminProductDetail"
+               extends="AdminProductViewMap"
+               autoMapping="true">
+
+        <result column="content" property="content" />
+
+        <collection property="imagePaths"
+                    javaType="java.util.ArrayList"
+                    ofType="java.lang.String"
+                    notNullColumn="image_paths">
+
+            <result column="image_paths" />
+        </collection>
+    </resultMap>
+
+    <!-- 관리자 처리 이력 DTO 매핑 -->
+    <resultMap id="AdminProductActivityMap"
+               type="com.ss_dam.admin.log.response.AdminActivity">
+
+        <id column="code" property="code" />
+        <result column="emp_id" property="empId" />
+        <result column="target_type" property="targetType" />
+        <result column="target_code" property="targetCode" />
+        <result column="process_type" property="processType" />
+        <result column="memo" property="memo" />
+        <result column="created_at" property="createdAt" />
+    </resultMap>
+
+    <!-- 검색 및 상태 필터 -->
+    <sql id="AdminProductSearchFilter">
+
+        <if test="keyword != null and keyword != ''">
+            <choose>
+
+                <!-- 제목 검색 -->
+                <when test="searchCode == 'title'">
+                    AND MP.title LIKE CONCAT('%', #{keyword}, '%')
+                </when>
+
+                <!-- 작성자 아이디 검색 -->
+                <when test="searchCode == 'author'">
+                    AND writer.id LIKE CONCAT('%', #{keyword}, '%')
+                </when>
+
+                <!-- 노출 상태 검색 -->
+                <when test="searchCode == 'status'">
+                    AND UPPER(MP.post_status) = UPPER(#{keyword})
+                </when>
+
+                <!-- 제목 또는 작성자 검색 -->
+                <otherwise>
+                    AND (
+                        MP.title LIKE CONCAT('%', #{keyword}, '%')
+                        OR writer.id LIKE CONCAT('%', #{keyword}, '%')
+                    )
+                </otherwise>
+
+            </choose>
+        </if>
+
+        <if test="status != null">
+            <choose>
+
+                <!-- 삭제된 상품 -->
+                <when test="status == 'DELETED'">
+                    AND MP.delete_yn = 1
+                </when>
+
+                <!-- 신고 이력이 있는 상품: 삭제 상품도 포함 -->
+                <when test="status == 'REPORTED'">
+                    AND EXISTS (
+                        SELECT 1
+                        FROM REPORT R
+                        WHERE R.target_type = 'market'
+                          AND R.target_code = MP.code
+                    )
+                </when>
+
+                <!-- 삭제되지 않은 상품의 노출 상태 -->
+                <otherwise>
+                    AND MP.delete_yn = 0
+                    AND UPPER(MP.post_status) = #{status}
+                </otherwise>
+
+            </choose>
+        </if>
+
+        <!-- 판매 상태 -->
+        <if test="dealStatus != null">
+            AND UPPER(MP.deal_status) = #{dealStatus}
+        </if>
+
+    </sql>
+
+    <!-- 목록·상세 공통 조회 컬럼 -->
+    <sql id="AdminProductColumns">
+        MP.code,
+        MP.title,
+        MP.price,
+        MP.hitcount,
+        MP.deal_status,
+        MP.created_at,
+        MP.updated_at,
+
+        UPPER(MP.post_status) AS status,
+        MP.delete_yn,
+        MP.created_by,
+        MP.updated_by,
+
+        main_category.name AS main_category_name,
+        sub_category.name AS sub_category_name,
+
+        writer.code AS m_code,
+        writer.id AS m_id,
+        writer.rating AS m_rating,
+        profile_image.path AS m_profile_image,
+
+        IFNULL(pick_count.cnt, 0) AS count_pick,
+        IFNULL(product_report.cnt, 0) AS count_product_report,
+        writer.status AS author_status,
+        IFNULL(author_report.cnt, 0) AS count_author_report,
+
+        activity.target_type AS a_target_type,
+        activity.target_code AS a_target_code,
+        activity.process_type AS a_process_type,
+        activity.created_at AS a_created_at
+    </sql>
+
+    <!-- 목록·상세 공통 JOIN -->
+    <sql id="AdminProductJoins">
+
+        JOIN MARKET_CATEGORY sub_category
+            ON sub_category.code = MP.cate_code
+
+        LEFT JOIN MARKET_CATEGORY main_category
+            ON main_category.code = sub_category.main_cate
+
+        JOIN MEMBER_ACCOUNT writer
+            ON writer.code = MP.mem_code
+
+        <!-- 프로필 이미지 -->
+        LEFT JOIN IMAGES profile_image
+            ON profile_image.target_code = writer.code
+            AND profile_image.type = 'profile'
+
+        <!-- 상품 Pick 수 -->
+        LEFT JOIN (
+            SELECT prod_code, COUNT(*) AS cnt
+            FROM MARKET_PROD_PICK
+            GROUP BY prod_code
+        ) pick_count
+            ON pick_count.prod_code = MP.code
+
+        <!-- 해당 상품 신고 수 -->
+        LEFT JOIN (
+            SELECT target_code, COUNT(*) AS cnt
+            FROM REPORT
+            WHERE target_type = 'market'
+            GROUP BY target_code
+        ) product_report
+            ON product_report.target_code = MP.code
+
+        <!-- 작성자의 전체 상품 신고 수 -->
+        LEFT JOIN (
+            SELECT product.mem_code, COUNT(*) AS cnt
+            FROM REPORT report
+
+            JOIN MARKET_PRODUCT product
+                ON product.code = report.target_code
+
+            WHERE report.target_type = 'market'
+
+            GROUP BY product.mem_code
+        ) author_report
+            ON author_report.mem_code = MP.mem_code
+
+        <!-- 상품의 가장 최근 관리자 활동 -->
+        LEFT JOIN ADMIN_ACTIVITY_LOG activity
+            ON activity.code = (
+                SELECT activity_detail.code
+                FROM ADMIN_ACTIVITY_LOG activity_detail
+                WHERE activity_detail.target_type = 'market'
+                  AND activity_detail.target_code = MP.code
+                ORDER BY activity_detail.created_at DESC,
+                         activity_detail.code DESC
+                LIMIT 1
+            )
+
+    </sql>
+
+    <!-- 검색 조건에 해당하는 전체 상품 수 -->
+    <select id="countProducts"
+            parameterType="map"
+            resultType="java.lang.Integer">
+
+        SELECT COUNT(*)
+        FROM MARKET_PRODUCT MP
+
+        JOIN MARKET_CATEGORY sub_category
+            ON sub_category.code = MP.cate_code
+
+        JOIN MEMBER_ACCOUNT writer
+            ON writer.code = MP.mem_code
+
+        WHERE 1 = 1
+
+        <include refid="AdminProductSearchFilter" />
+    </select>
+
+    <!-- 관리자 상품 목록 조회 -->
+    <select id="loadProducts"
+            parameterType="map"
+            resultMap="AdminProductViewMap">
+
+        SELECT
+            <include refid="AdminProductColumns" />,
+            thumbnail.path AS thumbnail
+
+        FROM MARKET_PRODUCT MP
+
+        <include refid="AdminProductJoins" />
+
+        <!-- 상품 대표 이미지 -->
+        LEFT JOIN IMAGES thumbnail
+            ON thumbnail.target_code = MP.code
+            AND thumbnail.type = 'market'
+            AND thumbnail.order_seq = 1
+
+        WHERE 1 = 1
+
+        <include refid="AdminProductSearchFilter" />
+
+        ORDER BY MP.created_at DESC, MP.code DESC
+
+        LIMIT #{offset}, #{perPage}
+    </select>
+
+    <!-- 관리자 상세 조회: 비공개·삭제 상품도 포함 -->
+    <select id="loadProduct"
+            parameterType="map"
+            resultMap="AdminProductDetailMap">
+
+        SELECT
+            <include refid="AdminProductColumns" />,
+            MP.content,
+            product_image.path AS image_paths
+
+        FROM MARKET_PRODUCT MP
+
+        <include refid="AdminProductJoins" />
+
+        <!-- 상품 전체 이미지 -->
+        LEFT JOIN IMAGES product_image
+            ON product_image.target_code = MP.code
+            AND product_image.type = 'market'
+
+        WHERE MP.code = #{prodCode}
+
+        ORDER BY product_image.order_seq ASC
+    </select>
+
+    <!-- 상품 논리 삭제: 기존 노출·판매 상태 유지 -->
+    <update id="deleteProduct" parameterType="map">
+        UPDATE MARKET_PRODUCT
+        SET delete_yn = 1,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE code = #{prodCode}
+          AND delete_yn = 0
+    </update>
+
+    <!-- 삭제된 상품 복구: 기존 노출·판매 상태 유지 -->
+    <update id="restoreProduct" parameterType="map">
+        UPDATE MARKET_PRODUCT
+        SET delete_yn = 0,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE code = #{prodCode}
+          AND delete_yn = 1
+    </update>
+
+    <!-- 관리자 처리 이력 저장 -->
+    <insert id="insertActivityLog" parameterType="map">
+        INSERT INTO ADMIN_ACTIVITY_LOG (
+            adm_code,
+            target_type,
+            target_code,
+            process_type,
+            memo,
+            created_at
+        )
+        VALUES (
+            #{admCode},
+            'market',
+            #{prodCode},
+            #{processType},
+            #{reason},
+            CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <!-- 상품 관리 처리 이력 조회 -->
+    <select id="loadProductLogs"
+            parameterType="map"
+            resultMap="AdminProductActivityMap">
+
+        SELECT
+            activity.code,
+            administrator.emp_id,
+            activity.target_type,
+            activity.target_code,
+            activity.process_type,
+            activity.memo,
+            activity.created_at
+
+        FROM ADMIN_ACTIVITY_LOG activity
+
+        LEFT JOIN ADMIN_ACCOUNT administrator
+            ON administrator.code = activity.adm_code
+
+        WHERE activity.target_type = 'market'
+          AND activity.target_code = #{prodCode}
+
+        ORDER BY activity.created_at DESC, activity.code DESC
+    </select>
 
 </mapper>
+
+<!--XML의 REPORTED 필터는 처리 완료 여부와 관계없이 신고 이력이 있는 상품을 조회
+프로필 이미지와 대표 이미지는 기존 SQL처럼 각각 한 건이라는 전제라, 여러 건이 등록될 수 있다면 JOIN을 한 건으로 제한해야 목록 페이지네이션이 정확-->
+
+<!--일반 사용자 쪽 연결도 필요해. 사용자 목록·상세 SQL에는 기존 접근 조건과 함께 다음 조건을 적용  AND MP.delete_yn = 0 --> 
+
+<!--새 거래 요청에서는 삭제된 상품을 거절하고, 삭제와 거래 요청이 동시에 들어오는 경우도 고려해 트랜잭션 안에서 잠금이나 조건부 변경으로 검증-->

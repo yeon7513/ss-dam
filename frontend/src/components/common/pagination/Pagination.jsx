@@ -1,11 +1,9 @@
 import styles from "./Pagination.module.scss";
 
-// 전체 페이지 수
-// 페이지 변경 핸들러
-// 활성화 된 페이지인지
+// 페이지네이션 컴포넌트
+// pager: 페이지네이션 정보
+// onChangePage: 페이지 변경 핸들러
 function Pagination({ pager, onChangePage }) {
-
-  console.log(pager?.page);
 
   return (
     <div className={styles.pagination}>

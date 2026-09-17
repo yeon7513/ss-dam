@@ -13,6 +13,7 @@ import com.ss_dam.auth.login.Login;
 import com.ss_dam.auth.login.service.LoginService;
 import com.ss_dam.common.ApiResponse;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @RestController
@@ -23,9 +24,10 @@ public class LoginController {
 	private LoginService loginService;
 
 	@PostMapping("/login")
-	public ResponseEntity<ApiResponse<Login>> login(@RequestBody Login loginForm, HttpSession session) {
+	public ResponseEntity<ApiResponse<Login>> login(@RequestBody Login loginForm, HttpSession session, HttpServletRequest request) {
 
-		Login loggedInUser = loginService.login(loginForm);
+		Login loggedInUser 
+		= loginService.login(loginForm, request.getRemoteAddr());
 
 		if (loggedInUser != null) {
 			session.setAttribute("loginUser", loggedInUser);

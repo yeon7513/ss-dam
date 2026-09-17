@@ -4,8 +4,8 @@ package com.ss_dam.feed.controller;
 
 import com.ss_dam.auth.login.Login;
 import com.ss_dam.common.ApiResponse;
-import com.ss_dam.common.pager.PageQuery;
 import com.ss_dam.common.pager.PageResult;
+import com.ss_dam.feed.model.filter.UserFeedSearchFilter;
 import com.ss_dam.feed.model.request.FeedCreate;
 import com.ss_dam.feed.model.request.FeedUpdate;
 import com.ss_dam.feed.model.response.FeedDetail;
@@ -34,10 +34,11 @@ public class UserFeedController {
 
   // 전체 피드 목록 조회
   @GetMapping
-  ResponseEntity<ApiResponse<PageResult<UserFeedView>>> loadFeeds(PageQuery pageQuery,
+  ResponseEntity<ApiResponse<PageResult<UserFeedView>>> loadFeeds(UserFeedSearchFilter filter,
       HttpSession session) {
 
-    System.out.println("searchCode: " + pageQuery.getPerPage());
+    System.out.println("chalCode: " + filter.getChalCode());
+
 
     //    System.out.println("=== 세션 디버깅 시작 ===");
     //    // 1. 현재 세션의 고유 ID 확인
@@ -58,7 +59,7 @@ public class UserFeedController {
     // -> 로그인하지 않았을 경우는 처음부터 null을 넘겨 무조건 false가 나오게 처리
     Long memberCode = (loginUser != null) ? loginUser.getCode() : null;
 
-    PageResult<UserFeedView> feeds = userFeedService.loadFeeds(pageQuery, memberCode);
+    PageResult<UserFeedView> feeds = userFeedService.loadFeeds(filter, memberCode);
 
     return ResponseEntity.ok(ApiResponse.success("피드 정보 조회 성공", feeds));
   }
