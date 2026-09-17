@@ -1,7 +1,7 @@
 package com.ss_dam.common.chat.controller;
 
 import com.ss_dam.common.ApiResponse;
-import com.ss_dam.common.chat.model.request.ChatRoomCreate;
+import com.ss_dam.common.chat.model.request.ChatRoomRequest;
 import com.ss_dam.common.chat.service.ChatService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -24,7 +24,7 @@ public class ChatRoomController {
   // 기존 채팅방이 있는지 확인 후 roomCode를 반환받아야 함.
   // 있으면? -> SELECT, 없으면? -> INSERT
   @PostMapping("/room")
-  public ResponseEntity<ApiResponse<Long>> loadOrCreateChatRoom(ChatRoomCreate chatRoomCreate,
+  public ResponseEntity<ApiResponse<String>> loadOrCreateChatRoom(ChatRoomRequest chatRoomRequest,
       HttpServletRequest httpServletRequest) {
 
     HttpSession session = httpServletRequest.getSession(false);
@@ -48,10 +48,10 @@ public class ChatRoomController {
     // 현재 로그인한 회원의 Pk 추출
     Long memberCode = (Long) session.getAttribute("loginUser");
     // 요청 데이터에 본인(Requester)의 PK를 설정
-    chatRoomCreate.setRequesterCode(memberCode);
+    chatRoomRequest.setRequesterCode(memberCode);
 
-    Long roomCode = chatService.loadOrCreateChatRoom(chatRoomCreate);
+    String roomId = chatService.loadOrCreateChatRoom(chatRoomRequest);
 
-    return ResponseEntity.ok(ApiResponse.success("채팅방 생성 및 조회 성공", roomCode));
+    return ResponseEntity.ok(ApiResponse.success("채팅방 생성 및 조회 성공", roomId));
   }
 }

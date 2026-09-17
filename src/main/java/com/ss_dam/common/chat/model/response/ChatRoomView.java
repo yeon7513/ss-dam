@@ -7,7 +7,8 @@ import com.ss_dam.market.model.response.UserProductView;
 
 // 채팅방 목록 DTO
 public class ChatRoomView {
-  private Long code; // 채팅방 고유 번호 (PK)
+  private Long code; // 채팅방 고유 번호 (PK, 개발 전용)
+  private String roomId; // 채팅방 접근 고유 아이디 (엔드포인트 접근용)
   private ChatType type; // 채팅방 타입 (DEAL, ADMIN, DIRECT)
 
   // 상대방 프로필 정보
@@ -78,5 +79,13 @@ public class ChatRoomView {
 
   public void setProductInfo(UserProductView productInfo) {
     this.productInfo = productInfo;
+  }
+
+  public String getRoomId() {
+    return roomId;
+  }
+
+  public void setRoomId(String roomId) {
+    this.roomId = roomId;
   }
 }

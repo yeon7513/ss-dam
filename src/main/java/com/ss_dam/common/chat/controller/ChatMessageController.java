@@ -46,15 +46,16 @@ public class ChatMessageController {
       return;
     }
 
+    // 메시지를 보낸 회원의 고유 번호 설정
     Long senderCode = (Long) sessionAttributes.get("code");
     chatMessageCreate.setSenderCode(senderCode);
 
     // 전송된 메시지를 DB에 저장
     ChatMessageView chatMessageView = chatService.registerChatMessage(chatMessageCreate);
 
+    String roomId = null;
     // 해당 채팅방을 구독 중인 클라이언트들에게 실시간으로 전송
-    String roomCode = chatMessageCreate.getRoomCode().toString();
-    String endpoint = "/sub/chat/room/" + roomCode;
+    String endpoint = "/sub/chat/room/" + roomId;
 
     // 즉 이 endpoint를 구독 중인 사용자들에게 전송하는 것!
     // 각각의 채팅방에 있는 사용자를 구분하기 위해...
