@@ -1,6 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./AdminHeader.module.scss";
+import Button from "../common/button/Button";
+import { FiHome } from "react-icons/fi";
 
 const AdminHeader = () => {
   const navigate = useNavigate();
@@ -10,7 +12,7 @@ const AdminHeader = () => {
   };
 
   const handleSwitchToUserMode = () => {
-    navigate("/mypage");
+    navigate("/mypage"); // 사용자 페이지로 변경 예정
   };
 
   return (
@@ -20,16 +22,18 @@ const AdminHeader = () => {
         onClick={handleGoHome}
         title="관리자 메인으로 이동"
       >
-        🏠
+        <FiHome />
       </div>
 
-      <button
+      <Button
         type="button"
+        btnStyle="danger"
+        size="sm"
         className={styles.userModeBtn}
         onClick={handleSwitchToUserMode}
       >
         사용자 모드 전환
-      </button>
+      </Button>
     </header>
   );
 };

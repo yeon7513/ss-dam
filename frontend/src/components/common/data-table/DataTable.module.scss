@@ -1,0 +1,42 @@
+.stateMessage {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+}
+
+.tableContainer {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 14px;
+
+  th,
+  td {
+    border: 1px solid #e2e8f0;
+    padding: 10px 12px;
+  }
+
+  thead {
+    tr {
+      background-color: #f8f9fa;
+      color: #333;
+      font-weight: 600;
+    }
+  }
+
+  tbody {
+    tr {
+      text-align: center;
+
+      &:hover {
+        background-color: #f1f5f9;
+      }
+    }
+  }
+}

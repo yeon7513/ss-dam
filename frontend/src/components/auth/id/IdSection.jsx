@@ -1,4 +1,4 @@
-import { checkDuplicateId } from "../../../api/member"; // [추가] API 함수 import
+import { checkDuplicateId } from "../../../api/member"; // API 함수 import
 import Button from "../../common/button/Button";
 import TextInput from "../../forms/text-input/TextInput";
 import styles from "./IdSection.module.scss";
@@ -26,7 +26,7 @@ const IdSection = ({ form, setForm, isIdChecked, setIsIdChecked }) => {
     setIsIdChecked(false);
   };
 
-  // [수정] 백엔드 연동 비동기 중복확인 함수
+  // 백엔드 연동 비동기 중복확인 함수
   const handleCheckIdDuplicate = async () => {
     if (isIdChecked) {
       alert("이미 확인된 아이디입니다.");
@@ -69,6 +69,7 @@ const IdSection = ({ form, setForm, isIdChecked, setIsIdChecked }) => {
       <Button
         type="button"
         className={styles.checkButton}
+        size="lg"
         onClick={handleCheckIdDuplicate}
       >
         중복확인

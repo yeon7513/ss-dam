@@ -37,9 +37,6 @@ public class UserFeedController {
   ResponseEntity<ApiResponse<PageResult<UserFeedView>>> loadFeeds(UserFeedSearchFilter filter,
       HttpSession session) {
 
-    System.out.println("chalCode: " + filter.getChalCode());
-
-
     //    System.out.println("=== 세션 디버깅 시작 ===");
     //    // 1. 현재 세션의 고유 ID 확인
     //    System.out.println("Session ID: " + session.getId());

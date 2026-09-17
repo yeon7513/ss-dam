@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.ss_dam.admin.log.response.AdminActivity;
+import com.ss_dam.market.model.filter.AdminProductSearchFilter;
 import com.ss_dam.market.model.response.AdminProductDetail;
 import com.ss_dam.market.model.response.AdminProductView;
 
@@ -18,17 +19,16 @@ public class AdminProductDaoImpl implements AdminProductDao {
     private SqlSession sql;
 
     @Override
-    public int countProducts(Map<String, Object> params) {
+    public int countProducts(AdminProductSearchFilter filter) {
         return sql.selectOne(
-                "adminProductView.countProducts", params);
+                "adminProductView.countProducts", filter);
     }
 
     @Override
-    public List<AdminProductView> loadProducts(
-            Map<String, Object> params) {
+    public List<AdminProductView> loadProducts(AdminProductSearchFilter filter) {
 
         return sql.selectList(
-                "adminProductView.loadProducts", params);
+                "adminProductView.loadProducts", filter);
     }
 
     @Override
