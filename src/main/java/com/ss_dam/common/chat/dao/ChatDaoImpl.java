@@ -28,7 +28,7 @@ public class ChatDaoImpl implements ChatDao {
   // 신규 채팅 메시지 저장
   @Override
   public Long registerChatMessage(ChatMessageCreate chatMessageCreate) {
-    return sql.insert("chat.registerChatMessage", chatMessageCreate);
+    return (long) sql.insert("chat.registerChatMessage", chatMessageCreate);
   }
 
   // 기존 채팅 메시지 찾기
