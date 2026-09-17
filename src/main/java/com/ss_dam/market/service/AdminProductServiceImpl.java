@@ -15,6 +15,7 @@ import com.ss_dam.admin.log.response.AdminActivity;
 import com.ss_dam.common.pager.PageQuery;
 import com.ss_dam.common.pager.PageResult;
 import com.ss_dam.market.dao.AdminProductDao;
+import com.ss_dam.market.model.filter.AdminProductSearchFilter;
 import com.ss_dam.market.model.response.AdminProductDetail;
 import com.ss_dam.market.model.response.AdminProductView;
 
@@ -32,29 +33,15 @@ private static final Set<String> ALLOWED_STATUSES = Set.of(
 
 // 관리자 상품 목록 조회
 @Override
-public PageResult<AdminProductView> loadProducts(
-        PageQuery pageQuery, String status, String dealStatus) {
+public PageResult<AdminProductView> loadProducts(AdminProductSearchFilter filter) { 
 
-    validateFilter(status, ALLOWED_STATUSES, "상품 상태");
-
-    Map<String, Object> params = new HashMap<>();
-
-    // 검색 조건
-    params.put("keyword", pageQuery.getKeyword());
-    params.put("status", status);
-    params.put("dealStatus", dealStatus);
-
-    // 검색 조건에 해당하는 전체 상품 수
-    int total = adminProductDao.countProducts(params);
-
-    // 페이지네이션
-    params.put("offset", pageQuery.getOffset());
-    params.put("perPage", pageQuery.getPerPage());
 
     List<AdminProductView> products =
-            adminProductDao.loadProducts(params);
+            adminProductDao.loadProducts(filter);
+    
+    int total = adminProductDao.countProducts(filter);   
 
-    return PageResult.of(products, pageQuery, total);
+    return PageResult.of(products, filter, (float) total);
 }
 
     // 관리자 상품 상세 조회

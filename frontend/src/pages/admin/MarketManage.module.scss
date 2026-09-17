@@ -1,0 +1,41 @@
+.container {
+  padding: 20px;
+
+  h2 {
+    margin-bottom: 20px;
+    font-size: 22px;
+    font-weight: 700;
+  }
+}
+
+/* 필터 바: 좌(빈공간) / 중(검색창 정중앙) / 우(라디오 버튼 맨 오른쪽) */
+.filterBar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  margin: 18px 0;
+}
+
+.searchWrapper {
+  justify-self: center; /* 검색창 정중앙 */
+}
+
+.radioGroup {
+  justify-self: end; /* 라디오 버튼 맨 오른쪽 끝 */
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  .radioLabel {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    user-select: none;
+
+    input[type="radio"] {
+      cursor: pointer;
+    }
+  }
+}

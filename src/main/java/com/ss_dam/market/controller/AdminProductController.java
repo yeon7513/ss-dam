@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ss_dam.admin.log.response.AdminActivity;
 import com.ss_dam.common.ApiResponse;
-import com.ss_dam.common.pager.PageQuery;
 import com.ss_dam.common.pager.PageResult;
+import com.ss_dam.market.model.filter.AdminProductSearchFilter;
 import com.ss_dam.market.model.request.ProductDelete;
 import com.ss_dam.market.model.response.AdminProductDetail;
 import com.ss_dam.market.model.response.AdminProductView;
@@ -42,14 +42,10 @@ public class AdminProductController {
     //필터 생략 시 해당 조건으로 제한하지 않음
     
     @GetMapping
-    public ResponseEntity<ApiResponse<PageResult<AdminProductView>>> loadProducts(
-            PageQuery pageQuery,
-            @RequestParam(required = false) String status,
-            @RequestParam(required = false) String dealStatus) {
+    public ResponseEntity<ApiResponse<PageResult<AdminProductView>>> loadProducts(AdminProductSearchFilter filter) {
 
         PageResult<AdminProductView> products =
-                adminProductService.loadProducts(
-                        pageQuery, status, dealStatus);
+                adminProductService.loadProducts(filter);
 
         return ResponseEntity.ok(
                 ApiResponse.success("관리자 상품 목록 조회 성공", products));
