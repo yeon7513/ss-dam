@@ -8,8 +8,11 @@ public class AdminProductSearchFilter extends PageQuery {
 	private Long prodCode;
 	private String tagName;
 	private String search;
+	private String searchCode;
+	private String keyword;
 	private String status;
 	private String deleteYn;
+	private String dealStatus;
 
 	public String getSortTarget() {
 		return sortTarget;
@@ -43,6 +46,22 @@ public class AdminProductSearchFilter extends PageQuery {
 		this.search = search;
 	}
 
+	public String getSearchCode() {
+		return searchCode;
+	}
+
+	public void setSearchCode(String searchCode) {
+		this.searchCode = searchCode;
+	}
+
+	public String getKeyword() {
+		return keyword;
+	}
+
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
+	}
+
 	public String getStatus() {
 		return status;
 	}
@@ -59,5 +78,12 @@ public class AdminProductSearchFilter extends PageQuery {
 		this.deleteYn = deleteYn;
 	}
 
-	
+	public String getDealStatus() {
+		return dealStatus;
+	}
+
+	public void setDealStatus(String dealStatus) {
+		this.dealStatus = dealStatus;
+	}
+
 }

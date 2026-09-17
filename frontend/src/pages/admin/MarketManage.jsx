@@ -144,7 +144,7 @@ export default function MarketManage() {
             options={SEARCH_OPTIONS}
             initSelectValue=""
             initKeyword=""
-            onSubmit={handleSearchSubmit}
+            onSearch={handleSearchSubmit}
           />
         </div>
 
