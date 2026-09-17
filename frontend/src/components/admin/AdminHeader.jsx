@@ -1,7 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./AdminHeader.module.scss";
+<<<<<<< Updated upstream
 import Button from "../common/button/Button";
+=======
+import { FiHome } from "react-icons/fi";
+>>>>>>> Stashed changes
 
 const AdminHeader = () => {
   const navigate = useNavigate();
@@ -21,7 +25,7 @@ const AdminHeader = () => {
         onClick={handleGoHome}
         title="관리자 메인으로 이동"
       >
-        🏠
+        <FiHome />
       </div>
 
       <Button
