@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-// @추가: 분리한 서브 컴포넌트들 import
+// 분리한 서브 컴포넌트들 import
 import DashboardHeader from "./OperationStatus/DashboardHeader.jsx";
 import SummaryStats from "./OperationStatus/SummaryStats.jsx";
 import AdminLogCard from "./OperationStatus/AdminLogCard.jsx";
