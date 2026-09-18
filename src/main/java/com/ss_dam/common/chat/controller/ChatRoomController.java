@@ -2,20 +2,19 @@ package com.ss_dam.common.chat.controller;
 
 import com.ss_dam.common.ApiResponse;
 import com.ss_dam.common.chat.model.request.ChatRoomRequest;
+import com.ss_dam.common.chat.model.response.ChatDetailView;
 import com.ss_dam.common.chat.service.ChatService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 // 채팅방을 생성하거나 조회하는 컨트롤러
 // 여기서는 메시지 전송이 실제로 일어나지 않는다..
 // 즉, 프론트엔드에서 "대화하기" 버튼을 눌렀을 때 호출되는 컨트롤러이다.
 @RestController
-@RequestMapping("/api/chat")
+@RequestMapping("/api/chat/rooms")
 public class ChatRoomController {
 
   @Autowired
@@ -23,7 +22,7 @@ public class ChatRoomController {
 
   // 기존 채팅방이 있는지 확인 후 roomCode를 반환받아야 함.
   // 있으면? -> SELECT, 없으면? -> INSERT
-  @PostMapping("/room")
+  @PostMapping
   public ResponseEntity<ApiResponse<String>> loadOrCreateChatRoom(ChatRoomRequest chatRoomRequest,
       HttpServletRequest httpServletRequest) {
 
@@ -53,5 +52,15 @@ public class ChatRoomController {
     String roomId = chatService.loadOrCreateChatRoom(chatRoomRequest);
 
     return ResponseEntity.ok(ApiResponse.success("채팅방 생성 및 조회 성공", roomId));
+  }
+
+  // 특정 채팅방의 메시지 내역 조회
+  @GetMapping("/{roomId}/messages")
+  public ResponseEntity<ApiResponse<ChatDetailView>> loadChatMessages(@PathVariable String roomId,
+      Long otherMemberCode) {
+
+    ChatDetailView chatDetailView = chatService.loadChatMessages(roomId, otherMemberCode);
+
+    return ResponseEntity.ok(ApiResponse.success("채팅 내역 조회 성공", chatDetailView));
   }
 }

@@ -31,4 +31,8 @@ export default defineConfig({
       },
     },
   },
+  // 웹소켓 & STOMP 설정
+  define: {
+    global: 'window',
+  },
 });

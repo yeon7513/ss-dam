@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="chatView">
+  <resultMap id="ChatDetailViewResultMap" type="ChatDetailView" autoMapping="true">
+    <result property="roomId" column="room_id" />
+
+    <!-- ChatRoomInfo 조립 -->
+    <association property="info" resultMap="ChatRoomInfo">
+      <result property="type" column="type" />
+
+      <!-- 상대방 프로필 -->
+      <association property="otherMemberProfile" javaType="MemberProfile" columnPrefix="other_" autoMapping="true">
+        <id property="code" column="code" />
+      </association>
+
+      <!-- 거래글 정보 -->
+      <association property="product" javaType="UserProductView" columnPrefix="product_" autoMapping="true">
+        <id property="code" column="code" />
+      </association>
+    </association>
+
+    <!-- 과거 메시지 목록 -->
+    <collection property="messages" javaType="ArrayList" ofType="ChatMessageView" columnPrefix="msg_"
+                autoMapping="true">
+      <id property="code" column="code" />
+    </collection>
+  </resultMap>
+
+  <!-- 기존 채팅방 UUID 조회 -->
+  <select id="findRoomId" resultType="String">
+    SELECT room_id
+    FROM CHAT_ROOM
+    WHERE type = #{type}
+    AND target_code = #{targetCode}
+    AND (
+    (REQUESTER_CODE = #{requesterCode} AND RESPONDER_CODE = #{responderCode})
+    OR (REQUESTER_CODE = #{responderCode} AND RESPONDER_CODE = #{requesterCode})
+    )
+  </select>
+
+  <!-- 채팅방 상세 내역 조회 (과거 메시지 포함) -->
+  <select id="loadChatMessages" resultMap="ChatDetailViewResultMap">
+    SELECT
+    cr.room_id,
+    cr.type,
+    <!-- 상대방 정보-->
+    mp.code AS other_code,
+    mp.id AS other_id,
+    mp.rating AS other_rating,
+    mp.path AS other_profile_image,
+    <!-- 상품 정보 (LEFT JOIN이므로 DEAL이 아니거나 상품이 없으면 NULL)-->
+    p.code AS product_code,
+    p.title AS product_title,
+    p.price AS product_price,
+    p.thumbnail AS product_thumbnail,
+    <!-- 채팅 메시지 목록 (LEFT JOIN이므로 메시지가 없어도 방 정보는 조회됨)-->
+    cm.message_code,
+    cm.sender_code,
+    cm.message,
+    cm.created_at
+    FROM CHAT_ROOM cr
+    <!-- 상대방 프로필 -->
+    JOIN (
+    SELECT m.code, m.id, i.path, m.rating
+    FROM MEMBER_ACCOUNT m
+    LEFT JOIN IMAGES i ON m.code = i.target_code AND i.TYPE = 'profile'
+    ) AS mp ON mp.code = #{otherMemberCode}
+    <!-- 거래 채팅일 경우 -->
+    LEFT JOIN MARKET_PRODUCT p ON cr.type = 'DEAL' AND p.code = cr.target_code
+    <!-- 주고받은 메시지들 -->
+    LEFT JOIN CHAT_MESSAGE cm ON cm.room_code = cr.code
+    WHERE cr.room_id = #{roomId}
+    ORDER BY cm.created_at ASC
+  </select>
+
+  <!--
+    기존 채팅 메시지 찾기 (단일)
+    웹소켓에서 새로 등록된 메시지를 보내줘야하기 때문에 사용
+  -->
+  <select id="findChatMessageByCode" resultType="ChatMessageView">
+    SELECT *
+    FROM CHAT_LOG
+    WHERE code = #{code}
+  </select>
+
+  <!-- 신규 메시지 저장을 위해 개발용 PK 추출 -->
+  <select id="findRoomCodeByRoomId" resultType="Long">
+    SELECT code AS room_code
+    FROM CHAT_ROOM
+    WHERE room_id = #{roomId}
+  </select>
+
+</mapper>

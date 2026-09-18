@@ -77,6 +77,10 @@ const ProductDetail = () => {
           <Button onClick={handleClickDeletePost}>삭제</Button>
         </div>
 
+        {/* 채팅 요청 */}
+        <div>
+          <Button onClick={() => navigate()}>거래 신청</Button>
+        </div>
       </div>
     </main>
   );
