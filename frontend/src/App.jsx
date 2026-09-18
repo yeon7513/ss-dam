@@ -7,7 +7,7 @@ import MarketGuide from "./pages/about/market-guide/MarketGuide.jsx";
 import OperationStatus from "./pages/admin/OperationStatus";
 import ChallengeManage from "./pages/admin/ChallengeManage";
 import FeedManage from "./pages/admin/FeedManage";
-import MarketManage from "./pages/admin/MarketManage";
+import MarketManage from "./pages/admin/market/MarketManage";
 import UserManage from "./pages/admin/UserManage";
 import FindId from "./pages/auth/find/FindId";
 import FindPassword from "./pages/auth/find/FindPassword";
@@ -38,6 +38,7 @@ import Supports from "./pages/support/Supports";
 import AdminRoute from "./components/common/admin/AdminRoute";
 import FeedUpdate from "./pages/feed/feed-update/FeedUpdate.jsx";
 import ProductUpdate from "./pages/market/product-update/ProductUpdate.jsx";
+import MarketManageDetail from "./pages/admin/market/MarketManageDetail.jsx";
 
 function App() {
   return (
@@ -116,6 +117,7 @@ function App() {
           <Route path="user_manage" element={<UserManage />} />
           <Route path="feed_manage" element={<FeedManage />} />
           <Route path="market_manage" element={<MarketManage />} />
+          <Route path="market_manage/:code" element={<MarketManageDetail />} />
           <Route path="challenge_manage" element={<ChallengeManage />} />
         </Route>
       </Route>
