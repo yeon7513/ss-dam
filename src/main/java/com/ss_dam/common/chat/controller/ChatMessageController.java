@@ -5,6 +5,7 @@ import com.ss_dam.common.chat.model.response.ChatMessageView;
 import com.ss_dam.common.chat.service.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -39,7 +40,7 @@ public class ChatMessageController {
   // 클라이언트에서 새로운 메시지를 보낼 경우,
   // 엔드포인트는 "/pub/send"로 요청
   @MessageMapping("/send")
-  public void sendMessage(ChatMessageCreate chatMessageCreate,
+  public void sendMessage(@Payload ChatMessageCreate chatMessageCreate,
       SimpMessageHeaderAccessor headerAccessor) {
 
     // HttpSessionHandshakeInterceptor를 통해
@@ -54,7 +55,6 @@ public class ChatMessageController {
     // 메시지를 보낸 회원의 고유 번호 설정
     Long senderCode = (Long) sessionAttributes.get("code");
 
-
     // 전송된 메시지를 DB에 저장
     // 단, DTO에 값을 세팅하는 로직은 서비스에서 수행함
     ChatMessageView chatMessageView =
@@ -68,6 +68,5 @@ public class ChatMessageController {
     // 각각의 채팅방에 있는 사용자를 구분하기 위해...
     // 백엔드 컨트롤러가 아닌, 프론트엔드의 엔드포인트로 넘어감.
     messagingTemplate.convertAndSend(endpoint, chatMessageView);
-
   }
 }

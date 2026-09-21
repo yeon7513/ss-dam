@@ -16,7 +16,7 @@ export const connectWebSocket = (onConnectCallback, onErrorCallback) => {
   stompClient = new Client({
     webSocketFactory: () => new SockJS(`${HOST}/ws`),
     reconnectDelay: 5000,
-    debug: (str) => console.log("STOMP: ", str),
+    debug: (str) => console.log("[STOMP DEBUG]: ", str),
     onConnect: () => {
       console.log("웹소켓 연결 성공");
       if (onConnectCallback) {
@@ -40,9 +40,15 @@ export const subscribeToChatRoom = (roomId, onMessageCallback) => {
     return null;
   }
 
+  console.log("subscribeToChatRoom: ", roomId);
+
   return stompClient.subscribe(`/sub/chat/room/${roomId}`, (message) => {
-    const data = JSON.parse(message.body);
-    onMessageCallback(data);
+    const parseData = typeof message.body === "string"
+      ? JSON.parse(message.body) : message;
+
+    console.log("parseData: ", parseData);
+
+    onMessageCallback(parseData);
   });
 };
 

@@ -2,11 +2,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import ChatMessages from "./chat-messages/ChatMessages.jsx";
 import styles from "./ChatContainer.module.scss";
 import { useLoadData } from "../../hooks/useLoadData.js";
-import { connectWebSocket, sendMessage, subscribeToChatRoom } from "../../utils/webSocketService.js";
+import { connectWebSocket, disconnectWebSocket, sendMessage, subscribeToChatRoom } from "../../utils/webSocketService.js";
 
 function ChatContainer({ roomId }) {
   const [messages, setMessages] = useState([]);
   const subscriptionRef = useRef(null);
+
+  console.log(messages);
 
   // 기존 과거 메시지 로그 받아오기
   const { data: chatLog, loading, error } = useLoadData(roomId ? `/api/chat/rooms/${roomId}/messages` : null);
@@ -20,8 +22,11 @@ function ChatContainer({ roomId }) {
   // 방이 변경될 때마다 대화 내역 블러오기 및 웹소켓 구독
   useEffect(() => {
     if (!roomId) {
+      console.log("roomId 없음..");
       return;
     }
+
+    console.log("useEffect 실행, roomId: ", roomId);
 
 // 웹소켓 연결 및 해당 채팅방 구독 시작
     connectWebSocket(() => {
@@ -31,14 +36,23 @@ function ChatContainer({ roomId }) {
       }
 
       // 새로 선택된 채팅방 구독 시작
-      subscriptionRef.current = subscribeToChatRoom(roomId, (newMessage) => {
+      const subscription = subscribeToChatRoom(roomId, (newMessage) => {
+        console.log("수신된 새 메시지: ", newMessage);
         setMessages((prevMessages) => [...prevMessages, newMessage]);
       });
+
+      if (subscription) {
+        console.log("subscription 객체 생성");
+        subscriptionRef.current = subscription;
+      } else {
+        console.warn("stompClient가 연결되지 않았습니다.");
+      }
     });
 
     return () => {
       if (subscriptionRef.current) {
         subscriptionRef.current.unsubscribe();
+        disconnectWebSocket();
       }
     };
   }, [roomId]);
