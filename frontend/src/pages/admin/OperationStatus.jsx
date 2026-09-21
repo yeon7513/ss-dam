@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 
 // 분리한 서브 컴포넌트들 import
-import DashboardHeader from "./OperationStatus/DashboardHeader.jsx";
-import SummaryStats from "./OperationStatus/SummaryStats.jsx";
-import AdminLogCard from "./OperationStatus/AdminLogCard.jsx";
-import PendingReports from "./OperationStatus/PendingReports.jsx";
-import DashboardCharts from "./OperationStatus/DashboardCharts.jsx";
-import RegionParticipation from "./OperationStatus/RegionParticipation.jsx";
-import TopSellers from "./OperationStatus/TopSellers.jsx";
+import DashboardHeader from "../../components/admin/DashboardHeader.jsx";
+import SummaryStats from "./OperationStatus/SummaryStats/SummaryStats.jsx";
+import AdminLogCard from "./OperationStatus/AdminLogCard/AdminLogCard.jsx";
+import PendingReports from "./OperationStatus/PendingReports/PendingReports.jsx";
+import DashboardCharts from "./OperationStatus/DashboardCharts/DashboardCharts.jsx";
+import RegionParticipation from "./OperationStatus/RegionParticipation/RegionParticipation.jsx";
+import TopSellers from "./OperationStatus/TopSellers/TopSellers.jsx";
 
 import styles from "./OperationStatus.module.scss";
 
@@ -37,11 +37,11 @@ const OperationStatus = () => {
   // 우수판매자
   const [topSellersData, setTopSellersData] = useState([]);
 
-  // 아이콘 회전 애니메이션 State
-  const [isSpinning, setIsSpinning] = useState(false);
-
   // 현재 시각 저장 State
   const [lastUpdated, setLastUpdated] = useState("");
+
+  // 아이콘 회전 애니메이션 State
+  const [isSpinning, setIsSpinning] = useState(false);
 
   // 현재 시각 갱신 함수
   const updateCurrentTime = () =>
@@ -163,6 +163,7 @@ const OperationStatus = () => {
     <div className={styles.dashboardBody}>
       {/* 대시보드헤더 컴포넌트*/}
       <DashboardHeader
+        title="운영 현황"
         lastUpdated={lastUpdated}
         handleRefresh={handleRefresh}
         isSpinning={isSpinning}

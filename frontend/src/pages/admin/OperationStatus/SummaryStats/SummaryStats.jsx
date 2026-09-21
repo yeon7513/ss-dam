@@ -1,5 +1,5 @@
 import React from "react";
-import StatCard from "../../../components/common/card/StatCard.jsx";
+import StatCard from "../../../../components/common/card/StatCard.jsx";
 import styles from "./SummaryStats.module.scss";
 
 const SummaryStats = ({ summaryData }) => {

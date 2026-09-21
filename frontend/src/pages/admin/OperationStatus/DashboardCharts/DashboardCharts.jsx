@@ -1,5 +1,5 @@
 import React from "react";
-import ChartCard from "../../../components/common/card/ChartCard.jsx";
+import ChartCard from "../../../../components/common/card/ChartCard.jsx";
 import styles from "./DashboardCharts.module.scss";
 
 const DashboardCharts = () => {

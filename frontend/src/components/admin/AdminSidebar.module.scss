@@ -34,6 +34,34 @@
   .categoryGroup {
     width: 100%;
     border-bottom: 1px solid $grayscale-20;
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      a {
+        width: 100%;
+        height: 50px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        padding: 0 20px 0 32px;
+        color: $grayscale-90;
+        font-size: 0.95rem;
+        text-decoration: none;
+
+        &:hover {
+          background-color: $grayscale-5;
+        }
+
+        &.subActive {
+          font-weight: 700;
+          color: $grayscale-90;
+          background-color: $grayscale-5;
+        }
+      }
+    }
   }
 
   .categoryHeader {
@@ -65,34 +93,6 @@
       .arrow {
         color: $grayscale-90; // (선택) 펼쳐졌을 때 화살표 아이콘 색상 변경
       }
-    }
-  }
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-
-  a {
-    width: 100%;
-    height: 50px;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    padding: 0 20px 0 32px;
-    color: $grayscale-90;
-    font-size: 0.95rem;
-    text-decoration: none;
-
-    &:hover {
-      background-color: $grayscale-5;
-    }
-
-    &.subActive {
-      font-weight: 700;
-      color: $grayscale-90;
-      background-color: $grayscale-5;
     }
   }
 }

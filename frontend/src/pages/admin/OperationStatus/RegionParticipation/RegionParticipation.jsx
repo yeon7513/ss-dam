@@ -1,5 +1,5 @@
 import React from "react";
-import Card from "../../../components/common/card/Card.jsx";
+import Card from "../../../../components/common/card/Card.jsx";
 import styles from "./RegionParticipation.module.scss";
 
 const RegionParticipation = ({ participationData }) => {

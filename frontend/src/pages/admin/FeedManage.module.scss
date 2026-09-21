@@ -1,0 +1,198 @@
+@use "/src/scss/variables.scss" as *;
+
+/* 공통 대시보드 레이아웃 뼈대 (운영현황 동일) */
+.dashboardBody {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* 피드 관리 메인 컨테이너 (흰색 박스) */
+.mainContainer {
+  background-color: $color-white;
+  padding: 20px;
+  border: 1px solid $grayscale-20;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* 상태 필터 탭 영역 (전체 / 신고된 피드 / 일반 / 블라인드 / 삭제) */
+.statusTab {
+  display: flex;
+  gap: 20px;
+  border-bottom: 1px solid $grayscale-20;
+  padding-bottom: 10px;
+
+  .tabBtn {
+    font-size: 1rem;
+    font-weight: 700;
+    color: $grayscale-50;
+
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: $primary-20;
+    }
+
+    // 선택 시 선택된 글자색
+    &.active {
+      font-weight: 700;
+      color: $primary-40;
+
+      // 탭 밑줄 강조선
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: -11px; // statusTab의 border-bottom 위치와 맞춤
+        width: 100%;
+        height: 2px;
+        background-color: $primary-40;
+      }
+    }
+
+    // 신고 건수 알림 배지
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      background-color: $dan-color;
+      color: $color-white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 100px;
+      line-height: 1;
+    }
+  }
+}
+
+/* 상세 조건 필터바 */
+.filterBar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  gap: 12px;
+
+  /* 필터바 공통스타일 (날짜, 셀렉트, 검색창) */
+  input[type="date"],
+  select,
+  input[type="text"] {
+    width: 100%;
+    height: 3.4rem;
+    padding: 0 16px;
+
+    font-size: 0.9rem;
+    font-weight: 400;
+    box-sizing: border-box;
+
+    border: 1.5px solid $point-20;
+    background-color: $color-white;
+    // @ 변경: 기본(선택 안 됨/초기) 글자색은 $grayscale-50으로 설정
+    color: $grayscale-50;
+
+    transition:
+      background-color 0.5s ease,
+      color 0.2s ease;
+
+    &::placeholder {
+      color: $grayscale-50;
+      font-weight: 400;
+      font-size: 0.9rem;
+    }
+
+    // @ 포커스 시 글자색 및 배경색 반응
+    &:focus {
+      border: 1.5px solid $point-20;
+      background-color: $point-5;
+      outline: none;
+      color: $grayscale-90;
+
+      &::placeholder {
+        color: $grayscale-90;
+      }
+    }
+  }
+
+  /* 작성일 기간 선택기 */
+  .datePickerGroup {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: $grayscale-50;
+    font-size: 0.9rem;
+
+    input[type="date"] {
+      width: 150px;
+      cursor: pointer;
+
+      // @ 추가: 날짜 값이 선택되어 채워진 상태에서는 $grayscale-90 적용
+      &:valid {
+        color: $grayscale-90;
+      }
+    }
+  }
+
+  /* 드롭다운 Select */
+  select {
+    min-width: 140px;
+    cursor: pointer;
+
+    // @ 추가: 드롭다운 옵션 목록 내부 글자색
+    option {
+      color: $grayscale-90;
+      background-color: $color-white;
+
+      // 첫 번째 안내 옵션(value="")은 $grayscale-50 유지
+      &[value=""] {
+        color: $grayscale-50;
+      }
+    }
+
+    // @ 추가: 실제 옵션을 선택한 경우(포커스 상태 포함) 글자색 $grayscale-90 적용
+    &:not([value=""]) {
+      color: $grayscale-90;
+    }
+  }
+
+  /* 검색어 입력창 (우측 정렬) */
+  .searchBox {
+    margin-left: auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    input[type="text"] {
+      width: 46rem;
+      padding-right: 36px;
+
+      // @ 추가: 검색어를 입력해 빈 값이 아닐 때 글자색 $grayscale-90 적용
+      &:not(:placeholder-shown) {
+        color: $grayscale-90;
+      }
+    }
+
+    .searchIcon {
+      position: absolute;
+      right: 12px;
+      color: $grayscale-50;
+      pointer-events: none;
+    }
+  }
+}
+
+/* 피드 카드 4열 그리드 레이아웃 */
+.feedCardGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-top: 8px;
+}
