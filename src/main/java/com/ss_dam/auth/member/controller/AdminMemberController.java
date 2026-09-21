@@ -12,19 +12,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.ss_dam.admin.log.response.AdminActivity;
 import com.ss_dam.auth.login.Login;
 import com.ss_dam.auth.member.model.filter.AdminMemberSearchFilter;
 import com.ss_dam.auth.member.model.request.MemberStatusChangeRequest;
 import com.ss_dam.auth.member.model.response.AdminMemberDetailView;
-import com.ss_dam.auth.member.model.response.AdminMemberFeedsView;
-import com.ss_dam.auth.member.model.response.AdminMemberProofsView;
-import com.ss_dam.auth.member.model.response.AdminMemberReportsView;
-import com.ss_dam.auth.member.model.response.AdminMemberTradesView;
 import com.ss_dam.auth.member.model.response.AdminMemberView;
 import com.ss_dam.auth.member.service.AdminMemberService;
 import com.ss_dam.common.ApiResponse;
-import com.ss_dam.common.pager.PageQuery;
 import com.ss_dam.common.pager.PageResult;
 
 import jakarta.servlet.http.HttpSession;
@@ -155,89 +149,7 @@ public class AdminMemberController {
         }
     
 
-        // 회원 관리 처리 이력 조회
-        //admin/log/response/AdminActivity DTO 사용
-        @GetMapping("/{memberCode}/logs")
-        public ResponseEntity<ApiResponse<PageResult<AdminActivity>>> loadMembersLogs(
-                @PathVariable Long memberCode,
-                @ModelAttribute PageQuery pageQuery) {
 
-                PageResult<AdminActivity> logs = 
-                        adminMemberService.loadMemberLogs(memberCode, pageQuery);
-                return ResponseEntity.ok(
-                        ApiResponse.success("회원 관리 처리 이력 조회 성공", logs));
-                }
-
-        // 관리자 회원 상세 - 작성 피드 탭
-        // 해당 회원의 피드 목록과 전체 등록·좋아요·조회수 통계 반환
-        @GetMapping("/{memberCode}/feeds")
-        public ResponseEntity<ApiResponse<AdminMemberFeedsView>> loadMemberFeeds(
-                @PathVariable Long memberCode,
-                @ModelAttribute PageQuery pageQuery,
-                HttpSession session) {
-
-
-        AdminMemberFeedsView result =
-                adminMemberService.loadMemberFeeds(memberCode, pageQuery);
-
-        return ResponseEntity.ok(
-                ApiResponse.success("회원 작성 피드 조회 성공", result));
-        }
-
-        //관리자 회원 상세 - 신고내역 탭
-
-        @GetMapping("/{memberCode}/reports")
-        public ResponseEntity<ApiResponse<AdminMemberReportsView>> loadMemberReports(
-                @PathVariable Long memberCode,
-                @ModelAttribute PageQuery pageQuery,
-                HttpSession session) {
-
-                AdminMemberReportsView result = 
-                        adminMemberService.loadMemberReports(memberCode, pageQuery);
-
-                return ResponseEntity.ok(
-                        ApiResponse.success("회원 신고내역 조회 성공", result));
-
-                //우측 상단 통계 : 전체 신고 / 처리 대기 / 처리 완료
-                //- 전체 신고: 모든 상태 포함
-                //- 처리 대기: PENDING, IN_REVIEW
-                //- 처리 완료: RESOLVED
-                // * 기각(REJECTED)은 전체 신고에만 포함
-                
-                }
-        
-
-
-
-        // 관리자 회원 상세 - 거래내역 탭
-        @GetMapping("/{memberCode}/trades")
-        public ResponseEntity<ApiResponse<AdminMemberTradesView>> loadMemberTrades(
-                @PathVariable Long memberCode,
-                @ModelAttribute PageQuery pageQuery,
-                HttpSession session) {
-
-
-        AdminMemberTradesView result =
-                adminMemberService.loadMemberTrades(memberCode, pageQuery);
-
-        return ResponseEntity.ok(
-                ApiResponse.success("회원 거래내역 조회 성공", result));
-        }
-
-        // 관리자 회원 상세 - 챌린지 인증 탭
-        @GetMapping("/{memberCode}/proofs")
-        public ResponseEntity<ApiResponse<AdminMemberProofsView>> loadMemberProofs(
-                @PathVariable Long memberCode,
-                @ModelAttribute PageQuery pageQuery,
-                HttpSession session) {
-
-
-        AdminMemberProofsView result =
-                adminMemberService.loadMemberProofs(memberCode, pageQuery);
-
-        return ResponseEntity.ok(
-                ApiResponse.success("회원 챌린지 인증내역 조회 성공", result));
-        }
         
 }
 

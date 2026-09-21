@@ -7,16 +7,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.ss_dam.admin.log.response.AdminActivity;
-import com.ss_dam.admin.report.model.response.ReportView;
 import com.ss_dam.auth.member.model.response.AdminMemberDetailView;
-import com.ss_dam.auth.member.model.response.AdminMemberFeedsView;
-import com.ss_dam.auth.member.model.response.AdminMemberProofsView;
-import com.ss_dam.auth.member.model.response.AdminMemberReportsView;
-import com.ss_dam.auth.member.model.response.AdminMemberTradeView;
-import com.ss_dam.auth.member.model.response.AdminMemberTradesView;
 import com.ss_dam.auth.member.model.response.AdminMemberView;
-import com.ss_dam.feed.model.response.UserFeedView;
 
 @Repository 
 public class AdminMemberDaoImpl implements AdminMemberDao {
@@ -25,13 +17,13 @@ public class AdminMemberDaoImpl implements AdminMemberDao {
     @Autowired
     private SqlSession sql;
 
-    // 검색 조건에 해당하는 전체 회원 수
+    //검색 조건에 해당하는 전체 회원 수
     @Override
     public int countMembers(Map<String, Object> params) {
         return sql.selectOne("adminMember.countMembers", params);
     }
 
-    // 관리자 회원 목록 조회
+    //관리자 회원 목록 조회
     @Override
     public List<AdminMemberView> loadMembers(
             Map<String, Object> params) {
@@ -39,7 +31,7 @@ public class AdminMemberDaoImpl implements AdminMemberDao {
         return sql.selectList("adminMember.loadMembers", params);
     }
 
-    // 관리자 회원 상세 조회 — 기본 정보 및 프로필 사진
+    //관리자 회원 상세 조회 — 기본 정보 및 프로필 사진
     @Override
     public AdminMemberDetailView loadMember(Long memberCode) {
 
@@ -48,7 +40,7 @@ public class AdminMemberDaoImpl implements AdminMemberDao {
                 memberCode);
     }
 
-    // 회원이 완료한 챌린지 수
+    //회원이 완료한 챌린지 수
     @Override
     public long countCompletedChallenges(Long memberCode) {
         return sql.selectOne(
@@ -79,7 +71,6 @@ public class AdminMemberDaoImpl implements AdminMemberDao {
     }
 
     //상단 통계 - 로그인 횟수 
-    
     @Override 
     public long countMemberLogins(Long memberCode) {
         return sql.selectOne(
@@ -101,103 +92,6 @@ public class AdminMemberDaoImpl implements AdminMemberDao {
     public int insertMemberStatusLog(Map<String, Object> params) {
         return sql.insert(
                 "adminMember.insertMemberStatusLog",
-                params);
-    }
-    // 회원 정지·해제 로그 전체 건수
-    @Override
-    public int countMemberLogs(Map<String, Object> params) {
-        return sql.selectOne(
-                "adminMember.countMemberLogs",
-                params);
-    }
-
-    // 회원 정지·해제 로그 목록
-    @Override
-    public List<AdminActivity> loadMemberLogs(
-            Map<String, Object> params) {
-
-        return sql.selectList(
-                "adminMember.loadMemberLogs",
-                params);
-    }
-
-    // 회원 작성 피드 전체 통계
-    @Override
-    public AdminMemberFeedsView loadMemberFeedSummary(
-            Map<String, Object> params) {
-
-        return sql.selectOne(
-                "adminMember.loadMemberFeedSummary",
-                params);
-    }
-
-    // 회원 작성 피드 페이지 목록
-    @Override
-    public List<UserFeedView> loadMemberFeeds(
-            Map<String, Object> params) {
-
-        return sql.selectList(
-                "adminMember.loadMemberFeeds",
-                params);
-    }
-
-    // 회원이 받은 전체 신고 통계
-    @Override
-    public AdminMemberReportsView loadMemberReportSummary(
-            Map<String, Object> params) {
-
-        return sql.selectOne(
-                "adminMember.loadMemberReportSummary",
-                params);
-    }
-
-    // 회원이 받은 신고 페이지 목록
-    @Override
-    public List<ReportView> loadMemberReports(
-            Map<String, Object> params) {
-
-        return sql.selectList(
-                "adminMember.loadMemberReports",
-                params);
-    }
-
-    // 회원 전체 거래 통계
-    @Override
-    public AdminMemberTradesView loadMemberTradeSummary(
-            Map<String, Object> params) {
-
-        return sql.selectOne(
-                "adminMember.loadMemberTradeSummary",
-                params);
-    }
-
-    // 회원 거래 페이지 목록
-    @Override
-    public List<AdminMemberTradeView> loadMemberTrades(
-            Map<String, Object> params) {
-
-        return sql.selectList(
-                "adminMember.loadMemberTrades",
-                params);
-    }
-
-    // 인증글 통계
-    @Override
-    public AdminMemberProofsView loadMemberProofSummary(
-            Map<String, Object> params) {
-
-        return sql.selectOne(
-                "adminMember.loadMemberProofSummary",
-                params);
-    }
-
-    // 인증글 페이지 목록
-    @Override
-    public List<UserFeedView> loadMemberProofs(
-            Map<String, Object> params) {
-
-        return sql.selectList(
-                "adminMember.loadMemberProofs",
                 params);
     }
 

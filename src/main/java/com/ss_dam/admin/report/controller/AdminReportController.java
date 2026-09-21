@@ -1,21 +1,33 @@
 package com.ss_dam.admin.report.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ss_dam.admin.report.model.response.AdminMemberReportsView;
+import com.ss_dam.admin.report.service.AdminReportService;
 import com.ss_dam.common.ApiResponse;
+import com.ss_dam.common.pager.PageQuery;
+
+import jakarta.servlet.http.HttpSession;
 
 //- AdminReportController - 신고 목록·상세, 검토·처리·기각 기능
 
 @RestController
 @RequestMapping("/api/admin/reports")
 public class AdminReportController {
+
+@Autowired 
+private AdminReportService adminReportService;
+
+
 
     // 관리자 신고 목록 조회
     // 조건 생략 시 해당 조건으로 제한하지 않음
@@ -73,6 +85,30 @@ public class AdminReportController {
         // TODO: 기각 상태로 변경하고 이력 저장
         return notImplemented();
     }
+
+
+    //관리자 회원 상세 - 신고내역 탭
+    @GetMapping("/members/{memberCode}")
+    public ResponseEntity<ApiResponse<AdminMemberReportsView>> loadMemberReports(
+            @PathVariable Long memberCode,
+            @ModelAttribute PageQuery pageQuery,
+            HttpSession session) {
+
+            AdminMemberReportsView result = 
+                    adminReportService.loadMemberReports(memberCode, pageQuery);
+
+            return ResponseEntity.ok(
+                    ApiResponse.success("회원 신고내역 조회 성공", result));
+
+            //우측 상단 통계 : 전체 신고 / 처리 대기 / 처리 완료
+            //- 전체 신고: 모든 상태 포함
+            //- 처리 대기: PENDING, IN_REVIEW
+            //- 처리 완료: RESOLVED
+            // * 기각(REJECTED)은 전체 신고에만 포함
+            
+            }
+        
+
 
     // 미구현 API 공통 응답
     private ResponseEntity<ApiResponse<Void>> notImplemented() {

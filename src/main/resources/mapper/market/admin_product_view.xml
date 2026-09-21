@@ -373,6 +373,96 @@
 		ORDER BY activity.created_at DESC, activity.code DESC
 	</select>
 
+<!--관리자 회원 상세 - 거래 내역-->
+<!-- 거래 통계 매핑 -->
+<resultMap id="memberTradeSummaryMap"
+           type="AdminMemberTradesView"
+           autoMapping="true">
+</resultMap>
+
+
+<!-- 거래 한 건 + 함께 조회한 상품 상세 매핑 -->
+<resultMap id="memberTradeMap"
+           type="AdminMemberTradeView"
+           autoMapping="true">
+    <id column="trade_code" property="code"/>
+</resultMap>
+
+
+<!-- 해당 회원이 구매자 또는 판매자인 거래 -->
+<sql id="memberTradeConditions">
+    WHERE (
+        d.BUYER_ID = m.ID
+        OR d.SELLER_ID = m.ID
+    )
+</sql>
+
+
+<!-- 오른쪽 통계: 전체 거래 / 구매 내역 / 판매 내역 -->
+<select id="loadMemberTradeSummary"
+        parameterType="map"
+        resultMap="memberTradeSummaryMap">
+
+    SELECT
+        COUNT(*) AS total_trade_count,
+
+        COALESCE(SUM(
+            CASE
+                WHEN d.BUYER_ID = m.ID THEN 1
+                ELSE 0
+            END
+        ), 0) AS purchase_count,
+
+        COALESCE(SUM(
+            CASE
+                WHEN d.SELLER_ID = m.ID THEN 1
+                ELSE 0
+            END
+        ), 0) AS sale_count
+
+    FROM MARKET_DEAL_LOG d
+
+    JOIN MEMBER_ACCOUNT m
+        ON m.CODE = #{memberCode}
+
+    <include refid="memberTradeConditions"/>
+</select>
+
+
+<!-- 현재 페이지 거래와 상품 상세를 한 쿼리로 조회 -->
+<!-- 변경: 거래 정보와 상품 번호만 조회하고, 상품 상세는 클릭 시 별도 조회 -->
+<select id="loadMemberTrades"
+        parameterType="map"
+        resultMap="memberTradeMap">
+
+    SELECT
+        d.CODE AS trade_code,
+        d.PROD_CODE AS product_code,
+        d.PRICE AS trade_price,
+        d.CREATED_AT AS traded_at,
+
+        CASE
+            WHEN d.BUYER_ID = m.ID
+                 AND d.SELLER_ID = m.ID
+                THEN 'BOTH'
+            WHEN d.BUYER_ID = m.ID
+                THEN 'BUY'
+            ELSE 'SELL'
+        END AS trade_type
+
+    FROM MARKET_DEAL_LOG d
+
+    JOIN MEMBER_ACCOUNT m
+        ON m.CODE = #{memberCode}
+
+    <include refid="memberTradeConditions"/>
+
+    ORDER BY d.CREATED_AT DESC, d.CODE DESC
+    LIMIT #{perPage} OFFSET #{offset}
+
+</select>
+
+
 </mapper>
 
 <!--XML의 REPORTED 필터는 처리 완료 여부와 관계없이 신고 이력이 있는 상품을 조회 프로필 이미지와 대표 이미지는 기존 

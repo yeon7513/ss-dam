@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="adminActivityLog">
+
+    <resultMap id="adminActivityMap"
+               type="AdminActivity">
+        <id column="CODE" property="code"/>
+        <result column="ADMIN_ID" property="empId"/>
+        <result column="TARGET_TYPE" property="targetType"/>
+        <result column="TARGET_CODE" property="targetCode"/>
+        <result column="PROCESS_TYPE" property="processType"/>
+        <result column="MEMO" property="memo"/>
+        <result column="CREATED_AT" property="createdAt"/>
+    </resultMap>
+
+    <!-- 목록과 건수 조회에 같은 조건 적용 -->
+    <sql id="memberLogConditions">
+        WHERE l.TARGET_TYPE = 'member'
+          AND l.TARGET_CODE = #{memberCode}
+          AND l.PROCESS_TYPE IN ('RESTRICT', 'RELEASE')
+    </sql>
+
+    <!-- 회원 정지·해제 로그 전체 건수 -->
+    <select id="countMemberLogs"
+            parameterType="map"
+            resultType="int">
+        SELECT COUNT(*)
+        FROM ADMIN_ACTIVITY_LOG l
+        <include refid="memberLogConditions"/>
+    </select>
+
+    <!-- 회원 정지·해제 로그 목록 -->
+    <select id="loadMemberLogs"
+            parameterType="map"
+            resultMap="adminActivityMap">
+        SELECT
+            l.CODE,
+            a.EMP_ID AS ADMIN_ID,
+            l.TARGET_TYPE,
+            l.TARGET_CODE,
+            l.PROCESS_TYPE,
+            l.MEMO,
+            l.CREATED_AT
+        FROM ADMIN_ACTIVITY_LOG l
+        LEFT JOIN ADMIN_ACCOUNT a
+            ON a.CODE = l.ADM_CODE
+        <include refid="memberLogConditions"/>
+        ORDER BY l.CREATED_AT DESC, l.CODE DESC
+        LIMIT #{perPage} OFFSET #{offset}
+    </select>
+    <!-- LEFT JOIN으로 관리자 이름과 아이디를 함께 가져옴
+- 관리자 계정이 삭제 처리되어도 과거 로그는 보여야 하므로 ,관리자 DELETE_YN 조건은 넣지 않음
+- 이름은 현재 관리자 정보를 기준으로 표시-->
+
+
+</mapper>

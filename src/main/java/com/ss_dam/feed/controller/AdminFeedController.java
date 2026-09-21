@@ -1,9 +1,11 @@
 package com.ss_dam.feed.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,12 +13,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ss_dam.common.ApiResponse;
+import com.ss_dam.common.pager.PageQuery;
+import com.ss_dam.feed.model.response.AdminMemberFeedsView;
+import com.ss_dam.feed.service.AdminFeedService;
+
+import jakarta.servlet.http.HttpSession;
 
 // - AdminFeedController - 피드 목록·상세, 삭제·복구, 처리 사유·이력
 
 @RestController
 @RequestMapping("/api/admin/feeds")
 public class AdminFeedController {
+
+@Autowired 
+private AdminFeedService adminFeedService;
 
     // 관리자 피드 목록 조회
     @GetMapping
@@ -65,6 +75,22 @@ public class AdminFeedController {
             @PathVariable Long feedCode) {
 
         return notImplemented();
+    }
+
+    // 관리자 회원 상세 - 작성 피드 탭
+    // 해당 회원의 피드 목록과 전체 등록·좋아요·조회수 통계 반환
+    @GetMapping("/members/{memberCode}")
+    public ResponseEntity<ApiResponse<AdminMemberFeedsView>> loadMemberFeeds(
+            @PathVariable Long memberCode,
+            @ModelAttribute PageQuery pageQuery,
+            HttpSession session) {
+
+
+    AdminMemberFeedsView result =
+            adminFeedService.loadMemberFeeds(memberCode, pageQuery);
+
+    return ResponseEntity.ok(
+            ApiResponse.success("회원 작성 피드 조회 성공", result));
     }
 
     // 미구현 API 공통 응답

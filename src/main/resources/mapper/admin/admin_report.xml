@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="adminReport">
+
+  <!-- 신고 통계 -->
+<resultMap id="memberReportSummaryMap"
+           type="AdminMemberReportsView"
+           autoMapping="true">
+</resultMap>
+
+<!-- 신고 한 건 -->
+<resultMap id="memberReportMap"
+           type="ReportView"
+           autoMapping="true">
+
+    <id column="CODE" property="code"/>
+
+    <!-- MEM_CODE는 reporterCode와 이름이 달라 직접 매핑 -->
+    <result column="MEM_CODE" property="reporterCode"/>
+</resultMap>
+
+<!-- 해당 회원이 받은 신고 조건: 한 번만 정의 -->
+<sql id="memberReceivedReportConditions">
+    WHERE (
+        (
+            r.TARGET_TYPE = 'feed'
+            AND EXISTS (
+                SELECT 1
+                FROM FEED f
+                WHERE f.CODE = r.TARGET_CODE
+                  AND f.MEM_CODE = #{memberCode}
+            )
+        )
+        OR
+        (
+            r.TARGET_TYPE = 'comment'
+            AND EXISTS (
+                SELECT 1
+                FROM COMMENTS c
+                WHERE c.CODE = r.TARGET_CODE
+                  AND c.MEM_CODE = #{memberCode}
+            )
+        )
+        OR
+        (
+            r.TARGET_TYPE = 'market'
+            AND EXISTS (
+                SELECT 1
+                FROM MARKET_PRODUCT p
+                WHERE p.CODE = r.TARGET_CODE
+                  AND p.MEM_CODE = #{memberCode}
+            )
+        )
+    )
+</sql>
+
+<!-- 전체 신고 / 처리 대기 / 처리 완료 -->
+<select id="loadMemberReportSummary"
+        parameterType="map"
+        resultMap="memberReportSummaryMap">
+
+    SELECT
+        COUNT(*) AS total_report_count,
+
+        COALESCE(SUM(
+            CASE
+                WHEN r.STATUS IN ('PENDING', 'IN_REVIEW') THEN 1
+                ELSE 0
+            END
+        ), 0) AS pending_report_count,
+
+        COALESCE(SUM(
+            CASE
+                WHEN r.STATUS = 'RESOLVED' THEN 1
+                ELSE 0
+            END
+        ), 0) AS resolved_report_count
+
+    FROM REPORT r
+
+    <include refid="memberReceivedReportConditions"/>
+</select>
+
+<!-- 신고 목록 + 페이지네이션 -->
+<select id="loadMemberReports"
+        parameterType="map"
+        resultMap="memberReportMap">
+
+    SELECT
+        r.CODE,
+        r.MEM_CODE,
+        r.TARGET_TYPE,
+        r.TARGET_CODE,
+        r.REASON_TYPE,
+        r.CONTENT,
+        r.STATUS,
+        r.CREATED_AT
+
+    FROM REPORT r
+
+    <include refid="memberReceivedReportConditions"/>
+
+    ORDER BY r.CREATED_AT DESC, r.CODE DESC
+    LIMIT #{perPage} OFFSET #{offset}
+</select>
+
+
+</mapper>
