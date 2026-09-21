@@ -1,9 +1,10 @@
 import React from "react";
 
+// @@@ 피드목록, 피드관리 @@@
 const FeedManage = () => {
   return (
     <div>
-      <h2>FeedManage</h2> {/* 피드 관리 */}
+      <h2>FeedManage</h2>
     </div>
   );
 };

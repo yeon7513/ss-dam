@@ -11,6 +11,7 @@ import TopSellers from "./OperationStatus/TopSellers.jsx";
 
 import styles from "./OperationStatus.module.scss";
 
+// @@@ 운영현황 @@@
 const OperationStatus = () => {
   // 백엔드 요청에 필요한 기본 조회 기간 설정 (예: 이번 달 1일 ~ 오늘)
   const [fromDate] = useState("2026-09-01");
