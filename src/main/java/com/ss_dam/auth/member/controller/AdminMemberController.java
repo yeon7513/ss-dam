@@ -95,6 +95,8 @@ public class AdminMemberController {
                 HttpSession session) {
                 
 
+                Login admin = requireAdmin(session);
+
                 adminMemberService.restrictMember(
                         memberCode,
                         request.getReason(),
