@@ -43,4 +43,10 @@
 
 // //MemberCard는 회원 한 명의 정보를 카드 모양으로 보여주는 리액트 컴포넌트
 // function MemberCard({ user }) {
-//   return
+//   return(
+//     <article className={style.card}>
+//       {/* 목록 API에 프로필 사진이 없으므로 임시 아바타 표시}
+//       {}
+//     </article>
+//   )
+// }
