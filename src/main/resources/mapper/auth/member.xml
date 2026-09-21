@@ -58,6 +58,7 @@
     FROM ADMIN_ACCOUNT
     WHERE EMP_ID = #{id}
     AND PASSWORD = #{password}
+    AND DELETE_YN = 0
   </select>
 
   <!-- 아이디 중복 확인 쿼리 (삭제되지 않은 계정 기준) -->
