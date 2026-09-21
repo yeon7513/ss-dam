@@ -1,16 +1,13 @@
 @use "/src/scss/variables.scss" as *;
 
-// isFixed={false}일 때 기본 영역 차지
 .sidebar {
   width: 250px;
   min-height: 100vh;
-  flex-shrink: 0; // 메인 콘텐츠가 늘어나도 240px 영역 유지
-
+  flex-shrink: 0;
   background-color: $color-white;
   border-right: 1px solid $grayscale-20;
 }
 
-// isFixed={true}일 때 (기본값)
 .fixed {
   @extend .sidebar;
 }
@@ -18,8 +15,8 @@
 .logoContainer {
   height: 4.6rem;
   display: flex;
-  align-items: center; /* 세로 중앙 정렬 */
-  justify-content: center; /* 가로 중앙 정렬 */
+  align-items: center;
+  justify-content: center;
 }
 
 .sidebarInner {
@@ -28,4 +25,74 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+.sidebarMenu {
+  flex: 1;
+  overflow-y: auto;
+
+  .categoryGroup {
+    width: 100%;
+    border-bottom: 1px solid $grayscale-20;
+  }
+
+  .categoryHeader {
+    width: 100%;
+    height: 50px;
+    padding: 0 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: $grayscale-90;
+
+    &:hover {
+      background-color: $grayscale-5;
+    }
+
+    &.active {
+      background-color: $point-5;
+      color: $grayscale-90;
+    }
+
+    &.open {
+      color: $grayscale-90; // 펼쳐졌을 때 글자색
+      background-color: $grayscale-5; // 펼쳐졌을 때 배경색 (원하는 색상으로 변경)
+
+      .arrow {
+        color: $grayscale-90; // (선택) 펼쳐졌을 때 화살표 아이콘 색상 변경
+      }
+    }
+  }
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  a {
+    width: 100%;
+    height: 50px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    padding: 0 20px 0 32px;
+    color: $grayscale-90;
+    font-size: 0.95rem;
+    text-decoration: none;
+
+    &:hover {
+      background-color: $grayscale-5;
+    }
+
+    &.subActive {
+      font-weight: 700;
+      color: $grayscale-90;
+      background-color: $grayscale-5;
+    }
+  }
 }
