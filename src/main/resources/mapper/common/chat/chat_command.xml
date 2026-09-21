@@ -3,20 +3,8 @@
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="chat">
-
-  <!-- 기존 채팅방 UUID 조회 -->
-  <select id="findRoomId" resultType="String">
-    SELECT room_id
-    FROM CHAT_ROOM
-    WHERE type = #{type}
-    AND target_code = #{targetCode}
-    AND (
-    (REQUESTER_CODE = #{requesterCode} AND RESPONDER_CODE = #{responderCode})
-    OR (REQUESTER_CODE = #{responderCode} AND RESPONDER_CODE = #{requesterCode})
-    )
-  </select>
-
+<mapper namespace="chatCommand">
+  
   <!-- 신규 채팅방 저장 -->
   <insert id="registerChatRoom">
     INSERT INTO CHAT_ROOM (room_id, type, target_code, requester_code, responder_code, created_at)
@@ -31,15 +19,5 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
   </insert>
-
-  <!--
-    기존 채팅 메시지 찾기 (단일)
-    웹소켓에서 새로 등록된 메시지를 보내줘야하기 때문에 사용
-  -->
-  <select id="findChatMessageByCode" resultType="ChatMessageView">
-    SELECT *
-    FROM CHAT_LOG
-    WHERE code = #{code}
-  </select>
 
 </mapper>

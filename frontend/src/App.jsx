@@ -1,13 +1,15 @@
 import { Navigate, Route, Routes } from "react-router-dom";
+import AdminRoute from "./components/common/admin/AdminRoute";
 import AdminLayout from "./layout/AdminLayout";
 import Layout from "./layout/Layout";
 import About from "./pages/about/About";
 import ChallengeGuide from "./pages/about/challenge-guide/ChallengeGuide.jsx";
 import MarketGuide from "./pages/about/market-guide/MarketGuide.jsx";
-import OperationStatus from "./pages/admin/OperationStatus";
 import ChallengeManage from "./pages/admin/ChallengeManage";
 import FeedManage from "./pages/admin/FeedManage";
 import MarketManage from "./pages/admin/market/MarketManage";
+import MarketManageDetail from "./pages/admin/market/MarketManageDetail.jsx";
+import OperationStatus from "./pages/admin/OperationStatus";
 import UserManage from "./pages/admin/UserManage";
 import FindId from "./pages/auth/find/FindId";
 import FindPassword from "./pages/auth/find/FindPassword";
@@ -20,13 +22,17 @@ import Verify from "./pages/auth/sign-up/Verify";
 import Challenge from "./pages/challenge/Challenge";
 import ChallengeDetail from "./pages/challenge/ChallengeDetail";
 import ChallengeRanking from "./pages/challenge/ChallengeRanking";
+import Chat from "./pages/chat/Chat.jsx";
+import Error from "./pages/error/Error.jsx";
 import Feed from "./pages/feed/Feed";
 import FeedRegister from "./pages/feed/feed-register/FeedRegister";
+import FeedUpdate from "./pages/feed/feed-update/FeedUpdate.jsx";
 import Home from "./pages/home/Home";
 import Market from "./pages/market/Market";
-import ProductDetail from "./pages/market/product-detail/ProductDetail.jsx";
 import MarketPayment from "./pages/market/market-payment/MarketPayment";
+import ProductDetail from "./pages/market/product-detail/ProductDetail.jsx";
 import ProductRegister from "./pages/market/product-register/ProductRegister";
+import ProductUpdate from "./pages/market/product-update/ProductUpdate.jsx";
 import Activities from "./pages/myPage/activities/Activities";
 import Dashboard from "./pages/myPage/dashboard/Dashboard";
 import Deal from "./pages/myPage/deal/Deal";
@@ -35,10 +41,6 @@ import MyPage from "./pages/myPage/MyPage";
 import Points from "./pages/myPage/points/Points";
 import SupportDetail from "./pages/support/SupportDetail";
 import Supports from "./pages/support/Supports";
-import AdminRoute from "./components/common/admin/AdminRoute";
-import FeedUpdate from "./pages/feed/feed-update/FeedUpdate.jsx";
-import ProductUpdate from "./pages/market/product-update/ProductUpdate.jsx";
-import MarketManageDetail from "./pages/admin/market/MarketManageDetail.jsx";
 
 function App() {
   return (
@@ -121,6 +123,13 @@ function App() {
           <Route path="challenge_manage" element={<ChallengeManage />} />
         </Route>
       </Route>
+
+      {/* 채팅 페이지 */}
+      <Route path="/chat" element={<Chat />} />
+
+      {/* 에러 페이지 */}
+      <Route path="/error/:errCode" element={<Error />} />
+      <Route path="*" element={<Navigate to="/error/404" replace />} />
     </Routes>
   );
 }
