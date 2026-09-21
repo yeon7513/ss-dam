@@ -1,52 +1,136 @@
-// //status 탭
-// //auth/member/enums/MemberStatus
-// //조회 요청: /api/admin/members?status=NORMAL
-// const STAUTS_TABS = [
-//   { value: '', label: '전체 상태' },
-//   { value: 'NORMAL', label: '일반' },
-//   { value: 'SUSPENDED', label: '정지' },
-//   { value: 'WITHDRAW', label: '탈퇴' },
-// ];
-// //DB의 상태 값
-// //NORMAL → DB STATUS = 'ACTIVE', DELETE_YN = 0
-// //SUSPENDED → DB STATUS = 'SUSPENDED', DELETE_YN = 0
-// //WITHDRAWN → DB DELETE_YN = 1
-// //따라서 목록에 회원 상태를 표시할 때도 user.deleteYn이 true이면 먼저 탈퇴로 표시하고,
-// //나머지는 user.status로 구분
+import { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import DataTable from '../../../components/common/data-table/DataTable';
+import Pagination from '../../../components/common/pagination/Pagination';
+import SearchBox from '../../../components/common/search-box/SearchBox';
+import TabMenus from '../../../components/common/tab-menus/TabMenus';
+import styles from './MarketManage.module.scss';
 
-// //필터(활동상태랑 지역 아직 X)
-// const INITIAL_FILTERS = {
-//   joinedFrom: '',
-//   joinedTo: '',
-//   rating: '',
-//   keyword: '',
-// };
+// 코드가 너무 길어져서 MarketManage.constants.jsx로 뺐음
+import {
+  DELETE_YN_OPTIONS,
+  SEARCH_OPTIONS,
+  STATUS_TABS,
+  getProductColumns,
+} from './MarketManage.constants';
 
-// //getStatusLabel은 회원 데이터(user)를 받아서 화면에 표시할 상태 이름을 반환하는 함수
-// function getStatusLabel(user) {
-//   if (user.deleteYn) return '탈퇴';
+export default function MarketManage() {
+  const navigate = useNavigate();
 
-//   if (user.status == 'ACTIVE') return '일반';
-//   if (user.status == 'SUSPENDED') return '정지';
+  const columns = getProductColumns(navigate);
 
-//   return '알 수 없음';
-// }
+  const [products, setProducts] = useState([]);
+  const [pager, setPager] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-// //formatDate는 날짜 문자열을 화면에 보여주기 좋게 바꾸는 함수
-// function formatDate(value) {
-//   //value ? ... : '-' — 값이 있는지 확인
-//   //삼항 연산자. 값이 있으면 날짜를 가공하고,
-//   //null, undefined, ''처럼 값이 없으면 '-'를 반환
-//   //'2026-09-21T14:30:00'.slice(0, 10) --> '2026-09-21'
-//   return value ? value.slice(0,10).replaceAll('-', '.') : '-';
-// }
+  const [searchParams, setSearchParams] = useState({
+    page: 1,
+    perPage: 10,
+    status: '',
+    deleteYn: '',
+    search: '',
+    keyword: '',
+  });
 
-// //MemberCard는 회원 한 명의 정보를 카드 모양으로 보여주는 리액트 컴포넌트
-// function MemberCard({ user }) {
-//   return(
-//     <article className={style.card}>
-//       {/* 목록 API에 프로필 사진이 없으므로 임시 아바타 표시}
-//       {}
-//     </article>
-//   )
-// }
+  const fetchProducts = useCallback(async () => {
+    setLoading(true);
+
+    const query = new URLSearchParams();
+    Object.keys(searchParams).forEach((key) => {
+      if (searchParams[key]) query.append(key, searchParams[key]);
+    });
+
+    try {
+      const response = await fetch(`/api/admin/products?${query.toString()}`);
+
+      if (!response.ok) throw new Error('데이터 로딩 실패');
+
+      const result = await response.json();
+
+      if (result.data) {
+        setProducts(result.data.content);
+        setPager(result.data.pager);
+      }
+    } catch (error) {
+      console.error('Fetch Error', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
+
+  const handleTabChange = (statusValue) => {
+    setSearchParams((prev) => ({
+      ...prev,
+      status: statusValue,
+      page: 1,
+    }));
+  };
+
+  const handleDeleteYnChange = (e) => {
+    setSearchParams((prev) => ({
+      ...prev,
+      deleteYn: e.target.value,
+      page: 1,
+    }));
+  };
+
+  const handleSearchSubmit = (searchData) => {
+    setSearchParams((prev) => ({
+      ...prev,
+      ...searchData,
+      page: 1,
+    }));
+  };
+
+  const handlePageChange = (newPage) => {
+    setSearchParams((prev) => ({ ...prev, page: newPage }));
+  };
+
+  return (
+    <div className={styles.container}>
+      <h2>관리자 상품 관리</h2>
+
+      <TabMenus
+        tabs={STATUS_TABS}
+        activeStatus={searchParams.status}
+        onTabChange={handleTabChange}
+      />
+
+      <div className={styles.filterBar}>
+        <div />
+
+        <div className={styles.searchWrapper}>
+          <SearchBox
+            name="search"
+            options={SEARCH_OPTIONS}
+            initSelectValue=""
+            initKeyword=""
+            onSearch={handleSearchSubmit}
+          />
+        </div>
+
+        <div className={styles.radioGroup}>
+          {DELETE_YN_OPTIONS.map((opt) => (
+            <label key={opt.value} className={styles.radioLabel}>
+              <input
+                type="radio"
+                name="deleteYn"
+                value={opt.value}
+                checked={searchParams.deleteYn === opt.value}
+                onChange={handleDeleteYnChange}
+              />
+              {opt.label}
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <DataTable columns={columns} data={products} loading={loading} />
+      <Pagination pager={pager} onChangePage={handlePageChange} />
+    </div>
+  );
+}
