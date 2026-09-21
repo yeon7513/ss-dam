@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.ss_dam.admin.log.response.AdminActivity;
-import com.ss_dam.common.pager.PageQuery;
 import com.ss_dam.common.pager.PageResult;
 import com.ss_dam.market.dao.AdminProductDao;
 import com.ss_dam.market.model.filter.AdminProductSearchFilter;

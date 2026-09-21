@@ -6,6 +6,7 @@ import Slide from "../../../components/common/slide/Slide.jsx";
 import { IoHeartSharp } from "react-icons/io5";
 import styles from "./ProductDetail.module.scss";
 import Button from "../../../components/common/button/Button.jsx";
+import { useSubmitData } from "../../../hooks/useSubmitData.js";
 
 const ProductDetail = () => {
   const navigate = useNavigate();
@@ -15,18 +16,36 @@ const ProductDetail = () => {
 
   const detail = data || {};
 
+  const handleClickDeletePost = () => {
+    console.log("거래글 삭제");
+  }
+
+  // 거래 신청
+  const { handleSubmit, error: connectionError } = useSubmitData("/api/chat/rooms", "POST");
+  const handleTradeRequest = async () => {
+    const requestData = {
+      type: "DEAL",
+      targetCode: detail.code,
+      responderCode: detail.memberProfile.code,
+    }
+
+    const { data: roomId, success } = await handleSubmit(requestData);
+
+    if (success) {
+      navigate(`/chat?roomId=${roomId}`);
+    } else {
+      alert(connectionError);
+    }
+  }
+
+  console.log(detail);
+
   if (loading) {
     return <div>거래글 정보를 불러오고 있습니다.</div>
   }
 
   if (error) {
     return <div>에러가 발생했습니다. {error}</div>
-  }
-
-  console.log(detail);
-
-  const handleClickDeletePost = () => {
-    console.log("거래글 삭제");
   }
 
   return (
@@ -77,6 +96,10 @@ const ProductDetail = () => {
           <Button onClick={handleClickDeletePost}>삭제</Button>
         </div>
 
+        {/* 채팅 요청 */}
+        <div>
+          <Button onClick={() => handleTradeRequest()}>거래 신청</Button>
+        </div>
       </div>
     </main>
   );

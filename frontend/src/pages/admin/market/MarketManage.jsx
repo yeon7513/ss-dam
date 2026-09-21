@@ -1,59 +1,24 @@
 import { useCallback, useEffect, useState } from 'react';
-import DataTable from '../../components/common/data-table/DataTable';
-import TabMenus from '../../components/common/tab-menus/TabMenus';
-import Pagination from './../../components/common/pagination/Pagination';
-import SearchBox from './../../components/common/search-box/SearchBox';
+import { useNavigate } from 'react-router-dom';
+import DataTable from '../../../components/common/data-table/DataTable';
+import Pagination from '../../../components/common/pagination/Pagination';
+import SearchBox from '../../../components/common/search-box/SearchBox';
+import TabMenus from '../../../components/common/tab-menus/TabMenus';
 import styles from './MarketManage.module.scss';
 
-// status 탭
-const STATUS_TABS = [
-  { value: '', label: '전체 상태' },
-  { value: 'ACTIVE', label: '활성' },
-  { value: 'PRIVATE', label: '비공개' },
-  { value: 'BLINDED', label: '블라인드' },
-  { value: 'REPORTED', label: '신고됨' },
-  { value: 'DELETED', label: '삭제' },
-];
-
-// 활성화 여부 라디오 버튼
-const DELETE_YN_OPTIONS = [
-  { value: '0', label: '활성화' },
-  { value: '1', label: '비활성화' },
-];
-
-// SearchBox.jsx 컴포넌트
-const SEARCH_OPTIONS = [
-  { code: '', name: '전체 검색' },
-  { code: 'title', name: '제목' },
-  { code: 'author', name: '작성자 아이디' },
-];
-
-// DataTable도 혹시 몰라서 컴포넌트로 빼 놓음
-const PRODUCT_COLUMNS = [
-  { header: '상품 코드', accessor: 'code' },
-  { header: '제품', accessor: 'title' },
-  {
-    header: '가격',
-    render: (item) => `${item.price?.toLocaleString()}원`,
-  },
-  {
-    header: '작성자 ID',
-    render: (item) => `${item.m_id || item.createdBy || '-'}`,
-  },
-  { header: '상태', accessor: 'status' },
-  {
-    header: '활성화여부',
-    render: (item) =>
-      `${item.deleteYn === true || item.deleteYn === 'Y' || item.deleteYn === 1 ? '비활성화' : '활성화'}`,
-  },
-  {
-    header: '등록일',
-    render: (item) =>
-      item.createdAt ? new Date(item.createdAt).toLocaleDateString() : '-',
-  },
-];
+// 코드가 너무 길어져서 MarketManage.constants.jsx로 뺐음
+import {
+  DELETE_YN_OPTIONS,
+  SEARCH_OPTIONS,
+  STATUS_TABS,
+  getProductColumns,
+} from './MarketManage.constants';
 
 export default function MarketManage() {
+  const navigate = useNavigate();
+
+  const columns = getProductColumns(navigate);
+
   const [products, setProducts] = useState([]);
   const [pager, setPager] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -164,7 +129,7 @@ export default function MarketManage() {
         </div>
       </div>
 
-      <DataTable columns={PRODUCT_COLUMNS} data={products} loading={loading} />
+      <DataTable columns={columns} data={products} loading={loading} />
       <Pagination pager={pager} onChangePage={handlePageChange} />
     </div>
   );

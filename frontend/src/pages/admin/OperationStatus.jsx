@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
-import Card from "../../components/common/card/Card.jsx";
-import StatCard from "../../components/common/card/StatCard.jsx";
-import ChartCard from "../../components/common/card/ChartCard.jsx";
-import AdminLayout from "../../layout/AdminLayout.jsx";
+
+// 분리한 서브 컴포넌트들 import
+import DashboardHeader from "./OperationStatus/DashboardHeader.jsx";
+import SummaryStats from "./OperationStatus/SummaryStats.jsx";
+import AdminLogCard from "./OperationStatus/AdminLogCard.jsx";
+import PendingReports from "./OperationStatus/PendingReports.jsx";
+import DashboardCharts from "./OperationStatus/DashboardCharts.jsx";
+import RegionParticipation from "./OperationStatus/RegionParticipation.jsx";
+import TopSellers from "./OperationStatus/TopSellers.jsx";
+
 import styles from "./OperationStatus.module.scss";
-import { FaArrowsRotate } from "react-icons/fa6";
 
 const OperationStatus = () => {
   // 백엔드 요청에 필요한 기본 조회 기간 설정 (예: 이번 달 1일 ~ 오늘)
@@ -155,173 +160,37 @@ const OperationStatus = () => {
 
   return (
     <div className={styles.dashboardBody}>
-      {/* 페이지 타이틀 */}
-      <div className={styles.pageTitleRow}>
-        <h1>
-          운영 현황
-          <FaArrowsRotate
-            className={`${styles.refreshIcon} ${isSpinning ? styles.spinning : ""}`}
-            onClick={handleRefresh}
-            size={18}
-          />
-        </h1>
-        {/* 동적으로 업데이트되는 시각 바인딩 */}
-        <span className={styles.timeInfo}>{lastUpdated}</span>
-      </div>
+      {/* 대시보드헤더 컴포넌트*/}
+      <DashboardHeader
+        lastUpdated={lastUpdated}
+        handleRefresh={handleRefresh}
+        isSpinning={isSpinning}
+      />
 
       {/* 상단 2열 레이아웃 */}
       <div className={styles.topGrid}>
         <div className={styles.leftColumn}>
-          {/* 2x2 요약 카드 */}
-          <div className={styles.statsContainer}>
-            {summaryData.map((item, index) => (
-              <StatCard key={index} {...item} />
-            ))}
-          </div>
+          {/* 2x2 요약 카드 컴포넌트 */}
+          <SummaryStats summaryData={summaryData} />
 
-          {/* 관리자 활동 로그 카드 */}
-          <Card className={styles.logCard}>
-            <div className={styles.cardHeader}>
-              <h3>관리자 활동 로그 ↗</h3>
-            </div>
-            <ul className={styles.logList}>
-              {adminLogsData.map((log, index) => (
-                <li key={index}>{log}</li>
-              ))}
-            </ul>
-          </Card>
+          {/* 관리자 활동 로그 카드 컴포넌트 */}
+          <AdminLogCard adminLogsData={adminLogsData} />
         </div>
 
-        {/* 미처리 신고 카드 */}
-        <Card className={styles.reportCard}>
-          <div className={styles.cardHeader}>
-            <h3>미처리 신고 ↗</h3>
-          </div>
-          <table className={styles.reportTable}>
-            <thead>
-              <tr>
-                <th>날짜</th>
-                <th>회원 구분</th>
-                <th>사유</th>
-                <th>설명</th>
-              </tr>
-            </thead>
-            <tbody>
-              {pendingReportsData.map((item, index) => (
-                <tr key={index}>
-                  <td>{item.date}</td>
-                  <td>
-                    <div className={styles.userInfo}>
-                      <div className={styles.avatar}>👤</div>
-                      <div className={styles.userText}>
-                        <strong>{item.user}</strong>
-                        <small>{item.role}</small>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <span className={styles.badge}>{item.reason}</span>
-                  </td>
-                  <td className={styles.descTd}>{item.desc}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <div className={styles.pagination}>
-            <span>&lt; 처음</span>
-            <span>1</span>
-            <span className={styles.activePage}>2</span>
-            <span>3</span>
-            <span>4</span>
-            <span>5</span>
-            <span>...</span>
-            <span>11</span>
-            <span>마지막 &gt;</span>
-          </div>
-        </Card>
+        {/* 미처리 신고 카드 컴포넌트 */}
+        <PendingReports pendingReportsData={pendingReportsData} />
       </div>
 
-      {/* 중단 3열: 차트 레이아웃 */}
-      <div className={styles.middleGrid}>
-        <ChartCard
-          title="월간 신규 회원"
-          legends={[
-            { label: "올해", isDark: true },
-            { label: "지난해", isDark: false },
-          ]}
-        >
-          <span>[ 월간 신규 회원 차트 영역 ]</span>
-        </ChartCard>
-
-        <ChartCard
-          title="전체 챌린지 달성률"
-          legends={[
-            { label: "달성", isDark: true },
-            { label: "미달성", isDark: false },
-          ]}
-        >
-          <span>[ 달성률 도넛 차트 영역 (67%) ]</span>
-        </ChartCard>
-
-        <ChartCard
-          title="챌린지 인기 순위"
-          legends={[
-            { label: "높음", isDark: true },
-            { label: "낮음", isDark: false },
-          ]}
-        >
-          <span>[ 원형/방사형 차트 영역 ]</span>
-        </ChartCard>
-      </div>
+      {/* 중단 3열 차트 레이아웃 컴포넌트 */}
+      <DashboardCharts />
 
       {/* 하단 2열: 지역별 참여도 및 우수 판매자 */}
       <div className={styles.bottomGrid}>
-        <Card className={styles.bottomCard}>
-          <div className={styles.cardHeader}>
-            <h3>지역별 참여도</h3>
-          </div>
-          <ul className={styles.regionList}>
-            {participationData.map((reg, index) => (
-              <li key={index}>
-                <span>{reg.name}</span>
-                <div className={styles.regionVal}>
-                  <strong>{reg.percent}</strong>
-                  <small>{reg.count}</small>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </Card>
+        {/* 지역별 참여도 카드 컴포넌트 */}
+        <RegionParticipation participationData={participationData} />
 
-        <Card className={styles.bottomCard}>
-          <div className={styles.cardHeader}>
-            <h3>우수 판매자</h3>
-          </div>
-          <div className={styles.sellerFlex}>
-            <div className={styles.donutPlaceholder}>
-              <span>[ 판매자 차트 영역 ]</span>
-            </div>
-            <ul className={styles.sellerList}>
-              {topSellersData.map((seller, index) => (
-                <li key={index}>
-                  <span className={styles.sellerName}>
-                    <i className={styles.dot}></i> {seller.name}
-                  </span>
-                  <div className={styles.sellerVal}>
-                    <strong>{seller.value}</strong>
-                    <span
-                      className={
-                        seller.rate.startsWith("-") ? styles.minus : styles.plus
-                      }
-                    >
-                      {seller.rate}
-                    </span>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </Card>
+        {/* 우수 판매자 카드 컴포넌트 */}
+        <TopSellers topSellersData={topSellersData} />
       </div>
     </div>
   );

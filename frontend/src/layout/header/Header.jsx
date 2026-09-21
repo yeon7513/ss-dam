@@ -62,7 +62,7 @@ const Header = () => {
             {isLoggedIn ? (
               <>
                 <span className={styles.navItem}>
-                  <Link to="/myPage">마이페이지</Link>
+                  <Link to="/mypage">마이페이지</Link>
                 </span>
                 <span className={styles.divider}> | </span>
                 <span className={styles.navItem} onClick={handleLogOut}>
@@ -72,15 +72,15 @@ const Header = () => {
             ) : (
               <>
                 {/* <span className={styles.navItem}>
-                  <Link to="/myPage">마이페이지</Link>
+                  <Link to="/mypage">마이페이지</Link>
                   </span>
                   <span className={styles.divider}> | </span> */}
                 <span className={styles.navItem}>
-                  <Link to="/logIn">로그인</Link>
+                  <Link to="/login">로그인</Link>
                 </span>
                 <span className={styles.divider}> | </span>
                 <span className={styles.navItem}>
-                  <Link to="/signUp">회원가입</Link>
+                  <Link to="/signup">회원가입</Link>
                 </span>
               </>
             )}

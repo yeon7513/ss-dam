@@ -1,0 +1,269 @@
+/* ==========================================
+   1. 레이아웃 & 로딩
+   ========================================== */
+.admin-detail-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  font-size: 16px;
+  color: #6b7280;
+}
+
+.admin-detail-wrapper {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ==========================================
+   2. 헤더 섹션
+   ========================================== */
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+
+  h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #111827;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+}
+
+.code-tag {
+  font-size: 13px;
+  color: #2563eb;
+  background-color: #eff6ff;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.btn-back {
+  padding: 8px 16px;
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background-color: #f3f4f6;
+    border-color: #9ca3af;
+  }
+}
+
+/* ==========================================
+   3. 상단 요약 바 & 배지
+   ========================================== */
+.summary-bar {
+  display: flex;
+  gap: 16px;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px 24px;
+  margin-bottom: 24px;
+}
+
+.summary-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  .label {
+    font-size: 12px;
+    color: #6b7280;
+  }
+
+  .value {
+    font-size: 15px;
+    font-weight: 600;
+    color: #111827;
+  }
+}
+
+.status-badge {
+  display: inline-block;
+  width: fit-content;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+
+  &.status-active {
+    background-color: #dcfce7;
+    color: #15803d;
+  }
+  &.status-private {
+    background-color: #f3f4f6;
+    color: #4b5563;
+  }
+  &.status-blinded {
+    background-color: #fef3c7;
+    color: #b45309;
+  }
+  &.status-reported {
+    background-color: #fee2e2;
+    color: #b91c1c;
+  }
+  &.status-deleted {
+    background-color: #f3f4f6;
+    color: #9ca3af;
+  }
+}
+
+.active-badge {
+  display: inline-block;
+  width: fit-content;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+
+  &.active {
+    background-color: #dcfce7;
+    color: #15803d;
+  }
+  &.inactive {
+    background-color: #fee2e2;
+    color: #b91c1c;
+  }
+}
+
+/* ==========================================
+   4. 본문 그리드 & 카드
+   ========================================== */
+.detail-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+.card {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #1f2937;
+}
+
+.content-box {
+  min-height: 120px;
+  padding: 14px;
+  background-color: #f9fafb;
+  border: 1px solid #f3f4f6;
+  border-radius: 6px;
+  white-space: pre-wrap;
+  line-height: 1.6;
+  font-size: 14px;
+  color: #374151;
+}
+
+.image-gallery {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+
+  .no-data {
+    color: #9ca3af;
+    font-size: 14px;
+  }
+}
+
+.image-item {
+  width: 100px;
+  height: 100px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+
+/* ==========================================
+   5. 우측 관리자 조치 카드
+   ========================================== */
+.action-card {
+  position: sticky;
+  top: 20px;
+}
+
+.action-desc {
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 12px;
+}
+
+.reason-textarea {
+  width: 100%;
+  height: 120px;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  resize: none;
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-family: inherit;
+  box-sizing: border-box;
+
+  &:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+  }
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-action {
+  flex: 1;
+  padding: 10px 0;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &.btn-delete {
+    background-color: #ef4444;
+    color: #ffffff;
+
+    &:hover {
+      background-color: #dc2626;
+    }
+  }
+
+  &.btn-restore {
+    background-color: #2563eb;
+    color: #ffffff;
+
+    &:hover {
+      background-color: #1d4ed8;
+    }
+  }
+}
+
+/* 공통 강조 텍스트 */
+.danger-text {
+  color: #ef4444;
+  font-weight: 600;
+}

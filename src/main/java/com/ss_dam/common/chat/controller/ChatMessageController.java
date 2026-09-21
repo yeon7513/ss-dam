@@ -21,6 +21,11 @@ public class ChatMessageController {
   ChatService chatService;
   SimpMessagingTemplate messagingTemplate;
 
+  // SimpMessagingTemplate
+  // 웹소켓 환경에서 STOMP 프로토콜을 사용할 때,
+  // 서버에서 클라이언트로 실시간 메시지를 쉽게 전송할 수 있게 해주는 클래스
+  // 즉, convertAndSend() 메소드로 특정 경로를 구독한 클라이언트들에게 메시지를 전송하는 역할
+
   // @MessageMapping
   // 클라이언트가 특정 엔드포인트로 전송한 메시지를
   // 서버의 해당 메소드가 처리하도록 매핑을 진행하주는 어노테이션
@@ -48,12 +53,14 @@ public class ChatMessageController {
 
     // 메시지를 보낸 회원의 고유 번호 설정
     Long senderCode = (Long) sessionAttributes.get("code");
-    chatMessageCreate.setSenderCode(senderCode);
+
 
     // 전송된 메시지를 DB에 저장
-    ChatMessageView chatMessageView = chatService.registerChatMessage(chatMessageCreate);
+    // 단, DTO에 값을 세팅하는 로직은 서비스에서 수행함
+    ChatMessageView chatMessageView =
+        chatService.registerChatMessage(chatMessageCreate, senderCode);
 
-    String roomId = null;
+    String roomId = chatMessageCreate.getRoomId();
     // 해당 채팅방을 구독 중인 클라이언트들에게 실시간으로 전송
     String endpoint = "/sub/chat/room/" + roomId;
 

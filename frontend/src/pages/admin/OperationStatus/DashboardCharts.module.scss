@@ -1,0 +1,25 @@
+@use "/src/scss/variables.scss" as *;
+
+// 중단 차트 3열 레이아웃 Grid
+.middleGrid {
+  display: grid;
+  grid-template-columns: 793.5px 1fr 1fr;
+  gap: 20px;
+
+  :global(.chartCard) {
+    height: 300px;
+
+    .chartPlaceholder {
+      flex: 1;
+      //height: 280px;
+      border: 1px dashed $grayscale-20;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: $grayscale-50;
+      font-size: 1rem;
+      background-color: $background-5;
+    }
+  }
+}
