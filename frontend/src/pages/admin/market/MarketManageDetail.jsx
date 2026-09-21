@@ -22,6 +22,10 @@ export default function MarketManageDetail() {
       </div>
     );
 
+  const authorId = product?.createdBy || product?.memberProfile.id || "-";
+
+  const isDeleted = Boolean(product?.deleteYn);
+
   return (
     <div className={styles["admin-detail-wrapper"]}>
       {/* 헤더 */}
@@ -39,9 +43,7 @@ export default function MarketManageDetail() {
       <div className={styles["summary-bar"]}>
         <div className={styles["summary-item"]}>
           <span className={styles.label}>작성자 ID</span>
-          <span className={styles.value}>
-            {product.mId || product.m_id || "-"}
-          </span>
+          <span className={styles.value}>{authorId}</span>
         </div>
         <div className={styles["summary-item"]}>
           <span className={styles.label}>노출 상태</span>
@@ -55,10 +57,10 @@ export default function MarketManageDetail() {
           <span className={styles.label}>활성화 여부</span>
           <span
             className={`${styles["active-badge"]} ${
-              product.deleteYn === "0" ? styles.active : styles.inactive
+              !isDeleted ? styles.active : styles.inactive
             }`}
           >
-            {product.deleteYn === "0" ? "활성화" : "비활성화(삭제)"}
+            {!isDeleted ? "활성화" : "비활성화(삭제)"}
           </span>
         </div>
         <div className={styles["summary-item"]}>
@@ -114,12 +116,14 @@ export default function MarketManageDetail() {
               <button
                 className={`${styles["btn-action"]} ${styles["btn-delete"]}`}
                 onClick={handleDelete}
+                disabled={isDeleted}
               >
                 비활성화 (삭제)
               </button>
               <button
                 className={`${styles["btn-action"]} ${styles["btn-restore"]}`}
                 onClick={handleRestore}
+                disabled={!isDeleted}
               >
                 활성화 (복구)
               </button>
