@@ -41,8 +41,38 @@ import MyPage from "./pages/myPage/MyPage";
 import Points from "./pages/myPage/points/Points";
 import SupportDetail from "./pages/support/SupportDetail";
 import Supports from "./pages/support/Supports";
+import { useEffect } from "react";
 
 function App() {
+  useEffect(() => {
+    const checkAuthStauts = async () => {
+      if (!sessionStorage.getItem("userRole")) return;
+
+      try {
+        const response = await fetch("/api/auth/check", {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+
+          sessionStorage.setItem("userRole", result.data.role);
+          sessionStorage.setItem("userName", result.data.name);
+        } else {
+          sessionStorage.clear();
+
+          window.dispatchEvent(new Event("loginStateChanged"));
+          alert("세션이 만료되었습니다. 다시 로그인해 주세요.");
+
+          window.location.href = "/login";
+        }
+      } catch (err) {
+        console.error("세션 검증 통신 에러", err);
+      }
+    };
+    checkAuthStauts();
+  }, []);
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
