@@ -94,7 +94,6 @@ public class AdminMemberController {
                 @Valid @RequestBody MemberStatusChangeRequest request,
                 HttpSession session) {
                 
-                Login admin = requireAdmin(session);
 
                 adminMemberService.restrictMember(
                         memberCode,
@@ -175,8 +174,6 @@ public class AdminMemberController {
                 @ModelAttribute PageQuery pageQuery,
                 HttpSession session) {
 
-        // 기존 관리자 권한 확인 메서드 사용
-        requireAdmin(session);
 
         AdminMemberFeedsView result =
                 adminMemberService.loadMemberFeeds(memberCode, pageQuery);
@@ -192,9 +189,6 @@ public class AdminMemberController {
                 @PathVariable Long memberCode,
                 @ModelAttribute PageQuery pageQuery,
                 HttpSession session) {
-
-                //기존 관리자 권한 확인 메서드 재사용
-                requireAdmin(session);
 
                 AdminMemberReportsView result = 
                         adminMemberService.loadMemberReports(memberCode, pageQuery);
@@ -220,7 +214,6 @@ public class AdminMemberController {
                 @ModelAttribute PageQuery pageQuery,
                 HttpSession session) {
 
-        requireAdmin(session);
 
         AdminMemberTradesView result =
                 adminMemberService.loadMemberTrades(memberCode, pageQuery);
@@ -236,7 +229,6 @@ public class AdminMemberController {
                 @ModelAttribute PageQuery pageQuery,
                 HttpSession session) {
 
-        requireAdmin(session);
 
         AdminMemberProofsView result =
                 adminMemberService.loadMemberProofs(memberCode, pageQuery);
