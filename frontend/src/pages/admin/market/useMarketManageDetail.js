@@ -89,6 +89,10 @@ export function useMarketManageDetail() {
         },
         { label: "거래 상태", value: product.dealStatus || "-" },
         {
+          label: "조회수",
+          value: `${product.hitcount?.toLocaleString() || 0}회`,
+        },
+        {
           label: "상품 신고 수",
           value: `${product.contProductReport ?? 0}건`,
           isDanger: true,

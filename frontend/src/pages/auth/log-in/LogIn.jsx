@@ -31,16 +31,30 @@ const LogIn = () => {
       if (response.ok) {
         const userRole = result.data.role;
         const userName = result.data.name;
+        const userCode = result.data.code;
 
         sessionStorage.setItem("userRole", userRole);
         sessionStorage.setItem("userName", userName);
 
+        sessionStorage.setItem(
+          "user",
+          JSON.stringify({
+            role: userRole,
+            name: userName,
+            code: userCode,
+            admCode: userRole !== "MEMBER" ? userCode : null,
+            memCode: userRole === "MEMBER" ? userCode : null,
+          }),
+        );
+
         window.dispatchEvent(new Event("loginStateChanged"));
 
         if (userRole !== "MEMBER") {
+          sessionStorage.setItem("admCode", userCode);
           alert("관리자 계정으로 로그인");
           navigate("/admin");
         } else {
+          sessionStorage.setItem("memCode", userCode);
           alert(`${userName}님 환영합니다!`);
           navigate("/");
         }

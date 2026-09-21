@@ -1,21 +1,14 @@
 import React from "react";
-import cn from "classnames";
 import { Outlet } from "react-router-dom";
 import AdminHeader from "../components/admin/AdminHeader";
+import AdminSidebar from "../components/admin/AdminSidebar";
 import styles from "./AdminLayout.module.scss";
 
-const AdminLayout = ({ sidebar, children, isFixed = true, className }) => {
+const AdminLayout = () => {
   return (
     <div className={styles.adminLayout}>
       {/* 사이드바 영역 */}
-      <div
-        className={
-          isFixed ? cn(styles.fixed, className) : cn(styles.sidebar, className)
-        }
-      >
-        {sidebar}
-        <ul>{children}</ul>
-      </div>
+      <AdminSidebar />
 
       {/* 우측 전체 영역 (헤더 + 메인 대시보드 콘텐츠) */}
       <div className={styles.mainContent}>

@@ -57,6 +57,20 @@ p {
   white-space: pre-line;
 }
 
+.logoArea {
+  > h1 {
+    font-family: $font-logo;
+    font-size: 28px;
+    font-weight: 800;
+    color: $point-60;
+    margin: 0;
+
+    a {
+      font-family: inherit;
+    }
+  }
+}
+
 /* media - desktop */
 @media screen and (min-width: 1024px) {
   :root {
