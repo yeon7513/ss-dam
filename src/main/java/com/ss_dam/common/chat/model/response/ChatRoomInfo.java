@@ -1,4 +1,4 @@
-package com.ss_dam.common.chat.model.core;
+package com.ss_dam.common.chat.model.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ss_dam.auth.member.MemberProfile;

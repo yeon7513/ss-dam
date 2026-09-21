@@ -1,5 +1,6 @@
 import React from 'react';
-import ChatBubble from "../chat-bubble/ChatBubble.jsx";
+import ChatBubble from "./chat-bubble/ChatBubble.jsx";
+import TextInput from "../../forms/text-input/TextInput.jsx";
 
 function ChatMessages({ messages, onSend }) {
   return (
@@ -8,8 +9,7 @@ function ChatMessages({ messages, onSend }) {
         <ChatBubble key={idx} message={msg} />
       ))}
       <div>
-        <input
-          type="text"
+        <TextInput
           onChange={e => onSend(e.target.value)}
         />
       </div>

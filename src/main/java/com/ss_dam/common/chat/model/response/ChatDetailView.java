@@ -1,7 +1,5 @@
 package com.ss_dam.common.chat.model.response;
 
-import com.ss_dam.common.chat.model.core.ChatRoomInfo;
-
 import java.util.List;
 
 // 컨트롤러에서 ChatMessageView를 리스트로 받지 않고

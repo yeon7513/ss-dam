@@ -38,6 +38,8 @@ import Supports from "./pages/support/Supports";
 import AdminRoute from "./components/common/admin/AdminRoute";
 import FeedUpdate from "./pages/feed/feed-update/FeedUpdate.jsx";
 import ProductUpdate from "./pages/market/product-update/ProductUpdate.jsx";
+import Chat from "./pages/chat/Chat.jsx";
+import Error from "./pages/error/Error.jsx";
 
 function App() {
   return (
@@ -119,6 +121,13 @@ function App() {
           <Route path="challenge_manage" element={<ChallengeManage />} />
         </Route>
       </Route>
+
+      {/* 채팅 페이지 */}
+      <Route path="/chat" element={<Chat />} />
+
+      {/* 에러 페이지 */}
+      <Route path="/error/:errCode" element={<Error />} />
+      <Route path="*" element={<Navigate to="/error/404" replace />} />
     </Routes>
   );
 }

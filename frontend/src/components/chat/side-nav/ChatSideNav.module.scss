@@ -1,0 +1,12 @@
+@use "/src/scss/variables.scss" as *;
+@use "/src/scss/mixin.scss" as mix;
+
+.sideNav {
+  width: 23%;
+  min-width: fit-content;
+
+  // 프로필 이미지 크기 임시 코딩
+  img {
+    width: 50px;
+  }
+}

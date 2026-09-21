@@ -1,7 +1,5 @@
 package com.ss_dam.common.chat.model.response;
 
-import com.ss_dam.common.chat.model.core.ChatRoomInfo;
-
 // 채팅방 목록 DTO
 public class ChatRoomView {
   private Long code; // 채팅방 고유 번호 (PK, 개발 전용)

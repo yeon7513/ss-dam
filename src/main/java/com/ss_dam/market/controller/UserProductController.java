@@ -44,6 +44,8 @@ public class UserProductController {
   @GetMapping("/{prodCode}")
   ResponseEntity<ApiResponse<ProductDetail>> findProductDetailByProdCode(
       @PathVariable Long prodCode, HttpSession session) {
+
+    // 로그인한 사용자의 Pick 여부를 받아오기 위해 세션에서 로그인 정보를 가져옴.
     Login loginUser = (Login) session.getAttribute("loginUser");
     Long memberCode = (loginUser != null) ? loginUser.getCode() : null;
 
@@ -107,6 +109,11 @@ public class UserProductController {
     //          .body(ApiResponse.fail("수정 권한이 없습니다."));
     //    }
 
+    //    Long memberCode = (loginUser != null) ? loginUser.getCode() : null;
+    //    String updatedBy = (loginUser != null) ? loginUser.getMemberId() : null;
+    //    productUpdate.setMemCode(memberCode);
+    //    productUpdate.setUpdatedBy(updatedBy);
+
     // 임시로 하드 코딩 -> 나중에 삭제할 것!!
     productUpdate.setMemCode(1L);
     productUpdate.setUpdatedBy("user01");
@@ -132,7 +139,7 @@ public class UserProductController {
     //      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponse.fail("삭제 권한이 없습니다."));
     //    }
     //
-    //    String updatedBy = loginUser.getMemberId();
+    //    String updatedBy = (loginUser != null) ? loginUser.getMemberId() : null;
 
     // 임시로 하드코딩
     String updatedBy = "user01";

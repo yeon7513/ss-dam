@@ -1,13 +1,16 @@
 package com.ss_dam.common.chat.dao;
 
+import com.ss_dam.common.chat.model.filter.ChatRoomSearchFilter;
 import com.ss_dam.common.chat.model.request.ChatMessageCreate;
 import com.ss_dam.common.chat.model.request.ChatRoomRequest;
 import com.ss_dam.common.chat.model.response.ChatDetailView;
 import com.ss_dam.common.chat.model.response.ChatMessageView;
+import com.ss_dam.common.chat.model.response.ChatRoomView;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -31,6 +34,16 @@ public class ChatDaoImpl implements ChatDao {
   @Override
   public ChatDetailView loadChatMessages(Map<String, Object> params) {
     return sql.selectOne("chatView.loadChatMessages", params);
+  }
+
+  @Override
+  public List<ChatRoomView> loadChatRoomsByMemberCode(Map<String, Object> params) {
+    return sql.selectList("chatView.loadChatRoomsByMemberCode", params);
+  }
+
+  @Override
+  public float loadChatRoomsTotalCount(ChatRoomSearchFilter filter) {
+    return sql.selectOne("chatView.loadChatRoomsTotalCount", filter);
   }
 
   // 신규 채팅방 저장

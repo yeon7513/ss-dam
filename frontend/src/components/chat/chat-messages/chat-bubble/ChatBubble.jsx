@@ -1,8 +1,8 @@
 import React from 'react';
 
-function ChatBubble(props) {
+function ChatBubble({ message }) {
   return (
-    <div></div>
+    <div>{message}</div>
   );
 }
 
