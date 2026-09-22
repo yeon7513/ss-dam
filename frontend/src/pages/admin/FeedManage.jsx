@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { MdArrowForwardIos, MdSearch } from "react-icons/md";
 
-// 분리한 서브 컴포넌트들 import
 import DashboardHeader from "../../components/admin/DashboardHeader.jsx";
+import RadioInput from "../../components/forms/radio-input/RadioInput.jsx";
+import SelectBox from "../../components/forms/select-box/SelectBox.jsx";
+import TextInput from "../../components/forms/text-input/TextInput.jsx";
 
 import styles from "./FeedManage.module.scss";
 
@@ -26,7 +29,7 @@ const FeedManage = () => {
     startDate: "",
     endDate: "",
     category: "",
-    likeCount: "",
+    likeCount: "POPULAR",
     region: "",
     keyword: "",
   });
@@ -73,13 +76,13 @@ const FeedManage = () => {
       <DashboardHeader
         title="피드 목록"
         lastUpdated={lastUpdated}
-        handleRefresh={handleRefresh}
         isSpinning={isSpinning}
+        handleRefresh={handleRefresh}
       />
 
       {/* 메인 컨텐츠 영역 (흰색 박스) */}
       <div className={styles.mainContainer}>
-        {/* ① StatusTab (상태 탭) */}
+        {/* StatusTab (상태필터탭) */}
         <div className={styles.statusTab}>
           {TAB_LIST.map((tab) => (
             <button
@@ -95,65 +98,89 @@ const FeedManage = () => {
           ))}
         </div>
 
-        {/* ② FilterBar (상세 필터바) */}
+        {/* FilterBar (필터바) */}
         <div className={styles.filterBar}>
+          {/* 작성일 선택기 */}
           <div className={styles.datePickerGroup}>
-            <input
-              type="date"
+            <TextInput
               name="startDate"
+              type="date"
               value={filters.startDate}
               onChange={handleFilterChange}
             />
-            <span>⇒</span> {/* ⇒ 밤티화살표 수정 예정 */}
-            <input
-              type="date"
+            <span>
+              <MdArrowForwardIos />
+            </span>
+
+            <TextInput
               name="endDate"
+              type="date"
               value={filters.endDate}
               onChange={handleFilterChange}
             />
           </div>
 
-          <select
+          {/* 챌린지 카테고리 */}
+          <SelectBox
             name="category"
-            value={filters.category}
+            className={styles.categorySelect}
+            selectedValue={filters.category}
+            placeholder={"챌린지 카테고리"}
+            options={[
+              { code: "13", name: "클린 거래 매너 온도 높이기 릴레이" },
+              { code: "8", name: "여름 맞이 첫 중고거래 인증 이벤트" },
+            ]}
             onChange={handleFilterChange}
-          >
-            <option value="">챌린지 카테고리</option>
-            <option value="A">챌린지 A</option>
-          </select>
+          />
 
-          <select
-            name="likeCount"
-            value={filters.likeCount}
-            onChange={handleFilterChange}
-          >
-            <option value="">좋아요 수</option>
-            <option value="HIGH">많은 순</option>
-          </select>
-
-          <select
-            name="region"
-            value={filters.region}
-            onChange={handleFilterChange}
-          >
-            <option value="">지역</option>
-          </select>
-
-          <div className={styles.searchBox}>
-            <input
-              type="text"
-              name="keyword"
-              placeholder="검색"
-              value={filters.keyword}
+          {/* 인기순/최신순 세그먼트 버튼 */}
+          <div className={styles.radioGroup}>
+            <RadioInput
+              id="likeCount-popular"
+              name="likeCount"
+              label="인기순"
+              value="POPULAR"
+              isChecked={filters.likeCount === "POPULAR"}
+              onChange={handleFilterChange}
+            />
+            <RadioInput
+              id="likeCount-newest"
+              name="likeCount"
+              label="최신순"
+              value="NEWEST"
+              isChecked={filters.likeCount === "NEWEST"}
               onChange={handleFilterChange}
             />
           </div>
+
+          {/* 지역 카테고리 */}
+          <SelectBox
+            name="region"
+            selectedValue={filters.region}
+            placeholder={"지역"}
+            options={[
+              { code: "SEOUL", name: "서울특별시" },
+              { code: "DAEJEON", name: "대전광역시" },
+            ]}
+            onChange={handleFilterChange}
+          />
+
+          {/* 검색어 입력창 */}
+          <div className={styles.searchBox}>
+            <input
+              name="keyword"
+              type="text"
+              value={filters.keyword}
+              placeholder="검색어를 입력하세요."
+              onChange={handleFilterChange}
+            />
+            {/* 돋보기 아이콘 */}
+            <MdSearch className={styles.searchIcon} />
+          </div>
         </div>
 
-        {/* ③ FeedCardGrid (카드 목록 영역) */}
-        <div className={styles.feedCardGrid}>
-          {/* 팀장님이 제작한 FeedCard 컴포넌트를 import한 뒤 이곳에서 map으로 출력 */}
-        </div>
+        {/* FeedCardGrid (카드목록 영역) */}
+        <div className={styles.feedCardGrid}></div>
       </div>
     </div>
   );

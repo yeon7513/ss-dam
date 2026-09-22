@@ -1,189 +1,246 @@
 @use "/src/scss/variables.scss" as *;
 
-/* 공통 대시보드 레이아웃 뼈대 (운영현황 동일) */
+/* 공통 대시보드 레이아웃 뼈대 */
 .dashboardBody {
-  padding: 24px;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  padding: 24px;
 }
 
 /* 피드 관리 메인 컨테이너 (흰색 박스) */
 .mainContainer {
-  background-color: $color-white;
-  padding: 20px;
-  border: 1px solid $grayscale-20;
-  border-radius: 8px;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  padding: 20px;
+
+  border: 1px solid $grayscale-20;
+  border-radius: 8px;
+  background-color: $color-white;
 }
 
-/* 상태 필터 탭 영역 (전체 / 신고된 피드 / 일반 / 블라인드 / 삭제) */
+/* 상태필터탭 영역 */
 .statusTab {
   display: flex;
   gap: 20px;
-  border-bottom: 1px solid $grayscale-20;
   padding-bottom: 10px;
 
-  .tabBtn {
-    font-size: 1rem;
-    font-weight: 700;
-    color: $grayscale-50;
+  border-bottom: 1px solid $grayscale-20;
 
+  .tabBtn {
     display: flex;
+    position: relative;
     align-items: center;
     gap: 6px;
-    position: relative;
+
+    font-size: 1rem;
+    font-weight: 700;
+    color: $grayscale-90;
+
     transition: color 0.2s ease;
 
     &:hover {
       color: $primary-20;
     }
 
-    // 선택 시 선택된 글자색
     &.active {
-      font-weight: 700;
       color: $primary-40;
 
-      // 탭 밑줄 강조선
       &::after {
         content: "";
         position: absolute;
-        bottom: -11px; // statusTab의 border-bottom 위치와 맞춤
+        bottom: -11px;
+
         width: 100%;
         height: 2px;
+
         background-color: $primary-40;
       }
     }
 
-    // 신고 건수 알림 배지
     .badge {
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      padding: 4px 8px;
 
-      background-color: $dan-color;
-      color: $color-white;
       font-size: 0.75rem;
       font-weight: 700;
-      padding: 4px 8px;
-      border-radius: 100px;
       line-height: 1;
+      color: $color-white;
+
+      border-radius: 100px;
+      background-color: $dan-color;
     }
   }
 }
 
-/* 상세 조건 필터바 */
+/* 상세조건 필터바 */
 .filterBar {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  flex-wrap: nowrap;
-  gap: 12px;
+  gap: 10px;
 
-  /* 필터바 공통스타일 (날짜, 셀렉트, 검색창) */
-  input[type="date"],
-  select,
-  input[type="text"] {
-    width: 100%;
-    height: 3.4rem;
-    padding: 0 16px;
+  width: 100%;
 
-    font-size: 0.9rem;
-    font-weight: 400;
-    box-sizing: border-box;
-
-    border: 1.5px solid $point-20;
-    background-color: $color-white;
-    // @ 변경: 기본(선택 안 됨/초기) 글자색은 $grayscale-50으로 설정
-    color: $grayscale-50;
-
-    transition:
-      background-color 0.5s ease,
-      color 0.2s ease;
-
-    &::placeholder {
-      color: $grayscale-50;
-      font-weight: 400;
-      font-size: 0.9rem;
-    }
-
-    // @ 포커스 시 글자색 및 배경색 반응
-    &:focus {
-      border: 1.5px solid $point-20;
-      background-color: $point-5;
-      outline: none;
-      color: $grayscale-90;
-
-      &::placeholder {
-        color: $grayscale-90;
-      }
-    }
-  }
-
-  /* 작성일 기간 선택기 */
+  /* 작성일 선택기 */
   .datePickerGroup {
     display: flex;
+    flex-shrink: 0;
     align-items: center;
-    gap: 8px;
-    color: $grayscale-50;
-    font-size: 0.9rem;
+    gap: 6px;
 
     input[type="date"] {
       width: 150px;
-      cursor: pointer;
+      height: 3.4rem;
+      padding: 0 12px;
 
-      // @ 추가: 날짜 값이 선택되어 채워진 상태에서는 $grayscale-90 적용
+      font-size: 1rem;
+      font-weight: 400;
+
+      border: 1.5px solid $point-20;
+      background-color: $color-white;
+
       &:valid {
         color: $grayscale-90;
       }
-    }
-  }
 
-  /* 드롭다운 Select */
-  select {
-    min-width: 140px;
-    cursor: pointer;
-
-    // @ 추가: 드롭다운 옵션 목록 내부 글자색
-    option {
-      color: $grayscale-90;
-      background-color: $color-white;
-
-      // 첫 번째 안내 옵션(value="")은 $grayscale-50 유지
-      &[value=""] {
-        color: $grayscale-50;
+      &:focus {
+        background-color: $point-5;
       }
     }
 
-    // @ 추가: 실제 옵션을 선택한 경우(포커스 상태 포함) 글자색 $grayscale-90 적용
-    &:not([value=""]) {
-      color: $grayscale-90;
+    span {
+      color: $grayscale-50;
     }
   }
 
-  /* 검색어 입력창 (우측 정렬) */
+  /* 셀렉트박스 컴포넌트 영역 */
+  > div:not(.datePickerGroup):not(.searchBox),
+  select {
+    min-width: 9rem;
+    height: 3.4rem;
+
+    color: $grayscale-90; // 셀렉트박스 내부 글자색상
+
+    /* 셀렉트박스 내부 실제 input/select/button 요소 조절 */
+    select,
+    input,
+    button {
+      width: 100%;
+      height: 100%;
+
+      font-size: 1rem;
+
+      border: 1.5px solid $point-20;
+    }
+  }
+
+  /* 챌린지 카테고리 */
+  > div:nth-child(2) {
+    max-width: 300px;
+  }
+
+  /* 인기순/최신순 카테고리 */
+  .radioGroup {
+    display: inline-flex; // 내용물 및 패딩 크기에 맞춰 전체 너비 자동 조절
+    flex-shrink: 0;
+    align-items: center;
+
+    min-height: 40px; // 기본 높이 유지
+    padding: 3px; // 외곽 테두리와 내부 박스 간격
+
+    border: 1.5px solid $point-20;
+    background-color: $color-white;
+    overflow: hidden; // 배경 바깥으로 넘친 내용 숨김
+
+    > div {
+      display: flex;
+      flex: 1; // 두 라디오 버튼 영역을 1:1 동일한 비율로 확장
+      align-items: center;
+      align-self: stretch;
+
+      /* 라디오 버튼 동그라미 숨기기 */
+      input[type="radio"] {
+        position: absolute;
+
+        width: 0;
+        height: 0;
+
+        opacity: 0;
+      }
+
+      label {
+        display: flex;
+        flex: 1; // 라벨이 부모 영역을 100% 채우도록 설정
+        align-items: center;
+        justify-content: center;
+        padding: 13px 16px; // 박스 비율에 맞추어 유연하게 커지는 패딩
+
+        font-size: 1rem;
+        white-space: nowrap;
+
+        cursor: pointer; // 이거 없으면 일반화살표 커서로 나옴...
+        transition: all 0.2s ease;
+      }
+
+      /* 선택된 항목 (초록 배경) */
+      input[type="radio"]:checked + label {
+        font-weight: 700;
+        color: $point-60;
+
+        background-color: $point-5;
+      }
+    }
+  }
+
+  /* 지역 카테고리 */
+  > div:nth-child(4) {
+    max-width: 150px;
+  }
+
+  /* 검색어 입력창 (우측 나머지 공간 채움) */
   .searchBox {
-    margin-left: auto;
-    position: relative;
     display: flex;
+    position: relative;
+    flex: 1;
     align-items: center;
 
     input[type="text"] {
-      width: 46rem;
-      padding-right: 36px;
+      width: 100%;
+      height: 3.4rem;
+      padding: 0 12px;
 
-      // @ 추가: 검색어를 입력해 빈 값이 아닐 때 글자색 $grayscale-90 적용
-      &:not(:placeholder-shown) {
-        color: $grayscale-90;
+      font-size: 1rem;
+      font-weight: 400;
+
+      border: 1.5px solid $point-20;
+      background-color: $color-white;
+
+      transition:
+        background-color 0.5s ease,
+        color 0.2s ease;
+
+      &::placeholder {
+        color: $grayscale-50;
+      }
+
+      &:focus {
+        background-color: $point-5;
+
+        &::placeholder {
+          color: $point-60; // 클릭 시 '검색어를 입력하세요' 글자 색상 변경
+        }
       }
     }
-
+    // 돋보기아이콘
     .searchIcon {
       position: absolute;
       right: 12px;
+
       color: $grayscale-50;
+      font-size: 1.5rem; // 돋보기아이콘 사이즈
       pointer-events: none;
     }
   }
@@ -194,5 +251,6 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
+
   margin-top: 8px;
 }
