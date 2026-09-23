@@ -6,29 +6,39 @@ import { connectWebSocket, disconnectWebSocket, sendMessage, subscribeToChatRoom
 
 function ChatContainer({ roomId }) {
   const [messages, setMessages] = useState([]);
+  const [roomInfo, setRoomInfo] = useState(null);
+  const [productInfo, setProductInfo] = useState(null);
+
   const subscriptionRef = useRef(null);
 
-  console.log(messages);
-
   // 기존 과거 메시지 로그 받아오기
-  const { data: chatLog, loading, error } = useLoadData(roomId ? `/api/chat/rooms/${roomId}/messages` : null);
+  const { data: chatData, loading, error } = useLoadData(roomId ? `/api/chat/rooms/${roomId}/messages` : null);
 
   useEffect(() => {
-    if (chatLog && Array.isArray(chatLog)) {
-      setMessages(chatLog);
+    if (chatData) {
+      // 메시지 목록 배열 채우기
+      if (Array.isArray(chatData.messages)) {
+        setMessages(chatData.messages);
+      }
+      // 채팅방 상단 정보(상대방 프로필, 상품 thumbnail/title 등) 채우기
+      if (chatData.info) {
+        setRoomInfo(chatData.info);
+      }
+
+      // 거래 게시글이 있을 경우
+      if (chatData.productInfo) {
+        setProductInfo(chatData.productInfo);
+      }
     }
-  }, [chatLog]);
+  }, [chatData]);
 
   // 방이 변경될 때마다 대화 내역 블러오기 및 웹소켓 구독
   useEffect(() => {
     if (!roomId) {
-      console.log("roomId 없음..");
       return;
     }
 
-    console.log("useEffect 실행, roomId: ", roomId);
-
-// 웹소켓 연결 및 해당 채팅방 구독 시작
+    // 웹소켓 연결 및 해당 채팅방 구독 시작
     connectWebSocket(() => {
       // 이전 채팅방 구독 시 해제
       if (subscriptionRef.current) {
@@ -57,6 +67,7 @@ function ChatContainer({ roomId }) {
     };
   }, [roomId]);
 
+
   // 메시지 전송 핸들러
   const handleSendMessage = (inputText) => {
     if (!inputText.trim()) return;
@@ -81,6 +92,21 @@ function ChatContainer({ roomId }) {
 
   return (
     <div className={styles.container}>
+      <div className={styles.header}>
+        {roomInfo && (
+          <div>
+            <img src={roomInfo.profileImage} alt="" width={50} height={50} />
+            <span>{roomInfo.id}</span>
+          </div>
+        )}
+        {productInfo && (
+          <div>
+            <img src={productInfo.thumbnail} alt="" width={50} height={50} />
+            <span>{productInfo.title}</span>
+            <span>{productInfo.price.toLocaleString()}</span>
+          </div>
+        )}
+      </div>
       <ChatMessages messages={messages} onSend={handleSendMessage} />
     </div>
   );

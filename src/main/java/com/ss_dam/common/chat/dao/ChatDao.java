@@ -14,7 +14,7 @@ public interface ChatDao {
 
   void registerChatRoom(ChatRoomRequest chatRoomRequest);
 
-  Long registerChatMessage(ChatMessageCreate chatMessageCreate);
+  void registerChatMessage(ChatMessageCreate chatMessageCreate);
 
   ChatMessageView findChatMessageByCode(Long newMessageCode);
 
@@ -27,4 +27,6 @@ public interface ChatDao {
   List<ChatRoomView> loadChatRoomsByMemberCode(Map<String, Object> params);
 
   float loadChatRoomsTotalCount(ChatRoomSearchFilter filter);
+
+  Long findReceiverCodeByRoomId(Map<String, Object> params);
 }

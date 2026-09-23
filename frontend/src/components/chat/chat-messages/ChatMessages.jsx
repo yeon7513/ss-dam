@@ -1,6 +1,7 @@
 import React from 'react';
 import ChatBubble from "./chat-bubble/ChatBubble.jsx";
 import TextInput from "../../forms/text-input/TextInput.jsx";
+import styles from "./ChatMessages.module.scss";
 
 function ChatMessages({ messages, onSend }) {
 
@@ -9,8 +10,6 @@ function ChatMessages({ messages, onSend }) {
       e.preventDefault();
 
       const newMessage = e.target.value;
-
-      console.log("newMessage: ", newMessage);
 
       if (newMessage.trim() !== '') {
         onSend(newMessage);
@@ -21,11 +20,13 @@ function ChatMessages({ messages, onSend }) {
   }
 
   return (
-    <div>
-      {messages?.map((msg, idx) => (
-        <ChatBubble key={idx} message={msg} />
-      ))}
-      <div>
+    <div className={styles.content}>
+      <div className={styles.messageItems}>
+        {messages?.map((msg, idx) => (
+          <ChatBubble key={idx} message={msg} />
+        ))}
+      </div>
+      <div className={styles.textInput}>
         <TextInput
           type="text"
           name="message"
