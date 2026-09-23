@@ -57,6 +57,7 @@ function App() {
         if (response.ok) {
           const result = await response.json();
 
+          sessionStorage.setItem("userCode", result.data.code);
           sessionStorage.setItem("userRole", result.data.role);
           sessionStorage.setItem("userName", result.data.name);
         } else {

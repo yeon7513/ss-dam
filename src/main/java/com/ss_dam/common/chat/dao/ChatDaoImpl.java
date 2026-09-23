@@ -46,6 +46,11 @@ public class ChatDaoImpl implements ChatDao {
     return sql.selectOne("chatView.loadChatRoomsTotalCount", filter);
   }
 
+  @Override
+  public Long findReceiverCodeByRoomId(Map<String, Object> params) {
+    return sql.selectOne("chatView.findReceiverCodeByRoomId", params);
+  }
+
   // 신규 채팅방 저장
   @Override
   public void registerChatRoom(ChatRoomRequest chatRoomRequest) {
@@ -54,8 +59,8 @@ public class ChatDaoImpl implements ChatDao {
 
   // 신규 채팅 메시지 저장
   @Override
-  public Long registerChatMessage(ChatMessageCreate chatMessageCreate) {
-    return (long) sql.insert("chatCommand.registerChatMessage", chatMessageCreate);
+  public void registerChatMessage(ChatMessageCreate chatMessageCreate) {
+    sql.insert("chatCommand.registerChatMessage", chatMessageCreate);
   }
 
   // 기존 채팅 메시지 찾기

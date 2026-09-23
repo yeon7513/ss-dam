@@ -16,4 +16,6 @@ public interface ChatService {
   ChatDetailView loadChatMessages(String roomId, Long memberCode);
 
   PageResult<ChatRoomView> loadChatRoomsByMemberCode(Long memberCode, ChatRoomSearchFilter filter);
+
+  Long findReceiverCodeByRoomId(String roomId, Long senderCode);
 }

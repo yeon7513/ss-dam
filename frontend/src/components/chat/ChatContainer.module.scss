@@ -2,5 +2,15 @@
 @use "/src/scss/mixin.scss" as mix;
 
 .container {
+  position: relative;
   flex: 2;
+  height: 100%;
+  overflow: hidden;
+
+  .header {
+    position: fixed;
+    z-index: 50;
+    background-color: #fff;
+    border-bottom: 1px solid #ccc;
+  }
 }

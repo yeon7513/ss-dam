@@ -30,6 +30,7 @@ public class UserFeedDaoImpl implements UserFeedDao {
     return sql.selectOne("feedView.findFeedDetailByFeedCode", params);
   }
 
+  // 이 부분 수정할 것. code를 꺼내오는 곳은 서비스로 이동..
   @Override
   public Long registerFeed(FeedCreate feedCreate) {
     sql.insert("feedCommand.registerFeed", feedCreate);
