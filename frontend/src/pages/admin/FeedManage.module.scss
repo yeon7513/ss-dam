@@ -8,7 +8,7 @@
   padding: 24px;
 }
 
-/* 피드 관리 메인 컨테이너 (흰색 박스) */
+/* 피드 관리 메인 컨테이너 */
 .mainContainer {
   display: flex;
   flex-direction: column;
@@ -37,6 +37,9 @@
     font-size: 1rem;
     font-weight: 700;
     color: $grayscale-90;
+    background: none;
+    border: none;
+    cursor: pointer;
 
     transition: color 0.2s ease;
 
@@ -51,6 +54,7 @@
         content: "";
         position: absolute;
         bottom: -11px;
+        left: 0;
 
         width: 100%;
         height: 2px;
@@ -79,10 +83,37 @@
 /* 상세조건 필터바 */
 .filterBar {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 10px;
 
   width: 100%;
+
+  .filterRow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    width: 100%;
+
+    .categorySelect {
+      min-width: 9rem;
+      max-width: 20rem;
+      height: 3.4rem;
+
+      color: $grayscale-90;
+
+      select,
+      input,
+      button {
+        width: 100%;
+        height: 100%;
+
+        font-size: 1rem;
+
+        border: 1.5px solid $point-20;
+      }
+    }
+  }
 
   /* 작성일 선택기 */
   .datePickerGroup {
@@ -112,80 +143,52 @@
     }
 
     span {
+      display: inline-flex;
+      align-items: center;
       color: $grayscale-50;
     }
   }
 
-  /* 셀렉트박스 컴포넌트 영역 */
-  > div:not(.datePickerGroup):not(.searchBox),
-  select {
-    min-width: 9rem;
-    height: 3.4rem;
-
-    color: $grayscale-90; // 셀렉트박스 내부 글자색상
-
-    /* 셀렉트박스 내부 실제 input/select/button 요소 조절 */
-    select,
-    input,
-    button {
-      width: 100%;
-      height: 100%;
-
-      font-size: 1rem;
-
-      border: 1.5px solid $point-20;
-    }
-  }
-
-  /* 챌린지 카테고리 */
-  > div:nth-child(2) {
-    max-width: 300px;
-  }
-
-  /* 인기순/최신순 카테고리 */
+  /* 인기순/최신순 라디오 그룹 */
   .radioGroup {
-    display: inline-flex; // 내용물 및 패딩 크기에 맞춰 전체 너비 자동 조절
+    display: inline-flex;
     flex-shrink: 0;
     align-items: center;
 
-    min-height: 40px; // 기본 높이 유지
-    padding: 3px; // 외곽 테두리와 내부 박스 간격
+    min-height: 40px;
+    padding: 3px;
 
     border: 1.5px solid $point-20;
     background-color: $color-white;
-    overflow: hidden; // 배경 바깥으로 넘친 내용 숨김
+    overflow: hidden;
 
     > div {
       display: flex;
-      flex: 1; // 두 라디오 버튼 영역을 1:1 동일한 비율로 확장
+      flex: 1;
       align-items: center;
       align-self: stretch;
 
-      /* 라디오 버튼 동그라미 숨기기 */
       input[type="radio"] {
         position: absolute;
-
         width: 0;
         height: 0;
-
         opacity: 0;
       }
 
       label {
         display: flex;
-        flex: 1; // 라벨이 부모 영역을 100% 채우도록 설정
+        flex: 1;
         align-items: center;
         justify-content: center;
-        padding: 13px 16px; // 박스 비율에 맞추어 유연하게 커지는 패딩
+        padding: 13px 16px;
 
         font-size: 1rem;
         white-space: nowrap;
 
-        cursor: pointer; // 이거 없으면 일반화살표 커서로 나옴...
+        cursor: pointer;
         transition: all 0.2s ease;
       }
 
-      /* 선택된 항목 (초록 배경) */
       input[type="radio"]:checked + label {
         font-weight: 700;
         color: $point-60;
@@ -195,12 +198,7 @@
     }
   }
 
-  /* 지역 카테고리 */
-  > div:nth-child(4) {
-    max-width: 150px;
-  }
-
-  /* 검색어 입력창 (우측 나머지 공간 채움) */
+  /* 검색어 입력창 */
   .searchBox {
     display: flex;
     position: relative;
@@ -230,23 +228,142 @@
         background-color: $point-5;
 
         &::placeholder {
-          color: $point-60; // 클릭 시 '검색어를 입력하세요' 글자 색상 변경
+          color: $point-60;
         }
       }
     }
-    // 돋보기아이콘
+
     .searchIcon {
       position: absolute;
       right: 12px;
 
       color: $grayscale-50;
-      font-size: 1.5rem; // 돋보기아이콘 사이즈
+      font-size: 1.5rem;
       pointer-events: none;
+    }
+  }
+
+  /* 지역 입력 및 태그 박스 */
+  .regionInputContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+    height: 3.4rem;
+    padding: 0 12px;
+
+    border: 1.5px solid $point-20;
+    background-color: $color-white;
+
+    transition: background-color 0.2s ease;
+
+    &:focus-within {
+      background-color: $point-5;
+
+      .regionInput {
+        color: $point-60;
+
+        &::placeholder {
+          color: $point-60;
+        }
+      }
+    }
+
+    &:has(input:disabled) {
+      background-color: $grayscale-10;
+    }
+
+    .regionInput {
+      flex: 1;
+      min-width: 180px;
+      height: 100%;
+
+      font-size: 1rem;
+      color: $grayscale-90;
+
+      appearance: none;
+      border: 0;
+      outline: none;
+      background: transparent;
+      box-shadow: none;
+
+      &::placeholder {
+        color: $grayscale-50;
+      }
+
+      &:focus,
+      &:focus-visible {
+        border: 0;
+        outline: none;
+        background: transparent;
+        box-shadow: none;
+      }
+
+      &:disabled {
+        cursor: not-allowed;
+        color: $grayscale-50;
+        background: transparent;
+      }
+    }
+
+    .tagContainer {
+      display: flex;
+      flex-shrink: 0;
+      align-items: center;
+      gap: 6px;
+
+      max-width: 65%;
+      overflow-x: auto;
+      white-space: nowrap;
+
+      scrollbar-width: none;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      .regionTag {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 10px;
+
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: $point-60;
+
+        border: 1px solid $point-20;
+        border-radius: 100px;
+        background-color: $point-5;
+
+        white-space: nowrap;
+
+        .removeTagBtn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          padding: 0;
+          margin-left: 2px;
+
+          font-size: 1rem;
+          color: $point-60;
+
+          background: none;
+          border: none;
+          cursor: pointer;
+          transition: color 0.2s ease;
+
+          &:hover {
+            color: $dan-color;
+          }
+        }
+      }
     }
   }
 }
 
-/* 피드 카드 4열 그리드 레이아웃 */
+/* 피드 카드 4열 그리드 */
 .feedCardGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
