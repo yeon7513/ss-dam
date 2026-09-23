@@ -1,12 +1,5 @@
 package com.ss_dam.auth.member.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
-import com.ss_dam.admin.log.response.AdminActivity;
 import com.ss_dam.auth.login.Login;
 import com.ss_dam.auth.member.model.filter.AdminMemberSearchFilter;
 import com.ss_dam.auth.member.model.request.MemberStatusChangeRequest;
@@ -15,9 +8,13 @@ import com.ss_dam.auth.member.model.response.AdminMemberView;
 import com.ss_dam.auth.member.service.AdminMemberService;
 import com.ss_dam.common.ApiResponse;
 import com.ss_dam.common.pager.PageResult;
-
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 // - AdminMemberController -
 // 회원 목록·검색·상세, 이용 제한·해제, 처리 사유·이력
@@ -53,18 +50,6 @@ public class AdminMemberController {
 
   // 관리자 회원 상세 조회 ->AdminMemberDetailView 확인
   // 기능 구현은 피그마 관리자 대시보드 - 서비스 관리 - 회원정보 - 상세 페이지 참조
-
-
-         // 회원 이용 제한
-        @PatchMapping("/{memberCode}/restrict")
-        public ResponseEntity<ApiResponse<Void>> restrictMember(
-                @PathVariable Long memberCode,
-                @Valid @RequestBody MemberStatusChangeRequest request,
-                HttpSession session) {
-                
-
-                Login admin = requireAdmin(session);
-                }
 
 
   // 관리자 회원 상세 조회 — 기본 정보, 사진, 요약 통계
@@ -124,47 +109,6 @@ public class AdminMemberController {
 
     return user;
   }
-
-
-  // 회원 관리 처리 이력 조회
-  //admin/log/response/AdminActivity DTO 사용
-  @GetMapping("/{memberCode}/logs")
-  public ResponseEntity<ApiResponse<PageResult<AdminActivity>>> loadMembersLogs(
-      @PathVariable Long memberCode, @ModelAttribute PageQuery pageQuery) {
-
-    PageResult<AdminActivity> logs = adminMemberService.loadMemberLogs(memberCode, pageQuery);
-    return ResponseEntity.ok(ApiResponse.success("회원 관리 처리 이력 조회 성공", logs));
-  }
-
-  // 관리자 회원 상세 - 작성 피드 탭
-  // 해당 회원의 피드 목록과 전체 등록·좋아요·조회수 통계 반환
-  @GetMapping("/{memberCode}/feeds")
-  public ResponseEntity<ApiResponse<AdminMemberFeedsView>> loadMemberFeeds(
-      @PathVariable Long memberCode, @ModelAttribute PageQuery pageQuery, HttpSession session) {
-
-    // 기존 관리자 권한 확인 메서드 사용
-    requireAdmin(session);
-
-    AdminMemberFeedsView result = adminMemberService.loadMemberFeeds(memberCode, pageQuery);
-
-    return ResponseEntity.ok(ApiResponse.success("회원 작성 피드 조회 성공", result));
-  }
-
-  //관리자 회원 상세 - 신고내역 탭
-
-  @GetMapping("/{memberCode}/reports")
-  public ResponseEntity<ApiResponse<AdminMemberReportsView>> loadMemberReports(
-      @PathVariable Long memberCode, @ModelAttribute PageQuery pageQuery, HttpSession session) {
-
-    //기존 관리자 권한 확인 메서드 재사용
-    requireAdmin(session);
-
-    AdminMemberReportsView result = adminMemberService.loadMemberReports(memberCode, pageQuery);
-
-    return ResponseEntity.ok(ApiResponse.success("회원 신고내역 조회 성공", result));
-
-  }
-
 
   //우측 상단 통계 : 전체 신고 / 처리 대기 / 처리 완료
   //- 전체 신고: 모든 상태 포함
