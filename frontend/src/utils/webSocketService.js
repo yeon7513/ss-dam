@@ -11,13 +11,13 @@ export const connectWebSocket = (onConnectCallback, onErrorCallback) => {
     connectCallbacks.push(onConnectCallback);
   }
 
-  // 1. 이미 연결되어 있는 경우 -> 콜백 즉시 실행
+  // 이미 연결되어 있는 경우 -> 콜백 즉시 실행
   if (stompClient && stompClient.connected) {
     flushCallbacks();
     return;
   }
 
-  // 2. 이미 연결 진행 중인 경우 -> 큐에 등록되어 있으므로 대기
+  // 이미 연결 진행 중인 경우 -> 큐에 등록되어 있으므로 대기
   if (stompClient && stompClient.active) {
     return;
   }

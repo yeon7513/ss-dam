@@ -4,7 +4,6 @@ import com.ss_dam.auth.login.Login;
 import com.ss_dam.common.chat.model.request.ChatMessageCreate;
 import com.ss_dam.common.chat.model.response.ChatMessageView;
 import com.ss_dam.common.chat.service.ChatService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -19,11 +18,13 @@ import java.util.Map;
 @Controller
 public class ChatMessageController {
 
-  @Autowired
-  ChatService chatService;
+  private final ChatService chatService;
+  private final SimpMessagingTemplate messagingTemplate;
 
-  @Autowired
-  SimpMessagingTemplate messagingTemplate;
+  public ChatMessageController(ChatService chatService, SimpMessagingTemplate messagingTemplate) {
+    this.chatService = chatService;
+    this.messagingTemplate = messagingTemplate;
+  }
 
   // SimpMessagingTemplate
   // 웹소켓 환경에서 STOMP 프로토콜을 사용할 때,
