@@ -11,6 +11,7 @@ import MarketManage from "./pages/admin/market/MarketManage";
 import MarketManageDetail from "./pages/admin/market/MarketManageDetail.jsx";
 import OperationStatus from "./pages/admin/OperationStatus";
 import UserManage from "./pages/admin/user/UserManage.jsx";
+import UserManageDetail from './pages/admin/user/UserManageDetail';
 import FindId from "./pages/auth/find/FindId";
 import FindPassword from "./pages/auth/find/FindPassword";
 import LogIn from "./pages/auth/log-in/LogIn";
@@ -148,6 +149,7 @@ function App() {
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<OperationStatus />} />
           <Route path="user_manage" element={<UserManage />} />
+          <Route path="user_manage/:code" element={<UserManageDetail />} />
           <Route path="feed_manage" element={<FeedManage />} />
           <Route path="market_manage" element={<MarketManage />} />
           <Route path="market_manage/:code" element={<MarketManageDetail />} />

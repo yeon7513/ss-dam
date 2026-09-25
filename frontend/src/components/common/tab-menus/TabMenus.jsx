@@ -7,6 +7,7 @@ const TabMenus = ({ tabs, activeStatus, onTabChange, className }) => {
       {tabs.map((tab) => (
         <button
           key={tab.value}
+          aria-current={activeStatus === tab.value ? 'page' : undefined}
           className={activeStatus === tab.value ? styles.activeTab : styles.tab}
           onClick={() => onTabChange(tab.value)}
         >

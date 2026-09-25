@@ -1,4 +1,5 @@
 import styles from './MemberCard.module.scss';
+import { Link } from 'react-router-dom';
 
 // 등급별 아이콘
 const RATING_ICONS = {
@@ -16,7 +17,11 @@ export default function MemberCard({ member }) {
       : '-';
 
   return (
-    <article className={styles.card}>
+    <Link
+      to={`/admin/user_manage/${member.code}`}
+      className={styles.card}
+      aria-label={`${member.name || member.id} 회원 상세 보기`}
+    >
       {/* 프로필 사진 연결 전에는 기본 아이콘 표시 */}
       <div className={styles.avatar}>
         <svg
@@ -53,6 +58,6 @@ export default function MemberCard({ member }) {
           <p>마지막 로그인: {formatDate(member.loggedAt)}</p>
         </div>
       </div>
-    </article>
+     </Link>
   );
 }
