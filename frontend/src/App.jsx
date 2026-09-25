@@ -10,7 +10,7 @@ import FeedManage from "./pages/admin/FeedManage";
 import MarketManage from "./pages/admin/market/MarketManage";
 import MarketManageDetail from "./pages/admin/market/MarketManageDetail.jsx";
 import OperationStatus from "./pages/admin/OperationStatus";
-import UserManage from "./pages/admin/member/UserManage";
+import UserManage from "./pages/admin/user/UserManage.jsx";
 import FindId from "./pages/auth/find/FindId";
 import FindPassword from "./pages/auth/find/FindPassword";
 import LogIn from "./pages/auth/log-in/LogIn";

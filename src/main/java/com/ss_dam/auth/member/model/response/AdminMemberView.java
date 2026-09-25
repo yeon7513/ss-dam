@@ -25,6 +25,7 @@ public class AdminMemberView {
     private Integer rating;           // 등급
     private Integer ranking;          // 랭킹
     private LocalDateTime createdAt;   // 가입일
+    private LocalDateTime loggedAt;    //최근 접속일
     private Boolean deleteYn;         // 삭제 여부
 
     public Long getCode() {
@@ -89,6 +90,14 @@ public class AdminMemberView {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getLoggedAt() {
+        return loggedAt;
+    }
+
+    public void setLoggedAt(LocalDateTime loggedAt) {
+        this.loggedAt = loggedAt;
     }
 
     public Boolean getDeleteYn() {

@@ -3,29 +3,29 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // 공통 UI 컴포넌트
-import DataTable from '../../../components/common/data-table/DataTable';
 import Pagination from '../../../components/common/pagination/Pagination';
-import SearchBox from '../../../components/common/search-box/SearchBox';
 import TabMenus from '../../../components/common/tab-menus/TabMenus';
+import MemberCard from '../../../components/admin/member-card/MemberCard';
+import UserManageFilters from './UserManageFilters';
+import DashboardHeader from '../OperationStatus/DashboardHeader';
 
 // 이 페이지에서 사용하는 스타일
 import styles from './UserManage.module.scss';
 
-// 검색 옵션, 상태 탭, 테이블 컬럼 설정은 별도 파일에서 관리
-import {
-  DELETE_YN_OPTIONS,
-  SEARCH_OPTIONS,
-  STATUS_TABS,
-  getMemberColumns,
-} from './UserManage.constants';
+// status 탭
+// NORMAL, SUSPENDED, SLEEP, WITHDRAW
+export const STATUS_TABS = [
+    { value : "", label: "전체 상태" },
+    { value : "NORMAL", label: "일반" },
+    { value : "SUSPENDED", label: "정지" },
+    { value : "SLEEP", label: "휴면" },
+    { value : "WITHDRAWN", label: "탈퇴" },
+];
 
 export default function UserManage() {
   // 다른 페이지로 이동할 때 사용하는 함수
   const navigate = useNavigate();
 
-  // 회원 테이블의 컬럼 설정 생성
-  // 컬럼 내부에서 페이지 이동 기능을 사용할 수 있도록 navigate 전달
-  const columns = getMemberColumns(navigate);
 
   // 조회한 회원 목록
   const [members, setMembers] = useState([]);
@@ -36,14 +36,32 @@ export default function UserManage() {
   // 데이터 조회 중인지 나타내는 상태
   const [loading, setLoading] = useState(false);
 
+  //import DashboardHeader 기능 추가-> 새로고침 + 우측 상단 시간 계산 기능
+  const [currentTime, setCurrentTime] = useState(
+    () => `${new Date().toLocaleString('sv-SE')} 기준`
+  );
+
+  // 현재 시각을 1분마다 갱신
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(`${new Date().toLocaleString('sv-SE')} 기준`);
+    }, 60000);
+
+    return () => clearInterval(timer);
+  }, []);
+
   // 서버에 전달할 조회 조건
   const [searchParams, setSearchParams] = useState({
     page: 1,      // 현재 페이지
     perPage: 10,  // 페이지 당 회원수
     status: '',   // 회원 상태 필터
-    deleteYn: '', // 탈퇴&휴면 여부 필터
     search: '',   // 검색 대상 필드
     keyword: '',   // 검색어
+    joinedFrom: '',
+    joinedTo: '',
+    activityStatus: '',
+    regionCode: '',
+    rating: '',
   });
 
   /*회원 목록 조회 함수*/
@@ -110,14 +128,6 @@ export default function UserManage() {
     }));
   };
 
-  // 삭제 여부 라디오 버튼 선택 시 실행
-  const handleDeleteYnChange = (e) => {
-    setSearchParams((prev) => ({
-      ...prev,
-      deleteYn: e.target.value, // 선택한 라디오 버튼의 값
-      page: 1,
-    }));
-  };
 
   // SearchBox에서 검색을 제출하면 실행
   // searchData는 SearchBox가 전달하는 검색 조건 객체
@@ -137,66 +147,67 @@ export default function UserManage() {
     }));
   };
 
+  const handleFilterChange = (name, value) => {
+  setSearchParams((prev) => ({
+    ...prev,
+    [name]: value,
+    page: 1,
+  }));
+};
+
+//import DashboardHeader 기능 추가
+const handleRefresh = () => {
+  if (loading) return;
+
+  setCurrentTime(`${new Date().toLocaleString('sv-SE')} 기준`);
+  fetchMembers();
+};
+
   return (
     <div className={styles.container}>
-      <h2>관리자 회원 관리</h2>
-
-      {/* 상품 상태별 탭 */}
-      <TabMenus
-        tabs={STATUS_TABS}                  // 표시할 탭 목록
-        activeStatus={searchParams.status}  // 현재 선택한 상태
-        onTabChange={handleTabChange}       // 탭 선택 시 실행할 함수
-      />
-
-      {/*검색창과 삭제 여부 필터를 배치하는 영역*/}
-      <div className={styles.filterBar}>
-
-        {/* 빈 요소: 구체적인 배치 역할은 SCSS 설정에 따라 결정 */}
-        {/* 내용이 없는 HTML 요소지만 CSS Grid에서는 하나의 칸을 차지하는 요소 */}
-        <div/>
-
-        <div className={styles.searchWrapper}>
-        {/* 검색창 : 검색 대상 선택과 검색어 입력 */}
-        <SearchBox
-          name="search"
-          options={SEARCH_OPTIONS} // 검색 대상 옵션 목록
-          initSelectValue=""       // 초기 선택값
-          initKeyword=""           // 초기 검색어
-          onSearch={handleSearchSubmit}
-        />
+       {/* 제목 + 새로고침 + 현재 시각 */}
+        <div className={styles.header}>
+          <DashboardHeader
+            title="관리자 회원 관리"
+            lastUpdated={currentTime}
+            isSpinning={loading}
+            handleRefresh={handleRefresh}
+          />
         </div>
 
-        {/* 라디오 버튼 : 삭제 여부 선택 영역 */}
-          <div className={styles.radioGroup}>
-          {DELETE_YN_OPTIONS.map((opt) => (
-            <label key={opt.value} className={styles.radioLabel}>
-              <input
-                type="radio"
-                name="deleteYn" // 같은 name으로 하나의 선택 그룹 구성
-                value={opt.value}
-                // 현재 조회 조건과 같은 값을 가진 버튼을 선택 표시
-                checked={searchParams.deleteYn === opt.value}
-                onChange={handleDeleteYnChange}
-              />
-              {opt.label}
-            </label>
+      {/* 회원 상태 탭 */}
+      <TabMenus
+        className={styles.tabs}
+        tabs={STATUS_TABS}
+        activeStatus={searchParams.status}
+        onTabChange={handleTabChange}
+      />
+
+      {/* 날짜·드롭다운·검색창 */}
+      <UserManageFilters
+        filters={searchParams}
+        onFilterChange={handleFilterChange}
+        onSearch={handleSearchSubmit}
+      />
+
+      {/* 회원 카드 목록 */}
+      {loading ? (
+        <p>회원 목록을 불러오는 중입니다.</p>
+      ) : members.length === 0 ? (
+        <p>조회된 회원이 없습니다.</p>
+      ) : (
+        <div className={styles.memberGrid}>
+          {members.map((member) => (
+            <MemberCard key={member.code} member={member} />
           ))}
         </div>
-      </div>
+      )}
 
-      {/* 상품 목록 표시 */}
-      <DataTable
-        columns={columns}
-        data={members}
-        loading={loading}
-      />
-
-      {/* 페이지 이동 UI */}
+      {/* 페이지 이동 */}
       <Pagination
         pager={pager}
         onChangePage={handlePageChange}
       />
     </div>
-  );
+  );  
 }
-

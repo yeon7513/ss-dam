@@ -1,0 +1,101 @@
+// 공통 FilterBar의 배치를 회원관리 화면에서 조정
+.filters.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin: 0 0 24px;
+
+  // 활동 상태·지역·등급이 남는 너비를 나눠 사용
+  > div:not(.dateRange) {
+    flex: 1 1 110px;
+    min-width: 0;
+  }
+
+  // 입력창과 선택창 높이 통일
+  input,
+  select {
+    width: 100%;
+    min-width: 0;
+    height: 40px;
+    box-sizing: border-box;
+    padding: 0 10px;
+    border: 1px solid #e2e6ec;
+    border-radius: 6px;
+    background: #f7f8fa;
+    font-size: 13px;
+    color: #374151;
+  }
+
+  select:disabled {
+    color: #929aa6;
+    cursor: not-allowed;
+  }
+
+  // 검색창의 기존 240px 고정 너비 해제
+  input[type='text'] {
+    width: 100%;
+  }
+}
+
+.dateRange {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1.5 1 300px;
+  min-width: 0;
+
+  > div {
+    flex: 1;
+    min-width: 0;
+  }
+
+  > span {
+    flex-shrink: 0;
+    color: #929aa6;
+  }
+}
+
+// 검색 대상 + 검색어 + 버튼
+.filters .search {
+  display: grid;
+  grid-template-columns: 90px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  flex: 2 1 320px;
+  min-width: 0;
+  margin: 0;
+
+  > div {
+    min-width: 0;
+  }
+
+  button {
+    height: 40px;
+    box-sizing: border-box;
+    padding: 0 14px;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 1200px) {
+  // 공간이 부족하면 검색창은 다음 줄 전체 사용
+  .filters .search {
+    flex-basis: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .dateRange {
+    flex-basis: 100%;
+  }
+
+  .filters.filters {
+    gap: 10px;
+  }
+
+  .filters .search {
+    grid-template-columns: 80px minmax(0, 1fr) auto;
+  }
+}

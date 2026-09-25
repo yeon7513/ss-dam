@@ -104,6 +104,7 @@
             m.RATING,
             m.RANKING,
             m.CREATED_AT,
+            m.LOGGED_AT,
             m.DELETE_YN
         FROM MEMBER_ACCOUNT m
 
