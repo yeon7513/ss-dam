@@ -46,7 +46,13 @@
                         AND m.DELETE_YN = 0
                     </when>
 
-                    <!-- 탈퇴를 soft delete로 관리하는 기준 -->
+                    <!-- 휴면 -->
+                    <when test="filter.status.name() ==  'SLEEP'">
+                        AND m.STATUS = 'SLEEP'
+                        AND m.DELETE_YN = 0
+                    </when>
+
+                    <!-- 탈퇴-->
                     <when test="filter.status.name() == 'WITHDRAWN'">
                         AND m.DELETE_YN = 1
                     </when>
@@ -96,6 +102,7 @@
             m.ADDRESS,
             m.STATUS,
             m.RATING,
+            m.RANKING,
             m.CREATED_AT,
             m.DELETE_YN
         FROM MEMBER_ACCOUNT m
