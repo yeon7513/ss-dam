@@ -26,10 +26,10 @@
 .activeTab {
   flex: 1;
   padding: 10px 0;
-  background-color: #279953;
+  background-color: var(--tab-active-bg, #279953);
   border: none;
-  border-right: 1px solid #279953;
-  color: #ffffff;
+  border-right: 1px solid var(--tab-active-bg, #279953);
+  color: var(--tab-active-color, #ffffff);
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;

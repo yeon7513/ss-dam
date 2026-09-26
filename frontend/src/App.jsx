@@ -11,7 +11,7 @@ import MarketManage from "./pages/admin/market/MarketManage";
 import MarketManageDetail from "./pages/admin/market/MarketManageDetail.jsx";
 import OperationStatus from "./pages/admin/OperationStatus";
 import UserManage from "./pages/admin/user/UserManage.jsx";
-import UserManageDetail from './pages/admin/user/UserManageDetail';
+import UserManageDetail from './pages/admin/user/user-manage-detail/UserManageDetail.jsx';
 import FindId from "./pages/auth/find/FindId";
 import FindPassword from "./pages/auth/find/FindPassword";
 import LogIn from "./pages/auth/log-in/LogIn";

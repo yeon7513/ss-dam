@@ -6,30 +6,23 @@
 // 제목과 탭 사이 간격
 .header {
   margin-bottom: 24px;
-
-  > div {
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  h1 {
-    margin: 0;
-    font-size: 24px;
-    line-height: 1.4;
-  }
-
-  // 헤더 오른쪽 시간
-  > div > span {
-    margin-left: auto;
-    font-size: 12px;
-    color: #87909d;
-    white-space: nowrap;
-  }
 }
 
-// 공통 탭의 기본 여백을 이 페이지에서 조정
+// 이 페이지의 탭 여백과 선택 색상
 .tabs.tabs {
   margin-bottom: 20px;
+
+  > :nth-child(3) {
+    --tab-active-bg: #facc15; // 노랑
+  }
+
+  > :nth-child(4) {
+    --tab-active-bg: #45aeba; // 하늘
+  }
+
+  > :nth-child(5) {
+    --tab-active-bg: #ff5e5e; // 빨강
+  }
 }
 
 // 회원 카드 목록
@@ -53,10 +46,6 @@
 
   .header {
     margin-bottom: 20px;
-
-    h1 {
-      font-size: 20px;
-    }
   }
 
   .memberGrid {

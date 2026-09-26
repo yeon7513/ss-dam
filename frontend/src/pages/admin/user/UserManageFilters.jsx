@@ -21,12 +21,38 @@ const RATING_OPTIONS = [
   { code: '5', name: '5등급' },
 ];
 
+// 지역 옵션
+const REGION_OPTIONS = [
+  { code: '서울', name: '서울특별시' },
+  { code: '부산', name: '부산광역시' },
+  { code: '대구', name: '대구광역시' },
+  { code: '인천', name: '인천광역시' },
+  { code: '광주', name: '광주광역시' },
+  { code: '대전', name: '대전광역시' },
+  { code: '울산', name: '울산광역시' },
+  { code: '세종', name: '세종특별자치시' },
+  { code: '경기', name: '경기도' },
+  { code: '강원', name: '강원특별자치도' },
+  { code: '충북', name: '충청북도' },
+  { code: '충남', name: '충청남도' },
+  { code: '전북', name: '전북특별자치도' },
+  { code: '전남', name: '전라남도' },
+  { code: '경북', name: '경상북도' },
+  { code: '경남', name: '경상남도' },
+  { code: '제주', name: '제주특별자치도' },
+];
+
+const ACTIVITY_OPTIONS = [
+  { code: 'WITHIN_7_DAYS', name: '최근 7일 접속' },
+  { code: 'BETWEEN_7_30_DAYS', name: '8~30일 전 접속' },
+  { code: 'OVER_30_DAYS', name: '30일 초과 미접속' },
+  { code: 'NEVER', name: '접속 기록 없음' },
+];
+
 export default function UserManageFilters({
   filters,
   onFilterChange,
   onSearch,
-  activityOptions = [],
-  regionOptions = [],
 }) {
   // 날짜·드롭다운의 이름과 선택값을 부모에게 전달
   const handleChange = (e) => {
@@ -60,24 +86,22 @@ export default function UserManageFilters({
         />
       </div>
 
-      {/* 활동 기준과 옵션을 정하기 전에는 비활성화 */}
+      {/* 활동 상태 (최근 접속일 기준) */}
       <SelectBox
         name="activityStatus"
         placeholder="활동 상태"
-        options={activityOptions}
+        options={ACTIVITY_OPTIONS}
         selectedValue={filters.activityStatus ?? ''}
         onChange={handleChange}
-        disabled={activityOptions.length === 0}
       />
 
-      {/* 지역 기준과 옵션을 정하기 전에는 비활성화 */}
+      {/* 지역 */}
       <SelectBox
         name="regionCode"
-        placeholder="지역"
-        options={regionOptions}
+        placeholder="전체 지역"
+        options={REGION_OPTIONS}
         selectedValue={filters.regionCode ?? ''}
         onChange={handleChange}
-        disabled={regionOptions.length === 0}
       />
 
       {/* 우선 백엔드에서 지원하는 등급 검색으로 구성 */}

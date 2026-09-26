@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import TabMenus from '../../../components/common/tab-menus/TabMenus';
-import Pagination from '../../../components/common/pagination/Pagination';
+import TabMenus from '../../../../components/common/tab-menus/TabMenus';
+import Pagination from '../../../../components/common/pagination/Pagination';
 import styles from './MemberActivityPanel.module.scss';
 
 const TABS = [

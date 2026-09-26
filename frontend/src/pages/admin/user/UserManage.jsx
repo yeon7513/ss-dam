@@ -1,6 +1,6 @@
-
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 
 // 공통 UI 컴포넌트
 import Pagination from '../../../components/common/pagination/Pagination';
@@ -24,6 +24,9 @@ export const STATUS_TABS = [
 
 export default function UserManage() {
   // 다른 페이지로 이동할 때 사용하는 함수
+
+
+  
   const navigate = useNavigate();
 
 
@@ -35,20 +38,13 @@ export default function UserManage() {
 
   // 데이터 조회 중인지 나타내는 상태
   const [loading, setLoading] = useState(false);
+  const [isSpinning, setIsSpinning] = useState(false);
 
   //import DashboardHeader 기능 추가-> 새로고침 + 우측 상단 시간 계산 기능
   const [currentTime, setCurrentTime] = useState(
     () => `${new Date().toLocaleString('sv-SE')} 기준`
   );
 
-  // 현재 시각을 1분마다 갱신
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(`${new Date().toLocaleString('sv-SE')} 기준`);
-    }, 60000);
-
-    return () => clearInterval(timer);
-  }, []);
 
   // 서버에 전달할 조회 조건
   const [searchParams, setSearchParams] = useState({
@@ -103,6 +99,13 @@ export default function UserManage() {
 
         // 페이지 정보 갱신 → Pagination에 반영
         setPager(result.data.pager);
+
+        //시간은 조회 성공 시에만 갱신하도록
+        setMembers(result.data.content);
+        setPager(result.data.pager);
+        setCurrentTime(`${new Date().toLocaleString('sv-SE')} 기준`);
+        
+        console.log("데이터 갱신 완료");
       }
     } catch (error) {
       // 요청 실패나 JSON 처리 중 발생한 오류를 콘솔에 출력
@@ -156,11 +159,18 @@ export default function UserManage() {
 };
 
 //import DashboardHeader 기능 추가
-const handleRefresh = () => {
-  if (loading) return;
+const handleRefresh = async () => {
+  if (loading || isSpinning) return;
 
-  setCurrentTime(`${new Date().toLocaleString('sv-SE')} 기준`);
-  fetchMembers();
+  setIsSpinning(true);
+
+  try {
+    await fetchMembers();
+  } finally {
+    setTimeout(() => {
+      setIsSpinning(false);
+    }, 1000);
+  }
 };
 
   return (
@@ -170,7 +180,7 @@ const handleRefresh = () => {
           <DashboardHeader
             title="관리자 회원 관리"
             lastUpdated={currentTime}
-            isSpinning={loading}
+            isSpinning={isSpinning}
             handleRefresh={handleRefresh}
           />
         </div>

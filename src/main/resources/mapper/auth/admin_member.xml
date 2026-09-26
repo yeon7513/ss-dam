@@ -21,13 +21,27 @@
     <sql id="memberSearchConditions">
         <where>
 
-            <!-- 아이디 검색 -->
+            <!-- 아이디 / 이름 / 연락처 검색 -->
             <if test="filter.keyword != null
-                      and filter.keyword.trim() != ''">
-                AND 
-                    m.ID LIKE CONCAT('%', #{filter.keyword}, '%')
-                    
-                
+                    and filter.keyword.trim() != ''">
+                <choose>
+                    <when test='filter.search == "name"'>
+                        AND m.NAME LIKE CONCAT('%', #{filter.keyword}, '%')
+                    </when>
+
+                    <when test='filter.search == "phone"'>
+                        AND REPLACE(m.PHONE, '-', '')
+                            LIKE CONCAT(
+                                '%',
+                                REPLACE(#{filter.keyword}, '-', ''),
+                                '%'
+                            )
+                    </when>
+
+                    <otherwise>
+                        AND m.ID LIKE CONCAT('%', #{filter.keyword}, '%')
+                    </otherwise>
+                </choose>
             </if>
 
             <!-- 회원 구분: null이면 전체 -->
@@ -76,6 +90,59 @@
                 AND m.RATING = #{filter.rating}
             </if>
 
+            <!-- 주소 기준 시·도 검색 -->
+            <if test="filter.regionCode != null and filter.regionCode != ''">
+                <choose>
+                    <when test='filter.regionCode == "충북"'>
+                        AND (m.ADDRESS LIKE '충북%' OR m.ADDRESS LIKE '충청북도%')
+                    </when>
+                    <when test='filter.regionCode == "충남"'>
+                        AND (m.ADDRESS LIKE '충남%' OR m.ADDRESS LIKE '충청남도%')
+                    </when>
+                    <when test='filter.regionCode == "전북"'>
+                        AND (m.ADDRESS LIKE '전북%' OR m.ADDRESS LIKE '전라북도%')
+                    </when>
+                    <when test='filter.regionCode == "전남"'>
+                        AND (m.ADDRESS LIKE '전남%' OR m.ADDRESS LIKE '전라남도%')
+                    </when>
+                    <when test='filter.regionCode == "경북"'>
+                        AND (m.ADDRESS LIKE '경북%' OR m.ADDRESS LIKE '경상북도%')
+                    </when>
+                    <when test='filter.regionCode == "경남"'>
+                        AND (m.ADDRESS LIKE '경남%' OR m.ADDRESS LIKE '경상남도%')
+                    </when>
+                    <otherwise>
+                        AND m.ADDRESS LIKE CONCAT(#{filter.regionCode}, '%')
+                    </otherwise>
+                </choose>
+            </if>
+            
+            <!-- 최근 접속 -->
+            <if test="filter.activityStatus != null
+                    and filter.activityStatus != ''">
+                <choose>
+                    <!-- 최근 7일 이내 -->
+                    <when test='filter.activityStatus == "WITHIN_7_DAYS"'>
+                        AND m.LOGGED_AT &gt;= DATE_SUB(NOW(), INTERVAL 7 DAY)
+                    </when>
+
+                    <!-- 7일 초과, 30일 이내 -->
+                    <when test='filter.activityStatus == "BETWEEN_7_30_DAYS"'>
+                        AND m.LOGGED_AT &lt; DATE_SUB(NOW(), INTERVAL 7 DAY)
+                        AND m.LOGGED_AT &gt;= DATE_SUB(NOW(), INTERVAL 30 DAY)
+                    </when>
+
+                    <!-- 30일 초과 -->
+                    <when test='filter.activityStatus == "OVER_30_DAYS"'>
+                        AND m.LOGGED_AT &lt; DATE_SUB(NOW(), INTERVAL 30 DAY)
+                    </when>
+
+                    <!-- 접속 기록 없음 -->
+                    <when test='filter.activityStatus == "NEVER"'>
+                        AND m.LOGGED_AT IS NULL
+                    </when>
+                </choose>
+            </if>
         </where>
     </sql>
 

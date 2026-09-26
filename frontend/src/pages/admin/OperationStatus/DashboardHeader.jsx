@@ -2,10 +2,10 @@ import React from "react";
 import { FaArrowsRotate } from "react-icons/fa6";
 import styles from "./DashboardHeader.module.scss";
 
-const DashboardHeader = ({ title = '운영 현황', lastUpdated, isSpinning, handleRefresh }) => {
+const DashboardHeader = ({ title = '운영 현황', lastUpdated, isSpinning, handleRefresh, className = "", }) => {
   return (
     // 페이지 타이틀
-    <div className={styles.pageTitleRow}>
+    <div className={`${styles.pageTitleRow} ${className ?? ""}`}>
       <h1>
         {title}
         <FaArrowsRotate
