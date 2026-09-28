@@ -1,4 +1,4 @@
-package com.ss_dam.auth.member.model.response;
+package com.ss_dam.challenge.model.response;
 
 import com.ss_dam.common.pager.PageResult;
 import com.ss_dam.feed.model.response.UserFeedView;

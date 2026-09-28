@@ -1,27 +1,23 @@
 package com.ss_dam.auth.member.enums;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
+// 회원에서 사용하는 status 값들의 집합
 public enum MemberStatus {
+    NORMAL("일반"),      // STATUS = 'ACTIVE', DELETE_YN = 0
+    SUSPENDED("정지"),   // STATUS = 'SUSPENDED', DELETE_YN = 0
+    SLEEP("휴면"),       // STATUS = 'SLEEP', DELETE_YN = 0
+    WITHDRAWN("탈퇴");   // DELETE_YN = 1
 
- // ALL → 상태·삭제 조건 없음
+    private final String label;
 
-  NORMAL("일반"),
-  //NORMAL    → STATUS = 'ACTIVE'    + DELETE_YN = 0
-
-  SUSPENDED("정지"),
-  //SUSPENDED → STATUS = 'SUSPENDED' + DELETE_YN = 0
-
-  WITHDRAWN("탈퇴");
-  //WITHDRAWN → DELETE_YN = 1
-
-     private final String description;
-
-    MemberStatus(String description) {
-        this.description = description;
+    MemberStatus(String label) {
+        this.label = label;
     }
 
-    public String getDescription() {
-        return description;
+		@JsonValue 
+    public String getLabel() {
+        return label;
     }
 }
-  
 

@@ -1,4 +1,4 @@
-package com.ss_dam.auth.member.model.response;
+package com.ss_dam.market.model.response;
 
 import java.time.LocalDateTime;
 

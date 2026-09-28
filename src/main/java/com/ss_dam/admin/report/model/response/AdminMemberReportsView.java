@@ -1,6 +1,5 @@
-package com.ss_dam.auth.member.model.response;
+package com.ss_dam.admin.report.model.response;
 
-import com.ss_dam.admin.report.model.response.ReportView;
 import com.ss_dam.common.pager.PageResult;
 
 //회원의 신고 통계 3개와 PageResult<ReportView>를 묶는 DTO

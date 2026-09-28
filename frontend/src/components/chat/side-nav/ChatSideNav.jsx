@@ -5,7 +5,8 @@ import { Link } from "react-router-dom";
 import styles from "./ChatSideNav.module.scss";
 import Sidebar from "../../../layout/sidebar/Sidebar.jsx";
 
-function ChatSideNav({ chatRooms }) {
+function ChatSideNav({ chatRooms, pager, activeRoomId, onClickChatRoom }) {
+
   return (
     <Sidebar className={styles.sideNav} isFixed={false}>
       <li>
@@ -18,7 +19,12 @@ function ChatSideNav({ chatRooms }) {
       </li>
 
       <li>
-        <ChatRoom room={chatRooms} />
+        <ChatRoom
+          rooms={chatRooms}
+          pager={pager}
+          activeRoomId={activeRoomId}
+          onClickChatRoom={onClickChatRoom}
+        />
       </li>
     </Sidebar>
   );

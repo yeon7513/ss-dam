@@ -2,20 +2,35 @@ import React, { useEffect, useRef, useState } from 'react';
 import ChatMessages from "./chat-messages/ChatMessages.jsx";
 import styles from "./ChatContainer.module.scss";
 import { useLoadData } from "../../hooks/useLoadData.js";
-import { connectWebSocket, sendMessage, subscribeToChatRoom } from "../../utils/webSocketService.js";
+import { connectWebSocket, disconnectWebSocket, sendMessage, subscribeToChatRoom } from "../../utils/webSocketService.js";
 
 function ChatContainer({ roomId }) {
   const [messages, setMessages] = useState([]);
+  const [roomInfo, setRoomInfo] = useState(null);
+  const [productInfo, setProductInfo] = useState(null);
+
   const subscriptionRef = useRef(null);
 
   // 기존 과거 메시지 로그 받아오기
-  const { data: chatLog, loading, error } = useLoadData(roomId ? `/api/chat/rooms/${roomId}/messages` : null);
+  const { data: chatData, loading, error } = useLoadData(roomId ? `/api/chat/rooms/${roomId}/messages` : null);
 
   useEffect(() => {
-    if (chatLog && Array.isArray(chatLog)) {
-      setMessages(chatLog);
+    if (chatData) {
+      // 메시지 목록 배열 채우기
+      if (Array.isArray(chatData.messages)) {
+        setMessages(chatData.messages);
+      }
+      // 채팅방 상단 정보(상대방 프로필, 상품 thumbnail/title 등) 채우기
+      if (chatData.info) {
+        setRoomInfo(chatData.info);
+      }
+
+      // 거래 게시글이 있을 경우
+      if (chatData.productInfo) {
+        setProductInfo(chatData.productInfo);
+      }
     }
-  }, [chatLog]);
+  }, [chatData]);
 
   // 방이 변경될 때마다 대화 내역 블러오기 및 웹소켓 구독
   useEffect(() => {
@@ -23,7 +38,7 @@ function ChatContainer({ roomId }) {
       return;
     }
 
-// 웹소켓 연결 및 해당 채팅방 구독 시작
+    // 웹소켓 연결 및 해당 채팅방 구독 시작
     connectWebSocket(() => {
       // 이전 채팅방 구독 시 해제
       if (subscriptionRef.current) {
@@ -31,17 +46,27 @@ function ChatContainer({ roomId }) {
       }
 
       // 새로 선택된 채팅방 구독 시작
-      subscriptionRef.current = subscribeToChatRoom(roomId, (newMessage) => {
+      const subscription = subscribeToChatRoom(roomId, (newMessage) => {
+        console.log("수신된 새 메시지: ", newMessage);
         setMessages((prevMessages) => [...prevMessages, newMessage]);
       });
+
+      if (subscription) {
+        console.log("subscription 객체 생성");
+        subscriptionRef.current = subscription;
+      } else {
+        console.warn("stompClient가 연결되지 않았습니다.");
+      }
     });
 
     return () => {
       if (subscriptionRef.current) {
         subscriptionRef.current.unsubscribe();
+        disconnectWebSocket();
       }
     };
   }, [roomId]);
+
 
   // 메시지 전송 핸들러
   const handleSendMessage = (inputText) => {
@@ -67,6 +92,21 @@ function ChatContainer({ roomId }) {
 
   return (
     <div className={styles.container}>
+      <div className={styles.header}>
+        {roomInfo && (
+          <div>
+            <img src={roomInfo.profileImage} alt="" width={50} height={50} />
+            <span>{roomInfo.id}</span>
+          </div>
+        )}
+        {productInfo && (
+          <div>
+            <img src={productInfo.thumbnail} alt="" width={50} height={50} />
+            <span>{productInfo.title}</span>
+            <span>{productInfo.price.toLocaleString()}</span>
+          </div>
+        )}
+      </div>
       <ChatMessages messages={messages} onSend={handleSendMessage} />
     </div>
   );

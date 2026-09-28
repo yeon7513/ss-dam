@@ -171,4 +171,15 @@
     WHERE room_id = #{roomId}
   </select>
 
+  <!-- 수신자 및 발신자 코드 찾기 -->
+  <select id="findReceiverCodeByRoomId" resultType="Long">
+    SELECT
+    CASE
+    WHEN requester_code = #{senderCode} THEN responder_code
+    ELSE requester_code
+    END AS receiver_code
+    FROM CHAT_ROOM
+    WHERE room_id = #{roomId}
+  </select>
+
 </mapper>

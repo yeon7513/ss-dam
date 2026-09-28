@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import TextInput from "../../../components/forms/text-input/TextInput";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "../../../components/common/button/Button";
-import { useNavigate, Link } from "react-router-dom";
+import TextInput from "../../../components/forms/text-input/TextInput";
 import styles from "./LogIn.module.scss"; // 로그인 페이지 전용 scss모듈
 
 const LogIn = () => {
@@ -31,8 +31,9 @@ const LogIn = () => {
       if (response.ok) {
         const userRole = result.data.role;
         const userName = result.data.name;
-        const userCode = result.data.code;
+        const userCode = result.data.code; // UI/UX 위해 추가
 
+        sessionStorage.setItem("userCode", userCode);
         sessionStorage.setItem("userRole", userRole);
         sessionStorage.setItem("userName", userName);
 

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,13 +16,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ss_dam.admin.log.response.AdminActivity;
 import com.ss_dam.common.ApiResponse;
+import com.ss_dam.common.pager.PageQuery;
 import com.ss_dam.common.pager.PageResult;
 import com.ss_dam.market.model.filter.AdminProductSearchFilter;
 import com.ss_dam.market.model.request.ProductDelete;
+import com.ss_dam.market.model.response.AdminMemberTradesView;
 import com.ss_dam.market.model.response.AdminProductDetail;
 import com.ss_dam.market.model.response.AdminProductView;
 import com.ss_dam.market.service.AdminProductService;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 
@@ -121,6 +125,23 @@ public class AdminProductController {
                     "상품 관리 처리 이력 조회 성공", logs));
           
           }
+
+        
+      // 관리자 회원 상세 - 거래내역 탭
+      @GetMapping("/members/{memberCode}/trades")
+        public ResponseEntity<ApiResponse<AdminMemberTradesView>> loadMemberTrades(
+                @PathVariable Long memberCode,
+                @ModelAttribute PageQuery pageQuery,
+                HttpSession session) {
+
+
+        AdminMemberTradesView result =
+                adminProductService.loadMemberTrades(memberCode, pageQuery);
+
+        return ResponseEntity.ok(
+                ApiResponse.success("회원 거래내역 조회 성공", result));
+        }
+
      }
 
   /*서비스 구현 시에는 다음을 반영

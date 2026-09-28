@@ -5,6 +5,8 @@ import java.util.Map;
 
 import com.ss_dam.admin.log.response.AdminActivity;
 import com.ss_dam.market.model.filter.AdminProductSearchFilter;
+import com.ss_dam.market.model.response.AdminMemberTradeView;
+import com.ss_dam.market.model.response.AdminMemberTradesView;
 import com.ss_dam.market.model.response.AdminProductDetail;
 import com.ss_dam.market.model.response.AdminProductView;
 
@@ -30,4 +32,12 @@ public interface AdminProductDao {
 
 	// 상품별 관리자 처리 이력 조회
 	List<AdminActivity> loadProductLogs(Long prodCode);
+
+	//관리자 회원 상세 - 회원 전체 거래 / 구매 / 판매 통계
+	AdminMemberTradesView loadMemberTradeSummary(
+					Map<String, Object> params);
+	
+	//관리자 회원 상세 - 회원 거래 페이지 목록
+	List<AdminMemberTradeView> loadMemberTrades(
+					Map<String, Object> params);
 }

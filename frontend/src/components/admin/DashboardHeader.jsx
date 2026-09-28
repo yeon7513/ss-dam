@@ -8,10 +8,11 @@ const DashboardHeader = ({
   lastUpdated,
   isSpinning,
   handleRefresh,
+  className = "",
 }) => {
   return (
     // 페이지 타이틀
-    <div className={styles.pageTitleRow}>
+    <div className={`${styles.pageTitleRow} ${className ?? ""}`}>
       <h1>
         {title}
         <FaArrowsRotate

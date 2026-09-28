@@ -1,9 +1,11 @@
 package com.ss_dam.challenge.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,7 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ss_dam.challenge.model.response.AdminMemberProofsView;
+import com.ss_dam.challenge.service.AdminChallengeService;
 import com.ss_dam.common.ApiResponse;
+import com.ss_dam.common.pager.PageQuery;
+
+import jakarta.servlet.http.HttpSession;
 
 
 //- AdminChallengController - 등록·수정·삭제, 관리자용 목록·상세 조회, 숨김·복구 등 운영 기능
@@ -22,6 +29,9 @@ import com.ss_dam.common.ApiResponse;
 @RestController
 @RequestMapping("/api/admin/challenge")
 public class AdminChallengeController {
+
+@Autowired 
+private AdminChallengeService adminChallengeService;
 
     // 관리자 챌린지 목록 조회
     // 조건 생략 시 해당 조건으로 제한하지 않음
@@ -116,6 +126,21 @@ public class AdminChallengeController {
         // TODO: 등록·수정·삭제·복구 처리 이력 조회
         // TODO: 처리 관리자·처리 사유·처리 시각 반환
         return notImplemented();
+    }
+
+    // 관리자 회원 상세 - 챌린지 인증 탭
+    @GetMapping("/members/{memberCode}/proofs")
+    public ResponseEntity<ApiResponse<AdminMemberProofsView>> loadMemberProofs(
+            @PathVariable Long memberCode,
+            @ModelAttribute PageQuery pageQuery,
+            HttpSession session) {
+
+
+    AdminMemberProofsView result =
+            adminChallengeService.loadMemberProofs(memberCode, pageQuery);
+
+    return ResponseEntity.ok(
+            ApiResponse.success("회원 챌린지 인증내역 조회 성공", result));
     }
 }
 

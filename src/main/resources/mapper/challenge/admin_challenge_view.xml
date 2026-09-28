@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="adminChallengeView">
+
+  <!-- 피드 카드 매핑 -->
+<resultMap id="memberFeedCardMap"
+           type="UserFeedView"
+           autoMapping="true">
+
+    <id column="code" property="code"/>
+
+    <!-- 작성자 프로필 (단일 객체) -->
+    <association property="memberProfile"
+                 javaType="MemberProfile"
+                 autoMapping="true">
+
+        <id column="member_code" property="code"/>
+
+        <!--이름 달라서 직접 매핑-->
+        <result column="member_id" property="id"/>
+        <result column="member_rating" property="rating"/>
+        <result column="profile_image" property="profileImage"/>
+    </association>
+
+    <!--해시태그 목록-->
+    <collection property="hashtags" ofType="java.lang.String">
+        <result column="tag_name"/>
+    </collection>
+</resultMap>
+<!--현재 회원 인증글 조회 SQL에서도 재사용하고 있어, 그대로 삭제하면 해당 조회가 깨짐-->
+
+
+
+<!-- 인증글 통계 자동 매핑 -->
+<resultMap id="memberProofSummaryMap"
+           type="AdminMemberProofsView"
+           autoMapping="true">
+</resultMap>
+
+
+<!-- 통계와 목록의 공통 조건 -->
+<sql id="memberProofConditions">
+    WHERE f.MEM_CODE = #{memberCode}
+      AND f.DELETE_YN = 0
+      AND EXISTS (
+          SELECT 1
+          FROM CHALLENGE ch
+          WHERE ch.CODE = f.CHAL_CODE
+      )
+</sql>
+
+
+<!-- 전체 인증글 / 인증한 챌린지 / 최근 30일 인증글 -->
+<select id="loadMemberProofSummary"
+        parameterType="map"
+        resultMap="memberProofSummaryMap">
+
+    SELECT
+        COUNT(*) AS total_proof_count,
+
+        COUNT(DISTINCT f.CHAL_CODE) AS proof_challenge_count,
+
+        COALESCE(SUM(
+            CASE
+                WHEN f.CREATED_AT BETWEEN
+                     DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()
+                THEN 1
+                ELSE 0
+            END
+        ), 0) AS recent_proof_count
+
+    FROM FEED f
+
+    <include refid="memberProofConditions"/>
+</select>
+
+
+<!-- 기존 피드 카드 매핑 재사용 -->
+<select id="loadMemberProofs"
+        parameterType="map"
+        resultMap="memberFeedCardMap">
+
+    SELECT
+        f.CODE AS code,
+        f.TITLE AS title,
+        f.HITCOUNT AS hitcount,
+        f.CREATED_AT AS created_at,
+        f.UPDATED_AT AS updated_at,
+        ch.TITLE AS challenge_name,
+
+        m.CODE AS member_code,
+        m.ID AS member_id,
+        m.RATING AS member_rating,
+
+        <!-- 작성자 프로필 사진 -->
+        (
+            SELECT i.PATH
+            FROM IMAGES i
+            WHERE i.TARGET_CODE = m.CODE
+              AND i.TYPE = 'profile'
+              AND i.DELETE_YN = 0
+            ORDER BY i.ORDER_SEQ ASC, i.PATH ASC
+            LIMIT 1
+        ) AS profile_image,
+
+        <!-- 인증글 대표 사진 -->
+        (
+            SELECT i.PATH
+            FROM IMAGES i
+            WHERE i.TARGET_CODE = f.CODE
+              AND i.TYPE = 'feed'
+              AND i.DELETE_YN = 0
+            ORDER BY i.ORDER_SEQ ASC, i.PATH ASC
+            LIMIT 1
+        ) AS thumbnail,
+
+        COALESCE(likes.like_count, 0) AS count_feed_like,
+        COALESCE(comments.comment_count, 0) AS count_feed_comment,
+
+        fh.TAG_NAME AS tag_name
+
+    FROM (
+        <!-- 해시태그 연결 전에 인증글부터 페이지 단위로 조회 -->
+        SELECT f.*
+        FROM FEED f
+
+        <include refid="memberProofConditions"/>
+
+        ORDER BY f.CREATED_AT DESC, f.CODE DESC
+        LIMIT #{perPage} OFFSET #{offset}
+    ) f
+
+    JOIN MEMBER_ACCOUNT m
+        ON m.CODE = f.MEM_CODE
+
+    JOIN CHALLENGE ch
+        ON ch.CODE = f.CHAL_CODE
+
+    <!-- 피드별 좋아요 수 -->
+    LEFT JOIN (
+        SELECT
+            fl.FEED_CODE,
+            COUNT(*) AS like_count
+        FROM FEED_LIKE fl
+        WHERE fl.DELETE_YN = 0
+        GROUP BY fl.FEED_CODE
+    ) likes
+        ON likes.FEED_CODE = f.CODE
+
+    <!-- 피드별 공개 댓글 수 -->
+    LEFT JOIN (
+        SELECT
+            c.FEED_CODE,
+            COUNT(*) AS comment_count
+        FROM COMMENTS c
+        WHERE c.DELETE_YN = 0
+          AND UPPER(c.STATUS) = 'ACTIVE'
+        GROUP BY c.FEED_CODE
+    ) comments
+        ON comments.FEED_CODE = f.CODE
+
+    LEFT JOIN FEED_HASHTAG fh
+        ON fh.FEED_CODE = f.CODE
+
+    ORDER BY
+        f.CREATED_AT DESC,
+        f.CODE DESC,
+        fh.TAG_NAME ASC
+</select>
+
+
+</mapper>

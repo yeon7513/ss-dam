@@ -64,7 +64,9 @@ public class ChatServiceImpl implements ChatService {
     Long roomCode = findRoomCodeByRoomId(chatMessageCreate.getRoomId());
     chatMessageCreate.setRoomCode(roomCode);
 
-    Long newMessageCode = chatDao.registerChatMessage(chatMessageCreate);
+    chatDao.registerChatMessage(chatMessageCreate);
+
+    Long newMessageCode = chatMessageCreate.getCode();
 
     if (newMessageCode == null) {
       return null;
@@ -98,6 +100,16 @@ public class ChatServiceImpl implements ChatService {
     float total = chatDao.loadChatRoomsTotalCount(filter);
 
     return PageResult.of(chatRooms, filter, total);
+  }
+
+  // 수신자 및 발신자 코드 추출하기!
+  @Override
+  public Long findReceiverCodeByRoomId(String roomId, Long senderCode) {
+    Map<String, Object> params = new HashMap<>();
+    params.put("roomId", roomId);
+    params.put("senderCode", senderCode);
+
+    return chatDao.findReceiverCodeByRoomId(params);
   }
 
 

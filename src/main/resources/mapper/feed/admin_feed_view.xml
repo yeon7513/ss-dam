@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="adminFeedView">
+
+   <!-- 작성 피드, 신고 내역, 거래 내역, 챌린지 인증 오른쪽 통계 정보 매핑 -->
+<resultMap id="memberFeedSummaryMap"
+           type="AdminMemberFeedsView">
+
+    <result column="total_feed_count" property="totalFeedCount"/>
+    <result column="total_like_count" property="totalLikeCount"/>
+    <result column="total_hit_count" property="totalHitCount"/>
+</resultMap>
+
+<!-- 피드 카드 매핑 -->
+<resultMap id="memberFeedCardMap"
+           type="UserFeedView"
+           autoMapping="true">
+
+    <id column="code" property="code"/>
+
+    <!-- 작성자 프로필 (단일 객체) -->
+    <association property="memberProfile"
+                 javaType="MemberProfile"
+                 autoMapping="true">
+
+        <id column="member_code" property="code"/>
+
+        <!--이름 달라서 직접 매핑-->
+        <result column="member_id" property="id"/>
+        <result column="member_rating" property="rating"/>
+        <result column="profile_image" property="profileImage"/>
+    </association>
+
+    <!--해시태그 목록-->
+    <collection property="hashtags" ofType="java.lang.String">
+        <result column="tag_name"/>
+    </collection>
+</resultMap>
+
+<!-- 목록과 통계의 공통 대상 조건 -->
+<sql id="memberFeedConditions">
+    WHERE f.MEM_CODE = #{memberCode}
+      AND f.DELETE_YN = 0
+</sql>
+
+<!-- 전체 등록 수·좋아요 수·조회수 -->
+<select id="loadMemberFeedSummary"
+        parameterType="map"
+        resultMap="memberFeedSummaryMap">
+
+    SELECT
+        COUNT(*) AS total_feed_count,
+        COALESCE(SUM(likes.like_count), 0) AS total_like_count,
+        COALESCE(SUM(f.HITCOUNT), 0) AS total_hit_count
+    FROM FEED f
+
+    LEFT JOIN (
+        SELECT FEED_CODE, COUNT(*) AS like_count
+        FROM FEED_LIKE
+        WHERE DELETE_YN = 0
+        GROUP BY FEED_CODE
+    ) likes ON likes.FEED_CODE = f.CODE
+
+    <include refid="memberFeedConditions"/>
+</select>
+
+<!-- 해당 회원의 작성 피드 목록 -->
+<select id="loadMemberFeeds"
+        parameterType="map"
+        resultMap="memberFeedCardMap">
+
+    SELECT
+        f.CODE AS code,
+        f.TITLE AS title,
+        f.HITCOUNT AS hitcount,
+        f.CREATED_AT AS created_at,
+        f.UPDATED_AT AS updated_at,
+        ch.TITLE AS challenge_name,
+
+        m.CODE AS member_code,
+        m.ID AS member_id,
+        m.RATING AS member_rating,
+
+        <!-- 프로필 사진 한 건 -->
+        (
+            SELECT i.PATH
+            FROM IMAGES i
+            WHERE i.TARGET_CODE = m.CODE
+              AND i.TYPE = 'profile'
+              AND i.DELETE_YN = 0
+            ORDER BY i.ORDER_SEQ ASC, i.PATH ASC
+            LIMIT 1
+        ) AS profile_image,
+
+        <!-- 피드 대표 사진 한 건 -->
+        (
+            SELECT i.PATH
+            FROM IMAGES i
+            WHERE i.TARGET_CODE = f.CODE
+              AND i.TYPE = 'feed'
+              AND i.DELETE_YN = 0
+            ORDER BY i.ORDER_SEQ ASC, i.PATH ASC
+            LIMIT 1
+        ) AS thumbnail,
+
+        <!-- JOIN으로 집계한 좋아요·댓글 수 -->
+        COALESCE(likes.like_count, 0) AS count_feed_like,
+        COALESCE(comments.comment_count, 0) AS count_feed_comment,
+
+        fh.TAG_NAME AS tag_name
+
+    FROM (
+        <!-- 피드를 먼저 페이지 단위로 조회 -->
+        SELECT f.*
+        FROM FEED f
+
+        <include refid="memberFeedConditions"/>
+
+        ORDER BY
+            f.CREATED_AT DESC,
+            f.CODE DESC
+
+        LIMIT #{perPage} OFFSET #{offset}
+    ) f
+
+    JOIN MEMBER_ACCOUNT m
+        ON m.CODE = f.MEM_CODE
+
+    LEFT JOIN CHALLENGE ch
+        ON ch.CODE = f.CHAL_CODE
+
+    <!-- 피드별 유효 좋아요 수 -->
+    LEFT JOIN (
+        SELECT
+            fl.FEED_CODE,
+            COUNT(*) AS like_count
+        FROM FEED_LIKE fl
+        WHERE fl.DELETE_YN = 0
+        GROUP BY fl.FEED_CODE
+    ) likes
+        ON likes.FEED_CODE = f.CODE
+
+    <!-- 피드별 공개 댓글 수 -->
+    LEFT JOIN (
+        SELECT
+            c.FEED_CODE,
+            COUNT(*) AS comment_count
+        FROM COMMENTS c
+        WHERE c.DELETE_YN = 0
+          AND UPPER(c.STATUS) = 'ACTIVE'
+        GROUP BY c.FEED_CODE
+    ) comments
+        ON comments.FEED_CODE = f.CODE
+
+    <!-- 해시태그 -->
+    LEFT JOIN FEED_HASHTAG fh
+        ON fh.FEED_CODE = f.CODE
+
+    ORDER BY
+        f.CREATED_AT DESC,
+        f.CODE DESC,
+        fh.TAG_NAME ASC
+
+</select>
+
+<!--COALESCE(..., 0): 좋아요나 댓글이 없어 연결 결과가 NULL이면 0으로 반환-->
+<!--재사용한 DTO의 likedYn과 프로필의 ranking은 이번 SQL에서 조회 X-->
+<!--피드를 먼저 페이지 단위로 조회한 뒤 해시태그를 연결하므로, 태그가 여러 개여도 페이지당 피드 수가 줄어들지 않습니다. resultMap이 같은 피드번호의 행을 한 카드로 묶습니다.-->
+
+<!--
+프로필·대표 사진 → 서브쿼리로 한 장 조회
+좋아요·댓글 수 → JOIN으로 연결
+챌린지 정보·해시태그 → JOIN으로 연결
+-->
+
+
+</mapper>

@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import com.ss_dam.admin.log.response.AdminActivity;
 import com.ss_dam.market.model.filter.AdminProductSearchFilter;
+import com.ss_dam.market.model.response.AdminMemberTradeView;
+import com.ss_dam.market.model.response.AdminMemberTradesView;
 import com.ss_dam.market.model.response.AdminProductDetail;
 import com.ss_dam.market.model.response.AdminProductView;
 
@@ -63,6 +65,24 @@ public class AdminProductDaoImpl implements AdminProductDao {
         return sql.selectList(
                 "adminProductView.loadProductLogs",
                 Map.of("prodCode", prodCode));
+    }
+
+    //관리자 회원 상세 - 회원 전체 거래 통계
+    @Override
+    public AdminMemberTradesView loadMemberTradeSummary(
+            Map<String, Object> params) {
+
+        return sql.selectOne(
+                "adminProductView.loadMemberTradeSummary", params);
+    }
+
+    //관리자 회원 상세 - 회원 거래 페이지 목록
+    @Override
+    public List<AdminMemberTradeView> loadMemberTrades(
+            Map<String, Object> params) {
+
+        return sql.selectList(
+                "adminProductView.loadMemberTrades", params);
     }
 }
 
