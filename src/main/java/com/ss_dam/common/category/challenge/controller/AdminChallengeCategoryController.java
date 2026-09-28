@@ -15,6 +15,9 @@ import com.ss_dam.common.ApiResponse;
 
 // -AdminChallengeCategoryController - //
 
+//challenge 폴더 → 관리자 챌린지 등록·목록·상세·수정·삭제
+//현재 폴더 => common/category/challenge 폴더 → 피드 작성 시 선택할 챌린지 목록 조회 (선택 목록 조회용)
+
 @RestController
 @RequestMapping("/api/admin/challenge/categories")
 public class AdminChallengeCategoryController {

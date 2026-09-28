@@ -5,6 +5,173 @@
 
 <mapper namespace="adminChallengeView">
 
+<!-- 관리자 챌린지 목록 매핑 -->
+<resultMap id="adminChallengeListMap"
+           type="AdminChallengeListView">
+
+    <id column="CODE" property="code"/>
+
+</resultMap>
+
+<!-- 건수 조회와 목록 조회가 공유하는 조건 -->
+<sql id="adminChallengeConditions">
+    WHERE c.DELETE_YN = 0
+</sql>
+
+<!-- 전체 대상 건수 -->
+<select id="countChallenges" resultType="long">
+    SELECT COUNT(*)
+    FROM CHALLENGE c
+
+    <include refid="adminChallengeConditions"/>
+</select>
+
+<!-- 관리자 챌린지 진행현황 목록 -->
+<select id="loadChallenges"
+        resultType="com.ss_dam.challenge.model.response.AdminChallengeListView">
+
+    SELECT
+        c.CODE,
+        c.TITLE,
+        c.CONTENT,
+        c.START_DATE,
+        c.END_DATE,
+        c.PROGRESS_STATUS,
+        c.POST_STATUS,
+        c.CREATED_AT,
+
+        a.EMP_ID AS ADMIN_ID,
+        a.ROLE AS ADMIN_ROLE,
+
+        <!-- 참여자 수 -->
+        (
+            SELECT COUNT(DISTINCT ce.MEM_CODE)
+            FROM CHALLENGE_ENTRY ce
+            WHERE ce.CHAL_CODE = c.CODE
+              AND ce.STATUS IN ('JOINED', 'COMPLETED')
+              AND ce.CANCELED_AT IS NULL
+        ) AS PARTICIPANT_COUNT,
+
+        <!-- 대표 이미지: 실제 저장한 TYPE 값과 일치해야 함 -->
+        (
+            SELECT i.PATH
+            FROM IMAGES i
+            WHERE i.TARGET_CODE = c.CODE
+              AND i.TYPE = 'challenge'
+              AND i.DELETE_YN = 0
+            ORDER BY i.ORDER_SEQ ASC, i.PATH ASC
+            LIMIT 1
+        ) AS THUMBNAIL,
+
+        <!-- 완료 회원 비율(%) -->
+        (
+            SELECT COALESCE(
+                ROUND(
+                    100.0 * COUNT(DISTINCT CASE
+                        WHEN ce.STATUS = 'COMPLETED'
+                        THEN ce.MEM_CODE
+                    END)
+                    / NULLIF(COUNT(DISTINCT ce.MEM_CODE), 0),
+                    1
+                ),
+                0
+            )
+            FROM CHALLENGE_ENTRY ce
+            WHERE ce.CHAL_CODE = c.CODE
+              AND ce.STATUS IN ('JOINED', 'COMPLETED')
+              AND ce.CANCELED_AT IS NULL
+        ) AS ACHIEVEMENT_RATE
+
+    FROM CHALLENGE c
+
+    LEFT JOIN ADMIN_ACCOUNT a
+        ON a.CODE = c.ADM_CODE
+
+    <include refid="adminChallengeConditions"/>
+
+    ORDER BY c.CREATED_AT DESC, c.CODE DESC
+
+    LIMIT #{perPage} OFFSET #{offset}
+</select>
+
+<!--참여자 수는 이 예시에서 “취소하지 않은 참여 중·완료 회원 수”로 정의했습니다. 진행 중인 회원만 표시하려면 STATUS = 'JOINED'로 변경하면 됩니다.
+
+참여 테이블을 목록에 직접 조인하지 않고 별도로 집계했으므로, 참여자가 여러 명이어도 챌린지 카드가 중복되지 않습니다.
+
+또한 등록 시간이 같은 챌린지도 순서가 일정하도록 CODE DESC를 함께 사용-->
+
+
+<!-- 관리자 챌린지 상세 조회 -->
+<select id="loadChallenge"
+        parameterType="map"
+        resultType="AdminChallengeDetailView">
+
+    SELECT
+        c.CODE,
+        c.TITLE,
+        c.CONTENT,
+        c.START_DATE,
+        c.END_DATE,
+        c.PROGRESS_STATUS,
+        c.POST_STATUS,
+        c.CREATED_AT,
+        c.UPDATED_AT,
+
+        c.ADM_CODE AS ADMIN_CODE,
+        a.EMP_ID AS ADMIN_ID,
+        a.ROLE AS ADMIN_ROLE,
+
+        <!-- 참여자 수 -->
+        (
+            SELECT COUNT(DISTINCT ce.MEM_CODE)
+            FROM CHALLENGE_ENTRY ce
+            WHERE ce.CHAL_CODE = c.CODE
+              AND ce.STATUS IN ('JOINED', 'COMPLETED')
+              AND ce.CANCELED_AT IS NULL
+        ) AS PARTICIPANT_COUNT,
+
+        <!-- 추가: 대표 이미지
+             실제 이미지 저장 시 TYPE 값과 일치해야 함 -->
+        (
+            SELECT i.PATH
+            FROM IMAGES i
+            WHERE i.TARGET_CODE = c.CODE
+              AND i.TYPE = 'challenge'
+              AND i.DELETE_YN = 0
+            ORDER BY i.ORDER_SEQ ASC, i.PATH ASC
+            LIMIT 1
+        ) AS THUMBNAIL,
+
+        <!-- 추가: 완료 회원 비율(%) -->
+        (
+            SELECT COALESCE(
+                ROUND(
+                    100.0 * COUNT(DISTINCT CASE
+                        WHEN ce.STATUS = 'COMPLETED'
+                        THEN ce.MEM_CODE
+                    END)
+                    / NULLIF(COUNT(DISTINCT ce.MEM_CODE), 0),
+                    1
+                ),
+                0
+            )
+            FROM CHALLENGE_ENTRY ce
+            WHERE ce.CHAL_CODE = c.CODE
+              AND ce.STATUS IN ('JOINED', 'COMPLETED')
+              AND ce.CANCELED_AT IS NULL
+        ) AS ACHIEVEMENT_RATE
+
+    FROM CHALLENGE c
+
+    LEFT JOIN ADMIN_ACCOUNT a
+        ON a.CODE = c.ADM_CODE
+
+    WHERE c.CODE = #{code}
+      AND c.DELETE_YN = 0
+</select>
+
+
+
   <!-- 피드 카드 매핑 -->
 <resultMap id="memberFeedCardMap"
            type="UserFeedView"

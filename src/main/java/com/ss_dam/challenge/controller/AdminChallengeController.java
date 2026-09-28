@@ -10,60 +10,104 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
+import com.ss_dam.admin.log.controller.AdminActivityLogController;
+import com.ss_dam.auth.login.Login;
+import com.ss_dam.challenge.model.request.AdminChallengeCreateRequest;
+import com.ss_dam.challenge.model.request.AdminChallengeSearch;
+import com.ss_dam.challenge.model.response.AdminChallengeDetailView;
+import com.ss_dam.challenge.model.response.AdminChallengeListView;
 import com.ss_dam.challenge.model.response.AdminMemberProofsView;
 import com.ss_dam.challenge.service.AdminChallengeService;
 import com.ss_dam.common.ApiResponse;
 import com.ss_dam.common.pager.PageQuery;
+import com.ss_dam.common.pager.PageResult;
 
 import jakarta.servlet.http.HttpSession;
 
 
 //- AdminChallengController - 등록·수정·삭제, 관리자용 목록·상세 조회, 숨김·복구 등 운영 기능
 
+//challenge 폴더 → 관리자 챌린지 등록·목록·상세·수정·삭제
+//common/category/challenge 폴더 → 피드 작성 시 선택할 챌린지 목록 조회
 
 
 @RestController
 @RequestMapping("/api/admin/challenge")
 public class AdminChallengeController {
 
+private final AdminActivityLogController adminActivityLogController;
 @Autowired 
 private AdminChallengeService adminChallengeService;
 
-    // 관리자 챌린지 목록 조회
-    // 조건 생략 시 해당 조건으로 제한하지 않음
+AdminChallengeController(AdminActivityLogController adminActivityLogController) {
+  this.adminActivityLogController = adminActivityLogController;
+}
+
+    // 관리자 챌린지 진행현황 목록 조회
     @GetMapping
-    public ResponseEntity<ApiResponse<Void>> loadChallenges(
-            @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) String progressStatus,
-            @RequestParam(required = false) String visibility,
-            @RequestParam(required = false) Boolean deleted) {
+    public ResponseEntity<ApiResponse<PageResult<AdminChallengeListView>>> 
+				loadChallenges(@ModelAttribute AdminChallengeSearch search) {
 
-        // TODO: 검색·페이지네이션 연결
-        // TODO: 진행 상태·공개 범위·삭제 여부 필터 연결
-        return notImplemented();
-    }
+				PageResult<AdminChallengeListView> result = 
+							adminChallengeService.loadChallenges(search);
+				
+				return ResponseEntity.ok(
+								ApiResponse.success("챌린지 진행현황 조회 성공", result));
+				}
+  
+				// @ModelAttribute가 다음 요청 값을 DTO에 담아 줌 
+				// ?page=1&perPage=10&perGroup=5
+    
 
-    // 관리자 챌린지 상세 조회
-    // 비공개·삭제된 챌린지 포함
+    // 관리자 챌린지 진행현황 상세 조회  
     @GetMapping("/{code}")
-    public ResponseEntity<ApiResponse<Void>> loadChallenge(
-            @PathVariable Long code) {
+    public ResponseEntity<ApiResponse<AdminChallengeDetailView>>
+						 loadChallenge(@PathVariable Long code) {
 
-        return notImplemented();
-    }
+				AdminChallengeDetailView result = 
+							adminChallengeService.loadChallenge(code);
 
-    // 챌린지 등록
+         	return ResponseEntity.ok(
+            ApiResponse.success("챌린지 상세 조회 성공", result));
+					}
+
+    // 관리자 챌린지 등록
     @PostMapping
-    public ResponseEntity<ApiResponse<Void>> createChallenge() {
+    public ResponseEntity<ApiResponse<Long>> createChallenge(
+						@RequestBody AdminChallengeCreateRequest request,
+						HttpSession session) {
 
-        // TODO: 등록 요청 DTO와 입력값 검증 연결
-        // TODO: 인증된 관리자 정보 연결
-        return notImplemented();
-    }
+						Login loginUser = (Login) session.getAttribute("loginUser");
+
+						if (loginUser == null) {
+							throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다");
+						}
+
+						String role = loginUser.getRole();
+
+						// 여기서는 세 관리자 권한 모두 등록 허용
+						if (!"ROLE_SUPER".equals(role)
+									&& !"ROLE_MANAGER".equals(role)
+									&& !"ROLE_STAFF".equals(role)) {
+
+								throw new ResponseStatusException(
+												HttpStatus.FORBIDDEN,
+												"관리자만 등록할 수 있습니다");
+									}
+						 Long code = adminChallengeService.createChallenge(
+            request,
+            loginUser.getCode(),
+            loginUser.getMemberId());
+
+							return ResponseEntity.status(HttpStatus.CREATED)
+											.body(ApiResponse.success("챌린지 등록 성공", code));
+					}
+			
 
     // 챌린지 수정
     @PutMapping("/{code}")
@@ -75,7 +119,10 @@ private AdminChallengeService adminChallengeService;
         return notImplemented();
     }
 
-    // 챌린지 논리 삭제
+    // 챌린지 조기 완료 
+		// 종료일 전에 관리자가 챌린지를 끝내는 기능으로 구현하면 됩니다. 삭제하지 않고 PROGRESS_STATUS를 ENDED로
+		//챌린지 운영 종료를 뜻합니다. 참여자 전원을 달성 완료로 바꾸거나 보상을 자동 지급하는 처리는 별개
+		//API : PATCH /api/admin/challenge/26/end
     @DeleteMapping("/{code}")
     public ResponseEntity<ApiResponse<Void>> deleteChallenge(
             @PathVariable Long code) {

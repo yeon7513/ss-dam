@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="adminChallengeCommand">
+
+    <!-- 관리자 챌린지 등록 -->
+    <insert id="createChallenge"
+            parameterType="map"
+            useGeneratedKeys="true"
+            keyProperty="code"
+            keyColumn="CODE">
+
+        INSERT INTO CHALLENGE (
+          ADM_CODE,
+          TITLE,
+          CONTENT,
+          START_DATE,
+          END_DATE,
+          GOAL,
+          POINT_EARNED,
+          POST_STATUS,
+          PROGRESS_STATUS,
+          CREATED_BY,
+          CREATED_AT,
+          DELETE_YN
+      )
+      VALUES (
+          #{adminCode},
+          #{title},
+          #{content},
+          #{startDate},
+          #{endDate},
+          #{goal},
+          #{pointEarned},
+          #{postStatus},
+          #{progressStatus},
+          #{adminId},
+          #{createdAt},
+          0
+      )
+
+    </insert>
+
+</mapper>
