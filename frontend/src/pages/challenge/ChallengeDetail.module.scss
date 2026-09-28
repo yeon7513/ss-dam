@@ -1,8 +1,8 @@
 .detailContainer {
   width: 100%;
-  max-width: none; /* 화면 전체 너비를 100% 사용 */
+  max-width: none;
   margin: 0;
-  padding: 24px 40px 100px; /* 좌우 40px 여백만 두고 양쪽 벽에 밀착 */
+  padding: 24px 40px 100px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -26,25 +26,22 @@
 .pageLayout {
   display: flex;
   width: 100%;
-  gap: 32px; /* 좌-중-우 사이의 간격 */
+  gap: 32px;
   box-sizing: border-box;
   align-items: flex-start;
 }
 
-/* 좌측 사이드바: margin-right 제거 (gap으로만 간격 조절) */
 .leftColumn {
   width: 280px;
   flex-shrink: 0;
   margin-right: 50px;
 }
 
-/* 중앙 메인 본문: 양쪽 사이드바를 제외한 가운데 모든 여백을 꽉 채움 */
 .mainContent {
   flex: 1;
   min-width: 0;
 }
 
-/* 우측 정보 카드: margin-left 제거 */
 .rightColumn {
   width: 320px;
   flex-shrink: 0;
@@ -116,7 +113,6 @@
   object-fit: cover;
 }
 
-/* CSS 일러스트레이션 (이미지 없을 때 대체 배너) */
 .hero {
   position: relative;
   width: 100%;
@@ -192,7 +188,6 @@
   z-index: 5;
 }
 
-/* 본문 소개 영역 */
 .introSection {
   margin-top: 10px;
 }
