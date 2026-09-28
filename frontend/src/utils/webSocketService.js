@@ -72,6 +72,7 @@ export const subscribeToChatRoom = (roomId, onMessageCallback) => {
 // 개인용 목록 & 알림 채널 구독
 export const subscribeToUsers = (memberCode, onUpdateCallback) => {
   if (!stompClient || !stompClient.connected) {
+    console.warn("stompClient가 아직 연결되지 않아 구독할 수 없습니다. (memberCode:", memberCode, ")");
     return null;
   }
 

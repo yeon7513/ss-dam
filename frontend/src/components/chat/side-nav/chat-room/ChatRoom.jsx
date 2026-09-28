@@ -7,6 +7,7 @@ import cn from "classnames";
 // 채팅방 목록
 function ChatRoom({ rooms, pager, activeRoomId, onClickChatRoom }) {
 
+  console.log("rooms", rooms);
 
   return (
     <div>
