@@ -97,7 +97,7 @@ export const sendMessage = (destination, payload) => {
 // 웹소켓 연결 종료
 export const disconnectWebSocket = () => {
   if (stompClient && stompClient.connected) {
-    stompClient.disconnect();
+    stompClient.disconnect;
     console.log("웹소켓 연결 종료");
   }
 };

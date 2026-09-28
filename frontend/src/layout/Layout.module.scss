@@ -17,4 +17,30 @@
     flex: 1;
   }
 
+  .chatIcon {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 1000;
+    transition: 0.3s;
+
+    > a {
+      @include mix.flex;
+      padding: 1rem;
+      font-size: 2.5rem;
+      color: #fff;
+      background-color: $primary-50;
+      border-radius: 50%;
+      transition: 0.3s;
+    }
+
+    &:hover {
+      bottom: 2.5rem;
+
+      > a {
+        background-color: $primary-20;
+      }
+    }
+  }
+
 }

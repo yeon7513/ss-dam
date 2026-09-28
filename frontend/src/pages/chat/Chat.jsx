@@ -5,6 +5,7 @@ import styles from "./Chat.module.scss";
 import { useLoadData } from "../../hooks/useLoadData.js";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { connectWebSocket, subscribeToUsers } from "../../utils/webSocketService.js";
+import { BsChatSquareDotsFill } from "react-icons/bs";
 
 // 채팅방 최초 랜딩 페이지
 function Chat() {
@@ -102,7 +103,10 @@ function Chat() {
       {roomId ? (
         <ChatContainer roomId={roomId} />
       ) : (
-        <div>채팅방을 선택해주세요.</div>
+        <div className={styles.container}>
+          <BsChatSquareDotsFill className={styles.icon} />
+          <p>시작할 채팅을 선택해주세요.</p>
+        </div>
       )}
     </div>
   );
