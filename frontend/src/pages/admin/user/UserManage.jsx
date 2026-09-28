@@ -1,23 +1,23 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from "react";
 
 // 공통 UI 컴포넌트
-import MemberCard from '../../../components/admin/member-card/MemberCard';
-import Pagination from '../../../components/common/pagination/Pagination';
-import TabMenus from '../../../components/common/tab-menus/TabMenus';
-import DashboardHeader from '../OperationStatus/DashboardHeader';
-import UserManageFilters from './UserManageFilters';
+import MemberCard from "../../../components/admin/member-card/MemberCard";
+import Pagination from "../../../components/common/pagination/Pagination";
+import TabMenus from "../../../components/common/tab-menus/TabMenus";
+import DashboardHeader from "../../../components/admin/DashboardHeader";
+import UserManageFilters from "./UserManageFilters";
 
 // 이 페이지에서 사용하는 스타일
-import styles from './UserManage.module.scss';
+import styles from "./UserManage.module.scss";
 
 // status 탭
 // NORMAL, SUSPENDED, SLEEP, WITHDRAW
 const STATUS_TABS = [
-  { value: '', label: '전체 상태' },
-  { value: 'NORMAL', label: '일반' },
-  { value: 'SUSPENDED', label: '정지' },
-  { value: 'SLEEP', label: '휴면' },
-  { value: 'WITHDRAWN', label: '탈퇴' },
+  { value: "", label: "전체 상태" },
+  { value: "NORMAL", label: "일반" },
+  { value: "SUSPENDED", label: "정지" },
+  { value: "SLEEP", label: "휴면" },
+  { value: "WITHDRAWN", label: "탈퇴" },
 ];
 
 export default function UserManage() {
@@ -35,21 +35,21 @@ export default function UserManage() {
 
   //import DashboardHeader 기능 추가-> 새로고침 + 우측 상단 시간 계산 기능
   const [currentTime, setCurrentTime] = useState(
-    () => `${new Date().toLocaleString('sv-SE')} 기준`,
+    () => `${new Date().toLocaleString("sv-SE")} 기준`,
   );
 
   // 서버에 전달할 조회 조건
   const [searchParams, setSearchParams] = useState({
     page: 1, // 현재 페이지
     perPage: 10, // 페이지 당 회원수
-    status: '', // 회원 상태 필터
-    search: '', // 검색 대상 필드
-    keyword: '', // 검색어
-    joinedFrom: '',
-    joinedTo: '',
-    activityStatus: '',
-    regionCode: '',
-    rating: '',
+    status: "", // 회원 상태 필터
+    search: "", // 검색 대상 필드
+    keyword: "", // 검색어
+    joinedFrom: "",
+    joinedTo: "",
+    activityStatus: "",
+    regionCode: "",
+    rating: "",
   });
 
   /*회원 목록 조회 함수*/
@@ -77,7 +77,7 @@ export default function UserManage() {
 
       // HTTP 응답이 성공 상태(200~299)가 아니면 catch로 이동
       if (!response.ok) {
-        throw new Error('데이터 로딩 실패');
+        throw new Error("데이터 로딩 실패");
       }
 
       // 서버의 JSON 응답을 자바스크립트 객체로 변환
@@ -93,13 +93,13 @@ export default function UserManage() {
         //시간은 조회 성공 시에만 갱신하도록
         setMembers(result.data.content);
         setPager(result.data.pager);
-        setCurrentTime(`${new Date().toLocaleString('sv-SE')} 기준`);
+        setCurrentTime(`${new Date().toLocaleString("sv-SE")} 기준`);
 
-        console.log('데이터 갱신 완료');
+        console.log("데이터 갱신 완료");
       }
     } catch (error) {
       // 요청 실패나 JSON 처리 중 발생한 오류를 콘솔에 출력
-      console.error('Fetch Error', error);
+      console.error("Fetch Error", error);
     } finally {
       // 성공·실패와 관계없이 로딩 종료
       setLoading(false);
