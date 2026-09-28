@@ -2,6 +2,7 @@ package com.ss_dam.common.chat.controller;
 
 import com.ss_dam.auth.login.Login;
 import com.ss_dam.common.chat.model.request.ChatMessageCreate;
+import com.ss_dam.common.chat.model.response.ChatAlertEvent;
 import com.ss_dam.common.chat.model.response.ChatMessageView;
 import com.ss_dam.common.chat.service.ChatService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -84,16 +85,21 @@ public class ChatMessageController {
     // 즉, 발신자와 수신자 각각의 개인 채널로 실시간 알림/
     // -> 개개인의 알림 및 실시간 렌더링용
 
+    ChatAlertEvent chatAlertEvent = new ChatAlertEvent();
+
+    chatAlertEvent.setRoomId(roomId);
+    chatAlertEvent.setMessage(chatMessageView);
+
     // 수신자(상대방) 회원 코드 조회
     Long receiverCode = chatService.findReceiverCodeByRoomId(roomId, senderCode);
 
     // 메시지를 직접 전송한 "내"가 받는 알림
-    messagingTemplate.convertAndSend("/sub/chat/users/" + senderCode + "/rooms", chatMessageView);
+    messagingTemplate.convertAndSend("/sub/chat/users/" + senderCode + "/rooms", chatAlertEvent);
 
     // 채팅을 받는 상대방이 존재한다면
     if (receiverCode != null) {
       messagingTemplate.convertAndSend("/sub/chat/users/" + receiverCode + "/rooms",
-          chatMessageView);
+          chatAlertEvent);
     }
   }
 }

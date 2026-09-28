@@ -9,6 +9,7 @@ function ChatContainer({ roomId }) {
   const [roomInfo, setRoomInfo] = useState(null);
   const [productInfo, setProductInfo] = useState(null);
 
+  // 채팅 구독 ref
   const subscriptionRef = useRef(null);
 
   // 기존 과거 메시지 로그 받아오기
@@ -107,7 +108,7 @@ function ChatContainer({ roomId }) {
           </div>
         )}
       </div>
-      <ChatMessages messages={messages} onSend={handleSendMessage} />
+      <ChatMessages key={roomId} messages={messages} onSend={handleSendMessage} />
     </div>
   );
 }

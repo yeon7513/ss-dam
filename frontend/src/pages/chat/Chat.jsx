@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ChatSideNav from "../../components/chat/side-nav/ChatSideNav.jsx";
 import ChatContainer from "../../components/chat/ChatContainer.jsx";
 import styles from "./Chat.module.scss";
@@ -16,36 +16,60 @@ function Chat() {
   // 현재 로그인한 회원의 PK를 세션에서 꺼내오기 (개인 구독에 사용하기 위해)
   const userCode = Number(sessionStorage.getItem("userCode"));
 
-  // 기존 채팅방 불러옴
+  // 기존 채팅방 불러옴 -> 즉 DB에 저장된 채팅방
   const { data } = useLoadData("/api/chat/rooms");
   const [chatRooms, setChatRooms] = useState([]);
 
+  console.log(data);
+
   // 초기값 할당
   useEffect(() => {
-    if (data) {
+    if (data?.content) {
       setChatRooms(data?.content);
     }
-  }, [data]);
+  }, [data?.content]);
+
+  const activeRoomIdRef = useRef(roomId);
+
+  useEffect(() => {
+    activeRoomIdRef.current = roomId;
+  }, [roomId])
 
   // 개인 웹소켓 구독 -> 실시간 목록&알림 업데이트
   useEffect(() => {
-    if (!userCode) return;
+    if (!userCode) {
+      console.log("userCode 없음.");
+      return;
+    }
 
+    console.log("개인 구독 시도 -> useEffect 실행");
     let userSub = null;
 
     connectWebSocket(() => {
-      userSub = subscribeToUsers(userCode, (newMessage) => {
+      console.log("개인 구독 시작 -> 웹소캣 연결");
+
+      userSub = subscribeToUsers(userCode, (payload) => {
+        const { roomId, message: newMessage } = payload;
+
         setChatRooms((prevRooms) => {
           const currentRooms = Array.isArray(prevRooms) ? prevRooms : [];
 
           const targetIndex = currentRooms.findIndex(
-            (room) => room.roomId === newMessage.roomId,
+            (room) => room.roomId === roomId,
           );
 
-          if (targetIndex === -1) return currentRooms;
+          console.log("targetIndex: ", targetIndex);
 
+          // 새로 생성된 채팅방이라 목록에 없을 경우
+          // 기존 목록 유지
+          if (targetIndex === -1) {
+            console.log("기존 목록 유지");
+            return currentRooms;
+          }
           const targetRoom = currentRooms[targetIndex];
-          const isCurrentActiveRoom = roomId === newMessage.roomId;
+
+          // 현재 활성화된 방인지 체크
+          const isCurrentActiveRoom = activeRoomIdRef.current === roomId;
           const isFromOther = newMessage.senderCode !== userCode;
 
           // 현재 활성화된 방이면 0, 아니면 안 읽은 메시지 수 +1
@@ -55,6 +79,7 @@ function Chat() {
               ? (targetRoom.unreadCount || 0) + 1
               : targetRoom.unreadCount || 0;
 
+          // 수신된 최신 메시지 정보로 해당 방 갱신
           const updatedRoom = {
             ...targetRoom,
             lastMessage: newMessage.message,
@@ -62,11 +87,13 @@ function Chat() {
             unreadCount: updatedUnreadCount,
           };
 
+          console.log("updatedRoom: ", updatedRoom);
+
+          // 메시지가 온 채팅방을 상단으로 끌어올림
           const remainingRooms = currentRooms.filter(
-            (room) => room.roomId !== newMessage.roomId,
+            (room) => room.roomId !== roomId,
           );
 
-          // 최신 메시지가 도착한 방을 맨 위로 올림
           return [updatedRoom, ...remainingRooms];
         });
       });
@@ -77,7 +104,7 @@ function Chat() {
         userSub.unsubscribe();
       }
     };
-  }, [userCode, roomId]);
+  }, [userCode]);
 
   // 채팅방 클릭 이벤트 핸들러
   const handleClickChatRoom = (selectedRoomId) => {
@@ -91,7 +118,6 @@ function Chat() {
     // 활성화된 방 전환
     navigate(`/chat?roomId=${selectedRoomId}`);
   };
-
 
   return (
     <div className={styles.chat}>
