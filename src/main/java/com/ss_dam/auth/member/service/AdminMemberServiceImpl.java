@@ -117,6 +117,12 @@ public void releaseMember(
             "SUSPENDED", "ACTIVE", "RELEASE");
 }
 
+// 휴면 전환 -> 기준 기간 정해서 자동, 정지/탈퇴 회원 제외
+// 마지막 로그인 기록이 없는 회원은 가입일 기준으로 판단
+
+// 휴면 해제 -> 기준 기간 정해서 자동으로, 재로그인하면 사용자가 본인 확인을 통해 해제
+
+
 // 상태 변경 및 관리자 로그 저장
 private void changeMemberStatus(
         Long memberCode,

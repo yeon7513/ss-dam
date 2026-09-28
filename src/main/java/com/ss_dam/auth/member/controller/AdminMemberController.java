@@ -64,6 +64,7 @@ public class AdminMemberController {
 
 
   // 회원 이용 제한
+  // DB에서 상태 변경 : ACTIVE -> SUSPENDED
   @PatchMapping("/{memberCode}/restrict")
   public ResponseEntity<ApiResponse<Void>> restrictMember(@PathVariable Long memberCode,
       @Valid @RequestBody MemberStatusChangeRequest request, HttpSession session) {
@@ -78,6 +79,7 @@ public class AdminMemberController {
   }
 
   // 회원 이용 제한 해제
+  // DB에서 상태 변경 : SUSPENDED -> ACTIVE
   @PatchMapping("/{memberCode}/release")
   public ResponseEntity<ApiResponse<Void>> releaseMember(@PathVariable Long memberCode,
       @Valid @RequestBody MemberStatusChangeRequest request, HttpSession session) {

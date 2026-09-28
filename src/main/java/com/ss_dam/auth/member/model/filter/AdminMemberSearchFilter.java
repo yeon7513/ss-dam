@@ -35,6 +35,9 @@ public class AdminMemberSearchFilter extends PageQuery{
     // 랭킹
     private Integer ranking;
 
+    // 검색 대상: id, name, phone
+    private String search;
+
     public MemberStatus getStatus() {
         return status;
     }
@@ -91,6 +94,12 @@ public class AdminMemberSearchFilter extends PageQuery{
         this.ranking = ranking;
     }
 
-    
+    public String getSearch() {
+        return search;
+    }
+
+    public void setSearch(String search) {
+        this.search = search;
+    } 
 }
 

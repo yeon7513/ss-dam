@@ -2,7 +2,41 @@
 @use "/src/scss/mixin.scss" as mix;
 
 .selectWrap {
+  display: flex;
+  position: relative; // .arrowIcon 위치 조절의 기준점 설정
+  align-items: center;
+
+  width: 100%;
+  height: 100%;
+
   > select {
-    padding: 0.5rem;
+    width: 100%;
+    height: 100%;
+    padding: 0px 36px 0px 12px; // 우측 패딩을 확보하여 글자와 아이콘 겹침 방지
+
+    /* 브라우저 기본 화살표 제거 */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    cursor: pointer;
+
+    // 박스 선택 시
+    &:focus {
+      border-color: $primary-40;
+      color: $grayscale-90;
+      outline: none; // 브라우저 기본 검정 외곽선 제거
+    }
+  }
+
+  /* 리액트 아이콘 위치 고정 */
+  .arrowIcon {
+    position: absolute;
+    right: 0.75rem;
+
+    font-size: 1.25rem;
+    color: $grayscale-50;
+
+    pointer-events: none; // 클릭 이벤트가 셀렉트태그로 전달되도록 설정
   }
 }

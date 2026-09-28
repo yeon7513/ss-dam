@@ -67,32 +67,32 @@
       }
     }
   }
-}
 
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
 
-  a {
-    width: 100%;
-    height: 50px;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    padding: 0 20px 0 32px;
-    color: $grayscale-90;
-    font-size: 0.95rem;
-    text-decoration: none;
-
-    &:hover {
-      background-color: $grayscale-5;
-    }
-
-    &.subActive {
-      font-weight: 700;
+    a {
+      width: 100%;
+      height: 50px;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      padding: 0 20px 0 32px;
       color: $grayscale-90;
-      background-color: $grayscale-5;
+      font-size: 0.95rem;
+      text-decoration: none;
+
+      &:hover {
+        background-color: $grayscale-5;
+      }
+
+      &.subActive {
+        font-weight: 700;
+        color: $grayscale-90;
+        background-color: $grayscale-5;
+      }
     }
   }
 }

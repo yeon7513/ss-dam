@@ -29,11 +29,10 @@
         animation: spin 1s linear infinite;
       }
     }
-
-    .timeInfo {
-      font-size: 0.9rem;
-      color: $grayscale-90;
-    }
+  }
+  .timeInfo {
+    font-size: 0.9rem;
+    color: $grayscale-90;
   }
 }
 
