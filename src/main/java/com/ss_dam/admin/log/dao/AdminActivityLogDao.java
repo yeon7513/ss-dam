@@ -7,6 +7,9 @@ import com.ss_dam.admin.log.response.AdminActivity;
 
 public interface AdminActivityLogDao {
 
+  // 관리자 처리 이력 저장
+  int insertActivityLog(Map<String, Object> params);
+
   // 회원 정지·해제 로그 전체 건수
   int countMemberLogs(Map<String, Object> params);
 

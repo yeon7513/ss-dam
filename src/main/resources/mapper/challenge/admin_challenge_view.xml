@@ -106,21 +106,22 @@
         parameterType="map"
         resultType="AdminChallengeDetailView">
 
-    SELECT
-        c.CODE,
-        c.TITLE,
-        c.CONTENT,
-        c.START_DATE,
-        c.END_DATE,
-        c.PROGRESS_STATUS,
-        c.POST_STATUS,
-        c.CREATED_AT,
-        c.UPDATED_AT,
+   SELECT
+    c.CODE,
+    c.TITLE,
+    c.CONTENT,
+    c.GOAL,
+    c.POINT_EARNED,
+    c.START_DATE,
+    c.END_DATE,
+    c.PROGRESS_STATUS,
+    c.POST_STATUS,
+    c.CREATED_AT,
+    c.UPDATED_AT,
 
-        c.ADM_CODE AS ADMIN_CODE,
-        a.EMP_ID AS ADMIN_ID,
-        a.ROLE AS ADMIN_ROLE,
-
+    c.ADM_CODE AS ADMIN_CODE,
+    a.EMP_ID AS ADMIN_ID,
+    a.ROLE AS ADMIN_ROLE,
         <!-- 참여자 수 -->
         (
             SELECT COUNT(DISTINCT ce.MEM_CODE)
@@ -338,5 +339,46 @@
         fh.TAG_NAME ASC
 </select>
 
+<!-- 수정 시 현재 조건 확인 및 행 잠금 -->
+<select id="loadChallengeForUpdate"
+        parameterType="map"
+        resultType="com.ss_dam.challenge.model.response.AdminChallengeEditState">
+
+    SELECT
+        CODE,
+        GOAL,
+        POINT_EARNED,
+        START_DATE,
+        END_DATE,
+        PROGRESS_STATUS
+
+    FROM CHALLENGE
+
+    WHERE CODE = #{code}
+      AND DELETE_YN = 0
+
+    FOR UPDATE
+</select>
+
+<!-- 관리자 챌린지 논리 삭제 조건 - 참여 이력 또는 인증글 존재 여부 확인 -->
+<!-- 이력 확인이므로 참여 상태나 DELETE_YN 조건을 추가 X -->
+<select id="hasChallengeHistory"
+        parameterType="map"
+        resultType="boolean">
+
+    SELECT
+        EXISTS (
+            SELECT 1
+            FROM CHALLENGE_ENTRY ce
+            WHERE ce.CHAL_CODE = #{code}
+        )
+        OR
+        EXISTS (
+            SELECT 1
+            FROM FEED f
+            WHERE f.CHAL_CODE = #{code}
+        )
+
+</select>
 
 </mapper>

@@ -25,6 +25,9 @@ public class AdminChallengeDetailView {
   private String thumbnail; // 챌린지 대표 이미지 경로
   private BigDecimal achievementRate; // 달성률(%)
 
+  private String goal;
+  private Integer pointEarned;
+
   // Getter & Setter
 
   public Long getCode() {
@@ -132,20 +135,35 @@ public class AdminChallengeDetailView {
   }
 
   public String getThumbnail() {
-      return thumbnail;
+    return thumbnail;
   }
 
   public void setThumbnail(String thumbnail) {
-      this.thumbnail = thumbnail;
+    this.thumbnail = thumbnail;
   }
 
   public BigDecimal getAchievementRate() {
-      return achievementRate;
+    return achievementRate;
   }
 
   public void setAchievementRate(BigDecimal achievementRate) {
-      this.achievementRate = achievementRate;
+    this.achievementRate = achievementRate;
   }
 
+  public String getGoal() {
+    return goal;
+  }
+
+  public void setGoal(String goal) {
+    this.goal = goal;
+  }
+
+  public Integer getPointEarned() {
+    return pointEarned;
+  }
+
+  public void setPointEarned(Integer pointEarned) {
+    this.pointEarned = pointEarned;
+  }
   
 }

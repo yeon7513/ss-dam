@@ -43,4 +43,56 @@
 
     </insert>
 
+    <!-- 관리자 챌린지 수정 -->
+<update id="updateChallenge" parameterType="map">
+
+    UPDATE CHALLENGE
+
+    <set>
+        TITLE = #{title},
+        CONTENT = #{content},
+        POST_STATUS = #{postStatus},
+        UPDATED_BY = #{adminId},
+        UPDATED_AT = #{updatedAt},
+
+        <!-- 시작 전일 때만 참여 조건 변경 -->
+        <if test="beforeStart">
+            GOAL = #{goal},
+            POINT_EARNED = #{pointEarned},
+            START_DATE = #{startDate},
+            END_DATE = #{endDate},
+        </if>
+    </set>
+
+    WHERE CODE = #{code}
+      AND DELETE_YN = 0
+
+</update>
+
+<!-- 관리자 챌린지 논리 삭제 -->
+<update id="deleteChallenge" parameterType="map">
+
+    UPDATE CHALLENGE
+    SET
+        DELETE_YN = 1,
+        UPDATED_BY = #{adminId},
+        UPDATED_AT = #{updatedAt}
+
+    WHERE CODE = #{code}
+      AND DELETE_YN = 0
+
+      AND NOT EXISTS (
+          SELECT 1
+          FROM CHALLENGE_ENTRY ce
+          WHERE ce.CHAL_CODE = #{code}
+      )
+
+      AND NOT EXISTS (
+          SELECT 1
+          FROM FEED f
+          WHERE f.CHAL_CODE = #{code}
+      )
+
+</update>
+
 </mapper>

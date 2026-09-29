@@ -19,6 +19,7 @@ import com.ss_dam.admin.log.controller.AdminActivityLogController;
 import com.ss_dam.auth.login.Login;
 import com.ss_dam.challenge.model.request.AdminChallengeCreateRequest;
 import com.ss_dam.challenge.model.request.AdminChallengeSearch;
+import com.ss_dam.challenge.model.request.AdminChallengeUpdateRequest;
 import com.ss_dam.challenge.model.response.AdminChallengeDetailView;
 import com.ss_dam.challenge.model.response.AdminChallengeListView;
 import com.ss_dam.challenge.model.response.AdminMemberProofsView;
@@ -109,31 +110,82 @@ AdminChallengeController(AdminActivityLogController adminActivityLogController) 
 					}
 			
 
-    // 챌린지 수정
+    // 관리자 챌린지 수정
     @PutMapping("/{code}")
     public ResponseEntity<ApiResponse<Void>> updateChallenge(
-            @PathVariable Long code) {
+        @PathVariable Long code,
+        @RequestBody AdminChallengeUpdateRequest request, 
+        HttpSession session) {
+        
+        Login loginUser = (Login) session.getAttribute("loginUser");
 
-        // TODO: 수정 요청 DTO와 입력값 검증 연결
-        // TODO: 진행 상태에 따른 수정 가능 항목 검증
-        return notImplemented();
-    }
+        if (loginUser == null) {
+            throw new ResponseStatusException(
+                HttpStatus.UNAUTHORIZED);
+        }
 
-    // 챌린지 조기 완료 
-		// 종료일 전에 관리자가 챌린지를 끝내는 기능으로 구현하면 됩니다. 삭제하지 않고 PROGRESS_STATUS를 ENDED로
-		//챌린지 운영 종료를 뜻합니다. 참여자 전원을 달성 완료로 바꾸거나 보상을 자동 지급하는 처리는 별개
-		//API : PATCH /api/admin/challenge/26/end
+        String role = loginUser.getRole();
+
+        if (!"ROLE_SUPER".equals(role)
+                && !"ROLE_MANAGER".equals(role)
+                && !"ROLE_STAFF".equals(role)) {
+                
+                throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN, 
+                    "관리자만 수정할 수 있습니다");
+                }
+            
+            adminChallengeService.updateChallenge(
+                code, request, loginUser.getMemberId(), loginUser.getMemberId());
+
+            return ResponseEntity.ok(
+                    ApiResponse.<Void>success(
+                    "챌린지 수정 성공", null));
+ 
+        }
+
+    // 관리자 챌린지 논리 삭제 (잘못 등록한 챌린지 논리 삭제)
+    // 관리자 챌린지 논리 삭제
     @DeleteMapping("/{code}")
     public ResponseEntity<ApiResponse<Void>> deleteChallenge(
-            @PathVariable Long code) {
+            @PathVariable Long code,
+            HttpSession session) {
 
-        // TODO: 처리 사유 요청 DTO와 인증된 관리자 정보 연결
-        // TODO: 기존 공개 범위를 유지하면서 논리 삭제
-        // TODO: 참여자가 있는 챌린지의 삭제 정책 검증
-        // TODO: 삭제와 처리 이력 저장을 같은 트랜잭션으로 처리
-        return notImplemented();
+        Login loginUser = (Login) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "로그인이 필요합니다.");
+        }
+
+        String role = loginUser.getRole();
+
+        if (!"ROLE_SUPER".equals(role)
+                && !"ROLE_MANAGER".equals(role)
+                && !"ROLE_STAFF".equals(role)) {
+
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "관리자만 삭제할 수 있습니다.");
+        }
+
+        adminChallengeService.deleteChallenge(
+                code, loginUser.getMemberId(), loginUser.getMemberId());
+
+        return ResponseEntity.ok(
+                ApiResponse.<Void>success("챌린지 삭제 성공", null));
     }
 
+
+    // 관리자 챌린지 조기 완료 (상태 변경 : PROGRESS_STATUS -> ENDED)
+    // 진행 중이고 참여자가 있는 챌린지는 삭제를 제한하고, 조기 완료 기능으로 종료하도록 함
+	// 참여자 전원을 달성 완료로 바꾸거나 보상을 자동 지급하는 처리는 별개
+		
+
+
+
+    
     // 삭제된 챌린지 복구
     @PatchMapping("/{code}/restore")
     public ResponseEntity<ApiResponse<Void>> restoreChallenge(

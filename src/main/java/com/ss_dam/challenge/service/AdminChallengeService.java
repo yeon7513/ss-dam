@@ -2,6 +2,7 @@ package com.ss_dam.challenge.service;
 
 import com.ss_dam.challenge.model.request.AdminChallengeCreateRequest;
 import com.ss_dam.challenge.model.request.AdminChallengeSearch;
+import com.ss_dam.challenge.model.request.AdminChallengeUpdateRequest;
 import com.ss_dam.challenge.model.response.AdminChallengeDetailView;
 import com.ss_dam.challenge.model.response.AdminChallengeListView;
 import com.ss_dam.challenge.model.response.AdminMemberProofsView;
@@ -22,9 +23,19 @@ public interface AdminChallengeService {
             AdminChallengeCreateRequest request,
             Long adminCode,
             String adminId);
+    
+    // 관리자 챌린지 수정
+    void updateChallenge(
+        Long code,
+        AdminChallengeUpdateRequest request,
+        Long adminCode,
+        String adminId);
 
-
-
+    // 관리자 챌린지 논리 삭제
+    void deleteChallenge(
+        Long code,
+        Long adminCode,
+        String adminId);
     
     // 관리자 회원 상세 - 회원 인증글 통계와 페이지 목록
     AdminMemberProofsView loadMemberProofs(

@@ -15,6 +15,17 @@ public class AdminActivityLogDaoImpl implements AdminActivityLogDao {
     @Autowired
     private SqlSession sql;
 
+    // 관리자 처리 이력 저장
+    @Override
+    public int insertActivityLog(Map<String, Object> params) {
+
+        return sql.insert(
+                "adminActivityLog.insertActivityLog",
+                params);
+    }
+
+
+
     //관리자 회원 상세 - 회원 정지·해제 로그 전체 건수
     @Override
     public int countMemberLogs(Map<String, Object> params) {

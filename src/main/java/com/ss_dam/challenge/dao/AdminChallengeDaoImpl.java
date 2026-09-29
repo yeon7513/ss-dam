@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.ss_dam.challenge.model.request.AdminChallengeSearch;
 import com.ss_dam.challenge.model.response.AdminChallengeDetailView;
+import com.ss_dam.challenge.model.response.AdminChallengeEditState;
 import com.ss_dam.challenge.model.response.AdminChallengeListView;
 import com.ss_dam.challenge.model.response.AdminMemberProofsView;
 import com.ss_dam.feed.model.response.UserFeedView;
@@ -54,8 +55,39 @@ public class AdminChallengeDaoImpl implements AdminChallengeDao {
                 params);
     }
 
+    // 관리자 챌린지 수정
+    @Override
+    public AdminChallengeEditState loadChallengeForUpdate(Long code) {
 
+        return sql.selectOne(
+                "adminChallengeView.loadChallengeForUpdate",
+                Map.of("code", code));
+    }
 
+    @Override
+    public int updateChallenge(Map<String, Object> params) {
+
+        return sql.update(
+                "adminChallengeCommand.updateChallenge",
+                params);
+    }
+
+    // 관리자 챌린지 논리 삭제
+    @Override
+    public boolean hasChallengeHistory(Long code) {
+
+        return sql.selectOne(
+                "adminChallengeView.hasChallengeHistory",
+                Map.of("code", code));
+    }
+
+    @Override
+    public int deleteChallenge(Map<String, Object> params) {
+
+        return sql.update(
+                "adminChallengeCommand.deleteChallenge",
+                params);
+    }
 
 
     //관리자 회원 상세 - 인증글 통계

@@ -55,5 +55,26 @@
 - 관리자 계정이 삭제 처리되어도 과거 로그는 보여야 하므로 ,관리자 DELETE_YN 조건은 넣지 않음
 - 이름은 현재 관리자 정보를 기준으로 표시-->
 
+<!-- 관리자 처리 이력 저장 -->
+<insert id="insertActivityLog" parameterType="map">
+
+    INSERT INTO ADMIN_ACTIVITY_LOG (
+        ADM_CODE,
+        TARGET_TYPE,
+        TARGET_CODE,
+        PROCESS_TYPE,
+        MEMO,
+        CREATED_AT
+    )
+    VALUES (
+        #{adminCode},
+        #{targetType},
+        #{targetCode},
+        #{processType},
+        #{memo},
+        #{createdAt}
+    )
+
+</insert>
 
 </mapper>
