@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./AdminHeader.module.scss";
-import Button from "../common/button/Button";
+import Button from "../../common/button/Button";
 import { FiHome } from "react-icons/fi";
 
 const AdminHeader = () => {

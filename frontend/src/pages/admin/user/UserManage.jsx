@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import MemberCard from "../../../components/admin/member-card/MemberCard";
 import Pagination from "../../../components/common/pagination/Pagination";
 import TabMenus from "../../../components/common/tab-menus/TabMenus";
-import DashboardHeader from "../../../components/admin/DashboardHeader";
+import DashboardHeader from "../../../components/admin/dashboard-header/DashboardHeader";
 import UserManageFilters from "./UserManageFilters";
 
 // 이 페이지에서 사용하는 스타일
