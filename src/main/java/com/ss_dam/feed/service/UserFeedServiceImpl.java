@@ -1,5 +1,14 @@
 package com.ss_dam.feed.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.ss_dam.comment.service.UserCommentService;
 import com.ss_dam.common.image.service.ImageService;
 import com.ss_dam.common.pager.PageResult;
@@ -11,27 +20,19 @@ import com.ss_dam.feed.model.request.FeedUpdate;
 import com.ss_dam.feed.model.response.FeedDetail;
 import com.ss_dam.feed.model.response.FeedEditView;
 import com.ss_dam.feed.model.response.UserFeedView;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class UserFeedServiceImpl implements UserFeedService {
-
-  @Autowired
-  UserFeedDao userFeedDao;
-
-  @Autowired
-  UserCommentService userCommentService;
-
-  @Autowired
-  ImageService imageService;
+  
+  private final UserFeedDao userFeedDao;  
+  private final UserCommentService userCommentService;  
+  private final ImageService imageService;
+  
+  public UserFeedServiceImpl(UserFeedDao userFeedDao, UserCommentService userCommentService, ImageService imageService) {
+	  this.userFeedDao = userFeedDao;
+	  this.userCommentService = userCommentService;
+	  this.imageService = imageService;
+  }
 
 
   // 피드 목록 조회

@@ -3,7 +3,6 @@ package com.ss_dam.challenge.controller;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,8 +29,12 @@ public class UserChallengeController {
 
 	//UserChallengController : 목록·상세·인기·최신·랭킹 조회, 챌린지 참여, 내 참여 정보
 
-	@Autowired
-	UserChallengeService userChallengeService;
+	private final UserChallengeService userChallengeService;
+	
+	public UserChallengeController(UserChallengeService userChallengeService) {
+		
+		this.userChallengeService = userChallengeService;
+	}
 
 	
 	// 전체 챌린지 조회

@@ -2,6 +2,16 @@ package com.ss_dam.feed.controller;
 
 
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.ss_dam.auth.login.Login;
 import com.ss_dam.common.ApiResponse;
 import com.ss_dam.common.pager.PageResult;
@@ -12,11 +22,8 @@ import com.ss_dam.feed.model.response.FeedDetail;
 import com.ss_dam.feed.model.response.FeedEditView;
 import com.ss_dam.feed.model.response.UserFeedView;
 import com.ss_dam.feed.service.UserFeedService;
+
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 
 // @RestController 어노테이션 붙이면
@@ -28,9 +35,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/feeds") // 26.06.30 엔드포인트 수정 -> 일반 사용자용(비회원, 회원)은 /user 안붙임
 public class UserFeedController {
-
-  @Autowired
-  UserFeedService userFeedService;
+  
+  private final UserFeedService userFeedService;
+  
+  public UserFeedController(UserFeedService userFeedService) {
+	  this.userFeedService = userFeedService;
+  }
 
   // 전체 피드 목록 조회
   @GetMapping
