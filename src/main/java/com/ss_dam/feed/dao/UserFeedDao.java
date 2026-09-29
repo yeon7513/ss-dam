@@ -29,4 +29,6 @@ public interface UserFeedDao {
   void deleteFeed(Map<String, Object> params);
 
   float loadFeedsTotalCount(PageQuery pageQuery);
+
+  int countFeedsByChallenge(int chalCode, int memCode);
 }

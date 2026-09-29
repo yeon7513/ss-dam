@@ -170,4 +170,11 @@ public class UserFeedServiceImpl implements UserFeedService {
     userFeedDao.deleteHashtags(feedCode);
   }
 
+
+  @Override
+  public int getProofCount(int chalCode, int memCode) {
+
+	return userFeedDao.countFeedsByChallenge(chalCode, memCode);
+  }
+
 }
