@@ -10,6 +10,7 @@ function FeedSideNav({ className, isLoggedIn = true }) {
     if (item.authMode === "always") {
       return true;
     }
+
     if (item.authMode === "member") {
       return isLoggedIn;
     }
@@ -23,7 +24,7 @@ function FeedSideNav({ className, isLoggedIn = true }) {
         {isLoggedIn ? (
           <>
             <div>
-              <ProfileCard />
+              <ProfileCard memberProfile={null} />
             </div>
             <Link to="/feed/register">피드 작성</Link>
           </>

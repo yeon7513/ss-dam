@@ -25,6 +25,7 @@ const Feed = () => {
     keyword: '',
     sortTarget: 'createdAt',
   });
+
   // 피드 목록 조회 (커스텀 훅 적용)
   const { data, loading, error } = useLoadData(`/api/feeds${queryString}`);
   // 검색용 챌린지 카테고리 조회
@@ -57,9 +58,11 @@ const Feed = () => {
     setSelectedFeedCode(null);
   };
 
+  const isLoggedIn = !!sessionStorage.getItem("userCode");
+
   return (
     <main className={styles.wrap}>
-      <FeedSideNav />
+      <FeedSideNav isLoggedIn={isLoggedIn} />
       <div className={styles.container}>
         <div className={styles.filterBar}>
           {/* 정렬 */}

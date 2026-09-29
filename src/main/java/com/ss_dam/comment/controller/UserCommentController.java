@@ -1,6 +1,6 @@
 package com.ss_dam.comment.controller;
 
-import com.ss_dam.auth.login.Login;
+import com.ss_dam.auth.login.model.response.MemberProfile;
 import com.ss_dam.comment.model.request.CommentCreate;
 import com.ss_dam.comment.model.request.CommentUpdate;
 import com.ss_dam.comment.model.response.UserCommentView;
@@ -27,7 +27,7 @@ public class UserCommentController {
       @PathVariable Long feedCode, PageQuery pageQuery, HttpSession session) {
 
     // 로그인한 사용자의 좋아요 여부 확인
-    Login loginUser = (Login) session.getAttribute("loginUser");
+    MemberProfile loginUser = (MemberProfile) session.getAttribute("loginUser");
     Long memberCode = (loginUser != null) ? loginUser.getCode() : null;
 
     PageResult<UserCommentView> comments =

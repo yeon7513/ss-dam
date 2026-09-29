@@ -1,6 +1,6 @@
 package com.ss_dam.common.chat.controller;
 
-import com.ss_dam.auth.login.Login;
+import com.ss_dam.auth.login.model.response.MemberProfile;
 import com.ss_dam.common.chat.model.request.ChatMessageCreate;
 import com.ss_dam.common.chat.model.response.ChatAlertEvent;
 import com.ss_dam.common.chat.model.response.ChatMessageView;
@@ -62,7 +62,7 @@ public class ChatMessageController {
     }
 
     // 메시지를 보낸 회원의 고유 번호 설정
-    Login sender = (Login) sessionAttributes.get("loginUser");
+    MemberProfile sender = (MemberProfile) sessionAttributes.get("loginUser");
     Long senderCode = sender.getCode();
 
     // 전송된 메시지를 DB에 저장

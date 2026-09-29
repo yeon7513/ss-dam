@@ -1,6 +1,6 @@
 package com.ss_dam.comment.model.response;
 
-import com.ss_dam.auth.member.MemberProfile;
+import com.ss_dam.auth.login.model.response.MemberProfile;
 
 // 댓글 조회용 DTO (일반 사용자용)
 public class UserCommentView {

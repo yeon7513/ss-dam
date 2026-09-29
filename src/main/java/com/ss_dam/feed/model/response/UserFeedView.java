@@ -1,6 +1,6 @@
 package com.ss_dam.feed.model.response;
 
-import com.ss_dam.auth.member.MemberProfile;
+import com.ss_dam.auth.login.model.response.MemberProfile;
 
 import java.util.List;
 
