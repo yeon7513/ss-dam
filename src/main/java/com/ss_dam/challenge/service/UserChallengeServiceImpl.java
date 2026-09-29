@@ -3,7 +3,6 @@ package com.ss_dam.challenge.service;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ss_dam.challenge.Challenge;
@@ -14,11 +13,14 @@ import com.ss_dam.feed.service.UserFeedService;
 @Service
 public class UserChallengeServiceImpl implements UserChallengeService {
 
-    @Autowired
-    private UserChallengeDao userChallengeDao;
     
-    @Autowired
-    private UserFeedService userFeedService;
+    private final UserChallengeDao userChallengeDao;   
+    private final UserFeedService userFeedService;
+    
+    public  UserChallengeServiceImpl(UserChallengeDao userChallengeDao, UserFeedService userFeedService) {
+    	this.userChallengeDao = userChallengeDao;
+    	this.userFeedService = userFeedService;
+    }
 
     @Override
     public List<Challenge> searchChallenges(String progressStatus) {

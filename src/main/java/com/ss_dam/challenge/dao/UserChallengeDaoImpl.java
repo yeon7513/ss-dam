@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.ss_dam.challenge.Challenge;
@@ -13,9 +12,12 @@ import com.ss_dam.challenge.ChallengeInfo;
 
 @Repository
 public class UserChallengeDaoImpl implements UserChallengeDao {
-
-	@Autowired
-	SqlSession sql;
+	
+	private final SqlSession sql;
+	
+	public UserChallengeDaoImpl(SqlSession sql) {
+		this.sql = sql;
+	}
 
 	@Override
 	public List<Challenge> searchChallenges(String progressStatus) {
