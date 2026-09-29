@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 // 분리한 서브 컴포넌트들 import
-import DashboardHeader from "../../components/admin/DashboardHeader.jsx";
+import DashboardHeader from "../../components/admin/dashboard-header/DashboardHeader.jsx";
 import SummaryStats from "./OperationStatus/SummaryStats/SummaryStats.jsx";
 import AdminLogCard from "./OperationStatus/AdminLogCard/AdminLogCard.jsx";
 import PendingReports from "./OperationStatus/PendingReports/PendingReports.jsx";

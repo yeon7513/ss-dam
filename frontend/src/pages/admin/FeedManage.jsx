@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { MdArrowForwardIos, MdSearch, MdClose } from "react-icons/md";
 
-import DashboardHeader from "../../components/admin/DashboardHeader.jsx";
+import DashboardHeader from "../../components/admin/dashboard-header/DashboardHeader.jsx";
 import RadioInput from "../../components/forms/radio-input/RadioInput.jsx";
 import SelectBox from "../../components/forms/select-box/SelectBox.jsx";
 import TextInput from "../../components/forms/text-input/TextInput.jsx";

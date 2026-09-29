@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ADMIN_MENU } from "../../lib/sideMenu";
+import { ADMIN_MENU } from "../../../lib/sideMenu";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 
 import styles from "./AdminSidebar.module.scss";
