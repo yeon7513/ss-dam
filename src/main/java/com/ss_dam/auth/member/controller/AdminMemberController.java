@@ -1,6 +1,6 @@
 package com.ss_dam.auth.member.controller;
 
-import com.ss_dam.auth.login.Login;
+import com.ss_dam.auth.login.model.response.AdminProfile;
 import com.ss_dam.auth.member.model.filter.AdminMemberSearchFilter;
 import com.ss_dam.auth.member.model.request.MemberStatusChangeRequest;
 import com.ss_dam.auth.member.model.response.AdminMemberDetailView;
@@ -69,7 +69,7 @@ public class AdminMemberController {
   public ResponseEntity<ApiResponse<Void>> restrictMember(@PathVariable Long memberCode,
       @Valid @RequestBody MemberStatusChangeRequest request, HttpSession session) {
 
-    Login admin = requireAdmin(session);
+    AdminProfile admin = requireAdmin(session);
 
     adminMemberService.restrictMember(memberCode, request.getReason(), admin.getCode());
 
@@ -84,7 +84,7 @@ public class AdminMemberController {
   public ResponseEntity<ApiResponse<Void>> releaseMember(@PathVariable Long memberCode,
       @Valid @RequestBody MemberStatusChangeRequest request, HttpSession session) {
 
-    Login admin = requireAdmin(session);
+    AdminProfile admin = requireAdmin(session);
 
     adminMemberService.releaseMember(memberCode, request.getReason(), admin.getCode());
 
@@ -92,9 +92,9 @@ public class AdminMemberController {
   }
 
   // 로그인 및 관리자 권한 확인
-  private Login requireAdmin(HttpSession session) {
+  private AdminProfile requireAdmin(HttpSession session) {
 
-    Login user = (Login) session.getAttribute("loginUser");
+    AdminProfile user = (AdminProfile) session.getAttribute("loginUser");
 
     if (user == null) {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다.");

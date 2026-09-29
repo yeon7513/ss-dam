@@ -1,7 +1,7 @@
 package com.ss_dam.auth.member.service;
 
+import com.ss_dam.auth.login.model.response.MemberProfile;
 import com.ss_dam.auth.member.Member;
-import com.ss_dam.auth.member.MemberProfile;
 import com.ss_dam.auth.member.dao.MemberDao;
 import com.ss_dam.common.image.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,9 +1,10 @@
 package com.ss_dam.auth.login.service;
 
-import com.ss_dam.auth.login.Login;
+import com.ss_dam.auth.login.model.request.Login;
+import com.ss_dam.auth.login.model.response.AuthProfile;
 
 public interface LoginService {
 
-	Login login(Login loginForm, String clientIp);
+  AuthProfile login(Login loginForm, String clientIp);
 
 }

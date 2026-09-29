@@ -1,6 +1,6 @@
 package com.ss_dam.common.chat.service;
 
-import com.ss_dam.auth.member.MemberProfile;
+import com.ss_dam.auth.login.model.response.MemberProfile;
 import com.ss_dam.auth.member.service.MemberService;
 import com.ss_dam.common.chat.dao.ChatDao;
 import com.ss_dam.common.chat.model.filter.ChatRoomSearchFilter;

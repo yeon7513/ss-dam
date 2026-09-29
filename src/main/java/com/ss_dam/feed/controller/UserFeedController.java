@@ -2,7 +2,7 @@ package com.ss_dam.feed.controller;
 
 
 
-import com.ss_dam.auth.login.Login;
+import com.ss_dam.auth.login.model.response.AuthProfile;
 import com.ss_dam.common.ApiResponse;
 import com.ss_dam.common.pager.PageResult;
 import com.ss_dam.feed.model.filter.UserFeedSearchFilter;
@@ -12,11 +12,8 @@ import com.ss_dam.feed.model.response.FeedDetail;
 import com.ss_dam.feed.model.response.FeedEditView;
 import com.ss_dam.feed.model.response.UserFeedView;
 import com.ss_dam.feed.service.UserFeedService;
+
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 
 // @RestController 어노테이션 붙이면
@@ -28,9 +25,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/feeds") // 26.06.30 엔드포인트 수정 -> 일반 사용자용(비회원, 회원)은 /user 안붙임
 public class UserFeedController {
-
-  @Autowired
-  UserFeedService userFeedService;
+  
+  private final UserFeedService userFeedService;
+  
+  public UserFeedController(UserFeedService userFeedService) {
+	  this.userFeedService = userFeedService;
+  }
 
   // 전체 피드 목록 조회
   @GetMapping
@@ -50,7 +50,7 @@ public class UserFeedController {
     //    System.out.println("=== 세션 디버깅 끝 ===");
 
     // 로그인한 사용자의 좋아요 여부를 받아오기 위해 세션에서 정보를 꺼내옴.
-    Login loginUser = (Login) session.getAttribute("loginUser");
+    AuthProfile loginUser = (AuthProfile) session.getAttribute("loginUser");
     // NullException을 방지하기 위해 삼항연산자로 분기 처리함.
     // -> 로그인 했을 경우, 해당 사용자의 고유 번호를 넘겨줌
     // -> 로그인하지 않았을 경우는 처음부터 null을 넘겨 무조건 false가 나오게 처리
@@ -66,7 +66,7 @@ public class UserFeedController {
   @GetMapping("/{feedCode}")
   ResponseEntity<ApiResponse<FeedDetail>> findFeedDetailByFeedCode(@PathVariable Long feedCode,
       HttpSession session) {
-    Login loginUser = (Login) session.getAttribute("loginUser");
+    AuthProfile loginUser = (AuthProfile) session.getAttribute("loginUser");
     Long memberCode = (loginUser != null) ? loginUser.getCode() : null;
 
     FeedDetail feedDetail = userFeedService.findFeedDetailByFeedCode(feedCode, memberCode);

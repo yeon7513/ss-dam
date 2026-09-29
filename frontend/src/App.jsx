@@ -75,6 +75,7 @@ function App() {
     };
     checkAuthStauts();
   }, []);
+
   return (
     <Routes>
       <Route path="/" element={<Layout />}>

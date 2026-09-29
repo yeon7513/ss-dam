@@ -1,6 +1,6 @@
 package com.ss_dam.market.controller;
 
-import com.ss_dam.auth.login.Login;
+import com.ss_dam.auth.login.model.response.MemberProfile;
 import com.ss_dam.common.ApiResponse;
 import com.ss_dam.common.pager.PageResult;
 import com.ss_dam.market.model.filter.UserProductSearchFilter;
@@ -29,7 +29,7 @@ public class UserProductController {
       UserProductSearchFilter filter, HttpSession session) {
 
     // 로그인한 사용자의 Pick 여부를 받아오기 위해 세션에서 로그인 정보를 가져옴.
-    Login loginUser = (Login) session.getAttribute("loginUser");
+    MemberProfile loginUser = (MemberProfile) session.getAttribute("loginUser");
     Long memberCode = (loginUser != null) ? loginUser.getCode() : null;
 
     System.out.println("dealStatus: " + filter.getDealStatus());
@@ -46,7 +46,7 @@ public class UserProductController {
       @PathVariable Long prodCode, HttpSession session) {
 
     // 로그인한 사용자의 Pick 여부를 받아오기 위해 세션에서 로그인 정보를 가져옴.
-    Login loginUser = (Login) session.getAttribute("loginUser");
+    MemberProfile loginUser = (MemberProfile) session.getAttribute("loginUser");
     Long memberCode = (loginUser != null) ? loginUser.getCode() : null;
 
     ProductDetail productDetail =

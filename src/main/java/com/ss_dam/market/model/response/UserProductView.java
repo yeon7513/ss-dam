@@ -1,6 +1,6 @@
 package com.ss_dam.market.model.response;
 
-import com.ss_dam.auth.member.MemberProfile;
+import com.ss_dam.auth.login.model.response.MemberProfile;
 import com.ss_dam.market.enums.DealStatus;
 
 // 일반 사용자가 보는 거래글 목록 DTO
