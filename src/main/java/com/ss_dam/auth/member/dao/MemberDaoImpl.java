@@ -1,11 +1,10 @@
 package com.ss_dam.auth.member.dao;
 
+import com.ss_dam.auth.login.model.response.MemberProfile;
+import com.ss_dam.auth.member.Member;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import com.ss_dam.auth.member.Member;
-import com.ss_dam.auth.member.MemberProfile;
 
 @Repository
 public class MemberDaoImpl implements MemberDao {
@@ -36,6 +35,6 @@ public class MemberDaoImpl implements MemberDao {
     return sql.selectOne("member.countById", id);
   }
 
- 
+
 
 }

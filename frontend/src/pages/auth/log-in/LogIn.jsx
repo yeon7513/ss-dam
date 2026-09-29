@@ -19,7 +19,7 @@ const LogIn = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          memberId: memberId,
+          id: memberId,
           password: password,
         }),
         credentials: "include",
@@ -60,7 +60,7 @@ const LogIn = () => {
           navigate("/");
         }
       } else {
-        alert(result.message || "로그인에 실패했습니다");
+        console.log(result.message);
       }
     } catch (error) {
       console.error("로그인 중 서버 통신 에러:", error);

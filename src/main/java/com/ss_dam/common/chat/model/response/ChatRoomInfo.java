@@ -1,7 +1,7 @@
 package com.ss_dam.common.chat.model.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.ss_dam.auth.member.MemberProfile;
+import com.ss_dam.auth.login.model.response.MemberProfile;
 import com.ss_dam.market.model.response.UserProductView;
 
 public class ChatRoomInfo {
