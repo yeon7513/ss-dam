@@ -20,4 +20,6 @@ public interface UserFeedService {
   void updateFeed(FeedUpdate feedUpdate);
 
   void deleteFeed(Long feedCode, String updatedBy);
+  
+  int getProofCount(int chalCode, int memCode);
 }
