@@ -1,5 +1,5 @@
-@use "/src/scss/variables.scss" as *;
-@use "/src/scss/mixin.scss" as mix;
+@use "../../scss/variables.scss" as v;
+@use "../../scss/mixin.scss" as mix;
 
 .wrap {
   @include mix.wrap($fd: column);
@@ -16,12 +16,12 @@
     width: 50%;
     text-align: center;
     border-radius: 12px;
-    background-color: $grayscale-10;
+    background-color: v.$grayscale-10;
     color: #fff;
 
     &.active {
-      color: $primary-50;
-      background-color: $point-5;
+      color: v.$primary-50;
+      background-color: v.$point-5;
     }
 
     > a {

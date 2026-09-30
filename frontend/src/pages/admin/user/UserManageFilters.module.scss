@@ -1,3 +1,6 @@
+@use "../../../scss/variables.scss" as v;
+@use "../../../scss/mixin.scss" as mix;
+
 // 공통 FilterBar의 배치를 회원관리 화면에서 조정
 .filters.filters {
   display: flex;

@@ -1,4 +1,5 @@
-@use "/src/scss/variables.scss" as *;
+@use "../../../scss/variables.scss" as v;
+@use "../../../scss/mixin.scss" as mix;
 
 .loginPage {
   display: flex; // 전체 가운데정렬
@@ -61,7 +62,7 @@
   margin-top: 1rem;
 
   p {
-    color: $grayscale-90; // 가지고 계신 회색조 변수에 맞춰 수정 가능
+    color: v.$grayscale-90; // 가지고 계신 회색조 변수에 맞춰 수정 가능
     opacity: 0.6; // 그레이스케일 컬러 차이간격이 너무 커서 투명도로 조절함
   }
 
@@ -72,7 +73,7 @@
 
     .subLink {
       &:hover {
-        color: $point-50;
+        color: v.$point-50;
         font-weight: 600;
         text-decoration: underline;
       }

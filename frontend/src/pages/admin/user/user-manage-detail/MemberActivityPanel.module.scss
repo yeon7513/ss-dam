@@ -1,3 +1,6 @@
+@use "../../../../scss/variables.scss" as v;
+@use "../../../../scss/mixin.scss" as mix;
+
 .panel {
   min-width: 0;
   margin-top: 24px;
@@ -168,7 +171,7 @@
 }
 
 
- .tabs.tabs button[aria-current='page'] {
+.tabs.tabs button[aria-current='page'] {
   color: #279953;
   border-bottom-color: #279953;
   font-weight: 700;

@@ -1,9 +1,10 @@
-@use "/src/scss/variables.scss" as *;
+@use "../../../scss/variables.scss" as v;
+@use "../../../scss/mixin.scss" as mix;
 
 /* 카드 박스 외곽 기본 스타일 */
 .card {
-  background-color: $color-white;
-  border: 1px solid $grayscale-20;
+  background-color: v.$color-white;
+  border: 1px solid v.$grayscale-20;
   border-radius: 8px;
   padding: 20px;
   display: flex;
@@ -13,7 +14,7 @@
   h3 {
     font-size: 1.25rem;
     font-weight: 600;
-    color: $grayscale-90;
+    color: v.$grayscale-90;
   }
 }
 

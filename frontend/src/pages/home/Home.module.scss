@@ -1,4 +1,5 @@
-@use "/src/scss/variables.scss" as *;
+@use "../../scss/variables.scss" as v;
+@use "../../scss/mixin.scss" as mix;
 
 .wrap {
   display: flex;
@@ -10,7 +11,7 @@
     max-width: 80vw;
 
     h2 {
-      font-family: $font-logo;
+      font-family: v.$font-logo;
       font-weight: 400;
     }
 

@@ -1,4 +1,6 @@
-@use "/src/scss/variables.scss" as *;
+@use "../../../scss/variables.scss" as v;
+@use "../../../scss/mixin.scss" as mix;
+
 
 .wrap {
   > input {
@@ -8,22 +10,22 @@
     font-size: 0.9rem;
     font-weight: 500;
     box-sizing: border-box;
-    border: 1.5px solid $point-20;
+    border: 1.5px solid v.$point-20;
     transition: background-color 0.5s ease;
 
     &::placeholder {
-      color: $grayscale-50;
+      color: v.$grayscale-50;
       font-weight: 400;
       font-size: 0.9rem;
     }
 
     &:focus {
-      border: 1.5px solid $point-20;
-      background-color: $point-5;
+      border: 1.5px solid v.$point-20;
+      background-color: v.$point-5;
       outline: none;
 
       &::placeholder {
-        color: $grayscale-90;
+        color: v.$grayscale-90;
       }
     }
   }

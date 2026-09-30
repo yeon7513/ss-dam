@@ -1,4 +1,5 @@
-@use "/src/scss/variables.scss" as *;
+@use "../../../../scss/variables.scss" as v;
+@use "../../../../scss/mixin.scss" as mix;
 
 .bottomCard {
   height: 300px;
@@ -15,7 +16,7 @@
     h3 {
       font-size: 1.1rem;
       font-weight: 700;
-      color: $grayscale-90;
+      color: v.$grayscale-90;
     }
   }
 
@@ -29,14 +30,14 @@
     .donutPlaceholder {
       width: 280px;
       height: 100%;
-      border: 1px dashed $grayscale-20;
+      border: 1px dashed v.$grayscale-20;
       border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: $grayscale-50;
+      color: v.$grayscale-50;
       font-size: 1rem;
-      background-color: $background-5;
+      background-color: v.$background-5;
       flex-shrink: 0;
     }
 
@@ -55,7 +56,7 @@
         display: flex;
         justify-content: space-between;
         font-size: 1rem;
-        color: $grayscale-90;
+        color: v.$grayscale-90;
 
         .sellerName {
           display: flex;
@@ -65,7 +66,7 @@
           .dot {
             width: 6px;
             height: 6px;
-            background-color: $grayscale-50;
+            background-color: v.$grayscale-50;
             border-radius: 50%;
           }
         }
@@ -75,10 +76,11 @@
           gap: 10px;
 
           .plus {
-            color: $primary-50;
+            color: v.$primary-50;
           }
+
           .minus {
-            color: $dan-color;
+            color: v.$dan-color;
           }
         }
       }
