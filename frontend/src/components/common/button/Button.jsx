@@ -12,7 +12,6 @@ import styles from "./Button.module.scss";
  * @param {'button' | 'submit' | 'reset'} [type="button"] - HTML 버튼 type 속성 (기본값: "button")
  * @param {object} [props] - 기타 HTML button 태그 속성(disabled, id, aria-* 등)도 자유롭게 쓰면 됩니다!
  */
-
 function Button({
   className,
   btnStyle = "fill",
@@ -36,6 +35,7 @@ function Button({
       onClick={onClick}
       {...props}
     >
+      {/* 버튼 영역 */}
       {children}
     </button>
   );
