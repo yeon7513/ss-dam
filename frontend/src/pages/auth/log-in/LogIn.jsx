@@ -1,14 +1,18 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
 import Button from "../../../components/common/button/Button";
 import TextInput from "../../../components/forms/text-input/TextInput";
-import styles from "./LogIn.module.scss"; // 로그인 페이지 전용 scss모듈
+
+import styles from "./LogIn.module.scss";
 
 const LogIn = () => {
+  /* 로그인 상태 관리 */
   const [memberId, setMemberId] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
+  /* 로그인 제출 처리 */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -31,7 +35,7 @@ const LogIn = () => {
       if (response.ok) {
         const userRole = result.data.role;
         const userName = result.data.name;
-        const userCode = result.data.code; // UI/UX 위해 추가
+        const userCode = result.data.code; // 사용자 구분 코드를 저장함.
 
         sessionStorage.setItem("userCode", userCode);
         sessionStorage.setItem("userRole", userRole);
@@ -68,60 +72,65 @@ const LogIn = () => {
     }
   };
 
-  // 이 아래로만 손댈 것. 퍼블리싱 시작.
   return (
     <main className={styles.loginPage}>
+      {/* 로그인 컨테이너 */}
       <div className={styles.loginContainer}>
         <h2>로그인</h2>
         <p className={styles.subTitle}>
           더 나은 순환을 위해 다시 만나 반가워요!
         </p>
+
+        {/* 로그인 정보 입력 양식 */}
         <form method="post" onSubmit={handleSubmit}>
           <div className={styles.inputGroup}>
             <TextInput
-              className={styles.loginInput}
-              name="id"
               label="아이디"
               placeholder="아이디 입력"
+              className={styles.loginInput}
+              name="id"
               value={memberId}
               onChange={(e) => setMemberId(e.target.value)}
             />
             <TextInput
+              label="비밀번호"
+              placeholder="비밀번호 입력"
               className={styles.loginInput}
               type="password"
               name="password"
-              label="비밀번호"
-              placeholder="비밀번호 입력"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <Button className={styles.loginButton} type="submit" fullWidth>
+
+          {/* 버튼 영역 */}
+          <Button fullWidth className={styles.loginButton} type="submit">
             로그인
           </Button>
 
           <Button
+            size="lg"
+            fullWidth
             className={styles.signupButton}
             type="button"
-            size="lg"
             onClick={() => navigate("/signup")}
-            fullWidth
           >
             회원가입
           </Button>
 
+          {/* 계정 정보 링크 영역 */}
           <div className={styles.ctaAuthLinks}>
             <p>계정 정보를 잊으셨나요?</p>
             <div className={styles.linkGroup}>
-              <Link className={styles.subLink} to="#">
+              <Link to="#" className={styles.subLink}>
                 아이디 찾기
               </Link>
               <span className={styles.divider}>|</span>
-              <Link className={styles.subLink} to="#">
+              <Link to="#" className={styles.subLink}>
                 비밀번호 찾기
               </Link>
               <span className={styles.divider}>|</span>
-              <Link className={styles.subLink} to="#">
+              <Link to="#" className={styles.subLink}>
                 회원가입
               </Link>
             </div>

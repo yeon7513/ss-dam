@@ -1,24 +1,23 @@
 @use "/src/scss/variables.scss" as *;
 
 .loginPage {
-  display: flex; // 전체 가운데정렬
+  display: flex; // 화면 중앙에 배치함.
   justify-content: center;
-  align-items: flex-start; // 하단 요소에 영향받지 않고 헤더와의 간격 고정
-  padding: 6rem 2rem; // 헤더, 푸터와 간격 조정
+  align-items: flex-start; // 상단 간격을 고정함.
+  padding: 96px 32px; // 내부 여백을 설정함.
 }
 
 .loginContainer {
-  width: 100%;
-  max-width: 20rem;
-
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+  max-width: 20rem;
 
   h2 {
+    margin-bottom: 2rem;
     font-size: 2rem;
     font-weight: 700;
-    margin-bottom: 2rem;
   }
 
   form {
@@ -42,15 +41,14 @@
 .loginInput {
   margin-bottom: 1.5rem;
 
-  // 인풋박스 위에 있는 아이디, 비밀번호
   label {
-    display: block;
+    display: block; // 라벨 요소를 한 줄 전체 영역으로 설정함.
     margin-bottom: 0.5rem;
   }
 }
 
 .loginButton {
-  margin-bottom: 0.8rem; // 로그인버튼과 회원가입버튼 사이 상하 간격
+  margin-bottom: 0.8rem; // 회원가입 버튼과의 간격을 설정함.
 }
 
 .ctaAuthLinks {
@@ -61,27 +59,21 @@
   margin-top: 1rem;
 
   p {
-    color: $grayscale-90; // 가지고 계신 회색조 변수에 맞춰 수정 가능
-    opacity: 0.6; // 그레이스케일 컬러 차이간격이 너무 커서 투명도로 조절함
+    opacity: 0.6; // 투명도를 조절함.
+    color: $grayscale-90;
   }
+}
 
-  .linkGroup {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+.linkGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
 
-    .subLink {
-      &:hover {
-        color: $point-50;
-        font-weight: 600;
-        text-decoration: underline;
-      }
-    }
-
-    // .divider {
-    //   font-size: 1rem;
-    //   color: $grayscale-90;
-    //   user-select: none;
-    // }
+.subLink {
+  &:hover {
+    font-weight: 600;
+    color: $point-50;
+    text-decoration: underline;
   }
 }
