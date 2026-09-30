@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAuth } from "../../../context/AuthContext.jsx";
 import { Navigate, Outlet } from "react-router-dom";
 
@@ -8,9 +8,15 @@ import { Navigate, Outlet } from "react-router-dom";
 function ProtectedRoute({ requiredRole }) {
   const { user, isLoggedIn } = useAuth();
 
+  // alert는 한번만
+  useEffect(() => {
+    if (!isLoggedIn) {
+      alert("로그인이 필요한 서비스입니다.");
+    }
+  }, [isLoggedIn])
+
   if (!isLoggedIn) {
-    alert("로그인이 필요한 서비스입니다.");
-    return <Navigate to="/login" />;
+    return <Navigate to="/login" replace />;
   }
 
   // 권한 검사
