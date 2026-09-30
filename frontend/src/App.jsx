@@ -104,8 +104,9 @@ function App() {
         </Route>
 
         {/* 고객센터 */}
-        <Route path="supports" element={<Supports />} />
-        <Route path=":code" element={<SupportDetail />} />
+        <Route path="supports" element={<Supports />}>
+          <Route path=":code" element={<SupportDetail />} />
+        </Route>
 
         {/* 일반회원 - 마이페이지 */}
         <Route element={<ProtectedRoute />}>
@@ -137,7 +138,7 @@ function App() {
       <Route element={<ProtectedRoute />}>
         <Route path="/chat" element={<Chat />} />
       </Route>
-      
+
       {/* 에러 페이지 */}
       <Route path="/error/:errCode" element={<Error />} />
       <Route path="*" element={<Navigate to="/error/404" replace />} />

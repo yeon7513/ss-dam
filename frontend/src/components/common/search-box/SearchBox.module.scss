@@ -5,8 +5,16 @@
   @include mix.flex;
   gap: 0.5rem;
 
-  input[type='text'] {
-    width: 240px;
+
+  .textGroup {
+    > input[type='text'] {
+      width: 240px;
+    }
+
+    .searchIcon {
+      font-size: 2.5rem;
+    }
+
   }
 
   .radioGroup {

@@ -8,7 +8,6 @@ import { useAuth } from "../../../context/AuthContext.jsx"; // 로그인 페이�
 const LogIn = () => {
   const [memberId, setMemberId] = useState("");
   const [password, setPassword] = useState("");
-  // const [] = useState(false);
   const navigate = useNavigate();
 
   const { login } = useAuth();
