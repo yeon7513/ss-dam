@@ -1,79 +1,73 @@
 @use "../../../scss/variables.scss" as v;
 @use "../../../scss/mixin.scss" as mix;
 
+/* 버튼 영역 */
 .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: none;
-  font-family: inherit;
+  font-size: 0.9rem;
   font-weight: 500;
-  font-size: 0.9rem; // 버튼 폰트 사이즈
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 
-  transition: background-color 0.3s ease,
-  border-color 0.3s ease;
-
+  /* 비활성화 상태 */
   &:disabled {
-    cursor: not-allowed;
     opacity: 0.9;
+    cursor: not-allowed;
   }
-}
 
-/* ==========================================
-    BtnStyle Variants (스타일 종류)
-   ========================================== */
-
-// 채우기 스타일
-.fill {
-  background-color: v.$grayscale-5;
-  color: v.$grayscale-90;
-
-  &:hover:not(:disabled) {
-    background-color: v.$grayscale-10;
-  }
-}
-
-// 아웃라인 스타일
-.outline {
-  //background-color: $color-white;
-  color: v.$grayscale-90;
-  border: 1.5px solid v.$grayscale-50;
-
-  &:hover:not(:disabled) {
+  /* 채우기 스타일 */
+  &.fill {
     background-color: v.$grayscale-5;
+    color: v.$grayscale-90;
+
+    &:hover:not(:disabled) {
+      background-color: v.$grayscale-10;
+    }
   }
-}
 
-// 위험/삭제 스타일
-.danger {
-  background-color: v.$dan-color; // 빨간색 계열 변수
-  color: v.$color-white;
+  /* 테두리 스타일 */
+  &.outline {
+    border: 1.5px solid v.$grayscale-50;
+    color: v.$grayscale-90;
 
-  &:hover:not(:disabled) {
-    background-color: v.$grayscale-50;
+    &:hover:not(:disabled) {
+      background-color: v.$grayscale-5;
+    }
   }
-}
 
-/* ==========================================
-    Size Variants (크기)
-   ========================================== */
+  /* 위험 스타일 */
+  &.danger {
+    background-color: v.$dan-color;
+    color: v.$color-white;
 
-.sm {
-  height: 2.4rem;
-  padding: 0 1rem;
-}
+    &:hover:not(:disabled) {
+      background-color: v.$grayscale-50;
+    }
+  }
 
-.md {
-  height: 3rem;
-  padding: 0 1.25rem;
-}
+  /* 작은 크기 */
+  &.sm {
+    height: 2.4rem;
+    padding: 0 16px;
+  }
 
-.lg {
-  height: 3.4rem;
-  padding: 0 1.5rem;
-}
+  /* 중간 크기 */
+  &.md {
+    height: 3rem;
+    padding: 0 20px;
+  }
 
-// 너비 100% 가득 채우기
-.fullWidth {
-  width: 100%;
+  /* 큰 크기 */
+  &.lg {
+    height: 3.4rem;
+    padding: 0 24px;
+  }
+
+  /* 전체 너비 */
+  &.fullWidth {
+    width: 100%;
+  }
 }
