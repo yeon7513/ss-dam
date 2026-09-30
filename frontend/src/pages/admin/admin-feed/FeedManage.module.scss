@@ -217,8 +217,9 @@
       border: 1.5px solid v.$point-20;
       background-color: v.$color-white;
 
-      transition: background-color 0.5s ease,
-      color 0.2s ease;
+      transition:
+        background-color 0.5s ease,
+        color 0.2s ease;
 
       &::placeholder {
         color: v.$grayscale-50;
