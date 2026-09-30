@@ -1,0 +1,26 @@
+@use "/src/scss/variables.scss" as *;
+
+/* 관리자 헤더 영역 */
+.topHeader {
+  display: flex;
+  position: sticky;
+  top: 0;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+  height: 4.6rem;
+  padding: 0 24px;
+  border-bottom: 1px solid $grayscale-20;
+  background-color: $color-white;
+
+  /* 홈 이동 버튼 영역 */
+  .homeBtn {
+    font-size: 1.625rem;
+    cursor: pointer;
+  }
+
+  /* 사용자 모드 전환 버튼 영역 */
+  .userModeBtn {
+    width: 9rem;
+  }
+}

@@ -1,3 +1,6 @@
+@use "../../../scss/variables.scss" as v;
+@use "../../../scss/mixin.scss" as mix;
+
 .uploadImage {
   padding: 24px;
   background-color: #ddd;

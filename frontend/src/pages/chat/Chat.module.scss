@@ -1,8 +1,25 @@
-@use "/src/scss/variables.scss" as *;
-@use "/src/scss/mixin.scss" as mix;
+@use "../../scss/variables.scss" as v;
+@use "../../scss/mixin.scss" as mix;
 
 .chat {
   @include mix.flex;
   height: 100vh;
   overflow: hidden;
+
+  .container {
+    @include mix.flex($fd: column);
+    gap: 1rem;
+    flex: 2;
+
+    .icon {
+      font-size: 3rem;
+      color: v.$grayscale-20;
+    }
+
+    > p {
+      font-size: 1.25rem;
+      color: v.$grayscale-50;
+    }
+
+  }
 }

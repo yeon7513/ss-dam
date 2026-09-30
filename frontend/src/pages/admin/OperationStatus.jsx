@@ -1,22 +1,18 @@
 import React, { useEffect, useState } from "react";
-
-// 분리한 서브 컴포넌트들 import
-import DashboardHeader from "./OperationStatus/DashboardHeader.jsx";
-import SummaryStats from "./OperationStatus/SummaryStats.jsx";
-import AdminLogCard from "./OperationStatus/AdminLogCard.jsx";
-import PendingReports from "./OperationStatus/PendingReports.jsx";
-import DashboardCharts from "./OperationStatus/DashboardCharts.jsx";
-import RegionParticipation from "./OperationStatus/RegionParticipation.jsx";
-import TopSellers from "./OperationStatus/TopSellers.jsx";
-
+import DashboardHeader from "../../components/admin/dashboard-header/DashboardHeader.jsx";
+import AdminLogCard from "./OperationStatus/AdminLogCard/AdminLogCard.jsx";
+import DashboardCharts from "./OperationStatus/DashboardCharts/DashboardCharts.jsx";
+import PendingReports from "./OperationStatus/PendingReports/PendingReports.jsx";
+import RegionParticipation from "./OperationStatus/RegionParticipation/RegionParticipation.jsx";
+import SummaryStats from "./OperationStatus/SummaryStats/SummaryStats.jsx";
+import TopSellers from "./OperationStatus/TopSellers/TopSellers.jsx";
 import styles from "./OperationStatus.module.scss";
 
 const OperationStatus = () => {
-  // 백엔드 요청에 필요한 기본 조회 기간 설정 (예: 이번 달 1일 ~ 오늘)
+  /* 운영 현황 대시보드 데이터 관리 */
   const [fromDate] = useState("2026-09-01");
   const [toDate] = useState("2026-09-15");
 
-  // 2*2요약 카드
   const [summaryData, setSummaryData] = useState([
     { title: "전체 회원 수", value: "0명", rate: "+0%" },
     { title: "오늘 신규 가입", value: "0명", rate: "+0%" },
@@ -24,34 +20,20 @@ const OperationStatus = () => {
     { title: "일일 참여 건수", value: "0건", rate: "+0%" },
   ]);
 
-  // 관리자 활동 로그
   const [adminLogsData] = useState([]);
-
-  // 미처리 신고
   const [pendingReportsData] = useState([]);
-
-  // 지역별 참여도
   const [participationData, setParticipationData] = useState([]);
-
-  // 우수판매자
   const [topSellersData, setTopSellersData] = useState([]);
-
-  // 아이콘 회전 애니메이션 State
+  const [lastUpdated, setLastUpdated] = useState("");
   const [isSpinning, setIsSpinning] = useState(false);
 
-  // 현재 시각 저장 State
-  const [lastUpdated, setLastUpdated] = useState("");
-
-  // 현재 시각 갱신 함수
   const updateCurrentTime = () =>
     setLastUpdated(`${new Date().toLocaleString("sv-SE")} 기준`);
 
-  // 데이터 통합 Fetch 함수
   const fetchAdminDashboardData = async () => {
     const queryParam = `?from=${fromDate}&to=${toDate}`;
 
     try {
-      // 대시보드 요약 조회
       const summaryRes = await fetch(
         `/api/admin/dashboard/summary${queryParam}`,
       );
@@ -59,7 +41,6 @@ const OperationStatus = () => {
         const result = await summaryRes.json();
         if (result.data) {
           const data = result.data;
-
           setSummaryData([
             {
               title: "전체 회원 수",
@@ -85,14 +66,12 @@ const OperationStatus = () => {
         }
       }
 
-      // 지역별 참여 통계 조회
       const regionRes = await fetch(
         `/api/admin/dashboard/statistics/regions${queryParam}`,
       );
       if (regionRes.ok) {
         const result = await regionRes.json();
         if (result.data) {
-          // 백엔드 RegionStatistics 응답 배열을 프론트 형태에 맞게 변환
           const formattedRegions = result.data.map((reg) => ({
             name: reg.regionName,
             percent: `${reg.percentage}%`,
@@ -102,14 +81,12 @@ const OperationStatus = () => {
         }
       }
 
-      // 우수 판매자 순위 조회
       const sellersRes = await fetch(
         `/api/admin/dashboard/statistics/sellers/ranking${queryParam}`,
       );
       if (sellersRes.ok) {
         const result = await sellersRes.json();
         if (result.data) {
-          // 백엔드 SellerRanking 응답 배열을 프론트 형태에 맞게 변환
           const formattedSellers = result.data.map((seller) => ({
             name: seller.sellerName,
             value: `${seller.totalPrice.toLocaleString()}원`,
@@ -121,11 +98,11 @@ const OperationStatus = () => {
         }
       }
     } catch (error) {
+      // 대시보드 데이터 조회 실패 시 예외를 처리함.
       console.error("어드민 대시보드 데이터 조회 실패", error);
     }
   };
 
-  // 새로고침 버튼 핸들러
   const handleRefresh = async () => {
     if (isSpinning) return;
     setIsSpinning(true);
@@ -133,8 +110,8 @@ const OperationStatus = () => {
     try {
       await fetchAdminDashboardData();
       updateCurrentTime();
-      console.log("데이터 갱신 완료");
     } catch (error) {
+      // 데이터 새로고침 실패 시 예외를 처리함.
       console.error("데이터 갱신 실패:", error);
     } finally {
       setTimeout(() => {
@@ -143,53 +120,52 @@ const OperationStatus = () => {
     }
   };
 
-  // 초기 렌더링 시 현재 시각 설정
   useEffect(() => {
     updateCurrentTime();
-    fetchAdminDashboardData(); // 데이터 패치 함수
+    fetchAdminDashboardData();
 
-    // 1분(60,000ms)마다 시각을 자동 갱신
+    // 1분마다 현재 시각을 자동 갱신함.
     const timer = setInterval(() => {
       updateCurrentTime();
     }, 60000);
 
-    // 컴포넌트 언마운트 시 메모리 누수 방지
     return () => clearInterval(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <div className={styles.dashboardBody}>
-      {/* 대시보드헤더 컴포넌트*/}
+      {/* 대시보드 헤더 영역 */}
       <DashboardHeader
+        title="운영 현황"
         lastUpdated={lastUpdated}
-        handleRefresh={handleRefresh}
         isSpinning={isSpinning}
+        handleRefresh={handleRefresh}
       />
 
-      {/* 상단 2열 레이아웃 */}
+      {/* 상단 레이아웃 영역 */}
       <div className={styles.topGrid}>
         <div className={styles.leftColumn}>
-          {/* 2x2 요약 카드 컴포넌트 */}
+          {/* 요약 통계 영역 */}
           <SummaryStats summaryData={summaryData} />
 
-          {/* 관리자 활동 로그 카드 컴포넌트 */}
+          {/* 관리자 로그 카드 영역 */}
           <AdminLogCard adminLogsData={adminLogsData} />
         </div>
 
-        {/* 미처리 신고 카드 컴포넌트 */}
+        {/* 미처리 신고 영역 */}
         <PendingReports pendingReportsData={pendingReportsData} />
       </div>
 
-      {/* 중단 3열 차트 레이아웃 컴포넌트 */}
+      {/* 중단 차트 영역 */}
       <DashboardCharts />
 
-      {/* 하단 2열: 지역별 참여도 및 우수 판매자 */}
+      {/* 하단 레이아웃 영역 */}
       <div className={styles.bottomGrid}>
-        {/* 지역별 참여도 카드 컴포넌트 */}
+        {/* 지역별 참여도 영역 */}
         <RegionParticipation participationData={participationData} />
 
-        {/* 우수 판매자 카드 컴포넌트 */}
+        {/* 우수 판매자 영역 */}
         <TopSellers topSellersData={topSellersData} />
       </div>
     </div>

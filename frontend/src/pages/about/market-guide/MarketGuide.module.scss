@@ -1,5 +1,5 @@
-@use "/src/scss/variables.scss" as *;
-@use "/src/scss/mixin.scss" as mix;
+@use "../../../scss/variables.scss" as v;
+@use "../../../scss/mixin.scss" as mix;
 
 //rem : 상대크기로 설정. 웬만하면 margin, padding도 rem으로 설정.
 //border : 무조건 px로 설정. //어 뭐야. 이걸 여기에 써놨었네
@@ -20,10 +20,10 @@
     top: 5rem; //스크롤 시 브라우저 상단에서 100px 떨어진 곳에 고정
 
     .mainTitle {
-      font-family: $font-logo;
+      font-family: v.$font-logo;
       font-size: 3.125rem;
       font-weight: 500;
-      color: $grayscale-100;
+      color: v.$grayscale-100;
 
       margin-bottom: 1.875rem;
       text-align: left;
@@ -39,38 +39,38 @@
 
     //공통 스타일
     .subTitle {
-      font-family: $font-main;
+      font-family: v.$font-main;
       font-size: 1.875rem;
       font-weight: 600;
-      color: $grayscale-100;
+      color: v.$grayscale-100;
 
       margin-bottom: 1.25rem;
     }
 
     .contentTitle {
-      font-family: $font-main;
+      font-family: v.$font-main;
       font-size: 1.375rem;
       font-weight: 600;
-      color: $grayscale-100;
+      color: v.$grayscale-100;
 
       margin-bottom: 0.4rem;
     }
 
     .contentText {
-      font-family: $font-main;
+      font-family: v.$font-main;
       font-size: 1.125rem;
       font-weight: 400;
-      color: $grayscale-100;
+      color: v.$grayscale-100;
 
       line-height: 1.6;
       margin-bottom: 2rem;
     }
 
     .pointText {
-      font-family: $font-logo;
+      font-family: v.$font-logo;
       font-size: 1.375rem;
       font-weight: 400;
-      color: $primary-50;
+      color: v.$primary-50;
 
       line-height: 1.6;
     }
@@ -89,23 +89,23 @@
   //반복되는 내용은 큰 뎁스의 하위로 구분.
   padding: 1.25rem 2.5rem;
   //border-radius: 6px 6px 6px 0px; //border-radius 방향 다르게 하기 위해 따로 뺌.
-  background-color: $background-50;
-  border: 2px solid $primary-20;
+  background-color: v.$background-50;
+  border: 2px solid v.$primary-20;
 
   .cardTitle {
-    font-family: $font-main;
+    font-family: v.$font-main;
     font-size: 1.375rem;
     font-weight: 600;
-    color: $grayscale-100;
+    color: v.$grayscale-100;
 
     margin-bottom: 0.875rem;
   }
 
   .cardText {
-    font-family: $font-main;
+    font-family: v.$font-main;
     font-size: 1rem;
     font-weight: 400;
-    color: $grayscale-100;
+    color: v.$grayscale-100;
 
     line-height: 1.6;
   }
@@ -128,10 +128,10 @@
 }
 
 .noticeList {
-  font-family: $font-main;
+  font-family: v.$font-main;
   font-size: 1.125rem;
   font-weight: 400;
-  color: $grayscale-100;
+  color: v.$grayscale-100;
 
   line-height: 1.6;
   padding-left: 1.4rem;
@@ -144,10 +144,10 @@
 }
 
 .stepProcess {
-  font-family: $font-main;
+  font-family: v.$font-main;
   font-size: 1rem;
   font-weight: 400;
-  color: $grayscale-100;
+  color: v.$grayscale-100;
 
   line-height: 1.6;
 
@@ -162,22 +162,21 @@
   line-height: 2;
 
   .stepText {
-    font-family: $font-main;
+    font-family: v.$font-main;
     font-size: 1.1rem;
     font-weight: 400;
-    color: $grayscale-100;
+    color: v.$grayscale-100;
   }
 
   .stepBox {
-    display: column;
     padding: 2px 8px;
 
     border-radius: 1.5rem;
-    border: 2px solid $primary-20;
+    border: 2px solid v.$primary-20;
 
-    font-family: $font-main;
+    font-family: v.$font-main;
     font-size: 0.8rem;
     font-weight: 800;
-    color: $primary-50;
+    color: v.$primary-50;
   }
 }

@@ -1,4 +1,5 @@
-@use "/src/scss/variables.scss" as *;
+@use "../../../scss/variables.scss" as v;
+@use "../../../scss/mixin.scss" as mix;
 
 .button {
   display: inline-flex;
@@ -9,9 +10,8 @@
   font-weight: 500;
   font-size: 0.9rem; // 버튼 폰트 사이즈
 
-  transition:
-    background-color 0.3s ease,
-    border-color 0.3s ease;
+  transition: background-color 0.3s ease,
+  border-color 0.3s ease;
 
   &:disabled {
     cursor: not-allowed;
@@ -25,32 +25,32 @@
 
 // 채우기 스타일
 .fill {
-  background-color: $grayscale-5;
-  color: $grayscale-90;
+  background-color: v.$grayscale-5;
+  color: v.$grayscale-90;
 
   &:hover:not(:disabled) {
-    background-color: $grayscale-10;
+    background-color: v.$grayscale-10;
   }
 }
 
 // 아웃라인 스타일
 .outline {
   //background-color: $color-white;
-  color: $grayscale-90;
-  border: 1.5px solid $grayscale-50;
+  color: v.$grayscale-90;
+  border: 1.5px solid v.$grayscale-50;
 
   &:hover:not(:disabled) {
-    background-color: $grayscale-5;
+    background-color: v.$grayscale-5;
   }
 }
 
 // 위험/삭제 스타일
 .danger {
-  background-color: $dan-color; // 빨간색 계열 변수
-  color: $color-white;
+  background-color: v.$dan-color; // 빨간색 계열 변수
+  color: v.$color-white;
 
   &:hover:not(:disabled) {
-    background-color: $grayscale-50;
+    background-color: v.$grayscale-50;
   }
 }
 

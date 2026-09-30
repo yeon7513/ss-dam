@@ -1,42 +1,43 @@
 package com.ss_dam.auth.login.dao;
 
-import java.util.Map;
-
+import com.ss_dam.auth.login.model.request.Login;
+import com.ss_dam.auth.login.model.response.AdminProfile;
+import com.ss_dam.auth.login.model.response.MemberProfile;
+import com.ss_dam.auth.member.Member;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.ss_dam.auth.login.Login;
-import com.ss_dam.auth.member.Member;
+import java.util.Map;
 
 @Repository
 public class LoginDaoImpl implements LoginDao {
 
-	@Autowired
-	private SqlSession sql;
-	
-	@Override
-	public Member findById(String memberId) {
-	
-		return sql.selectOne("member.findById", memberId);
-	}
+  @Autowired
+  private SqlSession sql;
 
-	@Override
-	public Login findMemberForLogin(Map<String, String> paramMap) {
-		
-		return sql.selectOne("member.findMemberForLogin", paramMap);
-	}
+  @Override
+  public Member findById(String memberId) {
 
-	@Override
-	public Login findAdminForLogin(Map<String, String> paramMap) {
-		
-		return sql.selectOne("member.findAdminForLogin", paramMap);
-	}
+    return sql.selectOne("member.findById", memberId);
+  }
 
-	@Override 
-	public int insertLoginActivity(Map<String, Object> params) {
-		return sql.insert("member.insertLoginActivity", params);
-	}
+  @Override
+  public MemberProfile findMemberForLogin(Login loginForm) {
+
+    return sql.selectOne("member.findMemberForLogin", loginForm);
+  }
+
+  @Override
+  public AdminProfile findAdminForLogin(Login loginForm) {
+
+    return sql.selectOne("member.findAdminForLogin", loginForm);
+  }
+
+  @Override
+  public int insertLoginActivity(Map<String, Object> params) {
+    return sql.insert("member.insertLoginActivity", params);
+  }
 
 }
 

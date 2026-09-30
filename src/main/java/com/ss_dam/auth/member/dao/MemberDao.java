@@ -1,7 +1,7 @@
 package com.ss_dam.auth.member.dao;
 
+import com.ss_dam.auth.login.model.response.MemberProfile;
 import com.ss_dam.auth.member.Member;
-import com.ss_dam.auth.member.MemberProfile;
 
 public interface MemberDao {
 

@@ -1,40 +1,61 @@
+@use "../../../scss/variables.scss" as v;
+@use "../../../scss/mixin.scss" as mix;
+
 .tabContainer {
   display: flex;
-  width: 100%;
-  border: 1px solid #d0d7de;
-  border-radius: 4px;
-  overflow: hidden;
-  margin-bottom: 16px;
+  gap: 20px;
+  padding-bottom: 10px;
+
+  border-bottom: 1px solid v.$grayscale-20;
 }
 
 .tab {
-  flex: 1;
-  padding: 10px 0;
-  background-color: #ffffff;
+  display: flex;
+  position: relative;
+  align-items: center;
+  gap: 6px;
+
+  font-size: 1rem;
+  font-weight: 700;
+  color: v.$grayscale-90;
+  background: none;
   border: none;
-  border-right: 1px solid #d0d7de;
-  color: #555555;
-  font-size: 13px;
-  font-weight: 500;
   cursor: pointer;
 
-  &:last-child {
-    border-right: none;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: v.$primary-20;
+  }
+
+  &.activeTab {
+    color: v.$primary-40;
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: -11px;
+      left: 0;
+
+      width: 100%;
+      height: 2px;
+
+      background-color: v.$primary-40;
+    }
   }
 }
 
-.activeTab {
-  flex: 1;
-  padding: 10px 0;
-  background-color: var(--tab-active-bg, #279953);
-  border: none;
-  border-right: 1px solid var(--tab-active-bg, #279953);
-  color: var(--tab-active-color, #ffffff);
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
 
-  &:last-child {
-    border-right: none;
-  }
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+  color: v.$color-white;
+
+  border-radius: 100px;
+  background-color: v.$dan-color;
 }

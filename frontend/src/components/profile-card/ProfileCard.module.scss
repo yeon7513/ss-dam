@@ -1,5 +1,5 @@
-@use '/src/scss/variables.scss' as *;
-@use '/src/scss/mixin.scss' as mix;
+@use '../../scss/variables.scss' as v;
+@use '../../scss/mixin.scss' as mix;
 
 .profileCard {
   display: flex;
@@ -9,14 +9,14 @@
   padding: 0.875rem;
   width: 100%;
   height: fit-content;
-  background-color: $color-white;
+  background-color: v.$color-white;
 
   .profileImage {
     width: 3rem;
     height: 3rem;
     border-radius: 50%;
     overflow: hidden;
-    background-color: $grayscale-10;
+    background-color: v.$grayscale-10;
   }
 
   .info {
@@ -28,14 +28,14 @@
     .memberId {
       font-size: 1rem;
       font-weight: 500;
-      color: $grayscale-90;
+      color: v.$grayscale-90;
     }
 
     .meta {
       display: flex;
       gap: 0.5rem;
       font-size: 0.75rem;
-      color: $point-60;
+      color: v.$point-60;
     }
   }
 

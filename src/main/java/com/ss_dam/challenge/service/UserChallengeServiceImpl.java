@@ -3,18 +3,24 @@ package com.ss_dam.challenge.service;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ss_dam.challenge.Challenge;
 import com.ss_dam.challenge.ChallengeInfo;
 import com.ss_dam.challenge.dao.UserChallengeDao;
+import com.ss_dam.feed.service.UserFeedService;
 
 @Service
 public class UserChallengeServiceImpl implements UserChallengeService {
 
-    @Autowired
-    UserChallengeDao userChallengeDao;
+    
+    private final UserChallengeDao userChallengeDao;   
+    private final UserFeedService userFeedService;
+    
+    public  UserChallengeServiceImpl(UserChallengeDao userChallengeDao, UserFeedService userFeedService) {
+    	this.userChallengeDao = userChallengeDao;
+    	this.userFeedService = userFeedService;
+    }
 
 
     @Override
@@ -54,7 +60,20 @@ public class UserChallengeServiceImpl implements UserChallengeService {
 
 	@Override
 	public ChallengeInfo searchChallengeInfoByCode(int code, int memCode) {		
-		return userChallengeDao.searchChallengeInfoByCode(code, memCode);
+		ChallengeInfo challengeInfo = userChallengeDao.searchChallengeInfoByCode(code, memCode);
+		
+		if(challengeInfo == null) {
+			return null;
+		}
+		
+		if(memCode != 0) {
+			int proofCount = userFeedService.getProofCount(code, memCode);
+			challengeInfo.setProofCount(proofCount);
+		}else {
+			challengeInfo.setProofCount(0);
+		}
+		
+		return challengeInfo;
 	}
 
 	@Override
@@ -67,5 +86,5 @@ public class UserChallengeServiceImpl implements UserChallengeService {
 	@Override
 	public List<Map<String, Object>> searchTopRankings() {
 		return userChallengeDao.searchTopRankings();
-	}
+	}	
 }

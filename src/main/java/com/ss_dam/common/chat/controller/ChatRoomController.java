@@ -1,6 +1,6 @@
 package com.ss_dam.common.chat.controller;
 
-import com.ss_dam.auth.login.Login;
+import com.ss_dam.auth.login.model.response.AuthProfile;
 import com.ss_dam.common.ApiResponse;
 import com.ss_dam.common.chat.model.filter.ChatRoomSearchFilter;
 import com.ss_dam.common.chat.model.request.ChatRoomRequest;
@@ -10,7 +10,6 @@ import com.ss_dam.common.chat.service.ChatService;
 import com.ss_dam.common.pager.PageResult;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +21,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/chat/rooms")
 public class ChatRoomController {
 
-  @Autowired
-  private ChatService chatService;
+  private final ChatService chatService;
+
+  public ChatRoomController(ChatService chatService) {
+    this.chatService = chatService;
+  }
 
   // 기존 채팅방이 있는지 확인 후 roomCode를 반환받아야 함.
   // 있으면? -> SELECT, 없으면? -> INSERT
@@ -51,7 +53,7 @@ public class ChatRoomController {
 
     // 현재 로그인한 회원의 Pk 추출
     // 현재 로그인한 회원의 코드를 받아와 구독중인 채팅방 추출
-    Login loginUser = (Login) session.getAttribute("loginUser");
+    AuthProfile loginUser = (AuthProfile) session.getAttribute("loginUser");
 
     if (loginUser == null) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -75,7 +77,7 @@ public class ChatRoomController {
     HttpSession session = httpServletRequest.getSession(false);
 
     // 현재 로그인한 회원의 코드를 받아와 구독중인 채팅방 추출
-    Login loginUser = (Login) session.getAttribute("loginUser");
+    AuthProfile loginUser = (AuthProfile) session.getAttribute("loginUser");
     Long memberCode = (loginUser != null) ? loginUser.getCode() : null;
 
     PageResult<ChatRoomView> chatRooms = chatService.loadChatRoomsByMemberCode(memberCode, filter);
@@ -91,7 +93,7 @@ public class ChatRoomController {
     HttpSession session = httpServletRequest.getSession(false);
 
     // 현재 로그인한 회원의 코드를 받아와 메시지 내역 추출
-    Login loginUser = (Login) session.getAttribute("loginUser");
+    AuthProfile loginUser = (AuthProfile) session.getAttribute("loginUser");
     Long memberCode = (loginUser != null) ? loginUser.getCode() : null;
 
     ChatDetailView chatDetailView = chatService.loadChatMessages(roomId, memberCode);

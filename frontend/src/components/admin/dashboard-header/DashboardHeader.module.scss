@@ -1,0 +1,49 @@
+@use "/src/scss/variables.scss" as *;
+
+/* 대시보드 헤더 영역 */
+.pageTitleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h1 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: $grayscale-90;
+
+    /* 새로고침 아이콘 영역 */
+    .refreshIcon {
+      cursor: pointer;
+      transition:
+        transform 0.1s ease,
+        color 0.3s ease;
+
+      &:hover {
+        color: $primary-40;
+      }
+
+      &.spinning {
+        animation: spin 1s linear infinite;
+      }
+    }
+  }
+
+  /* 시각 정보 영역 */
+  .timeInfo {
+    font-size: 0.9rem;
+    color: $grayscale-90;
+  }
+}
+
+/* 회전 애니메이션 영역 */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -233,5 +233,14 @@
     WHERE f.code = #{feedCode}
     AND f.mem_code = #{memberCode}
   </select>  
+  
+  <select id="countFeedsByChallenge" resultType="int">
+  	SELECT COUNT(*)
+  	FROM FEED
+  	WHERE chal_code = #{chalCode}
+  	AND mem_code = #{memCode}
+  	AND status = 'active'
+  	AND delete_yn = 0
+  </select>
 
 </mapper>

@@ -29,15 +29,16 @@ import com.ss_dam.feed.model.response.UserFeedView;
 
 @Service
 public class UserFeedServiceImpl implements UserFeedService {
-
-  @Autowired
-  UserFeedDao userFeedDao;
-
-  @Autowired
-  UserCommentService userCommentService;
-
-  @Autowired
-  ImageService imageService;
+  
+  private final UserFeedDao userFeedDao;  
+  private final UserCommentService userCommentService;  
+  private final ImageService imageService;
+  
+  public UserFeedServiceImpl(UserFeedDao userFeedDao, UserCommentService userCommentService, ImageService imageService) {
+	  this.userFeedDao = userFeedDao;
+	  this.userCommentService = userCommentService;
+	  this.imageService = imageService;
+  }
 
   @Autowired
   private ChallengeWriteGuard challengeWriteGuard;
@@ -210,6 +211,13 @@ public class UserFeedServiceImpl implements UserFeedService {
   // 해시태그 삭제 메소드
   private void deleteHashtags(Long feedCode) {
     userFeedDao.deleteHashtags(feedCode);
+  }
+
+
+  @Override
+  public int getProofCount(int chalCode, int memCode) {
+
+	return userFeedDao.countFeedsByChallenge(chalCode, memCode);
   }
 
 }
