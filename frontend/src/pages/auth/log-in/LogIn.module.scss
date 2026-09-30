@@ -68,7 +68,7 @@
 
   p {
     opacity: 0.6; // 투명도를 조절함.
-    color: $grayscale-90;
+    color: v.$grayscale-90;
   }
 }
 
@@ -83,7 +83,7 @@
 .subLink {
   &:hover {
     font-weight: 600;
-    color: $point-50;
+    color: v.$point-50;
     text-decoration: underline;
   }
 }
