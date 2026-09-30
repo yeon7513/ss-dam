@@ -4,7 +4,9 @@ import java.math.BigDecimal;
 
 public class AdminChallengeDetailView {
 
-  //단건 조회이므로 별도의 요청 DTO나 PageResult는 필요 X
+  // 챌린지 상세 조회 응답
+  // 화면에 반환할 상세 정보. 관리자 정보·이미지·달성률 등 포함
+  // 단건 조회이므로 별도의 요청 DTO나 PageResult는 필요 X
 
   private Long code;
   private String title;

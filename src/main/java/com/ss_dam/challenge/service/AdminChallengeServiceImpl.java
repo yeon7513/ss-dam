@@ -16,9 +16,8 @@ import org.springframework.web.server.ResponseStatusException;
 import com.ss_dam.admin.log.dao.AdminActivityLogDao;
 import com.ss_dam.auth.member.dao.AdminMemberDao;
 import com.ss_dam.challenge.dao.AdminChallengeDao;
-import com.ss_dam.challenge.model.request.AdminChallengeCreateRequest;
 import com.ss_dam.challenge.model.request.AdminChallengeSearch;
-import com.ss_dam.challenge.model.request.AdminChallengeUpdateRequest;
+import com.ss_dam.challenge.model.request.AdminChallengeWriteRequest;
 import com.ss_dam.challenge.model.response.AdminChallengeDetailView;
 import com.ss_dam.challenge.model.response.AdminChallengeEditState;
 import com.ss_dam.challenge.model.response.AdminChallengeListView;
@@ -110,7 +109,7 @@ public class AdminChallengeServiceImpl implements AdminChallengeService {
 		@Override
 		@Transactional
 		public Long createChallenge(
-						AdminChallengeCreateRequest request,
+						AdminChallengeWriteRequest request,
 						Long adminCode,
 						String adminId) {
 
@@ -187,6 +186,15 @@ public class AdminChallengeServiceImpl implements AdminChallengeService {
 										"챌린지 목표는 1~255자로 입력해주세요.");
 				}
 
+				// 참여 정원 검증 (추가)
+				if (request.getMaxParticipants() != null
+								&& request.getMaxParticipants() < 1) {
+
+						throw new ResponseStatusException(
+										HttpStatus.BAD_REQUEST,
+										"참여 정원은 1 이상이거나 제한 없음이어야 합니다.");
+				}
+
 				// 7. DB 저장값 구성
 				Map<String, Object> params = new HashMap<>();
 
@@ -201,6 +209,7 @@ public class AdminChallengeServiceImpl implements AdminChallengeService {
 				params.put("pointEarned", request.getPointEarned());
 				params.put("createdAt", now);
 				params.put("goal", request.getGoal().trim());
+				params.put("maxParticipants", request.getMaxParticipants());
 
 				// 8. 챌린지 등록
 				int inserted = adminChallengeDao.createChallenge(params);
@@ -245,15 +254,24 @@ public class AdminChallengeServiceImpl implements AdminChallengeService {
 	@Transactional
 	public void updateChallenge(
 					Long code,
-					AdminChallengeUpdateRequest request,
+					AdminChallengeWriteRequest request,
 					Long adminCode,
 					String adminId) {
 
-			// 1. 입력값 검증
+			// 1. 챌린지 번호 검증
 			if (code == null || code < 1) {
 					throw new ResponseStatusException(
 									HttpStatus.BAD_REQUEST,
 									"챌린지 번호는 1 이상이어야 합니다.");
+			}
+
+			// 2. 참여 정원 검증 (null은 허용하고, 0과 음수는 거절)
+			if (request.getMaxParticipants() != null
+							&& request.getMaxParticipants() < 1) {
+
+					throw new ResponseStatusException(
+									HttpStatus.BAD_REQUEST,
+									"참여 정원은 1 이상이거나 제한 없음이어야 합니다.");
 			}
 
 			if (request.getTitle() == null
@@ -308,7 +326,7 @@ public class AdminChallengeServiceImpl implements AdminChallengeService {
 									"보상 포인트는 0 이상이어야 합니다.");
 			}
 
-			// 2. 수정할 행 조회 및 잠금
+			// 3. 수정할 행 조회 및 잠금
 			// 트랜잭션이 끝날 때까지 다른 UPDATE와 순서를 맞춤
 			AdminChallengeEditState existing =
 							adminChallengeDao.loadChallengeForUpdate(code);
@@ -322,7 +340,7 @@ public class AdminChallengeServiceImpl implements AdminChallengeService {
 			LocalDateTime now =
 							LocalDateTime.now(ZoneId.of("Asia/Seoul"));
 
-			// 3. 저장 상태와 실제 시작일을 함께 확인
+			// 4. 저장 상태와 실제 시작일을 함께 확인
 			boolean beforeStart =
 							"WAITING".equals(existing.getProgressStatus())
 							&& existing.getStartDate() != null
@@ -339,19 +357,24 @@ public class AdminChallengeServiceImpl implements AdminChallengeService {
 
 			} else {
 
-					// 진행 중·종료 후에는 목표·보상·기간 변경 금지
+					// 진행 중·종료 후에는 목표·보상·기간 변경 금지 
+					// 시작 전에만 변경 가능
 					boolean conditionsChanged =
-									!Objects.equals(
-													existing.getGoal(), request.getGoal())
-									|| !Objects.equals(
-													existing.getPointEarned(),
-													request.getPointEarned())
-									|| !Objects.equals(
-													existing.getStartDate(),
-													request.getStartDate())
-									|| !Objects.equals(
-													existing.getEndDate(),
-													request.getEndDate());
+						!Objects.equals(
+										existing.getGoal(),
+										request.getGoal())
+						|| !Objects.equals(
+										existing.getPointEarned(),
+										request.getPointEarned())
+						|| !Objects.equals(
+										existing.getStartDate(),
+										request.getStartDate())
+						|| !Objects.equals(
+										existing.getEndDate(),
+										request.getEndDate())
+						|| !Objects.equals(
+										existing.getMaxParticipants(),
+										request.getMaxParticipants());
 
 					if (conditionsChanged) {
 							throw new ResponseStatusException(
@@ -361,7 +384,7 @@ public class AdminChallengeServiceImpl implements AdminChallengeService {
 					}
 			}
 
-			// 4. 수정값 구성
+			// 5. 수정값 구성
 			Map<String, Object> params = new HashMap<>();
 
 			params.put("code", code);
@@ -379,10 +402,10 @@ public class AdminChallengeServiceImpl implements AdminChallengeService {
 			params.put("startDate", request.getStartDate());
 			params.put("endDate", request.getEndDate());
 
-			// 5. 수정 처리
+			// 6. 수정 처리
 			adminChallengeDao.updateChallenge(params);
 
-			// 6. 수정 이력 저장
+			// 7. 수정 이력 저장
 			// 동일 값으로 요청해도 성공 처리하므로 이력 기록, 변경 전후 값까지 저장하는 코드는 아님
 			// 누가 언제 수정 요청을 처리했는지 기록
 			Map<String, Object> logParams = new HashMap<>();
@@ -480,7 +503,93 @@ public class AdminChallengeServiceImpl implements AdminChallengeService {
 			}
 	}
 
+		// 관리자 챌린지 조기 완료
+		@Override
+		@Transactional
+		public void endChallenge(
+						Long code,
+						Long adminCode,
+						String adminId) {
 
+				// 1. 번호 검증
+				if (code == null || code < 1) {
+						throw new ResponseStatusException(
+										HttpStatus.BAD_REQUEST,
+										"챌린지 번호는 1 이상이어야 합니다.");
+				}
+
+				// 2. 존재 여부 확인 및 행 잠금
+				// 기존 SQL에서 삭제되지 않은 챌린지만 조회
+				AdminChallengeEditState existing =
+								adminChallengeDao.loadChallengeForUpdate(code);
+
+				if (existing == null) {
+						throw new ResponseStatusException(
+										HttpStatus.NOT_FOUND,
+										"존재하지 않거나 삭제된 챌린지입니다.");
+				}
+
+				LocalDateTime now =
+								LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+
+				// 3. 실제 진행 기간 확인
+				boolean withinPeriod =
+								existing.getStartDate() != null
+								&& existing.getEndDate() != null
+								&& !now.isBefore(existing.getStartDate())
+								&& now.isBefore(existing.getEndDate());
+
+				// 자동 상태 갱신이 아직 없으므로
+				// 시작 시간이 지난 WAITING도 실제 기간으로 판단
+				boolean eligibleStatus =
+								"IN_PROGRESS".equals(existing.getProgressStatus())
+								|| "WAITING".equals(existing.getProgressStatus());
+
+				if (!withinPeriod || !eligibleStatus) {
+						throw new ResponseStatusException(
+										HttpStatus.CONFLICT,
+										"현재 진행 기간인 챌린지만 조기 완료할 수 있습니다.");
+				}
+
+				// 4. 종료 처리 정보
+				Map<String, Object> params = new HashMap<>();
+
+				params.put("code", code);
+				params.put("adminId", adminId);
+				params.put("endedAt", now);
+
+				// 5. 조기 완료 처리
+				int updated = adminChallengeDao.endChallenge(params);
+
+				if (updated != 1) {
+						throw new ResponseStatusException(
+										HttpStatus.CONFLICT,
+										"조기 완료할 수 없는 상태입니다. 다시 조회해주세요.");
+				}
+
+				// 6. 처리 이력 구성
+				Map<String, Object> logParams = new HashMap<>();
+
+				logParams.put("adminCode", adminCode);
+				logParams.put("targetType", "challenge");
+				logParams.put("targetCode", code);
+				logParams.put("processType", "EARLY_END");
+				logParams.put(
+								"memo",
+								"챌린지 조기 완료"
+												+ " / 기존 종료일시: " + existing.getEndDate()
+												+ " / 처리 일시: " + now);
+				logParams.put("createdAt", now);
+
+				// 7. 처리 이력 저장
+				int logInserted =
+								adminActivityLogDao.insertActivityLog(logParams);
+
+				if (logInserted != 1) {
+						throw new IllegalStateException(
+										"챌린지 조기 완료 이력 저장에 실패했습니다.");
+				}
+		}
 
 
 

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.ss_dam.challenge.Challenge;
 import com.ss_dam.challenge.ChallengeInfo;
+import com.ss_dam.challenge.model.response.ChallengeWriteState;
 
 public interface UserChallengeDao {
 
@@ -22,6 +23,18 @@ public interface UserChallengeDao {
 
 	// 챌린지 삭제
 	void deleteChallenge(int code);
+
+	// 챌린지 진행 현황 갱신
+	int refreshProgressStatuses(Map<String, Object> params);
+
+	// 챌린지 참여·인증 공통 검사
+	ChallengeWriteState loadWriteStateForUpdate(Long code);
+
+	long countOccupiedParticipants(Long code);
+
+	boolean hasParticipationHistory(Map<String, Object> params);
+
+	boolean hasActiveParticipation(Map<String, Object> params);
 
 	// 인기 챌린지 TOP 3
 	List<Challenge> searchPopularChallenges();

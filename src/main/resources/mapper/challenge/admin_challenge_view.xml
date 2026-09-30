@@ -112,6 +112,7 @@
     c.CONTENT,
     c.GOAL,
     c.POINT_EARNED,
+    c.MAX_PARTICIPANTS,
     c.START_DATE,
     c.END_DATE,
     c.PROGRESS_STATUS,
@@ -342,12 +343,13 @@
 <!-- 수정 시 현재 조건 확인 및 행 잠금 -->
 <select id="loadChallengeForUpdate"
         parameterType="map"
-        resultType="com.ss_dam.challenge.model.response.AdminChallengeEditState">
+        resultType="AdminChallengeEditState">
 
     SELECT
         CODE,
         GOAL,
         POINT_EARNED,
+        MAX_PARTICIPANTS,
         START_DATE,
         END_DATE,
         PROGRESS_STATUS

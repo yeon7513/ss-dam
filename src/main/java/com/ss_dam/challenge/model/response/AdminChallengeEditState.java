@@ -2,6 +2,8 @@ package com.ss_dam.challenge.model.response;
 
 import java.time.LocalDateTime;
 
+// 수정 전 DB 상태 검사. 날짜를 LocalDateTime으로 받아 비교
+
 public class AdminChallengeEditState {
 
     private Long code;
@@ -10,6 +12,9 @@ public class AdminChallengeEditState {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private String progressStatus;
+
+    private Integer maxParticipants;
+
 
     public Long getCode() {
         return code;
@@ -57,5 +62,13 @@ public class AdminChallengeEditState {
 
     public void setProgressStatus(String progressStatus) {
         this.progressStatus = progressStatus;
+    }
+
+    public Integer getMaxParticipants() {
+        return maxParticipants;
+    }
+
+    public void setMaxParticipants(Integer maxParticipants) {
+        this.maxParticipants = maxParticipants;
     }
 }

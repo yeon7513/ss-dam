@@ -20,6 +20,7 @@
           END_DATE,
           GOAL,
           POINT_EARNED,
+          MAX_PARTICIPANTS,
           POST_STATUS,
           PROGRESS_STATUS,
           CREATED_BY,
@@ -34,6 +35,7 @@
           #{endDate},
           #{goal},
           #{pointEarned},
+          #{maxParticipants},
           #{postStatus},
           #{progressStatus},
           #{adminId},
@@ -61,6 +63,7 @@
             POINT_EARNED = #{pointEarned},
             START_DATE = #{startDate},
             END_DATE = #{endDate},
+            MAX_PARTICIPANTS = #{maxParticipants},
         </if>
     </set>
 
@@ -93,6 +96,25 @@
           WHERE f.CHAL_CODE = #{code}
       )
 
+</update>
+
+<!-- 관리자 챌린지 조기 완료 -->
+<update id="endChallenge" parameterType="map">
+
+    UPDATE CHALLENGE
+    SET
+        PROGRESS_STATUS = 'ENDED',
+        END_DATE = #{endedAt},
+        UPDATED_BY = #{adminId},
+        UPDATED_AT = #{endedAt}
+
+    WHERE CODE = #{code}
+      AND DELETE_YN = 0
+      AND PROGRESS_STATUS IN ('WAITING', 'IN_PROGRESS')
+      AND START_DATE &lt;= #{endedAt}
+      AND END_DATE &gt; #{endedAt}
+
+<!--서비스 검사와 별도로 UPDATE에서도 조건을 확인합니다. 이미 ENDED인 챌린지는 다시 처리되지 않습니다.-->
 </update>
 
 </mapper>

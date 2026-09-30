@@ -37,6 +37,9 @@ public interface AdminChallengeDao {
 	// 관리자 챌린지 논리 삭제
 	int deleteChallenge(Map<String, Object> params);
 
+	// 관리자 챌린지 조기 완료
+	int endChallenge(Map<String, Object> params);
+
 
   // 관리자 회원 상세 -  전체 인증글 / 인증한 챌린지 / 최근 30일 인증글
   AdminMemberProofsView loadMemberProofSummary(

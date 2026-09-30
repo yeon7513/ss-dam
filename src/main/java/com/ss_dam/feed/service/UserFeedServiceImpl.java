@@ -1,5 +1,20 @@
 package com.ss_dam.feed.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+
+import com.ss_dam.challenge.dao.UserChallengeDao;
+import com.ss_dam.challenge.service.ChallengeWriteGuard;
 import com.ss_dam.comment.service.UserCommentService;
 import com.ss_dam.common.image.service.ImageService;
 import com.ss_dam.common.pager.PageResult;
@@ -11,15 +26,6 @@ import com.ss_dam.feed.model.request.FeedUpdate;
 import com.ss_dam.feed.model.response.FeedDetail;
 import com.ss_dam.feed.model.response.FeedEditView;
 import com.ss_dam.feed.model.response.UserFeedView;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class UserFeedServiceImpl implements UserFeedService {
@@ -32,6 +38,12 @@ public class UserFeedServiceImpl implements UserFeedService {
 
   @Autowired
   ImageService imageService;
+
+  @Autowired
+  private ChallengeWriteGuard challengeWriteGuard;
+
+  @Autowired
+  private UserChallengeDao userChallengeDao;
 
 
   // 피드 목록 조회
@@ -68,22 +80,52 @@ public class UserFeedServiceImpl implements UserFeedService {
 
 
   // 피드 등록
-  @Transactional
+  @Transactional(isolation = Isolation.READ_COMMITTED)
   @Override
   public Long registerFeed(FeedCreate feedCreate) {
 
-    Long newFeedCode = userFeedDao.registerFeed(feedCreate);
+      // 1. 회원 정보 확인
+      if (feedCreate.getMemCode() == null
+              || feedCreate.getMemCode() < 1) {
 
-    // 2차 방어..
-    if (newFeedCode != null) {
+          throw new ResponseStatusException(
+                  HttpStatus.UNAUTHORIZED,
+                  "로그인이 필요합니다.");
+      }
+
+      // 2. 챌린지 상태·기간 검사 및 행 잠금
+      challengeWriteGuard.checkAndLock(feedCreate.getChalCode());
+
+      // 3. 해당 챌린지에 참여 중인지 확인
+      boolean joined =
+              userChallengeDao.hasActiveParticipation(
+                      Map.of(
+                              "code", feedCreate.getChalCode(),
+                              "memCode", feedCreate.getMemCode()));
+
+      if (!joined) {
+          throw new ResponseStatusException(
+                  HttpStatus.CONFLICT,
+                  "참여 중인 챌린지에만 인증할 수 있습니다.");
+      }
+
+      // 4. 피드 등록
+      Long newFeedCode = userFeedDao.registerFeed(feedCreate);
+
+      if (newFeedCode == null || newFeedCode <= 0) {
+          throw new IllegalStateException(
+                  "피드 등록에 실패했습니다.");
+      }
+
       // 이미지 등록
-      imageService.uploadImages(feedCreate.getImages(), "feed", newFeedCode);
+      imageService.uploadImages(
+              feedCreate.getImages(), "feed", newFeedCode);
 
       // 해시태그 등록
-      registerHashtags(feedCreate.getHashtags(), newFeedCode);
-    }
+      registerHashtags(
+              feedCreate.getHashtags(), newFeedCode);
 
-    return newFeedCode;
+      return newFeedCode;
   }
 
 

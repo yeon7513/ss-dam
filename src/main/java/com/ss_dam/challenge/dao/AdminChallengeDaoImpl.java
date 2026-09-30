@@ -89,6 +89,14 @@ public class AdminChallengeDaoImpl implements AdminChallengeDao {
                 params);
     }
 
+    // 관리자 챌린지 조기 완료
+    @Override
+    public int endChallenge(Map<String, Object> params) {
+
+        return sql.update(
+                "adminChallengeCommand.endChallenge",
+                params);
+    }
 
     //관리자 회원 상세 - 인증글 통계
     @Override

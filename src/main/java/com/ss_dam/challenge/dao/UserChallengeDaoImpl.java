@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.ss_dam.challenge.Challenge;
 import com.ss_dam.challenge.ChallengeInfo;
+import com.ss_dam.challenge.model.response.ChallengeWriteState;
 
 @Repository
 public class UserChallengeDaoImpl implements UserChallengeDao {
@@ -41,6 +42,39 @@ public class UserChallengeDaoImpl implements UserChallengeDao {
 	public void deleteChallenge(int code) {
 		sql.update("challenge.deleteChallenge", code);
 	}
+
+	@Override 
+	public int refreshProgressStatuses(Map<String, Object> params) {
+		return sql.update("challenge.refreshProgressStatuses", params);
+	}
+
+	// 챌린지 참여·인증 공통 검사
+	@Override
+	public ChallengeWriteState loadWriteStateForUpdate(Long code) {
+			return sql.selectOne(
+							"challenge.loadWriteStateForUpdate",
+							Map.of("code", code));
+	}
+
+	@Override
+	public long countOccupiedParticipants(Long code) {
+			return sql.selectOne(
+							"challenge.countOccupiedParticipants",
+							Map.of("code", code));
+	}
+
+	@Override
+	public boolean hasParticipationHistory(Map<String, Object> params) {
+			return sql.selectOne(
+							"challenge.hasParticipationHistory", params);
+	}
+
+	@Override
+	public boolean hasActiveParticipation(Map<String, Object> params) {
+			return sql.selectOne(
+							"challenge.hasActiveParticipation", params);
+	}
+
 
 	@Override
 	public List<Challenge> searchPopularChallenges() {

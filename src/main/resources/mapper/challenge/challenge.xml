@@ -80,6 +80,29 @@
 		WHERE CODE = #{code}
 	</update>
 
+	<!-- 챌린지 진행 현황 갱신 (날짜에 따른 진행 상태 자동 갱신) -->
+	<update id="refreshProgressStatuses" parameterType="map">
+
+			UPDATE CHALLENGE
+			SET PROGRESS_STATUS =
+					CASE
+							WHEN END_DATE &lt;= #{now} THEN 'ENDED'
+							ELSE 'IN_PROGRESS'
+					END
+
+			WHERE DELETE_YN = 0
+				AND PROGRESS_STATUS IN ('WAITING', 'IN_PROGRESS')
+				AND (
+						END_DATE &lt;= #{now}
+						OR (
+								PROGRESS_STATUS = 'WAITING'
+								AND START_DATE &lt;= #{now}
+								AND END_DATE &gt; #{now}
+						)
+				)
+
+	</update>
+
 	<!-- 인기 챌린지 TOP 3 -->
 	<select id="searchPopularChallenges" resultType="Challenge">
 		SELECT
@@ -215,6 +238,71 @@
 	FROM MEMBER_ACCOUNT
 	ORDER BY POINT DESC
 	LIMIT 10
+	</select>
+
+	<!-- 참여·인증 등록 전 챌린지 행 잠금 -->
+	<!-- - 참여 중·달성 완료 회원 → 정원에 포함
+			 - 취소·삭제된 참여 기록 → 정원에서 제외
+			 - 과거 참여 이력이 있으면 재참여 불가 → 기존 참여 INSERT와 동일
+			 - 인증은 JOINED 회원만 가능-->
+	<select id="loadWriteStateForUpdate"
+					parameterType="map"
+					resultType="com.ss_dam.challenge.model.response.ChallengeWriteState">
+
+			SELECT
+					POST_STATUS,
+					PROGRESS_STATUS,
+					START_DATE,
+					END_DATE,
+					DELETE_YN,
+					MAX_PARTICIPANTS
+
+			FROM CHALLENGE
+			WHERE CODE = #{code}
+
+			FOR UPDATE
+	</select>
+
+	<!-- 현재 정원을 차지하는 회원 수 -->
+	<select id="countOccupiedParticipants"
+					parameterType="map"
+					resultType="long">
+
+			SELECT COUNT(DISTINCT MEM_CODE)
+			FROM CHALLENGE_ENTRY
+			WHERE CHAL_CODE = #{code}
+				AND STATUS IN ('JOINED', 'COMPLETED')
+				AND CANCELED_AT IS NULL
+				AND DELETE_YN = 0
+	</select>
+
+	<!-- 기존 참여 기록 존재 여부 -->
+	<select id="hasParticipationHistory"
+					parameterType="map"
+					resultType="boolean">
+
+			SELECT EXISTS (
+					SELECT 1
+					FROM CHALLENGE_ENTRY
+					WHERE CHAL_CODE = #{code}
+						AND MEM_CODE = #{memCode}
+			)
+	</select>
+
+	<!-- 인증을 등록할 수 있는 참여 중 회원인지 확인 -->
+	<select id="hasActiveParticipation"
+					parameterType="map"
+					resultType="boolean">
+
+			SELECT EXISTS (
+					SELECT 1
+					FROM CHALLENGE_ENTRY
+					WHERE CHAL_CODE = #{code}
+						AND MEM_CODE = #{memCode}
+						AND STATUS = 'JOINED'
+						AND CANCELED_AT IS NULL
+						AND DELETE_YN = 0
+			)
 	</select>
 
 </mapper>

@@ -16,6 +16,7 @@ public class UserChallengeServiceImpl implements UserChallengeService {
     @Autowired
     UserChallengeDao userChallengeDao;
 
+
     @Override
     public List<Challenge> searchChallenges(String progressStatus) {
         return userChallengeDao.searchChallenges(progressStatus);

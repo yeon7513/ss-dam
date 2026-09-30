@@ -17,9 +17,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.ss_dam.admin.log.controller.AdminActivityLogController;
 import com.ss_dam.auth.login.Login;
-import com.ss_dam.challenge.model.request.AdminChallengeCreateRequest;
 import com.ss_dam.challenge.model.request.AdminChallengeSearch;
-import com.ss_dam.challenge.model.request.AdminChallengeUpdateRequest;
+import com.ss_dam.challenge.model.request.AdminChallengeWriteRequest;
 import com.ss_dam.challenge.model.response.AdminChallengeDetailView;
 import com.ss_dam.challenge.model.response.AdminChallengeListView;
 import com.ss_dam.challenge.model.response.AdminMemberProofsView;
@@ -80,7 +79,7 @@ AdminChallengeController(AdminActivityLogController adminActivityLogController) 
     // 관리자 챌린지 등록
     @PostMapping
     public ResponseEntity<ApiResponse<Long>> createChallenge(
-						@RequestBody AdminChallengeCreateRequest request,
+						@RequestBody AdminChallengeWriteRequest request,
 						HttpSession session) {
 
 						Login loginUser = (Login) session.getAttribute("loginUser");
@@ -114,7 +113,7 @@ AdminChallengeController(AdminActivityLogController adminActivityLogController) 
     @PutMapping("/{code}")
     public ResponseEntity<ApiResponse<Void>> updateChallenge(
         @PathVariable Long code,
-        @RequestBody AdminChallengeUpdateRequest request, 
+        @RequestBody AdminChallengeWriteRequest request, 
         HttpSession session) {
         
         Login loginUser = (Login) session.getAttribute("loginUser");
@@ -136,7 +135,7 @@ AdminChallengeController(AdminActivityLogController adminActivityLogController) 
                 }
             
             adminChallengeService.updateChallenge(
-                code, request, loginUser.getMemberId(), loginUser.getMemberId());
+                code, request, loginUser.getCode(), loginUser.getMemberId());
 
             return ResponseEntity.ok(
                     ApiResponse.<Void>success(
@@ -171,7 +170,7 @@ AdminChallengeController(AdminActivityLogController adminActivityLogController) 
         }
 
         adminChallengeService.deleteChallenge(
-                code, loginUser.getMemberId(), loginUser.getMemberId());
+                code, loginUser.getCode(), loginUser.getMemberId());
 
         return ResponseEntity.ok(
                 ApiResponse.<Void>success("챌린지 삭제 성공", null));
@@ -181,8 +180,40 @@ AdminChallengeController(AdminActivityLogController adminActivityLogController) 
     // 관리자 챌린지 조기 완료 (상태 변경 : PROGRESS_STATUS -> ENDED)
     // 진행 중이고 참여자가 있는 챌린지는 삭제를 제한하고, 조기 완료 기능으로 종료하도록 함
 	// 참여자 전원을 달성 완료로 바꾸거나 보상을 자동 지급하는 처리는 별개
-		
+	// “조기 완료 상태 변경은 구현됐지만, 종료 후 참여·인증 차단은 아직 미완성"
+    @PatchMapping("/{code}/end")
+    public ResponseEntity<ApiResponse<Void>> endChallenge(
+            @PathVariable Long code,
+            HttpSession session) {
 
+        Login loginUser = (Login) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "로그인이 필요합니다.");
+        }
+
+        String role = loginUser.getRole();
+
+        if (!"ROLE_SUPER".equals(role)
+                && !"ROLE_MANAGER".equals(role)
+                && !"ROLE_STAFF".equals(role)) {
+
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "관리자만 조기 완료할 수 있습니다.");
+        }
+
+        adminChallengeService.endChallenge(
+                code,
+                loginUser.getCode(),
+                loginUser.getMemberId());
+
+        return ResponseEntity.ok(
+                ApiResponse.<Void>success(
+                        "챌린지가 조기 완료되었습니다.", null));
+    }
 
 
     
@@ -198,8 +229,7 @@ AdminChallengeController(AdminActivityLogController adminActivityLogController) 
     }
 
     // 챌린지 참여자 목록 조회
-    // challenge/entry의 참여자 조회 기능
-    // 참여 승인·실격 등 기능이 많아질 때 AdminChallengeEntryController로 분리
+    // challenge/entry의 참여자 조회 기능 -> 참여 승인·실격 등 기능이 많아질 때 AdminChallengeEntryController로 분리
     
     @GetMapping("/{code}/participants")
     public ResponseEntity<ApiResponse<Void>> loadParticipants(
@@ -209,12 +239,7 @@ AdminChallengeController(AdminActivityLogController adminActivityLogController) 
         return notImplemented();
     }
 
-    // 미구현 API 공통 응답
-    private ResponseEntity<ApiResponse<Void>> notImplemented() {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED)
-                .body(ApiResponse.<Void>fail(
-                        "아직 구현되지 않은 기능입니다."));
-    }
+  
 
     // 챌린지 관리 처리 이력 조회
     @GetMapping("/{code}/logs")

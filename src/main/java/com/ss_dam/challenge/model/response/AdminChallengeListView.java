@@ -19,6 +19,8 @@ public class AdminChallengeListView {
   private String adminRole;
   private BigDecimal achievementRate;
 
+  private Integer maxParticipants;
+
   //Getter & Setter
 
   public Long getCode() {
@@ -106,6 +108,14 @@ public class AdminChallengeListView {
 
   public void setAchievementRate(BigDecimal achievementRate) {
       this.achievementRate = achievementRate;
+  }
+
+  public Integer getMaxParticipants() {
+      return maxParticipants;
+  }
+
+  public void setMaxParticipants(Integer maxParticipants) {
+      this.maxParticipants = maxParticipants;
   }
   
 }
