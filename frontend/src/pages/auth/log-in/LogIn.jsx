@@ -129,10 +129,10 @@ const LogIn = () => {
               <Link to="#" className={styles.subLink}>
                 비밀번호 찾기
               </Link>
-              <span className={styles.divider}>|</span>
+              {/* <span className={styles.divider}>|</span>
               <Link to="#" className={styles.subLink}>
                 회원가입
-              </Link>
+              </Link> */}
             </div>
           </div>
         </form>
