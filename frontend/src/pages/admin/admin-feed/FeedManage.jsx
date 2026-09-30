@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { MdArrowForwardIos, MdSearch, MdClose } from "react-icons/md";
 
-import DashboardHeader from "../../components/admin/dashboard-header/DashboardHeader.jsx";
-import RadioInput from "../../components/forms/radio-input/RadioInput.jsx";
-import SelectBox from "../../components/forms/select-box/SelectBox.jsx";
-import TextInput from "../../components/forms/text-input/TextInput.jsx";
-import FeedCard from "../../components/feed/feed-card/FeedCard";
+import DashboardHeader from "../../../components/admin/dashboard-header/DashboardHeader.jsx";
+import RadioInput from "../../../components/forms/radio-input/RadioInput.jsx";
+import SelectBox from "../../../components/forms/select-box/SelectBox.jsx";
+import TextInput from "../../../components/forms/text-input/TextInput.jsx";
+import FeedCard from "../../../components/feed/feed-card/FeedCard.jsx";
 
 import styles from "./FeedManage.module.scss";
 
