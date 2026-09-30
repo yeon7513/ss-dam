@@ -5,7 +5,7 @@ import { FEED_MENU } from "../../../lib/sideMenu";
 import ProfileCard from "../../profile-card/ProfileCard";
 import styles from "./FeedSideNav.module.scss";
 
-function FeedSideNav({ className, isLoggedIn = true }) {
+function FeedSideNav({ className, isLoggedIn, memberProfile }) {
   const filteringMenuItems = FEED_MENU.filter((item) => {
     if (item.authMode === "always") {
       return true;
@@ -24,7 +24,7 @@ function FeedSideNav({ className, isLoggedIn = true }) {
         {isLoggedIn ? (
           <>
             <div>
-              <ProfileCard memberProfile={null} />
+              <ProfileCard memberProfile={memberProfile} />
             </div>
             <Link to="/feed/register">피드 작성</Link>
           </>

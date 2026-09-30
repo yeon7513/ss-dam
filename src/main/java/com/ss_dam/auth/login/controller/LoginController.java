@@ -24,22 +24,16 @@ public class LoginController {
   public ResponseEntity<ApiResponse<AuthProfile>> login(@RequestBody Login loginForm,
       HttpSession session, HttpServletRequest request) {
 
-    System.out.println("loggedInUser: " + loginForm.getId());
-    System.out.println("loggedInUser: " + loginForm.getPassword());
-
     AuthProfile loggedInUser = loginService.login(loginForm, request.getRemoteAddr());
 
-
-    System.out.println("loggedInUser: " + loggedInUser.getCode());
-
     // 로그인 실패 시 -> DB 조회 실패
-    if (loggedInUser != null) {
-      session.setAttribute("loginUser", loggedInUser);
-      return ResponseEntity.ok(ApiResponse.success("로그인 성공", loggedInUser));
+    if (loggedInUser == null) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.fail("로그인 실패"));
     }
 
-
-    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.fail("로그인 실패"));
+    session.setAttribute("loginUser", loggedInUser);
+    
+    return ResponseEntity.ok(ApiResponse.success("로그인 성공", loggedInUser));
   }
 
   @PostMapping("/logout")

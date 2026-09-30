@@ -2,66 +2,44 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "../../../components/common/button/Button";
 import TextInput from "../../../components/forms/text-input/TextInput";
-import styles from "./LogIn.module.scss"; // 로그인 페이지 전용 scss모듈
+import styles from "./LogIn.module.scss";
+import { useAuth } from "../../../context/AuthContext.jsx"; // 로그인 페이지 전용 scss모듈
 
 const LogIn = () => {
   const [memberId, setMemberId] = useState("");
   const [password, setPassword] = useState("");
+  // const [] = useState(false);
   const navigate = useNavigate();
+
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!memberId.trim()) {
+      alert("아이디를 입력해 주세요.");
+      return;
+    }
+
+    if (!password.trim()) {
+      alert("비밀번호를 입력해 주세요.");
+      return;
+    }
+
     try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: memberId,
-          password: password,
-        }),
-        credentials: "include",
+      const loggedInUser = await login({
+        id: memberId,
+        password: password,
       });
 
-      const result = await response.json();
-      console.log("백엔드가 준 결과물:", result);
-
-      if (response.ok) {
-        const userRole = result.data.role;
-        const userName = result.data.name;
-        const userCode = result.data.code; // UI/UX 위해 추가
-
-        sessionStorage.setItem("userCode", userCode);
-        sessionStorage.setItem("userRole", userRole);
-        sessionStorage.setItem("userName", userName);
-
-        sessionStorage.setItem(
-          "user",
-          JSON.stringify({
-            role: userRole,
-            name: userName,
-            code: userCode,
-            admCode: userRole !== "MEMBER" ? userCode : null,
-            memCode: userRole === "MEMBER" ? userCode : null,
-          }),
-        );
-
-        window.dispatchEvent(new Event("loginStateChanged"));
-
-        if (userRole !== "MEMBER") {
-          sessionStorage.setItem("admCode", userCode);
-          alert("관리자 계정으로 로그인");
-          navigate("/admin");
-        } else {
-          sessionStorage.setItem("memCode", userCode);
-          alert(`${userName}님 환영합니다!`);
-          navigate("/");
-        }
+      if (loggedInUser.role === "MEMBER") {
+        alert(`${loggedInUser.name}님 환영합니다!`);
+        navigate("/");
       } else {
-        console.log(result.message);
+        alert("관리자 계정으로 로그인");
+        navigate("/admin");
       }
+
     } catch (error) {
       console.error("로그인 중 서버 통신 에러:", error);
       alert("서버와 통신하는 중 문제가 발생했습니다.");

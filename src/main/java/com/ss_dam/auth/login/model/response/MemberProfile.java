@@ -8,6 +8,8 @@ public class MemberProfile implements AuthProfile {
   private String name;
   private int rating;
 
+  private String profileImage;
+
   @Override
   public Long getCode() {
     return code;
@@ -34,5 +36,13 @@ public class MemberProfile implements AuthProfile {
 
   public void setRating(int rating) {
     this.rating = rating;
+  }
+
+  public String getProfileImage() {
+    return profileImage;
+  }
+
+  public void setProfileImage(String profileImage) {
+    this.profileImage = profileImage;
   }
 }

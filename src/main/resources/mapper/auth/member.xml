@@ -37,16 +37,18 @@
 
   <select id="findMemberForLogin" resultType="MemberProfile">
     SELECT
-    CODE AS code,
-    ID AS id,
-    PASSWORD AS password,
-    NAME AS name,
+    MA.CODE AS code,
+    MA.ID AS id,
+    MA.PASSWORD AS password,
+    MA.NAME AS name,
     'MEMBER' AS role,
-    RATING AS rating
-    FROM MEMBER_ACCOUNT
-    WHERE ID = #{id}
-    AND PASSWORD = #{password}
-    AND DELETE_YN = 0
+    MA.RATING AS rating,
+    i.path AS profile_image
+    FROM MEMBER_ACCOUNT AS MA
+    LEFT JOIN IMAGES i ON MA.code = i.target_code AND i.type = 'profile'
+    WHERE MA.ID = #{id}
+    AND MA.PASSWORD = #{password}
+    AND MA.DELETE_YN = 0
   </select>
 
   <select id="findAdminForLogin" resultType="AdminProfile">

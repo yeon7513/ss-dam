@@ -10,6 +10,7 @@ import FeedDetail from "./feed-detail/FeedDetail.jsx";
 import { useLocation } from "react-router-dom";
 import TabMenus from "../../components/common/tab-menus/TabMenus.jsx";
 import { useSearchQuery } from "../../hooks/useSearchQuery.js";
+import { useAuth } from "../../context/AuthContext.jsx";
 
 const SORT_MENU = [
   { label: "최신순", value: "createdAt" },
@@ -58,11 +59,11 @@ const Feed = () => {
     setSelectedFeedCode(null);
   };
 
-  const isLoggedIn = !!sessionStorage.getItem("userCode");
+  const { isLoggedIn, user } = useAuth();
 
   return (
     <main className={styles.wrap}>
-      <FeedSideNav isLoggedIn={isLoggedIn} />
+      <FeedSideNav isLoggedIn={isLoggedIn} memberProfile={user} />
       <div className={styles.container}>
         <div className={styles.filterBar}>
           {/* 정렬 */}

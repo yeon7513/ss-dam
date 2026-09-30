@@ -4,7 +4,7 @@ import com.ss_dam.auth.admin.enums.AdminDept;
 
 public class AdminProfile implements AuthProfile {
   private Long code;
-  private String empId;
+  private String id;
   private String role;
   private String name;
   private AdminDept dept;
@@ -17,7 +17,7 @@ public class AdminProfile implements AuthProfile {
 
   @Override
   public String getId() {
-    return empId;
+    return id;
   }
 
   @Override

@@ -1,50 +1,9 @@
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styles from "./Header.module.scss";
+import { useAuth } from "../../context/AuthContext.jsx";
 
 const Header = () => {
-  const navigate = useNavigate();
-
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    return !!sessionStorage.getItem("userName");
-  });
-
-  useEffect(() => {
-    const handleStorageChange = () => {
-      const isLogged = sessionStorage.getItem("userName");
-
-      setIsLoggedIn(!!isLogged);
-    };
-
-    window.addEventListener("loginStateChanged", handleStorageChange);
-
-    return () => {
-      window.removeEventListener("loginStateChanged", handleStorageChange);
-    };
-  }, []);
-
-  const handleLogOut = async () => {
-    try {
-      const response = await fetch("/api/auth/logout", {
-        method: "POST",
-        credentials: "include",
-      });
-
-      if (response.ok) {
-        sessionStorage.removeItem("userName");
-        sessionStorage.removeItem("userRole");
-
-        window.dispatchEvent(new Event("loginStateChanged"));
-
-        alert("로그아웃 되었습니다");
-        navigate("/");
-      } else {
-        alert("로그아웃 처리에 실패했습니다");
-      }
-    } catch (error) {
-      console.error("로그아웃 통신 에러", error);
-    }
-  };
+  const { isLoggedIn, logout } = useAuth();
 
   return (
     <header className={styles.container}>
@@ -65,7 +24,7 @@ const Header = () => {
                   <Link to="/mypage">마이페이지</Link>
                 </span>
                 <span className={styles.divider}> | </span>
-                <span className={styles.navItem} onClick={handleLogOut}>
+                <span className={styles.navItem} onClick={logout}>
                   로그아웃
                 </span>
               </>

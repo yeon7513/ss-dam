@@ -42,40 +42,9 @@ import MyPage from "./pages/myPage/MyPage";
 import Points from "./pages/myPage/points/Points";
 import SupportDetail from "./pages/support/SupportDetail";
 import Supports from "./pages/support/Supports";
-import { useEffect } from "react";
+import ProtectedRoute from "./components/common/protected-route/ProtectedRoute.jsx";
 
 function App() {
-  useEffect(() => {
-    const checkAuthStauts = async () => {
-      if (!sessionStorage.getItem("userRole")) return;
-
-      try {
-        const response = await fetch("/api/auth/check", {
-          method: "GET",
-          credentials: "include",
-        });
-
-        if (response.ok) {
-          const result = await response.json();
-
-          sessionStorage.setItem("userCode", result.data.code);
-          sessionStorage.setItem("userRole", result.data.role);
-          sessionStorage.setItem("userName", result.data.name);
-        } else {
-          sessionStorage.clear();
-
-          window.dispatchEvent(new Event("loginStateChanged"));
-          alert("세션이 만료되었습니다. 다시 로그인해 주세요.");
-
-          window.location.href = "/login";
-        }
-      } catch (err) {
-        console.error("세션 검증 통신 에러", err);
-      }
-    };
-    checkAuthStauts();
-  }, []);
-
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
@@ -85,8 +54,10 @@ function App() {
         {/* 피드 */}
         <Route path="/feed">
           <Route index element={<Feed />} />
-          <Route path="register" element={<FeedRegister />} />
-          <Route path="edit/:code" element={<FeedUpdate />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="register" element={<FeedRegister />} />
+            <Route path="edit/:code" element={<FeedUpdate />} />
+          </Route>
         </Route>
 
         {/* 챌린지 */}
@@ -99,9 +70,11 @@ function App() {
         {/* 마켓 - 다시쓰담 */}
         <Route path="/market">
           <Route index element={<Market />} />
-          <Route path="register" element={<ProductRegister />} />
           <Route path=":code" element={<ProductDetail />} />
-          <Route path="edit/:code" element={<ProductUpdate />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="register" element={<ProductRegister />} />
+            <Route path="edit/:code" element={<ProductUpdate />} />
+          </Route>
           <Route path="payment" element={<MarketPayment />} />
         </Route>
 
@@ -135,13 +108,15 @@ function App() {
         <Route path=":code" element={<SupportDetail />} />
 
         {/* 일반회원 - 마이페이지 */}
-        <Route path="/mypage">
-          <Route index element={<MyPage />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="edit_profile" element={<EditProfile />} />
-          <Route path="activities" element={<Activities />} />
-          <Route path="deal" element={<Deal />} />
-          <Route path="points" element={<Points />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/mypage">
+            <Route index element={<MyPage />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="edit_profile" element={<EditProfile />} />
+            <Route path="activities" element={<Activities />} />
+            <Route path="deal" element={<Deal />} />
+            <Route path="points" element={<Points />} />
+          </Route>
         </Route>
       </Route>
 
@@ -159,8 +134,10 @@ function App() {
       </Route>
 
       {/* 채팅 페이지 */}
-      <Route path="/chat" element={<Chat />} />
-
+      <Route element={<ProtectedRoute />}>
+        <Route path="/chat" element={<Chat />} />
+      </Route>
+      
       {/* 에러 페이지 */}
       <Route path="/error/:errCode" element={<Error />} />
       <Route path="*" element={<Navigate to="/error/404" replace />} />
