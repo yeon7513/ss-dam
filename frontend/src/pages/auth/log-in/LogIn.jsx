@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
 import Button from "../../../components/common/button/Button";
 import TextInput from "../../../components/forms/text-input/TextInput";
 import styles from "./LogIn.module.scss";

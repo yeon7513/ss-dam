@@ -1,5 +1,5 @@
-@use "../../scss/variables.scss" as v;
-@use "../../scss/mixin.scss" as mix;
+@use "../../../scss/variables.scss" as v;
+@use "../../../scss/mixin.scss" as mix;
 
 /* 공통 대시보드 레이아웃 뼈대 */
 .dashboardBody {
@@ -217,9 +217,8 @@
       border: 1.5px solid v.$point-20;
       background-color: v.$color-white;
 
-      transition:
-        background-color 0.5s ease,
-        color 0.2s ease;
+      transition: background-color 0.5s ease,
+      color 0.2s ease;
 
       &::placeholder {
         color: v.$grayscale-50;
