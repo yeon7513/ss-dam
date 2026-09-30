@@ -1,60 +1,54 @@
 @use "/src/scss/variables.scss" as *;
 
-// ==========================================
-// 페이지 & 메인 컨테이너
-// ==========================================
+/* 회원가입 페이지 */
 .signUpPage {
-  display: flex;
+  display: flex; // 화면 중앙에 배치함.
   justify-content: center;
-  align-items: flex-start; // 하단 요소에 영향받지 않고 헤더와의 간격 고정
-  padding: 6rem 2rem; // 헤더, 푸터와 간격 조정
+  align-items: flex-start; // 상단 간격을 고정함.
+  padding: 96px 32px; // 내부 여백을 설정함.
 }
 
+/* 회원가입 컨테이너 */
 .signUpContainer {
-  width: 100%;
-  max-width: 26rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+  max-width: 26rem;
 
   h2 {
+    margin-bottom: 3rem;
     font-size: 2rem;
     font-weight: 700;
-    margin-bottom: 3rem;
   }
 
   form {
     width: 100%;
   }
 
-  // 폼 내부 공통 Label & Input 기본 스타일
   label {
+    display: block; // 라벨 요소를 한 줄 전체 영역으로 설정함.
+    margin-bottom: 0.5rem;
     font-size: 1rem;
     font-weight: 400;
-    display: block;
-    margin-bottom: 0.5rem;
   }
 }
 
-// ==========================================
-// 회원가입 제출 버튼
-// ==========================================
+/* 회원가입 제출 버튼 */
 .submitButton {
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.6rem; // 버튼 하단 간격을 설정함.
 }
 
-// ==========================================
-// 하단 로그인 안내 영역
-// ==========================================
+/* 로그인 링크 영역 */
 .ctaLogin {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 
   .loginLink {
-    color: $point-50;
-    text-decoration: underline;
     font-size: 1rem;
     font-weight: 600;
+    color: $point-50;
+    text-decoration: underline;
   }
 }

@@ -4,7 +4,7 @@ import styles from "./SummaryStats.module.scss";
 
 const SummaryStats = ({ summaryData }) => {
   return (
-    // 2x2 요약 카드
+    /* 요약 통계 정보 컴포넌트 */
     <div className={styles.statsContainer}>
       {summaryData.map((item, index) => (
         <StatCard key={index} {...item} />

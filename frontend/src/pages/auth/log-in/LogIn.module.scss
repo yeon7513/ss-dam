@@ -1,5 +1,6 @@
 @use "/src/scss/variables.scss" as *;
 
+/* 로그인 페이지 */
 .loginPage {
   display: flex; // 화면 중앙에 배치함.
   justify-content: center;
@@ -7,6 +8,7 @@
   padding: 96px 32px; // 내부 여백을 설정함.
 }
 
+/* 로그인 컨테이너 */
 .loginContainer {
   display: flex;
   flex-direction: column;
@@ -25,11 +27,13 @@
   }
 }
 
+/* 서브 타이틀 */
 .subTitle {
   margin-top: -1.5rem;
   margin-bottom: 2rem;
 }
 
+/* 입력 그룹 */
 .inputGroup {
   width: 100%;
 
@@ -38,6 +42,7 @@
   }
 }
 
+/* 로그인 입력 상자 */
 .loginInput {
   margin-bottom: 1.5rem;
 
@@ -47,10 +52,12 @@
   }
 }
 
+/* 로그인 버튼 */
 .loginButton {
   margin-bottom: 0.8rem; // 회원가입 버튼과의 간격을 설정함.
 }
 
+/* 계정 정보 링크 영역 */
 .ctaAuthLinks {
   display: flex;
   flex-direction: column;
@@ -64,12 +71,14 @@
   }
 }
 
+/* 링크 그룹 */
 .linkGroup {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
+/* 보조 링크 */
 .subLink {
   &:hover {
     font-weight: 600;

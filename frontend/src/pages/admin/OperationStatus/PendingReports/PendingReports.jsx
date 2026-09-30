@@ -2,13 +2,16 @@ import React from "react";
 import Card from "../../../../components/common/card/Card.jsx";
 import styles from "./PendingReports.module.scss";
 
-const PendingReports = ({ pendingReportsData }) => {
+const PendingReports = ({ pendingReportsData = [] }) => {
+  /* 미처리 신고 목록 컴포넌트 */
   return (
-    //  미처리 신고 카드
     <Card className={styles.reportCard}>
+      {/* 카드 헤더 영역 */}
       <div className={styles.cardHeader}>
         <h3>미처리 신고 ↗</h3>
       </div>
+
+      {/* 신고 테이블 영역 */}
       <div className={styles.tableWrapper}>
         <table className={styles.reportTable}>
           <thead>
@@ -20,9 +23,9 @@ const PendingReports = ({ pendingReportsData }) => {
             </tr>
           </thead>
           <tbody>
-            {pendingReportsData.map((item, index) => (
-              <tr key={index}>
-                <td>{item.date}</td>
+            {pendingReportsData.map((item) => (
+              <tr key={item.id}>
+                <td className={styles.dateTd}>{item.date}</td>
                 <td>
                   <div className={styles.userInfo}>
                     <div className={styles.avatar}>👤</div>
@@ -41,6 +44,8 @@ const PendingReports = ({ pendingReportsData }) => {
           </tbody>
         </table>
       </div>
+
+      {/* 페이지네이션 영역 */}
       <div className={styles.pagination}>
         <span>&lt; 처음</span>
         <span>1</span>

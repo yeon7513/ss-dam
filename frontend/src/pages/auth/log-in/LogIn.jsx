@@ -73,17 +73,21 @@ const LogIn = () => {
   };
 
   return (
+    /* 로그인 페이지 */
     <main className={styles.loginPage}>
       {/* 로그인 컨테이너 */}
       <div className={styles.loginContainer}>
         <h2>로그인</h2>
+        {/* 서브 타이틀 */}
         <p className={styles.subTitle}>
           더 나은 순환을 위해 다시 만나 반가워요!
         </p>
 
         {/* 로그인 정보 입력 양식 */}
         <form method="post" onSubmit={handleSubmit}>
+          {/* 입력 그룹 */}
           <div className={styles.inputGroup}>
+            {/* 로그인 입력 상자 */}
             <TextInput
               label="아이디"
               placeholder="아이디 입력"
@@ -103,11 +107,12 @@ const LogIn = () => {
             />
           </div>
 
-          {/* 버튼 영역 */}
+          {/* 로그인 버튼 */}
           <Button fullWidth className={styles.loginButton} type="submit">
             로그인
           </Button>
 
+          {/* 회원가입 버튼 */}
           <Button
             size="lg"
             fullWidth
@@ -121,6 +126,7 @@ const LogIn = () => {
           {/* 계정 정보 링크 영역 */}
           <div className={styles.ctaAuthLinks}>
             <p>계정 정보를 잊으셨나요?</p>
+            {/* 링크 그룹 */}
             <div className={styles.linkGroup}>
               <Link to="#" className={styles.subLink}>
                 아이디 찾기
@@ -129,10 +135,6 @@ const LogIn = () => {
               <Link to="#" className={styles.subLink}>
                 비밀번호 찾기
               </Link>
-              {/* <span className={styles.divider}>|</span>
-              <Link to="#" className={styles.subLink}>
-                회원가입
-              </Link> */}
             </div>
           </div>
         </form>
