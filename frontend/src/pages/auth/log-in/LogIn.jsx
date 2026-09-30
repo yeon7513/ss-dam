@@ -35,10 +35,10 @@ const LogIn = () => {
 
       if (loggedInUser.role === "MEMBER") {
         alert(`${loggedInUser.name}님 환영합니다!`);
-        navigate("/");
+        navigate("/", { replace: true });
       } else {
         alert("관리자 계정으로 로그인");
-        navigate("/admin");
+        navigate("/admin", { replace: true });
       }
     } catch (error) {
       console.error("로그인 중 서버 통신 에러:", error);
