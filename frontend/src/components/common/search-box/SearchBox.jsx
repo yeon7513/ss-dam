@@ -1,10 +1,10 @@
 import SelectBox from "../../forms/select-box/SelectBox";
 import TextInput from "../../forms/text-input/TextInput";
-import Button from "./../button/Button";
 import cn from "classnames";
 import styles from "./SearchBox.module.scss";
 import { useState } from "react";
 import RadioInput from "../../forms/radio-input/RadioInput.jsx";
+import { LuSearch } from "react-icons/lu";
 
 function SearchBox({
   className,
@@ -108,13 +108,15 @@ function SearchBox({
       {renderFilters()}
 
       {/* 키워드 검색은 항상 존재 */}
-      <TextInput
-        name="keyword"
-        value={keyword}
-        onChange={(e) => handleChangeKeyword(e)}
-        placeholder="검색어를 입력하세요."
-      />
-      <Button type="submit">검색</Button>
+      <div className={styles.textGroup}>
+        <TextInput
+          name="keyword"
+          value={keyword}
+          onChange={(e) => handleChangeKeyword(e)}
+          placeholder="검색어를 입력하세요."
+        />
+        <LuSearch className={styles.searchIcon} />
+      </div>
     </form>
   );
 }

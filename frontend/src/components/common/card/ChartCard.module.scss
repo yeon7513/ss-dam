@@ -1,4 +1,5 @@
-@use "/src/scss/variables.scss" as *;
+@use "../../../scss/variables.scss" as v;
+@use "../../../scss/mixin.scss" as mix;
 
 .chartCard {
   height: 300px;
@@ -15,12 +16,12 @@
     h3 {
       font-size: 1.1rem;
       font-weight: 700;
-      color: $grayscale-90;
+      color: v.$grayscale-90;
     }
 
     .legend {
       font-size: 0.9rem;
-      color: $grayscale-50;
+      color: v.$grayscale-50;
       display: flex;
       align-items: center;
       gap: 6px;
@@ -32,24 +33,26 @@
         height: 8px;
         border-radius: 50%;
       }
+
       .dotDark {
-        background-color: $grayscale-90;
+        background-color: v.$grayscale-90;
       }
+
       .dotLight {
-        background-color: $grayscale-20;
+        background-color: v.$grayscale-20;
       }
     }
   }
 
   .chartPlaceholder {
     flex: 1;
-    border: 1px dashed $grayscale-20;
+    border: 1px dashed v.$grayscale-20;
     border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: $grayscale-50;
+    color: v.$grayscale-50;
     font-size: 1rem;
-    background-color: $background-5;
+    background-color: v.$background-5;
   }
 }

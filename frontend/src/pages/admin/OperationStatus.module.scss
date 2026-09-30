@@ -1,37 +1,39 @@
-@use "/src/scss/variables.scss" as *;
+@use "../../scss/variables.scss" as v;
+@use "../../scss/mixin.scss" as mix;
 
+/* 대시보드 전체 영역 */
 .dashboardBody {
-  padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 1.25rem;
+  padding: 24px;
 }
 
+/* 범례 영역 */
 .legend {
-  font-size: 0.9rem;
-  color: $grayscale-50;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 0.375rem;
+  font-size: 0.9rem;
+  color: v.$grayscale-50;
 }
 
-// 상단 2열 레이아웃 Grid
+/* 상단 레이아웃 영역 */
 .topGrid {
   display: grid;
-  grid-template-columns: 1fr 1.5fr; // 1:1.5 비율
-  gap: 20px;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 1.25rem;
 
-  // 좌측 Column
   .leftColumn {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 0.625rem;
   }
 }
 
-// 하단 2열 레이아웃 Grid
+/* 하단 레이아웃 영역 */
 .bottomGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
+  gap: 1.25rem;
 }

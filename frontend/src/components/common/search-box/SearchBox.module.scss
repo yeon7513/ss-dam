@@ -1,12 +1,19 @@
-@use "/src/scss/variables.scss" as *;
-@use "/src/scss/mixin.scss" as mix;
+@use "../../../scss/variables.scss" as v;
+@use "../../../scss/mixin.scss" as mix;
 
 .wrap {
   @include mix.flex;
   gap: 0.5rem;
 
-  input[type='text'] {
-    width: 240px;
+  .textGroup {
+    > input[type='text'] {
+      width: 240px;
+    }
+
+    .searchIcon {
+      font-size: 2.5rem;
+    }
+
   }
 
   .radioGroup {

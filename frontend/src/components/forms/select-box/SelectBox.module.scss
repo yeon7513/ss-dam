@@ -1,5 +1,5 @@
-@use "/src/scss/variables.scss" as *;
-@use "/src/scss/mixin.scss" as mix;
+@use "../../../scss/variables.scss" as v;
+@use "../../../scss/mixin.scss" as mix;
 
 .selectWrap {
   display: flex;
@@ -23,8 +23,8 @@
 
     // 박스 선택 시
     &:focus {
-      border-color: $primary-40;
-      color: $grayscale-90;
+      border-color: v.$primary-40;
+      color: v.$grayscale-90;
       outline: none; // 브라우저 기본 검정 외곽선 제거
     }
   }
@@ -35,7 +35,7 @@
     right: 0.75rem;
 
     font-size: 1.25rem;
-    color: $grayscale-50;
+    color: v.$grayscale-50;
 
     pointer-events: none; // 클릭 이벤트가 셀렉트태그로 전달되도록 설정
   }

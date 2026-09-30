@@ -1,12 +1,13 @@
-@use "/src/scss/variables.scss" as *;
+@use "../scss/variables.scss" as v;
+@use "../scss/mixin.scss" as mix;
 
 .adminLayout {
   display: flex;
   min-height: 100vh;
 
-  background-color: $grayscale-5;
-  font-family: $font-main;
-  color: $grayscale-90;
+  background-color: v.$grayscale-5;
+  font-family: v.$font-main;
+  color: v.$grayscale-90;
 }
 
 .mainContent {

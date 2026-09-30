@@ -1,11 +1,12 @@
-@use "/src/scss/variables.scss" as *;
+@use "../../../scss/variables.scss" as v;
+@use "../../../scss/mixin.scss" as mix;
 
 .tabContainer {
   display: flex;
   gap: 20px;
   padding-bottom: 10px;
 
-  border-bottom: 1px solid $grayscale-20;
+  border-bottom: 1px solid v.$grayscale-20;
 }
 
 .tab {
@@ -16,7 +17,7 @@
 
   font-size: 1rem;
   font-weight: 700;
-  color: $grayscale-90;
+  color: v.$grayscale-90;
   background: none;
   border: none;
   cursor: pointer;
@@ -24,11 +25,11 @@
   transition: color 0.2s ease;
 
   &:hover {
-    color: $primary-20;
+    color: v.$primary-20;
   }
 
   &.activeTab {
-    color: $primary-40;
+    color: v.$primary-40;
 
     &::after {
       content: "";
@@ -39,7 +40,7 @@
       width: 100%;
       height: 2px;
 
-      background-color: $primary-40;
+      background-color: v.$primary-40;
     }
   }
 }
@@ -53,8 +54,8 @@
   font-size: 0.75rem;
   font-weight: 700;
   line-height: 1;
-  color: $color-white;
+  color: v.$color-white;
 
   border-radius: 100px;
-  background-color: $dan-color;
+  background-color: v.$dan-color;
 }

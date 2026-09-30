@@ -1,5 +1,5 @@
-@use "/src/scss/variables.scss" as *;
-@use "/src/scss/mixin.scss" as mix;
+@use "../../../scss/variables.scss" as v;
+@use "../../../scss/mixin.scss" as mix;
 
 .pagination {
   @include mix.flex;
@@ -20,7 +20,7 @@
         border-radius: 50%;
 
         &.active {
-          background-color: $point-5;
+          background-color: v.$point-5;
         }
       }
     }

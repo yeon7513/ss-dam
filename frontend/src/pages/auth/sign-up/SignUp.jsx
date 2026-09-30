@@ -1,16 +1,18 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { sendToSignup } from "../../../api/member";
 
 import IdSection from "../../../components/auth/Id/IdSection";
 import PasswordSection from "../../../components/auth/password/PasswordSection";
 import UserInfoSection from "../../../components/auth/userInfo/UserInfoSection";
 import AddressSection from "../../../components/auth/address/AddressSection";
 import ProfileImageSection from "../../../components/auth/profile-image/ProfileImageSection";
-
 import Button from "../../../components/common/button/Button";
+
+import { sendToSignup } from "../../../api/member";
+
 import styles from "./SignUp.module.scss";
 
+/* 정규 표현식 */
 const phoneRegex = /^010\d{8}$/;
 const passwordRegex =
   /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
@@ -18,6 +20,7 @@ const passwordRegex =
 const SignUp = () => {
   const navigate = useNavigate();
 
+  /* 회원가입 상태 관리 */
   const [form, setForm] = useState({
     id: "",
     password: "",
@@ -34,10 +37,12 @@ const SignUp = () => {
   const [passwordError, setPasswordError] = useState("");
   const [isPasswordMatched, setIsPasswordMatched] = useState(false);
 
+  /* 엔터 키 입력 방지 처리 */
   const handleKeyDown = (e) => {
     if (e.key === "Enter") e.preventDefault();
   };
 
+  /* 회원가입 제출 처리 */
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -75,9 +80,12 @@ const SignUp = () => {
 
   return (
     <main className={styles.signUpPage}>
+      {/* 회원가입 컨테이너 */}
       <div className={styles.signUpContainer}>
         <h2>회원가입</h2>
-        <form method="post" onSubmit={handleSubmit} onKeyDown={handleKeyDown}>
+
+        {/* 회원가입 입력 양식 */}
+        <form method="post" onKeyDown={handleKeyDown} onSubmit={handleSubmit}>
           <IdSection
             form={form}
             setForm={setForm}
@@ -102,21 +110,20 @@ const SignUp = () => {
 
           <ProfileImageSection setForm={setForm} />
 
-          <div>
-            <Button
-              className={styles.submitButton}
-              type="submit"
-              size="lg"
-              fullWidth
-            >
-              회원가입
-            </Button>
-          </div>
+          <Button
+            size="lg"
+            fullWidth
+            className={styles.submitButton}
+            type="submit"
+          >
+            회원가입
+          </Button>
         </form>
 
+        {/* 로그인 링크 영역 */}
         <div className={styles.ctaLogin}>
           <p>계정이 있으신가요?</p>
-          <Link className={styles.loginLink} to="/login">
+          <Link to="/login" className={styles.loginLink}>
             로그인
           </Link>
         </div>

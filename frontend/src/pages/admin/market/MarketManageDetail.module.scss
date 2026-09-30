@@ -1,3 +1,6 @@
+@use "../../../scss/variables.scss" as v;
+@use "../../../scss/mixin.scss" as mix;
+
 .admin-detail-loading {
   display: flex;
   justify-content: center;
@@ -95,18 +98,22 @@
     background-color: #dcfce7;
     color: #15803d;
   }
+
   &.status-private {
     background-color: #f3f4f6;
     color: #4b5563;
   }
+
   &.status-blinded {
     background-color: #fef3c7;
     color: #b45309;
   }
+
   &.status-reported {
     background-color: #fee2e2;
     color: #b91c1c;
   }
+
   &.status-deleted {
     background-color: #f3f4f6;
     color: #9ca3af;
@@ -125,6 +132,7 @@
     background-color: #dcfce7;
     color: #15803d;
   }
+
   &.inactive {
     background-color: #fee2e2;
     color: #b91c1c;

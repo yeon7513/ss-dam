@@ -102,12 +102,12 @@ export function AuthProvider({ children }) {
       });
 
       if (response.ok) {
-        alert("로그아웃 되었습니다.");
-
-        setUser(null);
         sessionStorage.removeItem("loggedInUser");
 
-        navigate("/");
+        alert("로그아웃 되었습니다.");
+        setUser(null);
+
+        window.location.href = "/";
       } else {
         alert("로그아웃 처리에 실패했습니다.")
       }

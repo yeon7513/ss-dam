@@ -1,36 +1,26 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "./AdminHeader.module.scss";
-import Button from "../../common/button/Button";
 import { FiHome } from "react-icons/fi";
+import Button from "../../common/button/Button";
+import styles from "./AdminHeader.module.scss";
 
 const AdminHeader = () => {
+  /* 관리자 헤더 이동 로직 */
   const navigate = useNavigate();
-
-  const handleGoHome = () => {
-    navigate("/admin");
-  };
-
-  const handleSwitchToUserMode = () => {
-    navigate("/mypage"); // 사용자 페이지로 변경 예정
-  };
 
   return (
     <header className={styles.topHeader}>
-      <div
-        className={styles.homeIcon}
-        onClick={handleGoHome}
-        title="관리자 메인으로 이동"
-      >
+      {/* 홈 이동 버튼 영역 */}
+      <div className={styles.homeBtn} onClick={() => navigate("/admin")}>
         <FiHome />
       </div>
 
+      {/* 사용자 모드 전환 버튼 영역 */}
       <Button
-        type="button"
         btnStyle="danger"
         size="sm"
         className={styles.userModeBtn}
-        onClick={handleSwitchToUserMode}
+        onClick={() => navigate("/mypage")}
       >
         사용자 모드 전환
       </Button>

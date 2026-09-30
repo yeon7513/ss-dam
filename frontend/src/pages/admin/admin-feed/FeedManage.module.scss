@@ -1,4 +1,5 @@
-@use "/src/scss/variables.scss" as *;
+@use "../../scss/variables.scss" as v;
+@use "../../scss/mixin.scss" as mix;
 
 /* 공통 대시보드 레이아웃 뼈대 */
 .dashboardBody {
@@ -15,9 +16,9 @@
   gap: 20px;
   padding: 20px;
 
-  border: 1px solid $grayscale-20;
+  border: 1px solid v.$grayscale-20;
   border-radius: 8px;
-  background-color: $color-white;
+  background-color: v.$color-white;
 }
 
 /* 상태필터탭 영역 */
@@ -26,7 +27,7 @@
   gap: 20px;
   padding-bottom: 10px;
 
-  border-bottom: 1px solid $grayscale-20;
+  border-bottom: 1px solid v.$grayscale-20;
 
   .tabBtn {
     display: flex;
@@ -36,7 +37,7 @@
 
     font-size: 1rem;
     font-weight: 700;
-    color: $grayscale-90;
+    color: v.$grayscale-90;
     background: none;
     border: none;
     cursor: pointer;
@@ -44,11 +45,11 @@
     transition: color 0.2s ease;
 
     &:hover {
-      color: $primary-20;
+      color: v.$primary-20;
     }
 
     &.active {
-      color: $primary-40;
+      color: v.$primary-40;
 
       &::after {
         content: "";
@@ -59,7 +60,7 @@
         width: 100%;
         height: 2px;
 
-        background-color: $primary-40;
+        background-color: v.$primary-40;
       }
     }
 
@@ -72,10 +73,10 @@
       font-size: 0.75rem;
       font-weight: 700;
       line-height: 1;
-      color: $color-white;
+      color: v.$color-white;
 
       border-radius: 100px;
-      background-color: $dan-color;
+      background-color: v.$dan-color;
     }
   }
 }
@@ -100,7 +101,7 @@
       max-width: 20rem;
       height: 3.4rem;
 
-      color: $grayscale-90;
+      color: v.$grayscale-90;
 
       select,
       input,
@@ -110,7 +111,7 @@
 
         font-size: 1rem;
 
-        border: 1.5px solid $point-20;
+        border: 1.5px solid v.$point-20;
       }
     }
   }
@@ -130,22 +131,22 @@
       font-size: 1rem;
       font-weight: 400;
 
-      border: 1.5px solid $point-20;
-      background-color: $color-white;
+      border: 1.5px solid v.$point-20;
+      background-color: v.$color-white;
 
       &:valid {
-        color: $grayscale-90;
+        color: v.$grayscale-90;
       }
 
       &:focus {
-        background-color: $point-5;
+        background-color: v.$point-5;
       }
     }
 
     span {
       display: inline-flex;
       align-items: center;
-      color: $grayscale-50;
+      color: v.$grayscale-50;
     }
   }
 
@@ -158,8 +159,8 @@
     min-height: 40px;
     padding: 3px;
 
-    border: 1.5px solid $point-20;
-    background-color: $color-white;
+    border: 1.5px solid v.$point-20;
+    background-color: v.$color-white;
     overflow: hidden;
 
     > div {
@@ -191,12 +192,13 @@
 
       input[type="radio"]:checked + label {
         font-weight: 700;
-        color: $point-60;
+        color: v.$point-60;
 
-        background-color: $point-5;
+        background-color: v.$point-5;
       }
     }
   }
+
   /* 검색어 입력창 */
   .searchBox {
     display: flex;
@@ -212,22 +214,21 @@
       font-size: 1rem;
       font-weight: 400;
 
-      border: 1.5px solid $point-20;
-      background-color: $color-white;
+      border: 1.5px solid v.$point-20;
+      background-color: v.$color-white;
 
-      transition:
-        background-color 0.5s ease,
-        color 0.2s ease;
+      transition: background-color 0.5s ease,
+      color 0.2s ease;
 
       &::placeholder {
-        color: $grayscale-50;
+        color: v.$grayscale-50;
       }
 
       &:focus {
-        background-color: $point-5;
+        background-color: v.$point-5;
 
         &::placeholder {
-          color: $point-60;
+          color: v.$point-60;
         }
       }
     }
@@ -236,7 +237,7 @@
       position: absolute;
       right: 12px;
 
-      color: $grayscale-50;
+      color: v.$grayscale-50;
       font-size: 1.5rem;
       pointer-events: none;
     }
@@ -252,25 +253,25 @@
     height: 3.4rem;
     padding: 0 12px;
 
-    border: 1.5px solid $point-20;
-    background-color: $color-white;
+    border: 1.5px solid v.$point-20;
+    background-color: v.$color-white;
 
     transition: background-color 0.2s ease;
 
     &:focus-within {
-      background-color: $point-5;
+      background-color: v.$point-5;
 
       .regionInput {
-        color: $point-60;
+        color: v.$point-60;
 
         &::placeholder {
-          color: $point-60;
+          color: v.$point-60;
         }
       }
     }
 
     &:has(input:disabled) {
-      background-color: $grayscale-10;
+      background-color: v.$grayscale-10;
     }
 
     .regionInput {
@@ -279,7 +280,7 @@
       height: 100%;
 
       font-size: 1rem;
-      color: $grayscale-90;
+      color: v.$grayscale-90;
 
       appearance: none;
       border: 0;
@@ -288,7 +289,7 @@
       box-shadow: none;
 
       &::placeholder {
-        color: $grayscale-50;
+        color: v.$grayscale-50;
       }
 
       &:focus,
@@ -301,7 +302,7 @@
 
       &:disabled {
         cursor: not-allowed;
-        color: $grayscale-50;
+        color: v.$grayscale-50;
         background: transparent;
       }
     }
@@ -317,6 +318,7 @@
       white-space: nowrap;
 
       scrollbar-width: none;
+
       &::-webkit-scrollbar {
         display: none;
       }
@@ -329,11 +331,11 @@
 
         font-size: 0.875rem;
         font-weight: 500;
-        color: $point-60;
+        color: v.$point-60;
 
-        border: 1px solid $point-20;
+        border: 1px solid v.$point-20;
         border-radius: 100px;
-        background-color: $point-5;
+        background-color: v.$point-5;
 
         white-space: nowrap;
 
@@ -346,7 +348,7 @@
           margin-left: 2px;
 
           font-size: 1rem;
-          color: $point-60;
+          color: v.$point-60;
 
           background: none;
           border: none;
@@ -354,7 +356,7 @@
           transition: color 0.2s ease;
 
           &:hover {
-            color: $dan-color;
+            color: v.$dan-color;
           }
         }
       }
@@ -380,6 +382,6 @@
     padding: 60px 0;
 
     font-size: 1rem;
-    color: $grayscale-50;
+    color: v.$grayscale-50;
   }
 }

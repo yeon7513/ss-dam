@@ -1,5 +1,5 @@
-@use "/src/scss/variables.scss" as *;
-@use "/src/scss/mixin.scss" as mix;
+@use "../scss/variables.scss" as v;
+@use "../scss/mixin.scss" as mix;
 
 .wrapper {
   @include mix.flex($fd: column, $jc: flex-start);
@@ -29,7 +29,7 @@
       padding: 1rem;
       font-size: 2.5rem;
       color: #fff;
-      background-color: $primary-50;
+      background-color: v.$primary-50;
       border-radius: 50%;
       transition: 0.3s;
     }
@@ -38,7 +38,7 @@
       bottom: 2.5rem;
 
       > a {
-        background-color: $primary-20;
+        background-color: v.$primary-20;
       }
     }
   }

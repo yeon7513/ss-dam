@@ -1,3 +1,6 @@
+@use "../../../../scss/variables.scss" as v;
+@use "../../../../scss/mixin.scss" as mix;
+
 .panel {
   min-width: 0;
   padding: 20px;
