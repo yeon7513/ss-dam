@@ -197,7 +197,6 @@
       }
     }
   }
-
   /* 검색어 입력창 */
   .searchBox {
     display: flex;
@@ -370,4 +369,17 @@
   gap: 20px;
 
   margin-top: 8px;
+
+  /* @@@ 데이터 로딩 및 검색 결과 없음 표시 스타일 */
+  .emptyState {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 60px 0;
+
+    font-size: 1rem;
+    color: $grayscale-50;
+  }
 }
