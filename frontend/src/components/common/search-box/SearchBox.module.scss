@@ -11,6 +11,12 @@
     > input[type='text'] {
       width: 100%;
       min-width: 240px;
+
+      &:focus {
+        + .searchIcon {
+          color: v.$grayscale-90;
+        }
+      }
     }
 
     .searchIcon {
@@ -18,9 +24,9 @@
       top: 50%;
       right: 1rem;
       transform: translateY(-50%);
-      font-size: 1.4rem;
+      font-size: 1.2rem;
+      color: v.$grayscale-50;
 
-      outline: 1px dotted red;
     }
 
   }

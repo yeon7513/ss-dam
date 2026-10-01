@@ -19,12 +19,19 @@
 .title {
   display: flex;
   gap: 8px;
+  width: 60%;
+
+  > input {
+    width: 100%;
+  }
 }
 
 .content {
   outline: 1px dotted blue;
 
   > textarea {
+    width: 100%;
+    height: 100%;
     padding: 8px;
     border: 1px solid #000;
   }
