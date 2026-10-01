@@ -38,8 +38,6 @@ const ProductDetail = () => {
     }
   }
 
-  console.log(detail);
-
   if (loading) {
     return <div>거래글 정보를 불러오고 있습니다.</div>
   }

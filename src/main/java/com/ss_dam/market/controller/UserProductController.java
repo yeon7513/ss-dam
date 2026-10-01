@@ -53,10 +53,10 @@ public class UserProductController {
         userProductService.findProductDetailByProdCode(prodCode, memberCode);
 
     if (productDetail == null) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.fail("거래글이 존재하지 않습니다."));
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.fail("존재하지 않는 거래글입니다."));
     }
 
-    return ResponseEntity.ok(ApiResponse.success("다시쓰담 거래글 상세 조회 성공", productDetail));
+    return ResponseEntity.ok(ApiResponse.success("거래글 상세 조회 성공", productDetail));
   }
 
 

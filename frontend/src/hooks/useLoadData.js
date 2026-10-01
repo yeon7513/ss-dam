@@ -35,13 +35,18 @@ export const useLoadData = (url) => {
           error.status = res.status;
           error.code = err?.code;
 
+          console.log("useLoadData - error 생성:", error);
+
           throw error;
         })
       }
+
       // 응답이 ok이면 json 데이터 반환
       return res.json();
     })
     .then(result => {
+      console.log("useLoadData - result: ", result);
+
       if (!ignore) {
         setData(result.data);
         setLoading(false);
@@ -49,6 +54,10 @@ export const useLoadData = (url) => {
     })
     .catch(err => {
       if (!ignore) {
+
+        console.log("useLoadData - catch 진입, err:", err);
+        console.log("useLoadData - catch err.message:", err.message);
+
         setMessage(err.message);
         setError(err);
         setLoading(false);

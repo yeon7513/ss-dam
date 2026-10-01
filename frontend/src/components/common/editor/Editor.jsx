@@ -56,14 +56,13 @@ function Editor({
           />
         </div>
         <div className={styles.content}>
-          {/* 텍스트 에디터 라이브러리로 바꿀 것... */}
           <textarea
             name="content"
             value={post?.content || ''}
             onChange={(e) => handleSetField(e, setPost)}
           />
         </div>
-        {/* children 부분에 해시태그 등록 섹션이 들어옴 -> 피드에서만 사용, 마켓은 사용 X  */}
+        {/* children 부분에 해시태그 및 가격 등록 섹션이 들어옴 */}
         {children}
         <div className={styles.submit}>
           <Button onClick={handleSubmit}>

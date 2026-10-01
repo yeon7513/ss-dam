@@ -1,10 +1,11 @@
 import cn from 'classnames';
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import placeholder from '../../../assets/images/placeholder.png';
 import FileInput from '../../forms/file-input/FileInput';
 import Button from '../button/Button';
 import styles from './UploadImages.module.scss';
 import ImageBox from "../image-box/ImageBox.jsx";
+import { MdImageNotSupported } from "react-icons/md";
 
 function UploadImage({ className, selectedImages, setSelectedImages }) {
   const [previews, setPreviews] = useState(selectedImages || []);
@@ -65,41 +66,68 @@ function UploadImage({ className, selectedImages, setSelectedImages }) {
     });
   };
 
+  // 이미지 리스트 가로 스크롤 ref
+  const scrollRef = useCallback((node) => {
+
+    if (node !== null) {
+      const handleWheel = (e) => {
+
+        if (e.deltaY !== 0) {
+          e.preventDefault();
+          node.scrollLeft += e.deltaY; // 세로 휠 동작을 가로 스크롤로 전환
+        }
+      };
+
+      node.addEventListener('wheel', handleWheel, { passive: false });
+
+      return () => {
+        node.removeEventListener('wheel', handleWheel);
+      }
+    }
+  }, []);
+
   return (
     <div className={cn(styles.uploadImage, className)}>
       {previews.length > 0 ? (
-        previews.map((preview, idx) => (
-          <div className={styles.imagePreview} key={idx}>
-            <ImageBox src={preview || placeholder} width={300} alt="preview" />
+        <div className={styles.preview} ref={scrollRef}>
+          {previews.map((preview, idx) => (
+            <div className={styles.previewItem} key={idx}>
+              <ImageBox src={preview || placeholder} alt="preview" />
 
-            {/* 인덱스 0번은 대표 이미지로 표시, 나머지는 설정 버튼 표시 */}
-            <div className={styles.badgeContainer}>
-              {idx === 0 ? (
-                <span className={styles.representativeBadge}>대표 이미지</span>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => handleSetRepresentativeImage(idx)}
-                >
-                  대표로 설정
-                </button>
-              )}
+              {/* 인덱스 0번은 대표 이미지로 표시, 나머지는 설정 버튼 표시 */}
+              <div className={styles.badgeContainer}>
+                {idx === 0 ? (
+                  <span className={styles.representativeBadge}>대표 이미지</span>
+                ) : (
+                  <button
+                    className={styles.changeRepresentativeImageButton}
+                    type="button"
+                    onClick={() => handleSetRepresentativeImage(idx)}
+                  >
+                    대표로 설정
+                  </button>
+                )}
+              </div>
+
+              <button
+                type="button"
+                data-target={idx}
+                onClick={(e) => handleDeleteImage(e)}
+              >
+                X
+              </button>
             </div>
-
-            <button
-              type="button"
-              data-target={idx}
-              onClick={(e) => handleDeleteImage(e)}
-            >
-              X
-            </button>
-          </div>
-        ))
+          ))
+          }
+        </div>
       ) : (
-        <div>등록된 이미지가 없습니다.</div>
+        <div className={styles.noImages}>
+          <MdImageNotSupported className={styles.icon} />
+          <span>등록된 이미지가 없습니다.</span>
+        </div>
       )}
       {!isMaxCount && (
-        <div>
+        <div className={styles.registerImageButton}>
           <Button onClick={() => fileInputRef.current.click()}>
             이미지 등록
           </Button>

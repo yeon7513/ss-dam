@@ -1,6 +1,70 @@
 @use "../../../scss/variables.scss" as v;
 @use "../../../scss/mixin.scss" as mix;
 
-.feedNav {
 
+.wrap {
+  position: relative;
+  width: 20%;
+}
+
+.feedNav {
+  position: sticky;
+  top: 2rem;
+  width: auto;
+  height: fit-content;
+  min-height: fit-content;
+  padding: 1.25rem;
+  border: 1px solid v.$grayscale-20;
+
+  @include mix.flex($fd: column, $ai: flex-start);
+  gap: 1.25rem;
+
+  .header {
+    width: 100%;
+    text-align: center;
+
+    button {
+      width: 100%;
+    }
+
+    .profile {
+      width: 100%;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid v.$grayscale-20;
+
+      .card {
+        margin-bottom: 1rem;
+      }
+    }
+
+    .loginNotice {
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid v.$grayscale-20;
+
+      > p {
+        margin-bottom: 1rem;
+      }
+    }
+  }
+
+  .menus, .support {
+    width: 100%;
+
+    &:not(.support) {
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid v.$grayscale-20;
+    }
+
+    li {
+      > a {
+        padding: 1rem;
+        display: block;
+        width: 100%;
+
+        &:hover {
+          background-color: v.$point-5;
+        }
+      }
+    }
+  }
 }

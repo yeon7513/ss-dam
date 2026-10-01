@@ -22,36 +22,46 @@ function FeedSideNav({ className, isLoggedIn, memberProfile }) {
   });
 
   return (
-    <Sidebar className={cn(styles.feedNav, className)} isFixed={false}>
-      <li>
-        {isLoggedIn ? (
-          <div className={styles.profile}>
-            <ProfileCard memberProfile={memberProfile} />
-            <Link to="/feed/register">피드 작성</Link>
-          </div>
-        ) : (
-          <div className={styles.loginNotice}>
-            <p>로그인하고 더 많은 친환경 챌린지를 확인하세요!</p>
-            <Button onClick={() => navigate("/login")}>로그인</Button>
-          </div>
-        )}
-      </li>
-      <li>
-        <ul className={styles.menus}>
-          {filteringMenuItems.map((menu) => (
-            <li key={menu.id}>
-              <Link to={menu.path}>{menu.label}</Link>
+    <div className={styles.wrap}>
+      <Sidebar className={cn(styles.feedNav, className)} isFixed={false}>
+        <li className={styles.header}>
+          {isLoggedIn ? (
+            <div className={styles.profile}>
+              <ProfileCard className={styles.card} memberProfile={memberProfile} isVertical={true} />
+              <Button onClick={() => navigate("/feed/register")}>피드 작성</Button>
+            </div>
+          ) : (
+            <div className={styles.loginNotice}>
+              <p>로그인하고 더 많은 친환경 챌린지를 확인하세요!</p>
+              <Button onClick={() => navigate("/login")}>로그인</Button>
+            </div>
+          )}
+        </li>
+        {
+          isLoggedIn && (
+            <li className={styles.menus}>
+              <ul>
+                {filteringMenuItems.map((menu) => (
+                  <li key={menu.id}>
+                    <Link to={menu.path}>{menu.label}</Link>
+                  </li>
+                ))}
+              </ul>
             </li>
-          ))}
-        </ul>
-      </li>
-      <li>
-        <Link to="/supports">공지사항</Link>
-      </li>
-      <li>
-        <Link to="/about/challenge_guide">이용가이드</Link>
-      </li>
-    </Sidebar>
+          )
+        }
+        <li className={styles.support}>
+          <ul>
+            <li>
+              <Link to="/supports">공지사항</Link>
+            </li>
+            <li>
+              <Link to="/about/challenge_guide">이용가이드</Link>
+            </li>
+          </ul>
+        </li>
+      </Sidebar>
+    </div>
   );
 }
 
