@@ -4,15 +4,10 @@ import DataTable from '../../../components/common/data-table/DataTable';
 import Pagination from '../../../components/common/pagination/Pagination';
 import SearchBox from '../../../components/common/search-box/SearchBox';
 import TabMenus from '../../../components/common/tab-menus/TabMenus';
-import styles from './MarketManage.module.scss';
+import styles from "./MarketManage.module.scss"
 
 // 코드가 너무 길어져서 MarketManage.constants.jsx로 뺐음
-import {
-  DELETE_YN_OPTIONS,
-  SEARCH_OPTIONS,
-  STATUS_TABS,
-  getProductColumns,
-} from './MarketManage.constants';
+import { DELETE_YN_OPTIONS, getProductColumns, SEARCH_OPTIONS, STATUS_TABS } from '../../../constants/MarketManage.constants';
 
 export default function MarketManage() {
   const navigate = useNavigate();
