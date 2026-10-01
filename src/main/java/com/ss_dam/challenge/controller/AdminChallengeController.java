@@ -33,7 +33,7 @@ public class AdminChallengeController {
   @Autowired
   private AdminChallengeService adminChallengeService;
 
-  AdminChallengeController(AdminActivityLogController adminActivityLogController) {
+  public AdminChallengeController(AdminActivityLogController adminActivityLogController) {
     this.adminActivityLogController = adminActivityLogController;
   }
 
