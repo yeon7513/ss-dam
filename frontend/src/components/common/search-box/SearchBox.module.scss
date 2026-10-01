@@ -8,7 +8,7 @@
   .textGroup {
     position: relative;
 
-    > input[type='text'] {
+    > input[type="text"] {
       width: 100%;
       min-width: 240px;
 
@@ -28,17 +28,16 @@
       color: v.$grayscale-50;
 
     }
-
   }
 
   .radioGroup {
     @include mix.flex;
-    gap: 1rem;
 
-    > label {
-      @include mix.flex;
-      gap: 0.3rem;
-    }
+    display: inline-flex;
+    padding: 3px;
+
+    border: 1.5px solid v.$point-20;
+
+    overflow: hidden;
   }
-
 }

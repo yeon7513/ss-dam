@@ -1,27 +1,79 @@
 @use "../../../scss/variables.scss" as v;
 @use "../../../scss/mixin.scss" as mix;
 
+/* 사이드 메뉴 영역 */
 .sideNav {
   min-width: 15%;
 }
 
+/* 메인 메뉴 영역 */
 .mainMenu {
-  margin-top: 1rem;
+  margin: 1rem 0 0;
+  padding: 0;
 
   > li {
+    width: 100%;
+    border-bottom: 1px solid v.$grayscale-20;
 
-    > button {
+    button {
+      display: flex;
+      align-items: center;
+
       width: 100%;
-      padding: 0.5rem 0;
+      height: 3.125rem;
+      padding: 0 20px;
+
+      background-color: v.$color-white;
+
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: v.$grayscale-90;
       text-align: left;
-      outline: 1px dotted blue;
+
+      &:hover {
+        background-color: v.$grayscale-5;
+      }
+
+      &.active {
+        background-color: v.$point-5;
+        color: v.$grayscale-90;
+      }
     }
   }
+}
 
-  .subMenu {
-    > li {
-      padding: 0.5rem 0 0.5rem 1rem;
-      outline: 1px dotted red;
+/* 서브 메뉴 영역 */
+.subMenu {
+  margin: 0;
+  padding: 0;
+
+  > li {
+    width: 100%;
+
+    button {
+      display: flex;
+      align-items: center;
+
+      width: 100%;
+      height: 3.125rem;
+      padding: 0 20px 0 32px;
+
+      background-color: v.$color-white;
+
+      font-size: 0.95rem;
+      font-weight: 400;
+      color: v.$grayscale-90;
+      text-align: left;
+
+      &:hover {
+        background-color: v.$grayscale-5;
+      }
+
+      &.subActive {
+        background-color: v.$grayscale-5;
+
+        font-weight: 700;
+      }
     }
   }
 }
