@@ -1,17 +1,20 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import AdminRoute from "./components/common/admin/AdminRoute";
+import ProtectedRoute from "./components/common/protected-route/ProtectedRoute.jsx";
 import AdminLayout from "./layout/AdminLayout";
 import Layout from "./layout/Layout";
 import About from "./pages/about/About";
 import ChallengeGuide from "./pages/about/challenge-guide/ChallengeGuide.jsx";
 import MarketGuide from "./pages/about/market-guide/MarketGuide.jsx";
-import ChallengeManage from "./pages/admin/ChallengeManage";
 import FeedManage from "./pages/admin/admin-feed/FeedManage";
+import ChallengeManage from "./pages/admin/ChallengeManage";
 import MarketManage from "./pages/admin/market/MarketManage";
 import MarketManageDetail from "./pages/admin/market/MarketManageDetail.jsx";
 import OperationStatus from "./pages/admin/OperationStatus";
-import UserManage from "./pages/admin/user/UserManage.jsx";
 import UserManageDetail from "./pages/admin/user/user-manage-detail/UserManageDetail.jsx";
+import UserManage from "./pages/admin/user/UserManage.jsx";
+import FindId from "./pages/auth/find-account/find-id/FindId.jsx";
+import FindPassword from "./pages/auth/find-account/find-password/FindPassword.jsx";
 import FindAccount from "./pages/auth/find-account/FindAccount.jsx";
 import LogIn from "./pages/auth/log-in/LogIn";
 import Done from "./pages/auth/sign-up/Done";
@@ -41,9 +44,6 @@ import MyPage from "./pages/my-page/MyPage.jsx";
 import Points from "./pages/my-page/points/Points";
 import SupportDetail from "./pages/support/SupportDetail";
 import Supports from "./pages/support/Supports";
-import ProtectedRoute from "./components/common/protected-route/ProtectedRoute.jsx";
-import FindId from "./pages/auth/find-account/find-id/FindId.jsx";
-import FindPassword from "./pages/auth/find-account/find-password/FindPassword.jsx";
 
 function App() {
   return (
