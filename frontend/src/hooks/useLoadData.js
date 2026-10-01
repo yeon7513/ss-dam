@@ -30,14 +30,7 @@ export const useLoadData = (url) => {
       if (!res.ok) {
         // 여기서 오류를 던지면 바로 catch절로 이동
         return res.json().then(err => {
-          const errorMessage = err?.message || "서버와의 통신에 실패했습니다.";
-          const error = new Error(errorMessage);
-          error.status = res.status;
-          error.code = err?.code;
-
-          console.log("useLoadData - error 생성:", error);
-
-          throw error;
+          throw err;
         })
       }
 
@@ -45,8 +38,6 @@ export const useLoadData = (url) => {
       return res.json();
     })
     .then(result => {
-      console.log("useLoadData - result: ", result);
-
       if (!ignore) {
         setData(result.data);
         setLoading(false);
@@ -54,10 +45,6 @@ export const useLoadData = (url) => {
     })
     .catch(err => {
       if (!ignore) {
-
-        console.log("useLoadData - catch 진입, err:", err);
-        console.log("useLoadData - catch err.message:", err.message);
-
         setMessage(err.message);
         setError(err);
         setLoading(false);

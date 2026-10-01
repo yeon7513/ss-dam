@@ -43,7 +43,11 @@ const ProductDetail = () => {
   }
 
   if (error) {
-    return <div>에러가 발생했습니다. {error}</div>
+    if (error?.status === undefined || error?.status === 404 || !error?.success) {
+      navigate("/error/404");
+    } else {
+      navigate(`/error/${error?.status}`);
+    }
   }
 
   return (
