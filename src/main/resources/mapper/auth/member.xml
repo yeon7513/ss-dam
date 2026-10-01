@@ -94,13 +94,13 @@
 
   </insert>
 
-  <select id="findMemberId" parameterType="String" resultType="MemberProfile">
+  <select id="findMemberId" resultType="MemberProfile">
     SELECT id
     FROM MEMBER_ACCOUNT
     WHERE NAME = #{name} and PHONE = #{phone}
   </select>
 
-  <select id="findMemberPw" parameterType="FindMember" resultType="Long">
+  <select id="findMemberPw" resultType="Long">
     SELECT code
     FROM MEMBER_ACCOUNT
     WHERE iD = #{id} AND NAME = #{name} AND PHONE = #{phone}

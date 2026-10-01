@@ -8,24 +8,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class FIndMemberServiceImpl implements FindMemberService{
+public class FindMemberServiceImpl implements FindMemberService{
 
-    @Autowired
-    FindMemberDao dao;
+    private final FindMemberDao findMemberDao;
+
+    public FindMemberServiceImpl(FindMemberDao findMemberDao) {
+        this.findMemberDao = findMemberDao;
+    }
 
     @Override
     public MemberProfile findMemberId(FindMember findMember) {
-        return dao.findMemberId(findMember);
+        return findMemberDao.findMemberId(findMember);
     }
 
     @Override
     public Long findMemberPw(FindMember findMember) {
-        return dao.findMemberPw(findMember);
+        return findMemberDao.findMemberPw(findMember);
     }
 
     @Override
     public boolean changePw(ChangePassword changePassword) {
-        int result = dao.changePassword(changePassword);
+        int result = findMemberDao.changePassword(changePassword);
         if (result == 1)
             return true;
         return false;
