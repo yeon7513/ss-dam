@@ -15,7 +15,48 @@
 
 <!-- 건수 조회와 목록 조회가 공유하는 조건 -->
 <sql id="adminChallengeConditions">
-    WHERE c.DELETE_YN = 0
+
+    <!-- 삭제 여부 -->
+    WHERE c.DELETE_YN =
+    <choose>
+        <when test="deleted">
+            1
+        </when>
+        <otherwise>
+            0
+        </otherwise>
+    </choose>
+
+    <!-- 진행 상태 -->
+    <if test="progressStatus != null and progressStatus != ''">
+        AND c.PROGRESS_STATUS = #{progressStatus}
+    </if>
+
+    <!-- 공개 상태 -->
+    <if test="postStatus != null and postStatus != ''">
+        AND c.POST_STATUS = #{postStatus}
+    </if>
+
+    <!-- 제목 또는 내용에 검색어가 포함된 항목 -->
+    <!-- LOCATE를 사용하므로 %와 _도 일반 문자로 검색 -->
+    <if test="keyword != null and keyword != ''">
+        AND (
+            LOCATE(#{keyword}, c.TITLE) &gt; 0
+            OR LOCATE(#{keyword}, c.CONTENT) &gt; 0
+        )
+    </if>
+
+    <!-- 조회 시작일 이후까지 진행되는 챌린지 -->
+    <!-- 챌린지 종료 시각은 미포함 -->
+    <if test="fromDate != null">
+        AND c.END_DATE &gt; #{fromDate}
+    </if>
+
+    <!-- 조회 종료일이 끝나기 전에 시작하는 챌린지 -->
+    <if test="toDate != null">
+        AND c.START_DATE &lt; DATE_ADD(#{toDate}, INTERVAL 1 DAY)
+    </if>
+
 </sql>
 
 <!-- 전체 대상 건수 -->
@@ -89,9 +130,51 @@
 
     <include refid="adminChallengeConditions"/>
 
-    ORDER BY c.CREATED_AT DESC, c.CODE DESC
+  <!-- 선택한 기준으로 정렬 -->
+<choose>
 
-    LIMIT #{perPage} OFFSET #{offset}
+    <!-- 참여자 많은 순 -->
+    <when test="sort == 'PARTICIPANTS_DESC'">
+        ORDER BY
+            PARTICIPANT_COUNT DESC,
+            c.CREATED_AT DESC,
+            c.CODE DESC
+    </when>
+
+    <!-- 참여자 적은 순 -->
+    <when test="sort == 'PARTICIPANTS_ASC'">
+        ORDER BY
+            PARTICIPANT_COUNT ASC,
+            c.CREATED_AT DESC,
+            c.CODE DESC
+    </when>
+
+    <!-- 달성률 높은 순 -->
+    <when test="sort == 'ACHIEVEMENT_DESC'">
+        ORDER BY
+            ACHIEVEMENT_RATE DESC,
+            c.CREATED_AT DESC,
+            c.CODE DESC
+    </when>
+
+    <!-- 달성률 낮은 순 -->
+    <when test="sort == 'ACHIEVEMENT_ASC'">
+        ORDER BY
+            ACHIEVEMENT_RATE ASC,
+            c.CREATED_AT DESC,
+            c.CODE DESC
+    </when>
+
+    <!-- 기본 최신순 -->
+    <otherwise>
+        ORDER BY
+            c.CREATED_AT DESC,
+            c.CODE DESC
+    </otherwise>
+
+</choose>
+
+LIMIT #{perPage} OFFSET #{offset}
 </select>
 
 <!--참여자 수는 이 예시에서 “취소하지 않은 참여 중·완료 회원 수”로 정의했습니다. 진행 중인 회원만 표시하려면 STATUS = 'JOINED'로 변경하면 됩니다.
@@ -113,6 +196,7 @@
     c.GOAL,
     c.POINT_EARNED,
     c.MAX_PARTICIPANTS,
+    c.DELETE_YN,
     c.START_DATE,
     c.END_DATE,
     c.PROGRESS_STATUS,
@@ -168,8 +252,8 @@
     LEFT JOIN ADMIN_ACCOUNT a
         ON a.CODE = c.ADM_CODE
 
+    <!-- 관리자는 삭제된 챌린지도 상세 조회 가능 -->
     WHERE c.CODE = #{code}
-      AND c.DELETE_YN = 0
 </select>
 
 
@@ -380,6 +464,528 @@
             FROM FEED f
             WHERE f.CHAL_CODE = #{code}
         )
+
+</select>
+
+<!-- 복구 검사용 조회: 삭제된 챌린지도 포함 -->
+<!--loadChallengeForUpdate()에는 DELETE_YN = 0 조건이 있으므로, 복구에는 이 별도 조회를 사용-->
+
+<!-- 서비스의 트랜잭션이 끝날 때까지 행 잠금 유지 -->
+<select id="loadDeleteYnForUpdate"
+        parameterType="map"
+        resultType="java.lang.Integer">
+
+    SELECT
+        CASE WHEN DELETE_YN = 1 THEN 1 ELSE 0 END
+    FROM CHALLENGE
+    WHERE CODE = #{code}
+    FOR UPDATE
+
+</select>
+
+
+<!-- 삭제 여부와 관계없이 챌린지 존재 확인 -->
+<select id="existsChallengeIncludingDeleted"
+        parameterType="map"
+        resultType="boolean">
+
+    SELECT EXISTS (
+        SELECT 1
+        FROM CHALLENGE
+        WHERE CODE = #{code}
+    )
+
+</select>
+
+<!-- 참여자 응답 매핑 -->
+<resultMap id="adminChallengeParticipantMap"
+           type="AdminChallengeParticipantView">
+
+    <id column="MEMBER_CODE" property="memberCode"/>
+    <result column="MEMBER_ID" property="memberId"/>
+    <result column="STATUS" property="status"/>
+    <result column="JOINED_AT" property="joinedAt"/>
+
+</resultMap>
+
+
+<!-- 기존 챌린지 목록의 참여자 수와 같은 조건 -->
+<sql id="challengeParticipantConditions">
+
+    WHERE ce.CHAL_CODE = #{code}
+      AND ce.STATUS IN ('JOINED', 'COMPLETED')
+      AND ce.CANCELED_AT IS NULL
+
+</sql>
+
+
+<!-- 챌린지 참여 회원 수 -->
+<select id="countParticipants"
+        parameterType="map"
+        resultType="long">
+
+    SELECT COUNT(DISTINCT ce.MEM_CODE)
+    FROM CHALLENGE_ENTRY ce
+
+    <include refid="challengeParticipantConditions"/>
+
+</select>
+
+
+<!-- 챌린지 참여자 목록 -->
+<select id="loadParticipants"
+        parameterType="map"
+        resultMap="adminChallengeParticipantMap">
+
+    SELECT
+        p.MEM_CODE AS MEMBER_CODE,
+        m.ID AS MEMBER_ID,
+        p.STATUS,
+        p.JOINED_AT
+
+    FROM (
+        <!-- 같은 회원의 기록이 여러 개여도 한 줄로 조회 -->
+        SELECT
+            ce.MEM_CODE,
+
+            <!-- 완료 기록이 있으면 완료 상태로 표시 -->
+            CASE
+                WHEN MAX(
+                    CASE
+                        WHEN ce.STATUS = 'COMPLETED' THEN 1
+                        ELSE 0
+                    END
+                ) = 1
+                THEN 'COMPLETED'
+                ELSE 'JOINED'
+            END AS STATUS,
+
+            MIN(ce.JOINED_AT) AS JOINED_AT
+
+        FROM CHALLENGE_ENTRY ce
+
+        <include refid="challengeParticipantConditions"/>
+
+        GROUP BY ce.MEM_CODE
+
+        ORDER BY JOINED_AT DESC, ce.MEM_CODE DESC
+        LIMIT #{perPage} OFFSET #{offset}
+    ) p
+
+    LEFT JOIN MEMBER_ACCOUNT m
+        ON m.CODE = p.MEM_CODE
+
+    ORDER BY p.JOINED_AT DESC, p.MEM_CODE DESC
+
+
+</select>
+
+<!-- 기존 관리자 활동 DTO 재사용 -->
+<resultMap id="challengeActivityMap"
+           type="AdminActivity">
+
+    <id column="CODE" property="code"/>
+    <result column="ADMIN_ID" property="empId"/>
+    <result column="TARGET_TYPE" property="targetType"/>
+    <result column="TARGET_CODE" property="targetCode"/>
+    <result column="PROCESS_TYPE" property="processType"/>
+    <result column="MEMO" property="memo"/>
+    <result column="CREATED_AT" property="createdAt"/>
+
+</resultMap>
+
+
+<!-- 건수와 목록 조회에서 공유하는 조건 -->
+<sql id="challengeLogConditions">
+
+    WHERE l.TARGET_TYPE = 'challenge'
+      AND l.TARGET_CODE = #{code}
+
+</sql>
+
+
+<!-- 챌린지 처리 이력 전체 건수 -->
+<select id="countChallengeLogs"
+        parameterType="map"
+        resultType="long">
+
+    SELECT COUNT(*)
+    FROM ADMIN_ACTIVITY_LOG l
+
+    <include refid="challengeLogConditions"/>
+
+</select>
+
+
+<!-- 챌린지 처리 이력 목록 -->
+<select id="loadChallengeLogs"
+        parameterType="map"
+        resultMap="challengeActivityMap">
+
+    SELECT
+        l.CODE,
+        a.EMP_ID AS ADMIN_ID,
+        l.TARGET_TYPE,
+        l.TARGET_CODE,
+        l.PROCESS_TYPE,
+        l.MEMO,
+        l.CREATED_AT
+
+    FROM ADMIN_ACTIVITY_LOG l
+
+    LEFT JOIN ADMIN_ACCOUNT a
+        ON a.CODE = l.ADM_CODE
+
+    <include refid="challengeLogConditions"/>
+
+    ORDER BY l.CREATED_AT DESC, l.CODE DESC
+    LIMIT #{perPage} OFFSET #{offset}
+
+</select>
+
+<!-- 지정 기간에 작성된, 현재 삭제되지 않은 인증글 수 -->
+<!-- 관리자 통계이므로 공개 여부는 구분하지 않음 -->
+<select id="countNewChallengeProofs"
+        parameterType="map"
+        resultType="long">
+
+    SELECT COUNT(*)
+    FROM FEED f
+
+    WHERE f.CHAL_CODE = #{code}
+      AND f.DELETE_YN = 0
+      AND f.CREATED_AT &gt;= #{start}
+      AND f.CREATED_AT &lt; #{end}
+<!--기간은 항상 시작 시각 이상, 종료 시각 미만으로 조회합니다. 자정의 데이터가 두 날짜에 중복 집계되지 않습니다.-->
+</select>
+
+<!-- 해당 챌린지에 회원이 처음 참여한 시각 -->
+<!-- 취소 여부와 관계없이 최초 유입을 집계 -->
+
+<!--최초 참여 시각을 구한 다음 기간을 필터링해야 합니다. 먼저 오늘 기록만 조회하면 과거 참여자가 재참여했을 때 신규 회원으로 집계될 수 있습니다.-->
+<sql id="challengeFirstParticipation">
+
+    SELECT
+        ce.MEM_CODE,
+        MIN(ce.JOINED_AT) AS FIRST_JOINED_AT
+
+    FROM CHALLENGE_ENTRY ce
+
+    WHERE ce.CHAL_CODE = #{code}
+
+    GROUP BY ce.MEM_CODE
+
+</sql>
+
+<!-- 지정 기간에 처음 참여한 회원 수 -->
+<select id="countNewChallengeParticipants"
+        parameterType="map"
+        resultType="long">
+
+    SELECT COUNT(*)
+
+    FROM (
+        <include refid="challengeFirstParticipation"/>
+    ) p
+
+    WHERE p.FIRST_JOINED_AT &gt;= #{start}
+      AND p.FIRST_JOINED_AT &lt; #{end}
+
+</select>
+
+<!-- 시간별 집계 응답 매핑 -->
+<resultMap id="challengeHourlyCountMap"
+           type="AdminChallengeHourlyCount">
+
+    <result column="DAY_TYPE" property="dayType"/>
+    <result column="HOUR_OF_DAY" property="hour"/>
+    <result column="PARTICIPANT_COUNT" property="participantCount"/>
+
+</resultMap>
+
+
+<!-- 어제 하루 전체와 오늘 현재까지의 시간별 신규 참여자 -->
+<select id="loadChallengeHourlyParticipants"
+        parameterType="map"
+        resultMap="challengeHourlyCountMap">
+
+    SELECT
+        CASE
+            WHEN p.FIRST_JOINED_AT &gt;= #{todayStart}
+                THEN 'TODAY'
+            ELSE 'YESTERDAY'
+        END AS DAY_TYPE,
+
+        HOUR(p.FIRST_JOINED_AT) AS HOUR_OF_DAY,
+
+        COUNT(*) AS PARTICIPANT_COUNT
+
+    FROM (
+        <include refid="challengeFirstParticipation"/>
+    ) p
+
+    WHERE p.FIRST_JOINED_AT &gt;= #{yesterdayStart}
+      AND p.FIRST_JOINED_AT &lt; #{now}
+
+    GROUP BY
+        DAY_TYPE,
+        HOUR_OF_DAY
+
+    ORDER BY
+        DAY_TYPE,
+        HOUR_OF_DAY
+
+</select>
+
+<!-- 관리자 챌린지 참여 순위 응답 -->
+<resultMap id="adminChallengeRankingMap"
+           type="AdminChallengeRankingView">
+
+    <id column="MEMBER_CODE" property="memberCode"/>
+
+    <result column="RANK_NO" property="rank"/>
+    <result column="MEMBER_ID" property="memberId"/>
+    <result column="PROFILE_IMAGE" property="profileImage"/>
+
+    <result column="PROOF_COUNT" property="proofCount"/>
+    <result column="PROOF_DAYS" property="proofDays"/>
+
+    <result column="SCORED_VIEW_COUNT" property="scoredViewCount"/>
+    <result column="SCORED_LIKE_COUNT" property="scoredLikeCount"/>
+    <result column="TOTAL_SCORE" property="totalScore"/>
+
+    <result column="ACHIEVEMENT_RATE" property="achievementRate"/>
+
+</resultMap>
+
+<!-- 관리자 챌린지 참여 순위 조회 -->
+<select id="loadChallengeRanking"
+        parameterType="map"
+        resultMap="adminChallengeRankingMap">
+
+    WITH
+
+    <!-- 1. 회원별 유효 참여 기록 -->
+    participants AS (
+        SELECT
+            ce.MEM_CODE,
+            MIN(ce.JOINED_AT) AS JOINED_AT
+
+        FROM CHALLENGE_ENTRY ce
+
+        <include refid="challengeParticipantConditions"/>
+
+        GROUP BY ce.MEM_CODE
+    ),
+
+    <!-- 2. 점수 계산 대상 인증글 -->
+    eligible_proofs AS (
+        SELECT
+            f.CODE,
+            f.MEM_CODE,
+            DATE(f.CREATED_AT) AS PROOF_DATE,
+            COALESCE(f.HITCOUNT, 0) AS VIEW_COUNT
+
+        FROM FEED f
+
+        JOIN CHALLENGE c
+            ON c.CODE = f.CHAL_CODE
+
+        JOIN participants p
+            ON p.MEM_CODE = f.MEM_CODE
+
+        WHERE f.CHAL_CODE = #{code}
+          AND f.DELETE_YN = 0
+
+          <!-- 챌린지 진행 기간 안에 작성 -->
+          AND f.CREATED_AT &gt;= c.START_DATE
+          AND f.CREATED_AT &lt; c.END_DATE
+
+          <!-- 참여 이후 작성 -->
+          AND f.CREATED_AT &gt;= p.JOINED_AT
+
+          <!-- 현재 시각까지 작성 -->
+          AND f.CREATED_AT &lt; #{now}
+    ),
+
+    <!-- 3. 인증글별 유효 좋아요 수 -->
+    proof_likes AS (
+        SELECT
+            fl.FEED_CODE,
+            COUNT(*) AS LIKE_COUNT
+
+        FROM FEED_LIKE fl
+
+        JOIN eligible_proofs ep
+            ON ep.CODE = fl.FEED_CODE
+
+        WHERE fl.DELETE_YN = 0
+
+        GROUP BY fl.FEED_CODE
+    ),
+
+    <!-- 4. 인증글별 점수 계산 -->
+    scored_proofs AS (
+        SELECT
+            ep.CODE,
+            ep.MEM_CODE,
+            ep.PROOF_DATE,
+            ep.VIEW_COUNT,
+            COALESCE(pl.LIKE_COUNT, 0) AS LIKE_COUNT,
+
+            (
+                CAST(ep.VIEW_COUNT AS SIGNED)
+                + COALESCE(pl.LIKE_COUNT, 0) * 10
+            ) AS SCORE
+
+        FROM eligible_proofs ep
+
+        LEFT JOIN proof_likes pl
+            ON pl.FEED_CODE = ep.CODE
+    ),
+
+    <!-- 5. 회원별·작성일별 최고 점수 글에 1번 부여 -->
+    daily_candidates AS (
+        SELECT
+            sp.*,
+
+            ROW_NUMBER() OVER (
+                PARTITION BY sp.MEM_CODE, sp.PROOF_DATE
+
+                ORDER BY
+                    sp.SCORE DESC,
+                    sp.CODE ASC
+            ) AS DAILY_ORDER
+
+        FROM scored_proofs sp
+    ),
+
+    <!-- 6. 하루 대표 글들의 점수만 합산 -->
+    member_scores AS (
+        SELECT
+            dc.MEM_CODE,
+
+            SUM(dc.VIEW_COUNT) AS SCORED_VIEW_COUNT,
+            SUM(dc.LIKE_COUNT) AS SCORED_LIKE_COUNT,
+            SUM(dc.SCORE) AS TOTAL_SCORE
+
+        FROM daily_candidates dc
+
+        WHERE dc.DAILY_ORDER = 1
+
+        GROUP BY dc.MEM_CODE
+    ),
+
+    <!-- 7. 전체 유효 인증글 수와 인증 날짜 수 -->
+    proof_stats AS (
+        SELECT
+            ep.MEM_CODE,
+            COUNT(*) AS PROOF_COUNT,
+            COUNT(DISTINCT ep.PROOF_DATE) AS PROOF_DAYS
+
+        FROM eligible_proofs ep
+
+        GROUP BY ep.MEM_CODE
+    ),
+
+    <!-- 8. 챌린지 전체 진행 날짜 수 -->
+    challenge_days AS (
+        SELECT
+            CASE
+                WHEN END_DATE &gt; START_DATE
+                THEN DATEDIFF(
+                    DATE(DATE_SUB(END_DATE, INTERVAL 1 SECOND)),
+                    DATE(START_DATE)
+                ) + 1
+                ELSE NULL
+            END AS GOAL_DAYS
+
+        FROM CHALLENGE
+
+        WHERE CODE = #{code}
+    ),
+
+    <!-- 9. 인증글 없는 참여자도 0점으로 포함 -->
+    member_totals AS (
+        SELECT
+            p.MEM_CODE,
+
+            COALESCE(ps.PROOF_COUNT, 0) AS PROOF_COUNT,
+            COALESCE(ps.PROOF_DAYS, 0) AS PROOF_DAYS,
+
+            COALESCE(ms.SCORED_VIEW_COUNT, 0) AS SCORED_VIEW_COUNT,
+            COALESCE(ms.SCORED_LIKE_COUNT, 0) AS SCORED_LIKE_COUNT,
+            COALESCE(ms.TOTAL_SCORE, 0) AS TOTAL_SCORE
+
+        FROM participants p
+
+        LEFT JOIN proof_stats ps
+            ON ps.MEM_CODE = p.MEM_CODE
+
+        LEFT JOIN member_scores ms
+            ON ms.MEM_CODE = p.MEM_CODE
+    ),
+
+    <!-- 10. 회원 전체 순위 계산 -->
+    ranked AS (
+        SELECT
+            mt.*,
+
+            RANK() OVER (
+                ORDER BY
+                    mt.TOTAL_SCORE DESC,
+                    mt.PROOF_DAYS DESC
+            ) AS RANK_NO
+
+        FROM member_totals mt
+    )
+
+    <!-- 11. 전체 순위 계산 후 페이지 단위로 반환 -->
+    SELECT
+        r.RANK_NO,
+        r.MEM_CODE AS MEMBER_CODE,
+        m.ID AS MEMBER_ID,
+
+        (
+            SELECT i.PATH
+
+            FROM IMAGES i
+
+            WHERE i.TARGET_CODE = r.MEM_CODE
+              AND i.TYPE = 'profile'
+              AND i.DELETE_YN = 0
+
+            ORDER BY i.ORDER_SEQ ASC, i.PATH ASC
+            LIMIT 1
+        ) AS PROFILE_IMAGE,
+
+        r.PROOF_COUNT,
+        r.PROOF_DAYS,
+        r.SCORED_VIEW_COUNT,
+        r.SCORED_LIKE_COUNT,
+        r.TOTAL_SCORE,
+
+        ROUND(
+            LEAST(
+                100.0,
+                100.0 * r.PROOF_DAYS
+                    / NULLIF(cd.GOAL_DAYS, 0)
+            ),
+            1
+        ) AS ACHIEVEMENT_RATE
+
+    FROM ranked r
+
+    LEFT JOIN MEMBER_ACCOUNT m
+        ON m.CODE = r.MEM_CODE
+
+    CROSS JOIN challenge_days cd
+
+    ORDER BY
+        r.RANK_NO ASC,
+        r.MEM_CODE ASC
+
+    LIMIT #{perPage} OFFSET #{offset}
 
 </select>
 

@@ -3,10 +3,14 @@ package com.ss_dam.challenge.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.ss_dam.admin.log.response.AdminActivity;
 import com.ss_dam.challenge.model.request.AdminChallengeSearch;
 import com.ss_dam.challenge.model.response.AdminChallengeDetailView;
 import com.ss_dam.challenge.model.response.AdminChallengeEditState;
+import com.ss_dam.challenge.model.response.AdminChallengeHourlyCount;
 import com.ss_dam.challenge.model.response.AdminChallengeListView;
+import com.ss_dam.challenge.model.response.AdminChallengeParticipantView;
+import com.ss_dam.challenge.model.response.AdminChallengeRankingView;
 import com.ss_dam.challenge.model.response.AdminMemberProofsView;
 import com.ss_dam.feed.model.response.UserFeedView;
 
@@ -40,6 +44,42 @@ public interface AdminChallengeDao {
 	// 관리자 챌린지 조기 완료
 	int endChallenge(Map<String, Object> params);
 
+	// 삭제된 챌린지를 포함하여 삭제 여부 조회 및 행 잠금
+	Integer loadDeleteYnForUpdate(Long code);
+
+	// 삭제된 챌린지 복구
+	int restoreChallenge(Map<String, Object> params);
+
+	// 삭제 여부와 관계없이 챌린지 존재 확인
+	boolean existsChallengeIncludingDeleted(Long code);
+
+	// 챌린지 참여자 전체 건수
+	long countParticipants(Map<String, Object> params);
+
+	// 챌린지 참여자 목록
+	List<AdminChallengeParticipantView> loadParticipants(
+					Map<String, Object> params);
+
+	// 챌린지 처리 이력 전체 건수
+	long countChallengeLogs(Map<String, Object> params);
+
+	// 챌린지 처리 이력 목록
+	List<AdminActivity> loadChallengeLogs(
+					Map<String, Object> params);
+
+	// 챌린지 상세 통계 - 지정 기간에 작성된 인증글 수
+	long countNewChallengeProofs(Map<String, Object> params);
+
+	// 챌린지 상세 통계 - 지정 기간에 처음 참여한 회원 수
+	long countNewChallengeParticipants(Map<String, Object> params);
+
+	// 챌린지 상세 통계 - 오늘·어제의 시간별 신규 참여자 수
+	List<AdminChallengeHourlyCount> loadChallengeHourlyParticipants(
+					Map<String, Object> params);
+
+	// 관리자 챌린지 참여 순위 조회
+	List<AdminChallengeRankingView> loadChallengeRanking(
+					Map<String, Object> params);
 
   // 관리자 회원 상세 -  전체 인증글 / 인증한 챌린지 / 최근 30일 인증글
   AdminMemberProofsView loadMemberProofSummary(

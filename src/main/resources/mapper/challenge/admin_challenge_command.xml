@@ -117,4 +117,30 @@
 <!--서비스 검사와 별도로 UPDATE에서도 조건을 확인합니다. 이미 ENDED인 챌린지는 다시 처리되지 않습니다.-->
 </update>
 
+<!-- 삭제된 챌린지 복구 -->
+<update id="restoreChallenge" parameterType="map">
+
+    UPDATE CHALLENGE
+    SET
+        DELETE_YN = 0,
+        UPDATED_BY = #{adminId},
+        UPDATED_AT = #{updatedAt},
+
+        <!-- 삭제되어 있는 동안 지난 기간을 복구 시점에 반영 -->
+        <!-- 이미 종료된 챌린지는 종료 상태 유지 -->
+        PROGRESS_STATUS =
+            CASE
+                WHEN PROGRESS_STATUS = 'ENDED' THEN 'ENDED'
+                WHEN END_DATE &lt;= #{updatedAt} THEN 'ENDED'
+                WHEN START_DATE &gt; #{updatedAt} THEN 'WAITING'
+                ELSE 'IN_PROGRESS'
+            END
+
+    WHERE CODE = #{code}
+      AND DELETE_YN = 1
+<!--POST_STATUS를 바꾸지 않으므로 공개·비공개 설정이 유지
+삭제 중에는 기존 스케줄러의 상태 갱신 대상에서 제외되므로, 복구할 때 날짜에 맞게 진행 상태를 반영
+이미 종료된 챌린지는 다시 진행 중으로 바꾸지 않습니다.-->
+</update>
+
 </mapper>

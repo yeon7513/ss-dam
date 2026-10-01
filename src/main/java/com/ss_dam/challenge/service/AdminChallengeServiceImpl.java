@@ -1,27 +1,41 @@
 package com.ss_dam.challenge.service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.ss_dam.admin.log.dao.AdminActivityLogDao;
+import com.ss_dam.admin.log.response.AdminActivity;
 import com.ss_dam.auth.member.dao.AdminMemberDao;
 import com.ss_dam.challenge.dao.AdminChallengeDao;
 import com.ss_dam.challenge.model.request.AdminChallengeSearch;
 import com.ss_dam.challenge.model.request.AdminChallengeWriteRequest;
 import com.ss_dam.challenge.model.response.AdminChallengeDetailView;
 import com.ss_dam.challenge.model.response.AdminChallengeEditState;
+import com.ss_dam.challenge.model.response.AdminChallengeHourlyCount;
 import com.ss_dam.challenge.model.response.AdminChallengeListView;
+import com.ss_dam.challenge.model.response.AdminChallengeParticipantView;
+import com.ss_dam.challenge.model.response.AdminChallengeRankingView;
+import com.ss_dam.challenge.model.response.AdminChallengeStatisticsView;
+import com.ss_dam.challenge.model.response.AdminChallengeStatisticsView.HourPoint;
+import com.ss_dam.challenge.model.response.AdminChallengeStatisticsView.Metric;
 import com.ss_dam.challenge.model.response.AdminMemberProofsView;
+import com.ss_dam.common.image.service.ImageService;
 import com.ss_dam.common.pager.PageQuery;
 import com.ss_dam.common.pager.PageResult;
 import com.ss_dam.common.pager.Pager;
@@ -33,11 +47,123 @@ public class AdminChallengeServiceImpl implements AdminChallengeService {
     @Autowired
     private AdminChallengeDao adminChallengeDao;
 
+		@Autowired
+		private ImageService imageService;
+
     @Autowired
     private AdminMemberDao adminMemberDao;
 
 		@Autowired
 		private AdminActivityLogDao adminActivityLogDao; 		// 관리자 처리 이력 저장
+
+	// 관리자 챌린지 목록 검색 조건 검증
+	private void validateChallengeSearch(AdminChallengeSearch search) {
+
+			// 빈 문자열은 필터 없음으로 처리
+			String progressStatus =
+							normalizeChallengeSearchValue(search.getProgressStatus());
+
+			String postStatus =
+							normalizeChallengeSearchValue(search.getPostStatus());
+
+			String keyword =
+							normalizeChallengeSearchValue(search.getKeyword());
+
+			String sort =
+							normalizeChallengeSearchValue(search.getSort());
+
+			// 진행 상태 검증
+			if (progressStatus != null
+							&& !Set.of(
+											"WAITING",
+											"IN_PROGRESS",
+											"ENDED"
+							).contains(progressStatus)) {
+
+					throw new ResponseStatusException(
+									HttpStatus.BAD_REQUEST,
+									"진행 상태는 WAITING, IN_PROGRESS, ENDED 중 하나여야 합니다.");
+			}
+
+			// 공개 상태 검증
+			if (postStatus != null
+							&& !Set.of("ACTIVE", "PRIVATE").contains(postStatus)) {
+
+					throw new ResponseStatusException(
+									HttpStatus.BAD_REQUEST,
+									"공개 상태는 ACTIVE 또는 PRIVATE여야 합니다.");
+			}
+
+			// 검색어 길이 제한
+			if (keyword != null && keyword.length() > 100) {
+
+					throw new ResponseStatusException(
+									HttpStatus.BAD_REQUEST,
+									"검색어는 100자 이내로 입력해주세요.");
+			}
+
+			// 날짜 범위 검증
+			// DB 날짜 범위와 종료일 다음 날 계산을 고려
+			LocalDate minDate = LocalDate.of(1000, 1, 1);
+			LocalDate maxDate = LocalDate.of(9999, 12, 30);
+
+			if ((search.getFromDate() != null
+							&& (search.getFromDate().isBefore(minDate)
+									|| search.getFromDate().isAfter(maxDate)))
+							|| (search.getToDate() != null
+							&& (search.getToDate().isBefore(minDate)
+									|| search.getToDate().isAfter(maxDate)))) {
+
+					throw new ResponseStatusException(
+									HttpStatus.BAD_REQUEST,
+									"조회 날짜는 1000-01-01부터 9999-12-30까지 입력해주세요.");
+			}
+
+			if (search.getFromDate() != null
+							&& search.getToDate() != null
+							&& search.getFromDate().isAfter(search.getToDate())) {
+
+					throw new ResponseStatusException(
+									HttpStatus.BAD_REQUEST,
+									"조회 시작일은 종료일보다 늦을 수 없습니다.");
+			}
+
+			// 정렬값이 없으면 최신순
+			if (sort == null) {
+					sort = "LATEST";
+			}
+
+			if (!Set.of(
+							"LATEST",
+							"PARTICIPANTS_DESC",
+							"PARTICIPANTS_ASC",
+							"ACHIEVEMENT_DESC",
+							"ACHIEVEMENT_ASC"
+			).contains(sort)) {
+
+					throw new ResponseStatusException(
+									HttpStatus.BAD_REQUEST,
+									"지원하지 않는 정렬 방식입니다.");
+			}
+
+			search.setProgressStatus(progressStatus);
+			search.setPostStatus(postStatus);
+			search.setKeyword(keyword);
+			search.setSort(sort);
+	}
+
+
+	// 검색 조건의 앞뒤 공백 제거
+	private String normalizeChallengeSearchValue(String value) {
+
+			if (value == null || value.isBlank()) {
+					return null;
+			}
+
+			return value.trim();
+	}
+
+
 
     // 관리자 챌린지 진행현황 목록 조회
     @Override 
@@ -67,6 +193,10 @@ public class AdminChallengeServiceImpl implements AdminChallengeService {
 											HttpStatus.BAD_REQUEST,
 											"조회 가능한 페이지 범위를 초과했습니다.");
 					}
+
+					// 검색 조건 검증 및 공백 정리
+					validateChallengeSearch(search);
+
 
 					// 2. 전체 대상 건수
 					// countChallenges() → 페이지 버튼 계산에 필요한 전체 건수
@@ -110,8 +240,12 @@ public class AdminChallengeServiceImpl implements AdminChallengeService {
 		@Transactional
 		public Long createChallenge(
 						AdminChallengeWriteRequest request,
+						MultipartFile image,
 						Long adminCode,
 						String adminId) {
+
+				// 첨부한 이미지 검증
+				validateChallengeImage(image);
 
 				// 1. 제목 검증
 				if (request.getTitle() == null
@@ -244,6 +378,13 @@ public class AdminChallengeServiceImpl implements AdminChallengeService {
 										"챌린지 등록 이력 저장에 실패했습니다.");
 				}
 
+				// 추가: 공통 이미지 서비스를 통해 대표 이미지 저장
+				if (image != null) {
+						imageService.uploadSingleImage(
+										image, "challenge", challengeCode);
+				}
+
+
 				// 12. 생성된 번호 반환
 				return challengeCode;
 		}
@@ -255,8 +396,20 @@ public class AdminChallengeServiceImpl implements AdminChallengeService {
 	public void updateChallenge(
 					Long code,
 					AdminChallengeWriteRequest request,
+					MultipartFile image,
+					boolean removeImage,
 					Long adminCode,
 					String adminId) {
+
+			// 추가: 첨부한 이미지 검증
+			validateChallengeImage(image);
+
+			// 추가: 교체와 제거 동시 요청 제한
+			if (image != null && removeImage) {
+					throw new ResponseStatusException(
+									HttpStatus.BAD_REQUEST,
+									"이미지 교체와 제거를 동시에 요청할 수 없습니다.");
+			}
 
 			// 1. 챌린지 번호 검증
 			if (code == null || code < 1) {
@@ -426,6 +579,28 @@ public class AdminChallengeServiceImpl implements AdminChallengeService {
 					throw new IllegalStateException(
 									"챌린지 수정 이력 저장에 실패했습니다.");
 			}
+
+			// 추가: 대표 이미지 교체 또는 제거
+			if (image != null || removeImage) {
+
+					List<MultipartFile> newImages =
+									image == null ? List.of() : List.of(image);
+
+					List<Integer> newOrders =
+									image == null ? List.of() : List.of(1);
+
+					// 기존 대표 이미지는 남기지 않고 교체 또는 제거
+					List<String> remainingImagePaths = List.of();
+					List<Integer> remainingImageOrders = List.of();
+
+					imageService.updateImages(
+									code,
+									"challenge",
+									newImages,
+									newOrders,
+									remainingImagePaths,
+									remainingImageOrders);
+			}
 	}
 
 	// 관리자 챌린지 논리 삭제
@@ -591,7 +766,353 @@ public class AdminChallengeServiceImpl implements AdminChallengeService {
 				}
 		}
 
+		// 삭제된 챌린지 복구
+		@Override
+		@Transactional
+		public void restoreChallenge(
+						Long code,
+						String reason,
+						Long adminCode,
+						String adminId) {
 
+				validateChallengeCode(code);
+
+				// 컨트롤러 검증과 별도로 서비스에서도 처리 사유 확인
+				if (reason == null
+								|| reason.isBlank()
+								|| reason.length() > 255) {
+
+						throw new ResponseStatusException(
+										HttpStatus.BAD_REQUEST,
+										"복구 사유는 1~255자로 입력해주세요.");
+				}
+
+				// 삭제된 챌린지도 조회하고, 복구가 끝날 때까지 행 잠금
+				Integer deleteYn =
+								adminChallengeDao.loadDeleteYnForUpdate(code);
+
+				if (deleteYn == null) {
+						throw new ResponseStatusException(
+										HttpStatus.NOT_FOUND,
+										"존재하지 않는 챌린지입니다.");
+				}
+
+				if (deleteYn != 1) {
+						throw new ResponseStatusException(
+										HttpStatus.CONFLICT,
+										"삭제된 챌린지만 복구할 수 있습니다.");
+				}
+
+				LocalDateTime now =
+								LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+
+				Map<String, Object> params = new HashMap<>();
+				params.put("code", code);
+				params.put("adminId", adminId);
+				params.put("updatedAt", now);
+
+				// 공개 범위를 유지하면서 삭제 여부 복구
+				int updated = adminChallengeDao.restoreChallenge(params);
+
+				if (updated != 1) {
+						throw new ResponseStatusException(
+										HttpStatus.CONFLICT,
+										"복구할 수 없는 상태입니다. 다시 조회해주세요.");
+				}
+
+				// 기존 관리자 처리 이력 저장 기능 재사용
+				Map<String, Object> logParams = new HashMap<>();
+				logParams.put("adminCode", adminCode);
+				logParams.put("targetType", "challenge");
+				logParams.put("targetCode", code);
+				logParams.put("processType", "RESTORE");
+				logParams.put("memo", reason.trim());
+				logParams.put("createdAt", now);
+
+				int inserted =
+								adminActivityLogDao.insertActivityLog(logParams);
+
+				// 예외가 발생하면 챌린지 복구도 함께 롤백
+				if (inserted != 1) {
+						throw new IllegalStateException(
+										"챌린지 복구 이력 저장에 실패했습니다.");
+				}
+		}
+
+
+		// 챌린지 참여자 목록 조회
+		@Override
+		@Transactional(readOnly = true)
+		public PageResult<AdminChallengeParticipantView> loadParticipants(
+						Long code,
+						PageQuery pageQuery) {
+
+				validateChallengeCode(code);
+				validateChallengePageQuery(pageQuery);
+				requireChallengeExists(code);
+
+				Map<String, Object> params =
+								createChallengePageParams(code, pageQuery);
+
+				// 전체 참여 회원 수
+				long total = adminChallengeDao.countParticipants(params);
+
+				// 현재 페이지 참여자 목록
+				List<AdminChallengeParticipantView> content =
+								adminChallengeDao.loadParticipants(params);
+
+				return PageResult.of(
+								content,
+								new Pager(pageQuery, total));
+		}
+
+
+		// 챌린지 관리 처리 이력 조회
+		@Override
+		@Transactional(readOnly = true)
+		public PageResult<AdminActivity> loadChallengeLogs(
+						Long code,
+						PageQuery pageQuery) {
+
+				validateChallengeCode(code);
+				validateChallengePageQuery(pageQuery);
+
+				// 삭제된 챌린지의 처리 이력도 조회할 수 있도록 확인
+				requireChallengeExists(code);
+
+				Map<String, Object> params =
+								createChallengePageParams(code, pageQuery);
+
+				long total = adminChallengeDao.countChallengeLogs(params);
+
+				List<AdminActivity> content =
+								adminChallengeDao.loadChallengeLogs(params);
+
+				return PageResult.of(
+								content,
+								new Pager(pageQuery, total));
+		}
+
+
+		// 챌린지 번호 검증
+		private void validateChallengeCode(Long code) {
+
+				if (code == null || code < 1) {
+						throw new ResponseStatusException(
+										HttpStatus.BAD_REQUEST,
+										"챌린지 번호는 1 이상이어야 합니다.");
+				}
+		}
+
+
+		// 삭제 여부와 관계없이 챌린지 존재 확인
+		private void requireChallengeExists(Long code) {
+
+				if (!adminChallengeDao.existsChallengeIncludingDeleted(code)) {
+						throw new ResponseStatusException(
+										HttpStatus.NOT_FOUND,
+										"존재하지 않는 챌린지입니다.");
+				}
+		}
+
+
+		// 참여자·처리 이력 조회에서 공통으로 사용하는 페이지 검증
+		private void validateChallengePageQuery(PageQuery pageQuery) {
+
+				if (pageQuery == null
+								|| pageQuery.getPage() < 1
+								|| pageQuery.getPerPage() < 1
+								|| pageQuery.getPerPage() > 100
+								|| pageQuery.getPerGroup() < 1
+								|| pageQuery.getPerGroup() > 10) {
+
+						throw new ResponseStatusException(
+										HttpStatus.BAD_REQUEST,
+										"page는 1 이상, perPage는 1~100, "
+														+ "perGroup은 1~10이어야 합니다.");
+				}
+
+				long offset =
+								((long) pageQuery.getPage() - 1)
+												* pageQuery.getPerPage();
+
+				if (offset > Integer.MAX_VALUE) {
+						throw new ResponseStatusException(
+										HttpStatus.BAD_REQUEST,
+										"조회 가능한 페이지 범위를 초과했습니다.");
+				}
+		}
+
+
+// 참여자·처리 이력 조회에 전달할 공통 파라미터
+private Map<String, Object> createChallengePageParams(
+        Long code,
+        PageQuery pageQuery) {
+
+    Map<String, Object> params = new HashMap<>();
+    params.put("code", code);
+    params.put("offset", pageQuery.getOffset());
+    params.put("perPage", pageQuery.getPerPage());
+
+    return params;
+}
+
+		// 관리자 챌린지 상세 통계 조회
+		@Override
+		@Transactional(readOnly = true)
+		public AdminChallengeStatisticsView loadChallengeStatistics(Long code) {
+
+				validateChallengeCode(code);
+				requireChallengeExists(code);
+
+				// 모든 조회에 동일한 기준 시각 사용
+				LocalDateTime now =
+								LocalDateTime.now(ZoneId.of("Asia/Seoul"))
+												.withNano(0);
+
+				LocalDateTime todayStart =
+								now.toLocalDate().atStartOfDay();
+
+				LocalDateTime yesterdayStart =
+								todayStart.minusDays(1);
+
+				// 어제 같은 시각까지 비교
+				LocalDateTime yesterdaySameTime =
+								now.minusDays(1);
+
+				Map<String, Object> todayParams = Map.of(
+								"code", code,
+								"start", todayStart,
+								"end", now);
+
+				Map<String, Object> yesterdayParams = Map.of(
+								"code", code,
+								"start", yesterdayStart,
+								"end", yesterdaySameTime);
+
+				// 1. 신규 인증글 수
+				long todayProofs =
+								adminChallengeDao.countNewChallengeProofs(todayParams);
+
+				long yesterdayProofs =
+								adminChallengeDao.countNewChallengeProofs(yesterdayParams);
+
+				// 2. 신규 참여자 수
+				long todayParticipants =
+								adminChallengeDao.countNewChallengeParticipants(todayParams);
+
+				long yesterdayParticipants =
+								adminChallengeDao.countNewChallengeParticipants(yesterdayParams);
+
+				// 3. 어제 하루 전체 + 오늘 현재까지의 시간별 참여자 조회
+				Map<String, Object> graphParams = Map.of(
+								"code", code,
+								"yesterdayStart", yesterdayStart,
+								"todayStart", todayStart,
+								"now", now);
+
+				List<AdminChallengeHourlyCount> rows =
+								adminChallengeDao.loadChallengeHourlyParticipants(graphParams);
+
+				// SQL 결과에 없는 시간도 0으로 채우기
+				long[] todayCounts = new long[24];
+				long[] yesterdayCounts = new long[24];
+
+				for (AdminChallengeHourlyCount row : rows) {
+
+						if ("TODAY".equals(row.getDayType())) {
+								todayCounts[row.getHour()] = row.getParticipantCount();
+						} else {
+								yesterdayCounts[row.getHour()] = row.getParticipantCount();
+						}
+				}
+
+				List<HourPoint> graph = new ArrayList<>();
+
+				for (int hour = 0; hour < 24; hour++) {
+
+						// 미래 시간은 0명이 아니라 아직 집계하지 않은 상태
+						Long todayCount =
+										hour <= now.getHour()
+														? Long.valueOf(todayCounts[hour])
+														: null;
+
+						graph.add(new HourPoint(
+										hour,
+										todayCount,
+										yesterdayCounts[hour]));
+				}
+
+				return new AdminChallengeStatisticsView(
+								now,
+								new Metric(
+												todayProofs,
+												yesterdayProofs,
+												calculateChallengeChangeRate(
+																todayProofs, yesterdayProofs)),
+								new Metric(
+												todayParticipants,
+												yesterdayParticipants,
+												calculateChallengeChangeRate(
+																todayParticipants, yesterdayParticipants)),
+								graph);
+		}
+
+
+		// 이전 기간 대비 증감률 계산
+		private BigDecimal calculateChallengeChangeRate(
+						long current,
+						long previous) {
+
+				// 둘 다 0이면 변화 없음
+				if (previous == 0 && current == 0) {
+						return BigDecimal.ZERO;
+				}
+
+				// 이전 값이 0이면 증감률 계산 불가
+				if (previous == 0) {
+						return null;
+				}
+
+				return BigDecimal.valueOf(current)
+								.subtract(BigDecimal.valueOf(previous))
+								.multiply(BigDecimal.valueOf(100))
+								.divide(
+												BigDecimal.valueOf(previous),
+												1,
+												RoundingMode.HALF_UP);
+		}
+
+		// 관리자 챌린지 참여 순위 조회
+		@Override
+		@Transactional(readOnly = true)
+		public PageResult<AdminChallengeRankingView> loadChallengeRanking(
+						Long code,
+						PageQuery pageQuery) {
+
+				// 기존 공통 검증 메서드 재사용
+				validateChallengeCode(code);
+				validateChallengePageQuery(pageQuery);
+				requireChallengeExists(code);
+
+				Map<String, Object> params =
+								createChallengePageParams(code, pageQuery);
+
+				params.put(
+								"now",
+								LocalDateTime.now(ZoneId.of("Asia/Seoul")));
+
+				// 기존 참여자 전체 건수 조회 재사용
+				// 순위 SQL과 동일한 참여자 조건을 사용
+				long total = adminChallengeDao.countParticipants(params);
+
+				List<AdminChallengeRankingView> content =
+								adminChallengeDao.loadChallengeRanking(params);
+
+				return PageResult.of(
+								content,
+								new Pager(pageQuery, total));
+		}
 
 
         //관리자 회원 상세 - 회원 인증글 통계와 페이지 목록
@@ -641,4 +1162,37 @@ public class AdminChallengeServiceImpl implements AdminChallengeService {
         return result;
         }
 
-}
+
+		// 챌린지 대표 이미지 기본 검증
+		private void validateChallengeImage(MultipartFile image) {
+
+				// 파일을 보내지 않으면 변경 없음
+				if (image == null) {
+						return;
+				}
+
+				if (image.isEmpty()) {
+						throw new ResponseStatusException(
+										HttpStatus.BAD_REQUEST,
+										"빈 이미지 파일은 업로드할 수 없습니다.");
+				}
+
+				if (image.getSize() > 5L * 1024 * 1024) {
+						throw new ResponseStatusException(
+										HttpStatus.BAD_REQUEST,
+										"이미지는 5MB 이하로 업로드해주세요.");
+				}
+
+				String contentType = image.getContentType();
+
+				if (!"image/jpeg".equalsIgnoreCase(contentType)
+								&& !"image/png".equalsIgnoreCase(contentType)) {
+
+						throw new ResponseStatusException(
+										HttpStatus.BAD_REQUEST,
+										"JPG 또는 PNG 이미지만 업로드해주세요.");
+				}
+		}
+
+} 
+
