@@ -38,14 +38,16 @@ const ProductDetail = () => {
     }
   }
 
-  console.log(detail);
-
   if (loading) {
     return <div>거래글 정보를 불러오고 있습니다.</div>
   }
 
   if (error) {
-    return <div>에러가 발생했습니다. {error}</div>
+    if (error?.status === undefined || error?.status === 404 || !error?.success) {
+      navigate("/error/404");
+    } else {
+      navigate(`/error/${error?.status}`);
+    }
   }
 
   return (

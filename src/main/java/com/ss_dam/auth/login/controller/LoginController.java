@@ -32,7 +32,7 @@ public class LoginController {
     }
 
     session.setAttribute("loginUser", loggedInUser);
-    
+
     return ResponseEntity.ok(ApiResponse.success("로그인 성공", loggedInUser));
   }
 
@@ -47,9 +47,9 @@ public class LoginController {
   }
 
   @GetMapping("/check")
-  public ResponseEntity<ApiResponse<Login>> checkSession(HttpSession session) {
+  public ResponseEntity<ApiResponse<AuthProfile>> checkSession(HttpSession session) {
     // 세션에서 유저 정보 꺼내기
-    Login user = (Login) session.getAttribute("loginUser");
+    AuthProfile user = (AuthProfile) session.getAttribute("loginUser");
 
     if (user != null) {
       // 세션이 살아있으면 200 OK와 유저 정보 반환

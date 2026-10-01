@@ -30,14 +30,10 @@ export const useLoadData = (url) => {
       if (!res.ok) {
         // 여기서 오류를 던지면 바로 catch절로 이동
         return res.json().then(err => {
-          const errorMessage = err?.message || "서버와의 통신에 실패했습니다.";
-          const error = new Error(errorMessage);
-          error.status = res.status;
-          error.code = err?.code;
-
-          throw error;
+          throw err;
         })
       }
+
       // 응답이 ok이면 json 데이터 반환
       return res.json();
     })

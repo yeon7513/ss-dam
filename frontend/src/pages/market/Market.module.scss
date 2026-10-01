@@ -5,6 +5,13 @@
   @include mix.wrap;
 }
 
+/* 마켓 사이드바 */
+.sideNavWrap {
+  position: sticky;
+  top: 20px;
+  align-self: flex-start;
+}
+
 .container {
   flex: 1;
 
@@ -13,14 +20,14 @@
     margin-bottom: 2rem;
 
     .sortTab {
-      width: 40%;
+      // 버튼 개수, 글자 길이에 따라 자동 길이 조절함.
+      width: fit-content;
     }
 
     .searchBar {
       flex: 1;
     }
   }
-
 }
 
 .list {
@@ -40,5 +47,18 @@
     flex-direction: column;
     width: 100%;
     margin: 0;
+  }
+
+  /* 검색 결과 없음 영역 */
+  .emptyState {
+    display: flex;
+    grid-column: 1 / -1;
+    align-items: center;
+    justify-content: center;
+
+    padding: 60px 0;
+
+    font-size: 1rem;
+    color: v.$grayscale-50;
   }
 }

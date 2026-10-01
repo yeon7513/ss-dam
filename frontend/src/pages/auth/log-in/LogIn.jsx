@@ -101,11 +101,11 @@ const LogIn = () => {
             <p>계정 정보를 잊으셨나요?</p>
             {/* 링크 그룹 */}
             <div className={styles.linkGroup}>
-              <Link to="#" className={styles.subLink}>
+              <Link to="/supports/find_account/id" className={styles.subLink}>
                 아이디 찾기
               </Link>
               <span className={styles.divider}>|</span>
-              <Link to="#" className={styles.subLink}>
+              <Link to="/supports/find_account/password" className={styles.subLink}>
                 비밀번호 찾기
               </Link>
             </div>

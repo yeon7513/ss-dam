@@ -27,11 +27,11 @@
     outline: 1px dotted red;
 
     .filterBar {
-      @include mix.flex($jc: space-between);
+      @include mix.flex($jc: space-between, $ai: flex-end);
       margin-bottom: 2rem;
 
       .sortTab {
-        width: 30%;
+        //width: 30%;
       }
     }
   }

@@ -1,4 +1,4 @@
-import { INFO_COLUMNS } from "./MarketManage.constants";
+import { INFO_COLUMNS } from "../../../constants/MarketManage.constants";
 import DataTable from "../../../components/common/data-table/DataTable";
 import { useMarketManageDetail } from "./useMarketManageDetail";
 import styles from "./MarketManageDetail.module.scss";

@@ -1,2 +1,40 @@
 @use "../../../scss/variables.scss" as v;
 @use "../../../scss/mixin.scss" as mix;
+
+.radio {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  align-self: stretch;
+
+  input[type="radio"] {
+    position: absolute;
+
+    width: 100%;
+    padding: 0.8rem;
+
+    opacity: 0;
+  }
+
+  label {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0.55rem 0.8rem;
+
+    font-size: 1rem;
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+  }
+
+  input[type="radio"]:checked + label {
+    font-weight: 700;
+    color: v.$point-60;
+    background-color: v.$point-5;
+  }
+}

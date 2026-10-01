@@ -3,9 +3,65 @@
 
 .uploadImage {
   padding: 24px;
-  background-color: #ddd;
+  border: 1px solid v.$grayscale-10;
+  border-radius: 0.5rem;
 
-  .imagePreview {
-    width: 30%;
+  .noImages {
+    @include mix.flex($fd: column);
+    gap: 1rem;
+    margin-bottom: 2rem;
+
+    > .icon {
+      font-size: 3rem;
+      color: v.$grayscale-50;
+    }
   }
+
+  .preview {
+    @include mix.flex($jc: flex-start);
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    //scroll-behavior: smooth;
+    padding-bottom: 1rem;
+
+    // 스크롤바
+    &::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #ccc;
+      border-radius: 3px;
+    }
+
+    .previewItem {
+      position: relative;
+      flex: 0 0 280px;
+      //scroll-snap-align: start;
+
+      outline: 1px dotted red;
+    }
+  }
+
 }
+
+.badgeContainer {
+
+}
+
+// 대표 이미지 뱃지
+.representativeBadge {
+  position: absolute;
+  top: 0;
+  padding: 8px;
+  font-size: 14px;
+  background-color: v.$grayscale-50;
+}
+
+.registerImageButton {
+  text-align: center;
+}
+
+
