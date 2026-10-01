@@ -31,6 +31,7 @@ export default function UserManage() {
 
   // 데이터 조회 중인지 나타내는 상태
   const [loading, setLoading] = useState(false);
+  const [loadError, setLoadError] = useState("");
   const [isSpinning, setIsSpinning] = useState(false);
 
   //import DashboardHeader 기능 추가-> 새로고침 + 우측 상단 시간 계산 기능
@@ -58,6 +59,7 @@ export default function UserManage() {
   const fetchMembers = useCallback(async () => {
     //조회 시작 -> 로딩 상태 활성화
     setLoading(true);
+    setLoadError("");
 
     //조회 조건을 URL 쿼리 문자열로 변환
     const query = new URLSearchParams();
@@ -77,29 +79,25 @@ export default function UserManage() {
 
       // HTTP 응답이 성공 상태(200~299)가 아니면 catch로 이동
       if (!response.ok) {
-        throw new Error("데이터 로딩 실패");
+        throw new Error(`회원 목록을 불러오지 못했습니다. (HTTP ${response.status}) 서버 상태를 확인한 후 새로고침해주세요.`);
       }
 
       // 서버의 JSON 응답을 자바스크립트 객체로 변환
       const result = await response.json();
 
-      if (result.data) {
-        // 상품 목록 갱신 → DataTable에 반영
-        setMembers(result.data.content);
-
-        // 페이지 정보 갱신 → Pagination에 반영
-        setPager(result.data.pager);
-
-        //시간은 조회 성공 시에만 갱신하도록
-        setMembers(result.data.content);
-        setPager(result.data.pager);
-        setCurrentTime(`${new Date().toLocaleString("sv-SE")} 기준`);
-
-        console.log("데이터 갱신 완료");
+      if (!result.success || !Array.isArray(result.data?.content)) {
+        throw new Error(result.message || "회원 목록 응답을 확인할 수 없습니다. 다시 시도해주세요.");
       }
+
+      setMembers(result.data.content);
+      setPager(result.data.pager);
+      setCurrentTime(`${new Date().toLocaleString("sv-SE")} 기준`);
     } catch (error) {
       // 요청 실패나 JSON 처리 중 발생한 오류를 콘솔에 출력
       console.error("Fetch Error", error);
+      setLoadError(error instanceof TypeError
+        ? "서버에 연결할 수 없습니다. 서버 상태를 확인한 후 새로고침해주세요."
+        : error.message || "회원 목록을 불러오지 못했습니다. 다시 시도해주세요.");
     } finally {
       // 성공·실패와 관계없이 로딩 종료
       setLoading(false);
@@ -192,6 +190,8 @@ export default function UserManage() {
       {/* 회원 카드 목록 */}
       {loading ? (
         <p>회원 목록을 불러오는 중입니다.</p>
+      ) : loadError ? (
+        <p role="alert">{loadError}</p>
       ) : members.length === 0 ? (
         <p>조회된 회원이 없습니다.</p>
       ) : (
@@ -203,7 +203,7 @@ export default function UserManage() {
       )}
 
       {/* 페이지 이동 */}
-      <Pagination pager={pager} onChangePage={handlePageChange} />
+      {!loading && !loadError && <Pagination pager={pager} onChangePage={handlePageChange} />}
     </div>
   );
 }
