@@ -35,7 +35,7 @@ export const useLoadData = (url) => {
           error.status = res.status;
           error.code = err?.code;
 
-          console.log("useLoadData - error: ", error);
+          console.log("useLoadData - error 생성:", error);
 
           throw error;
         })
@@ -55,8 +55,8 @@ export const useLoadData = (url) => {
     .catch(err => {
       if (!ignore) {
 
-        console.log("useLoadData - err: ", err);
-        console.log("useLoadData - err: ", err.message);
+        console.log("useLoadData - catch 진입, err:", err);
+        console.log("useLoadData - catch err.message:", err.message);
 
         setMessage(err.message);
         setError(err);
