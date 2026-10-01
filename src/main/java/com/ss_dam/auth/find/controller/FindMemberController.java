@@ -16,15 +16,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/auth/find")
 public class FindMemberController {
 
-  @Autowired
-  FindMemberService service;
+    private final FindMemberService findMemberService;
+    public  FindMemberController(FindMemberService findMemberService) {
+        this.findMemberService = findMemberService;
+    }
 
-  @PostMapping("/id")
-  public ResponseEntity<ApiResponse<String>> findMemberId(FindMember findMember) {
-    MemberProfile resultMember = service.findMemberId(findMember);
+    @PostMapping("/id")
+    public ResponseEntity<ApiResponse<String>> findMemberId(FindMember findMember) {
+         MemberProfile resultMember = findMemberService.findMemberId(findMember);
 
-    if (resultMember == null)
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.fail("아이디 조회 실패"));
+         if (resultMember == null)
+             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.fail("아이디 조회 실패"));
 
     String resultId = resultMember.getId();
 
@@ -33,7 +35,7 @@ public class FindMemberController {
 
   @PostMapping("/password")
   public ResponseEntity<ApiResponse<Long>> findMemberPassword(FindMember findMember) {
-    Long memberCode = service.findMemberPw(findMember);
+    Long memberCode = findMemberService.findMemberPw(findMember);
     if (memberCode == null)
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.fail("비밀번호 조회 실패"));
 
@@ -42,13 +44,13 @@ public class FindMemberController {
 
   @PostMapping("/changepassword")
   public ResponseEntity<ApiResponse<Boolean>> changePassword(ChangePassword changePassword) {
-    boolean changePw = service.changePw(changePassword);
+        boolean changePw = findMemberService.changePw(changePassword);
 
-    if (!changePw) {
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.fail("비밀번호 변경 실패"));
+        if (!changePw) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.fail("비밀번호 변경 실패"));
+        }
+
+        return ResponseEntity.ok(ApiResponse.success("비밀번호 변경 성공", null));
     }
-
-    return ResponseEntity.ok(ApiResponse.success("비밀번호 변경 성공", null));
-  }
 
 }
