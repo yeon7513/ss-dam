@@ -13,14 +13,14 @@
     margin-bottom: 2rem;
 
     .sortTab {
-      width: 40%;
+      // 버튼 개수, 글자 길이에 따라 자동 길이 조절함.
+      width: fit-content;
     }
 
     .searchBar {
       flex: 1;
     }
   }
-
 }
 
 .list {
