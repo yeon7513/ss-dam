@@ -1,4 +1,4 @@
-import styles from "./MarketManage.module.scss";
+import styles from "../pages/admin/market/MarketManage.module.scss";
 
 // status 탭
 export const STATUS_TABS = [
