@@ -80,7 +80,7 @@ function App() {
 
         {/* 아이디 및 비밀번호 찾기 */}
         <Route path="/auth">
-          <Route index element={<Navigate to="findId" replace />} />
+          <Route index element={<Navigate to="findMember" replace />} />
           <Route path="find_id" element={<FindId />} />
           <Route path="find_password" element={<FindPassword />} />
         </Route>
