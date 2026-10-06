@@ -8,9 +8,8 @@ import com.ss_dam.auth.login.model.response.AuthProfile;
 
 import jakarta.servlet.http.HttpSession;
 
-// 기존 컨트롤러의 AuthProfile import 추가
 
-// 인터셉터 구현 또는 Spring Security의 @PreAuthorize 방식으로 바뀌면 파일 삭제 
+// 인터셉터 구현 되면 파일 삭제 
 
 @Component
 public class AdminAuthValidator {
