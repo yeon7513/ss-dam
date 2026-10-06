@@ -2,6 +2,7 @@ package com.ss_dam.challenge.model.response;
 
 import java.time.LocalDateTime;
 
+// 일반 사용자 참여·인증 가능 여부 검사
 // 참여·인증 공통 검사 DTO
 public class ChallengeWriteState {
   
