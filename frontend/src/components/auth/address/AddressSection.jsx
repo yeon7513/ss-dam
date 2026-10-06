@@ -13,8 +13,6 @@ const AddressSection = ({ setForm }) => {
   const [detail, setDetail] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
-  const buttonText = "주소 검색";
-
   // ==========================================
   // 이벤트 핸들러
   // ==========================================
@@ -90,8 +88,9 @@ const AddressSection = ({ setForm }) => {
             readOnly
             onClick={togglePostcode}
           />
-          <Button type="button" onClick={togglePostcode}>
-            {buttonText}
+
+          <Button type="button" size="md" onClick={togglePostcode}>
+            주소검색
           </Button>
         </div>
 

@@ -24,6 +24,7 @@ function Button({
 }) {
   return (
     <button
+      type={type}
       className={cn(
         styles.button,
         styles[btnStyle],
@@ -31,7 +32,6 @@ function Button({
         { [styles.fullWidth]: fullWidth },
         className,
       )}
-      type={type}
       onClick={onClick}
       {...props}
     >

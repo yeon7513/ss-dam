@@ -66,12 +66,7 @@ const IdSection = ({ form, setForm, isIdChecked, setIsIdChecked }) => {
         value={form.id}
         onChange={handleIdChange}
       />
-      <Button
-        type="button"
-        className={styles.checkButton}
-        size="lg"
-        onClick={handleCheckIdDuplicate}
-      >
+      <Button type="button" size="md" onClick={handleCheckIdDuplicate}>
         중복확인
       </Button>
     </div>
