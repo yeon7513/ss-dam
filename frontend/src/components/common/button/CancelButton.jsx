@@ -16,7 +16,7 @@ function CancelButton({
   };
 
   return (
-    <Button type="button" className={className} onClick={handleCancel}>
+    <Button type="button" className={className} btnStyle="danger" onClick={handleCancel}>
       {children}
     </Button>
   );

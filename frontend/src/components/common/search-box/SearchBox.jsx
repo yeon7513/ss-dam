@@ -113,9 +113,9 @@ function SearchBox({
           name="keyword"
           value={keyword}
           onChange={(e) => handleChangeKeyword(e)}
+          icon={<LuSearch className={styles.searchIcon} />}
           placeholder="검색어를 입력하세요."
         />
-        <LuSearch className={styles.searchIcon} />
       </div>
     </form>
   );
