@@ -1,51 +1,52 @@
-import { Navigate, Route, Routes } from "react-router-dom";
-import AdminRoute from "./components/common/admin/AdminRoute";
-import ProtectedRoute from "./components/common/protected-route/ProtectedRoute.jsx";
-import AdminLayout from "./layout/AdminLayout";
-import Layout from "./layout/Layout";
-import About from "./pages/about/About";
-import ChallengeGuide from "./pages/about/challenge-guide/ChallengeGuide.jsx";
-import MarketGuide from "./pages/about/market-guide/MarketGuide.jsx";
-import FeedManage from "./pages/admin/admin-feed/FeedManage";
-import ChallengeManage from "./pages/admin/challenge-manage/ChallengeManage.jsx";
-import MarketManage from "./pages/admin/market/MarketManage";
-import MarketManageDetail from "./pages/admin/market/MarketManageDetail.jsx";
-import OperationStatus from "./pages/admin/OperationStatus";
-import UserManageDetail from "./pages/admin/user/user-manage-detail/UserManageDetail.jsx";
-import UserManage from "./pages/admin/user/UserManage.jsx";
-import FindId from "./pages/auth/find-account/find-id/FindId.jsx";
-import FindPassword from "./pages/auth/find-account/find-password/FindPassword.jsx";
-import FindAccount from "./pages/auth/find-account/FindAccount.jsx";
-import LogIn from "./pages/auth/log-in/LogIn";
-import Done from "./pages/auth/sign-up/Done";
-import Info from "./pages/auth/sign-up/Info";
-import SignUp from "./pages/auth/sign-up/SignUp";
-import Terms from "./pages/auth/sign-up/Terms";
-import Verify from "./pages/auth/sign-up/Verify";
-import Challenge from "./pages/challenge/Challenge";
-import ChallengeDetail from "./pages/challenge/ChallengeDetail";
-import ChallengeRanking from "./pages/challenge/ChallengeRanking";
-import Chat from "./pages/chat/Chat.jsx";
-import Error from "./pages/error/Error.jsx";
-import Feed from "./pages/feed/Feed";
-import FeedRegister from "./pages/feed/feed-register/FeedRegister";
-import FeedUpdate from "./pages/feed/feed-update/FeedUpdate.jsx";
-import Home from "./pages/home/Home";
-import Market from "./pages/market/Market";
-import MarketPayment from "./pages/market/market-payment/MarketPayment";
-import ProductDetail from "./pages/market/product-detail/ProductDetail.jsx";
-import ProductRegister from "./pages/market/product-register/ProductRegister";
-import ProductUpdate from "./pages/market/product-update/ProductUpdate.jsx";
-import Activities from "./pages/my-page/activities/Activities";
-import Dashboard from "./pages/my-page/dashboard/Dashboard";
-import Deal from "./pages/my-page/deal/Deal";
-import EditProfile from "./pages/my-page/edit_profile/EditProfile";
-import MyPage from "./pages/my-page/MyPage.jsx";
-import Points from "./pages/my-page/points/Points";
-import SupportDetail from "./pages/support/SupportDetail";
-import Supports from "./pages/support/Supports";
-import ChallengeRegister from "./pages/admin/challenge-manage/register/ChallengeRegister.jsx";
-import ChallengeUpdate from "./pages/admin/challenge-manage/update/ChallengeUpdate.jsx";
+import { Navigate, Route, Routes } from 'react-router-dom';
+import AdminRoute from './components/common/admin/AdminRoute';
+import ProtectedRoute from './components/common/protected-route/ProtectedRoute.jsx';
+import AdminLayout from './layout/AdminLayout';
+import Layout from './layout/Layout';
+import About from './pages/about/About';
+import ChallengeGuide from './pages/about/challenge-guide/ChallengeGuide.jsx';
+import MarketGuide from './pages/about/market-guide/MarketGuide.jsx';
+import FeedManage from './pages/admin/admin-feed/FeedManage';
+import ChallengeManage from './pages/admin/challenge-manage/ChallengeManage.jsx';
+import ChallengeManageDetail from './pages/admin/challenge-manage/ChallengeManageDetail.jsx';
+import ChallengeRegister from './pages/admin/challenge-manage/register/ChallengeRegister.jsx';
+import ChallengeUpdate from './pages/admin/challenge-manage/update/ChallengeUpdate.jsx';
+import MarketManage from './pages/admin/market/MarketManage';
+import MarketManageDetail from './pages/admin/market/MarketManageDetail.jsx';
+import OperationStatus from './pages/admin/OperationStatus';
+import UserManageDetail from './pages/admin/user/user-manage-detail/UserManageDetail.jsx';
+import UserManage from './pages/admin/user/UserManage.jsx';
+import FindId from './pages/auth/find-account/find-id/FindId.jsx';
+import FindPassword from './pages/auth/find-account/find-password/FindPassword.jsx';
+import FindAccount from './pages/auth/find-account/FindAccount.jsx';
+import LogIn from './pages/auth/log-in/LogIn';
+import Done from './pages/auth/sign-up/Done';
+import Info from './pages/auth/sign-up/Info';
+import SignUp from './pages/auth/sign-up/SignUp';
+import Terms from './pages/auth/sign-up/Terms';
+import Verify from './pages/auth/sign-up/Verify';
+import Challenge from './pages/challenge/Challenge';
+import ChallengeDetail from './pages/challenge/ChallengeDetail';
+import ChallengeRanking from './pages/challenge/ChallengeRanking';
+import Chat from './pages/chat/Chat.jsx';
+import Error from './pages/error/Error.jsx';
+import Feed from './pages/feed/Feed';
+import FeedRegister from './pages/feed/feed-register/FeedRegister';
+import FeedUpdate from './pages/feed/feed-update/FeedUpdate.jsx';
+import Home from './pages/home/Home';
+import Market from './pages/market/Market';
+import MarketPayment from './pages/market/market-payment/MarketPayment';
+import ProductDetail from './pages/market/product-detail/ProductDetail.jsx';
+import ProductRegister from './pages/market/product-register/ProductRegister';
+import ProductUpdate from './pages/market/product-update/ProductUpdate.jsx';
+import Activities from './pages/my-page/activities/Activities';
+import Dashboard from './pages/my-page/dashboard/Dashboard';
+import Deal from './pages/my-page/deal/Deal';
+import EditProfile from './pages/my-page/edit_profile/EditProfile';
+import MyPage from './pages/my-page/MyPage.jsx';
+import Points from './pages/my-page/points/Points';
+import SupportDetail from './pages/support/SupportDetail';
+import Supports from './pages/support/Supports';
 
 function App() {
   return (
@@ -137,6 +138,7 @@ function App() {
             <Route index element={<ChallengeManage />} />
             <Route path="register" element={<ChallengeRegister />} />
             <Route path="edit/:code" element={<ChallengeUpdate />} />
+            <Route path=":code" element={<ChallengeManageDetail />} />
           </Route>
         </Route>
       </Route>
