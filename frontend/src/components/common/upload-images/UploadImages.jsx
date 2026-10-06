@@ -121,7 +121,7 @@ function UploadImage({ className, selectedImages, setSelectedImages }) {
           }
         </div>
       ) : (
-        <div className={styles.noImages}>
+        <div className={cn(styles.preview, styles.noImages)}>
           <MdImageNotSupported className={styles.icon} />
           <span>등록된 이미지가 없습니다.</span>
         </div>
