@@ -1,7 +1,5 @@
 package com.ss_dam.auth.member.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -10,118 +8,118 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
-import com.ss_dam.auth.login.model.response.AdminProfile;
+import com.ss_dam.auth.login.model.response.AuthProfile;
 import com.ss_dam.auth.member.model.filter.AdminMemberSearchFilter;
 import com.ss_dam.auth.member.model.request.MemberStatusChangeRequest;
 import com.ss_dam.auth.member.model.response.AdminMemberDetailView;
 import com.ss_dam.auth.member.model.response.AdminMemberView;
 import com.ss_dam.auth.member.service.AdminMemberService;
+import com.ss_dam.challenge.model.response.AdminMemberProofsView;
 import com.ss_dam.common.ApiResponse;
+import com.ss_dam.common.pager.PageQuery;
 import com.ss_dam.common.pager.PageResult;
+import com.ss_dam.common.validator.auth.AdminAuthValidator;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-
-// - AdminMemberController -
-// 회원 목록·검색·상세, 이용 제한·해제, 처리 사유·이력
 
 @RestController
 @RequestMapping("/api/admin/members")
 public class AdminMemberController {
 
-  @Autowired
-  private AdminMemberService adminMemberService;
+    private final AdminMemberService adminMemberService;
+    private final AdminAuthValidator adminAuthValidator;
 
-  // 관리자 회원 관리 - 회원 목록 조회 및 검색
-  // 회원 목록: 아이디, 이름, 지역, 상태, 등급, 가입일
-  @GetMapping
-  public ResponseEntity<ApiResponse<PageResult<AdminMemberView>>> loadMember(
-      @ModelAttribute AdminMemberSearchFilter filter) {
+    public AdminMemberController(
+            AdminMemberService adminMemberService,
+            AdminAuthValidator adminAuthValidator) {
 
-    PageResult<AdminMemberView> members = adminMemberService.loadMembers(filter);
-
-    return ResponseEntity.ok(ApiResponse.success("관리자 회원 목록 조회 성공", members));
-  }
-
-  // 관리자 회원 관리 - 회원 상세 조회 
-  // 기본 정보, 사진, 요약 통계
-  @GetMapping("/{memberCode}")
-  public ResponseEntity<ApiResponse<AdminMemberDetailView>> loadMember(
-      @PathVariable Long memberCode) {
-
-    AdminMemberDetailView member = adminMemberService.loadMember(memberCode);
-
-    return ResponseEntity.ok(ApiResponse.success("관리자 회원 상세 조회 성공", member));
-  }
-
-
-  // 관리자 회원 관리 - 회원 이용 제한 (상태 변경 : ACTIVE -> SUSPENDED)
-  @PatchMapping("/{memberCode}/restrict")
-  public ResponseEntity<ApiResponse<Void>> restrictMember(
-      @PathVariable Long memberCode,
-      @Valid @RequestBody MemberStatusChangeRequest request, HttpSession session) {
-
-    AdminProfile admin = requireAdmin(session);
-
-    adminMemberService.restrictMember(memberCode, request.getReason(), admin.getCode());
-
-
-    return ResponseEntity.ok(ApiResponse.success("회원 이용을 제한했습니다", null));
-
-  }
-
-  // 회원 이용 제한 해제 (상태 변경 : SUSPENDED -> ACTIVE)
-  @PatchMapping("/{memberCode}/release")
-  public ResponseEntity<ApiResponse<Void>> releaseMember(@PathVariable Long memberCode,
-      @Valid @RequestBody MemberStatusChangeRequest request, HttpSession session) {
-
-    AdminProfile admin = requireAdmin(session);
-
-    adminMemberService.releaseMember(memberCode, request.getReason(), admin.getCode());
-
-    return ResponseEntity.ok(ApiResponse.success("회원 이용 제한을 해제했습니다.", null));
-  }
-
-  // 로그인 및 관리자 권한 확인
-  private AdminProfile requireAdmin(HttpSession session) {
-
-    AdminProfile user = (AdminProfile) session.getAttribute("loginUser");
-
-    if (user == null) {
-      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다.");
+        this.adminMemberService = adminMemberService;
+        this.adminAuthValidator = adminAuthValidator;
     }
 
-    if (!"ROLE_SUPER".equals(user.getRole()) && !"ROLE_MANAGER".equals(user.getRole())) {
+    // 회원 목록 조회 및 검색
+    @GetMapping
+    public ResponseEntity<ApiResponse<PageResult<AdminMemberView>>> loadMembers(
+            @ModelAttribute AdminMemberSearchFilter filter,
+            HttpSession session) {
 
-      throw new ResponseStatusException(HttpStatus.FORBIDDEN, "회원 상태를 변경할 권한이 없습니다.");
+        adminAuthValidator.requireAdmin(session);
+
+        PageResult<AdminMemberView> members =
+                adminMemberService.loadMembers(filter);
+
+        return ResponseEntity.ok(
+                ApiResponse.success("관리자 회원 목록 조회 성공", members));
     }
 
-    if (user.getCode() == null) {
-      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "관리자 정보가 없습니다. 다시 로그인해주세요.");
+    // 회원 기본 상세 조회
+    @GetMapping("/{memberCode}")
+    public ResponseEntity<ApiResponse<AdminMemberDetailView>> loadMember(
+            @PathVariable Long memberCode,
+            HttpSession session) {
+
+        adminAuthValidator.requireAdmin(session);
+
+        AdminMemberDetailView member =
+                adminMemberService.loadMember(memberCode);
+
+        return ResponseEntity.ok(
+                ApiResponse.success("관리자 회원 상세 조회 성공", member));
     }
 
-    return user;
-  }
+    // 회원 이용 제한
+    @PatchMapping("/{memberCode}/restrict")
+    public ResponseEntity<ApiResponse<Void>> restrictMember(
+            @PathVariable Long memberCode,
+            @Valid @RequestBody MemberStatusChangeRequest request,
+            HttpSession session) {
 
+        AuthProfile admin =
+                adminAuthValidator.requireMemberManager(session);
+
+        adminMemberService.restrictMember(
+                memberCode,
+                request.getReason(),
+                admin.getCode());
+
+        return ResponseEntity.ok(
+                ApiResponse.success("회원 이용을 제한했습니다.", null));
+    }
+
+    // 회원 이용 제한 해제
+    @PatchMapping("/{memberCode}/release")
+    public ResponseEntity<ApiResponse<Void>> releaseMember(
+            @PathVariable Long memberCode,
+            @Valid @RequestBody MemberStatusChangeRequest request,
+            HttpSession session) {
+
+        AuthProfile admin =
+                adminAuthValidator.requireMemberManager(session);
+
+        adminMemberService.releaseMember(
+                memberCode,
+                request.getReason(),
+                admin.getCode());
+
+        return ResponseEntity.ok(
+                ApiResponse.success("회원 이용 제한을 해제했습니다.", null));
+    }
+
+    // 회원 인증글 통계와 페이지 목록
+    @GetMapping("/{memberCode}/proofs")
+    public ResponseEntity<ApiResponse<AdminMemberProofsView>> loadMemberProofs(
+            @PathVariable Long memberCode,
+            @ModelAttribute PageQuery pageQuery,
+            HttpSession session) {
+
+        adminAuthValidator.requireMemberManager(session);
+
+        AdminMemberProofsView result =
+                adminMemberService.loadMemberProofs(memberCode, pageQuery);
+
+        return ResponseEntity.ok(
+                ApiResponse.success("회원 챌린지 인증내역 조회 성공", result));
+    }
 }
-
-  //우측 상단 통계 : 전체 신고 / 처리 대기 / 처리 완료
-  //- 전체 신고: 모든 상태 포함
-  //- 처리 대기: PENDING, IN_REVIEW
-  //- 처리 완료: RESOLVED
-  // * 기각(REJECTED)은 전체 신고에만 포함
-
-  /*
- * 필요한 기능
- * - 회원 목록 조회 : 전체 회원을 조회하고 닉네임·이메일 등으로 검색
- * - 회원 상세 조회 : 회원 정보 및 이용 제한 상태 조회
- * - 회원 이용 제한 : 관리자가 부적절한 활동을 한 회원의 이용을 제한
- * - 회원 이용 제한 해제 : 제한된 회원의 서비스 이용을 다시 허용
- * - 회원 관리 처리 이력 조회 : 이용 제한·해제 사유와 처리 내역 조회
- */
-
-
-
-

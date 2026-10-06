@@ -30,6 +30,10 @@ public class AdminChallengeDetailView {
   private String goal;
   private Integer pointEarned;
 
+
+private Integer maxParticipants;   // 참여 정원: null이면 제한 없음
+private boolean deleteYn; // 삭제 여부: true이면 삭제된 챌린지
+
   // Getter & Setter
 
   public Long getCode() {
@@ -167,5 +171,21 @@ public class AdminChallengeDetailView {
   public void setPointEarned(Integer pointEarned) {
     this.pointEarned = pointEarned;
   }
-  
+
+  public Integer getMaxParticipants() {
+      return maxParticipants;
+  }
+
+  public void setMaxParticipants(Integer maxParticipants) {
+      this.maxParticipants = maxParticipants;
+  }
+
+  public boolean isDeleteYn() {
+      return deleteYn;
+  }
+
+  public void setDeleteYn(boolean deleteYn) {
+      this.deleteYn = deleteYn;
+  }
+    
 }

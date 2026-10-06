@@ -8,11 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.ss_dam.challenge.model.request.AdminChallengeSearch;
-import com.ss_dam.challenge.model.response.AdminChallengeDetailView;
 import com.ss_dam.challenge.model.response.AdminChallengeEditState;
 import com.ss_dam.challenge.model.response.AdminChallengeListView;
-import com.ss_dam.challenge.model.response.AdminMemberProofsView;
-import com.ss_dam.feed.model.response.UserFeedView;
 
 @Repository
 public class AdminChallengeDaoImpl implements AdminChallengeDao {
@@ -20,99 +17,85 @@ public class AdminChallengeDaoImpl implements AdminChallengeDao {
     @Autowired
     private SqlSession sql;
 
-
-    // 관리자 챌린지 진행현황 목록 조회 - 전체 대상 건수
-    @Override 
+    // 챌린지 목록 - 전체 건수
+    @Override
     public long countChallenges(AdminChallengeSearch search) {
-        return sql.selectOne("adminChallengeView.countChallenges", search);
+        return sql.selectOne(
+                "adminChallenge.countChallenges",
+                search);
     }
 
-    // 관리자 챌린지 진행현황 목록 조회 - 현재 페이지 목록
-    @Override 
+    // 챌린지 목록 조회
+    @Override
     public List<AdminChallengeListView> loadChallenges(
             AdminChallengeSearch search) {
 
         return sql.selectList(
-            "adminChallengeView.loadChallenges", search);
-        }
-
-    // 관리자 챌린지 진행현황 상세 조회
-    @Override 
-    public AdminChallengeDetailView loadChallenge(Long code) {
-
-        return sql.selectOne(
-            "adminChallengeView.loadChallenge", 
-            //XML의 #{code}와 연결되도록 Map에 담아 전달
-            Map.of("code", code));
+                "adminChallenge.loadChallenges",
+                search);
     }
 
-    // 관리자 챌린지 등록
+    // 챌린지 등록
     @Override
     public int createChallenge(Map<String, Object> params) {
-
         return sql.insert(
-                "adminChallengeCommand.createChallenge",
+                "adminChallenge.createChallenge",
                 params);
     }
 
-    // 관리자 챌린지 수정
+    // 수정·삭제·조기 완료를 위한 조회 및 행 잠금
     @Override
     public AdminChallengeEditState loadChallengeForUpdate(Long code) {
-
         return sql.selectOne(
-                "adminChallengeView.loadChallengeForUpdate",
+                "adminChallenge.loadChallengeForUpdate",
                 Map.of("code", code));
     }
 
+    // 챌린지 수정
     @Override
     public int updateChallenge(Map<String, Object> params) {
-
         return sql.update(
-                "adminChallengeCommand.updateChallenge",
+                "adminChallenge.updateChallenge",
                 params);
     }
 
-    // 관리자 챌린지 논리 삭제
+    // 삭제 제한을 위한 참여 이력·인증글 존재 여부 확인
     @Override
     public boolean hasChallengeHistory(Long code) {
-
         return sql.selectOne(
-                "adminChallengeView.hasChallengeHistory",
+                "adminChallenge.hasChallengeHistory",
                 Map.of("code", code));
     }
 
+    // 챌린지 논리 삭제
     @Override
     public int deleteChallenge(Map<String, Object> params) {
-
         return sql.update(
-                "adminChallengeCommand.deleteChallenge",
+                "adminChallenge.deleteChallenge",
                 params);
     }
 
-    // 관리자 챌린지 조기 완료
+    // 챌린지 조기 완료
     @Override
     public int endChallenge(Map<String, Object> params) {
-
         return sql.update(
-                "adminChallengeCommand.endChallenge",
+                "adminChallenge.endChallenge",
                 params);
     }
 
-    //관리자 회원 상세 - 인증글 통계
+    // 복구를 위한 삭제 여부 조회 및 행 잠금
     @Override
-    public AdminMemberProofsView loadMemberProofSummary(
-            Map<String, Object> params) {
-
+    public Integer loadDeleteYnForUpdate(Long code) {
         return sql.selectOne(
-                "adminChallengeView.loadMemberProofSummary", params);
+                "adminChallenge.loadDeleteYnForUpdate",
+                Map.of("code", code));
     }
 
-    //관리자 회원 상세 - 인증글 페이지 목록
+    // 삭제된 챌린지 복구
     @Override
-    public List<UserFeedView> loadMemberProofs(
-            Map<String, Object> params) {
-
-        return sql.selectList(
-                "adminChallengeView.loadMemberProofs", params);
+    public int restoreChallenge(Map<String, Object> params) {
+        return sql.update(
+                "adminChallenge.restoreChallenge",
+                params);
     }
 }
