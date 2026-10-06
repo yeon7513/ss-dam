@@ -36,7 +36,7 @@ const AdminSidebar = () => {
             return (
               <div key={item.category} className={styles.categoryGroup}>
                 {isSingle ? (
-                  /* @수정: button과 내부 태그 구조(span)를 동일하게 맞춰서 CSS 정렬 위치를 수평선상에 완전히 일치시킴 */
+                  /* 수정: button과 내부 태그 구조(span)를 동일하게 맞춰서 CSS 정렬 위치를 수평선상에 완전히 일치시킴 */
                   <Link
                     to={item.path}
                     className={`${styles.categoryHeader} ${

@@ -7,13 +7,9 @@ import Button from "../../common/button/Button";
 import styles from "./MarketSideNav.module.scss";
 
 // 다시쓰담 전용 사이드 메뉴
-
 // 이 사이드메뉴는 목록, 상세 페이지에서 사용함.
-
 // 목록에서 카테고리 메뉴 클릭 -> 필터링되어 재렌더링
-
 // 상세 페이지에서 카테고리 메뉴 클릭 -> 목록으로 이동 후 필터링되어 재렌더링
-
 function MarketSideNav({ categories, onSearch }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -41,7 +37,7 @@ function MarketSideNav({ categories, onSearch }) {
       {/* 물품 등록 영역 */}
       <div>
         <Button
-          btnStyle="danger"
+          btnStyle="fill"
           size="lg"
           fullWidth
           onClick={() => navigate("/market/register")}
