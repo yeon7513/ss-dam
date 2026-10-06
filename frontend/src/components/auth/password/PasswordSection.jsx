@@ -81,16 +81,18 @@ const PasswordSection = ({
                 : "비밀번호 먼저 입력"
             }
             onChange={handlePasswordCheckChange}
+            icon={
+              <button
+                type="button"
+                className={styles.togglePasswordBtn}
+                onClick={() => setShowPassword((prev) => !prev)}
+                aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}
+              >
+                {showPassword ? <HiEyeOff size={20} /> : <HiEye size={20} />}
+              </button>
+            }
             disabled={!form.password || !!passwordError}
           />
-          <button
-            type="button"
-            className={styles.togglePasswordBtn}
-            onClick={() => setShowPassword((prev) => !prev)}
-            aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}
-          >
-            {showPassword ? <HiEyeOff size={20} /> : <HiEye size={20} />}
-          </button>
         </div>
       </div>
 

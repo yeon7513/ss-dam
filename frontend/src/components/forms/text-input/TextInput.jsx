@@ -7,19 +7,27 @@ function TextInput({
   type = 'text',
   name,
   onChange,
+  icon,
   ...props
 }) {
   return (
     <div className={cn(styles.wrap, className)}>
       {label && <label htmlFor={name}>{label}</label>}
-      <input
-        id={name}
-        type={type}
-        name={name}
-        onChange={onChange}
-        autoComplete="off"
-        {...props}
-      />
+      <div className={styles.textGroup}>
+        <input
+          id={name}
+          type={type}
+          name={name}
+          onChange={onChange}
+          autoComplete="off"
+          {...props}
+        />
+        {icon && (
+          <div className={styles.icon}>
+            {icon}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

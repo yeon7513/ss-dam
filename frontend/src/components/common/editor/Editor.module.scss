@@ -34,9 +34,24 @@
   > textarea {
     width: 100%;
     height: 100%;
-    padding: 8px;
+    padding: 0.8rem;
     border: 1px solid v.$grayscale-10;
     border-radius: 0.5rem;
+    font-size: 1rem;
     resize: none;
+  }
+}
+
+.formFooter {
+  @include mix.flex($jc: space-between, $ai: flex-end);
+
+  .submitGroup {
+    @include mix.flex;
+    gap: 0.5rem;
+    outline: 1px dotted red;
+
+    button {
+      width: 100px;
+    }
   }
 }

@@ -13,6 +13,7 @@ import { handleSetField } from "../../../utils/changeHandler.js";
 const FeedRegister = () => {
   const navigate = useNavigate();
   const [hashs, setHashs] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
   const [post, setPost] = useState({});
 
   // 등록이 가능한 챌린지 카테고리 조회 (현재 진행 중인 카테고리만)
@@ -27,6 +28,12 @@ const FeedRegister = () => {
     const value = e.target.value.trim().replace(/\s+/g, "");
 
     if (e.code === "Enter" && value !== "") {
+
+      if (hashs.length === 10) {
+        alert("해시태그는 10개까지만 등록이 가능합니다.");
+        return;
+      }
+
       // 중복 비허용
       if (hashs.includes(value)) {
         // 이 부분에 해당 input에 중복관련 경고 띄우면 좋을 것 같음.
@@ -77,8 +84,8 @@ const FeedRegister = () => {
 
 
   return (
-    <main>
-      <form>
+    <main className={styles.wrap}>
+      <form className={styles.container}>
         <Editor
           title="피드 등록"
           typeName="chalCode"
@@ -95,23 +102,21 @@ const FeedRegister = () => {
           }
           onSubmit={handleRegisterFeed}
         >
-          <div className={styles.hash}>
+          <div className={styles.hashtags}>
             <div className={styles.regHashs}>
               {hashs.length === 0 ? (
                 <p>등록된 태그가 없습니다.</p>
               ) : (
                 hashs.map((hash, idx) => (
-                  <Hashtag key={idx}>
-                    <button type="button" onClick={() => handleDeleteHash(hash)}>
-                      # {hash} X
-                    </button>
-                  </Hashtag>
+                  <Hashtag key={idx} hashName={hash} isButton={true} onDeleteHash={handleDeleteHash} />
                 ))
               )}
             </div>
             <input
+              id="hashInput"
               type="text"
               onKeyUp={handleRegisterHashs}
+              className={styles.hashInput}
               placeholder="해시태그 등록"
             />
           </div>
