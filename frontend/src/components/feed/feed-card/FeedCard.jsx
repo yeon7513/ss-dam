@@ -28,9 +28,7 @@ function FeedCard({ feed, onClickDetail }) {
         <div className={styles.detail}>
           <div className={styles.hashtags}>
             {feed.hashtags.map((tag, idx) => (
-              <Hashtag key={idx}>
-                <span>#{tag}</span>
-              </Hashtag>
+              <Hashtag key={idx} hashName={tag} />
             ))}
           </div>
         </div>

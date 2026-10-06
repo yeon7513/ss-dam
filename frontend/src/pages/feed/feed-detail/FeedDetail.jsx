@@ -80,10 +80,7 @@ const FeedDetail = ({ code, onClose }) => {
           {/* 해시태그 */}
           <div className={styles.hashtags}>
             {detail.hashtags.map((tag, idx) => (
-              <Hashtag key={idx}>
-                {/* 링크로 놓고 해당 해시태그만 모아보기? */}
-                <span>#{tag}</span>
-              </Hashtag>
+              <Hashtag key={idx} hashName={tag} />
             ))}
           </div>
 

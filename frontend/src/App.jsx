@@ -55,10 +55,10 @@ function App() {
         {/* 피드 */}
         <Route path="/feed">
           <Route index element={<Feed />} />
-          <Route element={<ProtectedRoute />}>
-            <Route path="register" element={<FeedRegister />} />
-            <Route path="edit/:code" element={<FeedUpdate />} />
-          </Route>
+          {/*<Route element={<ProtectedRoute />}>*/}
+          <Route path="register" element={<FeedRegister />} />
+          <Route path="edit/:code" element={<FeedUpdate />} />
+          {/*</Route>*/}
         </Route>
 
         {/* 챌린지 */}
@@ -72,10 +72,10 @@ function App() {
         <Route path="/market">
           <Route index element={<Market />} />
           <Route path=":code" element={<ProductDetail />} />
-          <Route element={<ProtectedRoute />}>
-            <Route path="register" element={<ProductRegister />} />
-            <Route path="edit/:code" element={<ProductUpdate />} />
-          </Route>
+          {/*<Route element={<ProtectedRoute />}>*/}
+          <Route path="register" element={<ProductRegister />} />
+          <Route path="edit/:code" element={<ProductUpdate />} />
+          {/*</Route>*/}
           <Route path="payment" element={<MarketPayment />} />
         </Route>
 

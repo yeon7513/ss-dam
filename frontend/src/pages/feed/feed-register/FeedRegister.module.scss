@@ -1,2 +1,27 @@
 @use "../../../scss/variables.scss" as v;
 @use "../../../scss/mixin.scss" as mix;
+
+.hashtags {
+  flex: 1;
+  outline: 1px dotted red;
+
+  .regHashs {
+    @include mix.flex($jc: flex-start);
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+
+    > p {
+      padding: 0.5rem;
+    }
+  }
+
+
+  .hashInput {
+    padding: 0.8rem;
+    width: 30%;
+    border: 1px solid v.$grayscale-10;
+    border-radius: 0.5rem;
+  }
+
+}

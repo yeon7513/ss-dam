@@ -59,16 +59,19 @@ function Editor({
           <textarea
             name="content"
             value={post?.content || ''}
+            placeholder="본문을 입력하세요."
             onChange={(e) => handleSetField(e, setPost)}
           />
         </div>
-        {/* children 부분에 해시태그 및 가격 등록 섹션이 들어옴 */}
-        {children}
-        <div className={styles.submit}>
-          <Button onClick={handleSubmit}>
-            {submitText}
-          </Button>
-          <CancelButton targetUrl={cancelUrl}>취소</CancelButton>
+        <div className={styles.formFooter}>
+          {/* children 부분에 해시태그 및 가격 등록 섹션이 들어옴 */}
+          {children}
+          <div className={styles.submitGroup}>
+            <Button onClick={handleSubmit}>
+              {submitText}
+            </Button>
+            <CancelButton targetUrl={cancelUrl}>취소</CancelButton>
+          </div>
         </div>
       </div>
     </div>
