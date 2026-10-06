@@ -8,6 +8,8 @@ import CategorySelectBox from "../../../components/market/category-select-box/Ca
 import TextInput from "../../../components/forms/text-input/TextInput.jsx";
 import { handleSetField } from "../../../utils/changeHandler.js";
 
+import styles from "./ProductRegister.module.scss";
+
 const ProductRegister = () => {
   const navigate = useNavigate();
   const [post, setPost] = useState({});
@@ -18,7 +20,10 @@ const ProductRegister = () => {
   console.log(categories);
 
   // 거래글 등록 커스텀 훅 호출
-  const { handleSubmit, loading } = useSubmitData("/api/market/products", "POST");
+  const { handleSubmit, loading } = useSubmitData(
+    "/api/market/products",
+    "POST",
+  );
 
   // 서브밋 핸들러
   const handleRegisterProduct = async (newPost) => {
@@ -47,10 +52,8 @@ const ProductRegister = () => {
           setPost={setPost}
           onSubmit={handleRegisterProduct}
           selectCategoryBox={
-            <CategorySelectBox
-              categories={categories}
-              setPost={setPost}
-            />}
+            <CategorySelectBox categories={categories} setPost={setPost} />
+          }
           cancelUrl="/market"
           submitText="물품 등록"
         >
@@ -60,7 +63,8 @@ const ProductRegister = () => {
               type="text"
               name="price"
               id="price"
-              onChange={(e) => handleSetField({ e, setPost })} />
+              onChange={(e) => handleSetField({ e, setPost })}
+            />
           </div>
         </Editor>
       </form>
