@@ -18,7 +18,7 @@ const AdminHeader = () => {
       {/* 사용자 모드 전환 버튼 영역 */}
       <Button
         btnStyle="danger"
-        size="sm"
+        size="md"
         className={styles.userModeBtn}
         onClick={() => navigate("/mypage")}
       >
