@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="adminChallenge">
+
+    <!-- 목록 검색 공통 조건 -->
+    <sql id="adminChallengeConditions">
+
+        WHERE c.DELETE_YN =
+        <choose>
+            <when test="deleted">1</when>
+            <otherwise>0</otherwise>
+        </choose>
+
+        <!-- 진행 상태 -->
+        <if test="progressStatus != null and progressStatus != ''">
+            AND c.PROGRESS_STATUS = #{progressStatus}
+        </if>
+
+        <!-- 공개 상태 -->
+        <if test="postStatus != null and postStatus != ''">
+            AND c.POST_STATUS = #{postStatus}
+        </if>
+
+        <!-- 제목·내용 검색: %와 _도 일반 문자로 처리 -->
+        <if test="keyword != null and keyword != ''">
+            AND (
+                LOCATE(#{keyword}, c.TITLE) &gt; 0
+                OR LOCATE(#{keyword}, c.CONTENT) &gt; 0
+            )
+        </if>
+
+        <!-- 조회 기간과 챌린지 진행 기간이 겹치는 항목 -->
+        <if test="fromDate != null">
+            AND c.END_DATE &gt; #{fromDate}
+        </if>
+
+        <if test="toDate != null">
+            AND c.START_DATE &lt; DATE_ADD(#{toDate}, INTERVAL 1 DAY)
+        </if>
+
+    </sql>
+
+    <!-- 목록 전체 건수 -->
+    <select id="countChallenges" resultType="long">
+
+        SELECT COUNT(*)
+        FROM CHALLENGE c
+
+        <include refid="adminChallengeConditions"/>
+
+    </select>
+
+    <!-- 챌린지 목록 조회 -->
+    <select id="loadChallenges"
+            resultType="com.ss_dam.challenge.model.response.AdminChallengeListView">
+
+        SELECT
+            c.CODE,
+            c.TITLE,
+            c.CONTENT,
+            c.START_DATE,
+            c.END_DATE,
+            c.PROGRESS_STATUS,
+            c.POST_STATUS,
+            c.CREATED_AT,
+
+            a.EMP_ID AS ADMIN_ID,
+            a.ROLE AS ADMIN_ROLE,
+
+            <!-- 취소하지 않은 참여·완료 회원 수 -->
+            (
+                SELECT COUNT(DISTINCT ce.MEM_CODE)
+                FROM CHALLENGE_ENTRY ce
+                WHERE ce.CHAL_CODE = c.CODE
+                  AND ce.STATUS IN ('JOINED', 'COMPLETED')
+                  AND ce.CANCELED_AT IS NULL
+            ) AS PARTICIPANT_COUNT,
+
+            <!-- 기존 대표 이미지 조회 -->
+            (
+                SELECT i.PATH
+                FROM IMAGES i
+                WHERE i.TARGET_CODE = c.CODE
+                  AND i.TYPE = 'challenge'
+                  AND i.DELETE_YN = 0
+                ORDER BY i.ORDER_SEQ ASC, i.PATH ASC
+                LIMIT 1
+            ) AS THUMBNAIL,
+
+            <!-- 완료 회원 비율 -->
+            (
+                SELECT COALESCE(
+                    ROUND(
+                        100.0 * COUNT(DISTINCT CASE
+                            WHEN ce.STATUS = 'COMPLETED'
+                            THEN ce.MEM_CODE
+                        END)
+                        / NULLIF(COUNT(DISTINCT ce.MEM_CODE), 0),
+                        1
+                    ),
+                    0
+                )
+                FROM CHALLENGE_ENTRY ce
+                WHERE ce.CHAL_CODE = c.CODE
+                  AND ce.STATUS IN ('JOINED', 'COMPLETED')
+                  AND ce.CANCELED_AT IS NULL
+            ) AS ACHIEVEMENT_RATE
+
+        FROM CHALLENGE c
+
+        LEFT JOIN ADMIN_ACCOUNT a
+            ON a.CODE = c.ADM_CODE
+
+        <include refid="adminChallengeConditions"/>
+
+        <choose>
+            <when test="sort == 'PARTICIPANTS_DESC'">
+                ORDER BY
+                    PARTICIPANT_COUNT DESC,
+                    c.CREATED_AT DESC,
+                    c.CODE DESC
+            </when>
+
+            <when test="sort == 'PARTICIPANTS_ASC'">
+                ORDER BY
+                    PARTICIPANT_COUNT ASC,
+                    c.CREATED_AT DESC,
+                    c.CODE DESC
+            </when>
+
+            <when test="sort == 'ACHIEVEMENT_DESC'">
+                ORDER BY
+                    ACHIEVEMENT_RATE DESC,
+                    c.CREATED_AT DESC,
+                    c.CODE DESC
+            </when>
+
+            <when test="sort == 'ACHIEVEMENT_ASC'">
+                ORDER BY
+                    ACHIEVEMENT_RATE ASC,
+                    c.CREATED_AT DESC,
+                    c.CODE DESC
+            </when>
+
+            <otherwise>
+                ORDER BY
+                    c.CREATED_AT DESC,
+                    c.CODE DESC
+            </otherwise>
+        </choose>
+
+        LIMIT #{perPage} OFFSET #{offset}
+
+    </select>
+
+    <!-- 챌린지 등록 -->
+    <insert id="createChallenge"
+            parameterType="map"
+            useGeneratedKeys="true"
+            keyProperty="code"
+            keyColumn="CODE">
+
+        INSERT INTO CHALLENGE (
+            ADM_CODE,
+            TITLE,
+            CONTENT,
+            START_DATE,
+            END_DATE,
+            GOAL,
+            POINT_EARNED,
+            MAX_PARTICIPANTS,
+            POST_STATUS,
+            PROGRESS_STATUS,
+            CREATED_BY,
+            CREATED_AT,
+            DELETE_YN
+        )
+        VALUES (
+            #{adminCode},
+            #{title},
+            #{content},
+            #{startDate},
+            #{endDate},
+            #{goal},
+            #{pointEarned},
+            #{maxParticipants},
+            #{postStatus},
+            #{progressStatus},
+            #{adminId},
+            #{createdAt},
+            0
+        )
+
+    </insert>
+
+    <!-- 수정·삭제·조기 완료를 위한 조회 및 행 잠금 -->
+    <select id="loadChallengeForUpdate"
+            parameterType="map"
+            resultType="com.ss_dam.challenge.model.response.AdminChallengeEditState">
+
+        SELECT
+            CODE,
+            GOAL,
+            POINT_EARNED,
+            MAX_PARTICIPANTS,
+            START_DATE,
+            END_DATE,
+            PROGRESS_STATUS
+
+        FROM CHALLENGE
+
+        WHERE CODE = #{code}
+          AND DELETE_YN = 0
+
+        FOR UPDATE
+
+    </select>
+
+    <!-- 챌린지 수정 -->
+    <update id="updateChallenge" parameterType="map">
+
+        UPDATE CHALLENGE
+
+        <set>
+            TITLE = #{title},
+            CONTENT = #{content},
+            POST_STATUS = #{postStatus},
+            UPDATED_BY = #{adminId},
+            UPDATED_AT = #{updatedAt},
+
+            <!-- 시작 전일 때만 참여 조건 변경 -->
+            <if test="beforeStart">
+                GOAL = #{goal},
+                POINT_EARNED = #{pointEarned},
+                START_DATE = #{startDate},
+                END_DATE = #{endDate},
+                MAX_PARTICIPANTS = #{maxParticipants},
+            </if>
+        </set>
+
+        WHERE CODE = #{code}
+          AND DELETE_YN = 0
+
+    </update>
+
+    <!-- 삭제 제한을 위한 참여·인증 이력 확인 -->
+    <!-- 취소된 참여와 삭제된 인증글도 이력에 포함 -->
+    <select id="hasChallengeHistory"
+            parameterType="map"
+            resultType="boolean">
+
+        SELECT
+            EXISTS (
+                SELECT 1
+                FROM CHALLENGE_ENTRY ce
+                WHERE ce.CHAL_CODE = #{code}
+            )
+            OR
+            EXISTS (
+                SELECT 1
+                FROM FEED f
+                WHERE f.CHAL_CODE = #{code}
+            )
+
+    </select>
+
+    <!-- 챌린지 논리 삭제 -->
+    <update id="deleteChallenge" parameterType="map">
+
+        UPDATE CHALLENGE
+        SET
+            DELETE_YN = 1,
+            UPDATED_BY = #{adminId},
+            UPDATED_AT = #{updatedAt}
+
+        WHERE CODE = #{code}
+          AND DELETE_YN = 0
+
+          AND NOT EXISTS (
+              SELECT 1
+              FROM CHALLENGE_ENTRY ce
+              WHERE ce.CHAL_CODE = #{code}
+          )
+
+          AND NOT EXISTS (
+              SELECT 1
+              FROM FEED f
+              WHERE f.CHAL_CODE = #{code}
+          )
+
+    </update>
+
+    <!-- 챌린지 조기 완료 -->
+    <update id="endChallenge" parameterType="map">
+
+        UPDATE CHALLENGE
+        SET
+            PROGRESS_STATUS = 'ENDED',
+            END_DATE = #{endedAt},
+            UPDATED_BY = #{adminId},
+            UPDATED_AT = #{endedAt}
+
+        WHERE CODE = #{code}
+          AND DELETE_YN = 0
+          AND PROGRESS_STATUS IN ('WAITING', 'IN_PROGRESS')
+          AND START_DATE &lt;= #{endedAt}
+          AND END_DATE &gt; #{endedAt}
+
+    </update>
+
+    <!-- 복구를 위한 삭제 여부 조회 및 행 잠금 -->
+    <select id="loadDeleteYnForUpdate"
+            parameterType="map"
+            resultType="java.lang.Integer">
+
+        SELECT
+            CASE WHEN DELETE_YN = 1 THEN 1 ELSE 0 END
+        FROM CHALLENGE
+        WHERE CODE = #{code}
+        FOR UPDATE
+
+    </select>
+
+    <!-- 삭제된 챌린지 복구 -->
+    <update id="restoreChallenge" parameterType="map">
+
+        UPDATE CHALLENGE
+        SET
+            DELETE_YN = 0,
+            UPDATED_BY = #{adminId},
+            UPDATED_AT = #{updatedAt},
+
+            <!-- 삭제 중 지난 기간을 반영하되 종료 상태는 유지 -->
+            PROGRESS_STATUS =
+                CASE
+                    WHEN PROGRESS_STATUS = 'ENDED' THEN 'ENDED'
+                    WHEN END_DATE &lt;= #{updatedAt} THEN 'ENDED'
+                    WHEN START_DATE &gt; #{updatedAt} THEN 'WAITING'
+                    ELSE 'IN_PROGRESS'
+                END
+
+        WHERE CODE = #{code}
+          AND DELETE_YN = 1
+
+    </update>
+
+</mapper>

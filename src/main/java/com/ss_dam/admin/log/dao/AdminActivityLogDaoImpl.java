@@ -10,36 +10,53 @@ import org.springframework.stereotype.Repository;
 import com.ss_dam.admin.log.response.AdminActivity;
 
 @Repository
-public class AdminActivityLogDaoImpl implements AdminActivityLogDao {
+public class AdminActivityLogDaoImpl
+        implements AdminActivityLogDao {
 
     @Autowired
     private SqlSession sql;
 
-    // 관리자 처리 이력 저장
-    @Override
-    public int insertActivityLog(Map<String, Object> params) {
-
-        return sql.insert(
-                "adminActivityLog.insertActivityLog",
-                params);
-    }
-
-
-
-    //관리자 회원 상세 - 회원 정지·해제 로그 전체 건수
+    // 회원 정지·해제 이력 전체 건수
     @Override
     public int countMemberLogs(Map<String, Object> params) {
         return sql.selectOne(
-                "adminActivityLog.countMemberLogs", params);
+                "adminActivityLog.countMemberLogs",
+                params);
     }
 
-    //관리자 회원 상세 - 회원 정지·해제 로그 목록
+    // 회원 정지·해제 이력 목록
     @Override
     public List<AdminActivity> loadMemberLogs(
             Map<String, Object> params) {
 
         return sql.selectList(
-                "adminActivityLog.loadMemberLogs", params);
+                "adminActivityLog.loadMemberLogs",
+                params);
     }
 
+    // 챌린지 처리 이력 전체 건수
+    @Override
+    public long countChallengeLogs(Map<String, Object> params) {
+        return sql.selectOne(
+                "adminActivityLog.countChallengeLogs",
+                params);
+    }
+
+    // 챌린지 처리 이력 목록
+    @Override
+    public List<AdminActivity> loadChallengeLogs(
+            Map<String, Object> params) {
+
+        return sql.selectList(
+                "adminActivityLog.loadChallengeLogs",
+                params);
+    }
+
+    // 관리자 처리 이력 저장
+    @Override
+    public int insertActivityLog(Map<String, Object> params) {
+        return sql.insert(
+                "adminActivityLog.insertActivityLog",
+                params);
+    }
 }

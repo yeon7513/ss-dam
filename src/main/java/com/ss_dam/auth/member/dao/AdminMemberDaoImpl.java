@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import com.ss_dam.auth.member.model.response.AdminMemberDetailView;
 import com.ss_dam.auth.member.model.response.AdminMemberView;
+import com.ss_dam.challenge.model.response.AdminMemberProofsView;
+import com.ss_dam.feed.model.response.UserFeedView;
 
 @Repository 
 public class AdminMemberDaoImpl implements AdminMemberDao {
@@ -87,12 +89,25 @@ public class AdminMemberDaoImpl implements AdminMemberDao {
                 params);
     }
 
-    // 관리자 회원 상태 변경 이력 저장
-    @Override
-    public int insertMemberStatusLog(Map<String, Object> params) {
-        return sql.insert(
-                "adminMember.insertMemberStatusLog",
-                params);
-    }
+
+    // 회원 상세 - 인증글 통계
+@Override
+public AdminMemberProofsView loadMemberProofSummary(
+        Map<String, Object> params) {
+
+    return sql.selectOne(
+            "adminMember.loadMemberProofSummary",
+            params);
+}
+
+// 회원 상세 - 인증글 페이지 목록
+@Override
+public List<UserFeedView> loadMemberProofs(
+        Map<String, Object> params) {
+
+    return sql.selectList(
+            "adminMember.loadMemberProofs",
+            params);
+}
 
 }

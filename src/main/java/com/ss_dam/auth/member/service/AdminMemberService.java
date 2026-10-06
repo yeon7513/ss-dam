@@ -3,6 +3,8 @@ package com.ss_dam.auth.member.service;
 import com.ss_dam.auth.member.model.filter.AdminMemberSearchFilter;
 import com.ss_dam.auth.member.model.response.AdminMemberDetailView;
 import com.ss_dam.auth.member.model.response.AdminMemberView;
+import com.ss_dam.challenge.model.response.AdminMemberProofsView;
+import com.ss_dam.common.pager.PageQuery;
 import com.ss_dam.common.pager.PageResult;
 
 public interface AdminMemberService {
@@ -19,5 +21,8 @@ public interface AdminMemberService {
 
   //회원 이용 제한 해제
   void releaseMember(Long memberCode, String reason, Long adminCode);
+
+  // 관리자 회원 상세 - 회원 인증글 통계와 페이지 목록
+  AdminMemberProofsView loadMemberProofs(Long memberCode, PageQuery pageQuery);
 
 }
