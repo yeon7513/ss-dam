@@ -1,6 +1,6 @@
 import cn from "classnames";
 import styles from "./Hashtag.module.scss";
-import { IoIosClose } from "react-icons/io";
+import CloseButton from "../../common/button/close/CloseButton.jsx";
 
 function Hashtag({ className, hashName, isButton = false, onDeleteHash }) {
   // 버튼 형식일 경우
@@ -9,7 +9,7 @@ function Hashtag({ className, hashName, isButton = false, onDeleteHash }) {
       <div className={cn(styles.hashtagItem, styles.tagButton, className)}>
         <button type="button" onClick={() => onDeleteHash(hashName)}>
           <span className={styles.tagName}># {hashName}</span>
-          <IoIosClose className={styles.deleteIcon} />
+          <CloseButton />
         </button>
       </div>
     )

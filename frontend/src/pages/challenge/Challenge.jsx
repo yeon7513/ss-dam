@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import TabMenus from "../../components/common/tab-menus/TabMenus";
 import styles from "./Challenge.module.scss";
-import { CHALLENGE_TABS } from "../../lib/challengeTabs";
-import LikeButton from "../../components/common/button/LikeButton";
+import LikeButton from "../../components/common/button/like/LikeButton.jsx";
 
 const MAIN_TABS = [
   { label: "전체 챌린지", value: "ALL" },

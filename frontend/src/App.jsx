@@ -7,7 +7,7 @@ import About from "./pages/about/About";
 import ChallengeGuide from "./pages/about/challenge-guide/ChallengeGuide.jsx";
 import MarketGuide from "./pages/about/market-guide/MarketGuide.jsx";
 import FeedManage from "./pages/admin/admin-feed/FeedManage";
-import ChallengeManage from "./pages/admin/ChallengeManage";
+import ChallengeManage from "./pages/admin/challenge-manage/ChallengeManage.jsx";
 import MarketManage from "./pages/admin/market/MarketManage";
 import MarketManageDetail from "./pages/admin/market/MarketManageDetail.jsx";
 import OperationStatus from "./pages/admin/OperationStatus";
@@ -44,6 +44,8 @@ import MyPage from "./pages/my-page/MyPage.jsx";
 import Points from "./pages/my-page/points/Points";
 import SupportDetail from "./pages/support/SupportDetail";
 import Supports from "./pages/support/Supports";
+import ChallengeRegister from "./pages/admin/challenge-manage/register/ChallengeRegister.jsx";
+import ChallengeUpdate from "./pages/admin/challenge-manage/update/ChallengeUpdate.jsx";
 
 function App() {
   return (
@@ -128,9 +130,14 @@ function App() {
           <Route path="user_manage" element={<UserManage />} />
           <Route path="user_manage/:code" element={<UserManageDetail />} />
           <Route path="feed_manage" element={<FeedManage />} />
-          <Route path="market_manage" element={<MarketManage />} />
-          <Route path="market_manage/:code" element={<MarketManageDetail />} />
-          <Route path="challenge_manage" element={<ChallengeManage />} />
+          <Route path="market_manage" element={<MarketManage />}>
+            <Route path=":code" element={<MarketManageDetail />} />
+          </Route>
+          <Route path="challenge_manage">
+            <Route index element={<ChallengeManage />} />
+            <Route path="register" element={<ChallengeRegister />} />
+            <Route path="edit/:code" element={<ChallengeUpdate />} />
+          </Route>
         </Route>
       </Route>
 

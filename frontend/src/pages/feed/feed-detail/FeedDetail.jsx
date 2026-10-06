@@ -10,6 +10,7 @@ import { useLoadData } from "../../../hooks/useLoadData.js";
 import { useNavigate } from "react-router-dom";
 import { useSubmitData } from "../../../hooks/useSubmitData.js";
 import Comments from "../../../components/feed/comment/Comments.jsx";
+import CloseButton from "../../../components/common/button/close/CloseButton.jsx";
 
 const FeedDetail = ({ code, onClose }) => {
   const navigate = useNavigate();
@@ -53,14 +54,16 @@ const FeedDetail = ({ code, onClose }) => {
     return <div>데이터를 불러오는 데 실패했습니다. {error}</div>;
   }
 
+  console.log(detail);
+
   return (
     <div className={cn(styles.feedDetail)}>
-      <div className={styles.title}>
-        <div>
-          <button type="button" onClick={onClose}>X</button>
-          <span>{detail.chalTitle}</span>
-          <h2>{detail.title}</h2>
+      <div className={styles.header}>
+        <div className={styles.titleBox}>
+          <span className={styles.challengeName}>{detail.challengeName}</span>
+          <h2 className={styles.title}>{detail.title}</h2>
         </div>
+        <CloseButton className={styles.closeModalButton} onClick={onClose} />
       </div>
 
       <div className={styles.container}>

@@ -4,10 +4,47 @@
 .feedDetail {
   padding: 32px;
 
-  .title {
-    @include mix.wrap($pd: 0);
-    margin-bottom: 24px;
-    outline: 1px dotted red;
+  .header {
+    @include mix.flex($jc: space-between, $ai: flex-start);
+    margin-bottom: 1.5rem;
+
+    // 챌린지명 & 제목
+    .titleBox {
+
+      .challengeName {
+        display: block;
+        padding: 0.5rem 1.2rem;
+        width: fit-content;
+        border: 1px solid v.$point-20;
+        border-radius: 999px;
+        color: v.$point-50;
+
+      }
+
+      .title {
+        outline: 1px dotted red;
+      }
+
+    }
+
+    // 닫기 버튼
+    .closeModalButton {
+      opacity: 0.7;
+      background-color: v.$grayscale-90;
+      color: #fff;
+      border-radius: 50%;
+      transition: 0.2s;
+
+      &:hover {
+        opacity: 1;
+        transform: rotate(180deg);
+      }
+
+      > svg {
+        font-size: 2rem;
+      }
+    }
+
   }
 }
 

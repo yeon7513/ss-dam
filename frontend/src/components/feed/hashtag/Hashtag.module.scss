@@ -2,18 +2,15 @@
 @use "../../../scss/mixin.scss" as mix;
 
 .hashtagItem {
+
   &.tagButton {
     > button {
       @include mix.flex;
       gap: 0.5rem;
-      padding: 0.5rem;
+      padding: 0.5rem 0.5rem 0.5rem 0.8rem;
+      border-radius: 999px;
       background-color: v.$grayscale-5;
       font-size: 0.875rem;
-
-      .deleteIcon {
-        font-size: 1.25rem;
-      }
-
     }
   }
 
