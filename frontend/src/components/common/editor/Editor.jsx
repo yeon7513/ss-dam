@@ -41,12 +41,12 @@ function Editor({
       <div className={styles.container}>
         <div className={styles.title}>
           {/* 카테고리 선택용 컴포넌트 영역 */}
-          {selectCategoryBox && (selectCategoryBox)}
+          {selectCategoryBox && selectCategoryBox}
           {/* 제목 */}
           <TextInput
             name="title"
             placeholder="제목을 입력하세요."
-            value={post?.title || ''}
+            value={post?.title || ""}
             onChange={(e) => handleSetField(e, setPost)}
           />
         </div>
@@ -67,7 +67,7 @@ function Editor({
         <div className={styles.content}>
           <textarea
             name="content"
-            value={post?.content || ''}
+            value={post?.content || ""}
             placeholder="본문을 입력하세요."
             onChange={(e) => handleSetField(e, setPost)}
           />
@@ -76,7 +76,7 @@ function Editor({
           {/* children 부분에 해시태그 및 가격 등록 섹션이 들어옴 */}
           {children}
           <div className={styles.submitGroup}>
-            <Button onClick={handleSubmit}>
+            <Button btnStyle="submit" onClick={handleSubmit}>
               {submitText}
             </Button>
             <CancelButton targetUrl={cancelUrl}>취소</CancelButton>
