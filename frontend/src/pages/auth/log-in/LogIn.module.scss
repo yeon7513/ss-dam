@@ -87,3 +87,34 @@
     text-decoration: underline;
   }
 }
+
+/* 비밀번호 입력창 감싸는 영역 */
+.passwordInputWrapper {
+  position: relative;
+  width: 100%;
+
+  input {
+    padding-right: 2.5rem;
+  }
+}
+
+/* 비밀번호 눈모양 토글 버튼 */
+.togglePasswordBtn {
+  position: absolute;
+  right: 0.8rem;
+  top: calc(100% - 1.45rem); // 눈을 똑바로 뜨지 못함...
+  transform: translateY(-50%);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: v.$grayscale-50;
+  cursor: pointer;
+
+  &:hover {
+    color: v.$grayscale-90;
+  }
+}
