@@ -4,29 +4,50 @@
 .wrap {
   width: 100%;
 
-  > input {
-    width: 100%;
-    padding: 0.8rem;
-    font-size: 0.9rem;
-    font-weight: 500;
-    box-sizing: border-box;
-    border: 1.5px solid v.$point-20;
-    transition: background-color 0.5s ease;
+  .textGroup {
+    position: relative;
 
-    &::placeholder {
-      color: v.$grayscale-50;
-      font-weight: 400;
+    input {
+      width: 100%;
+      padding: 0.8rem;
       font-size: 0.9rem;
-    }
-
-    &:focus {
+      font-weight: 500;
+      box-sizing: border-box;
       border: 1.5px solid v.$point-20;
-      background-color: v.$point-5;
-      outline: none;
+      transition: background-color 0.5s ease;
 
       &::placeholder {
-        color: v.$grayscale-90;
+        color: v.$grayscale-50;
+        font-weight: 400;
+        font-size: 0.9rem;
       }
+
+      &:focus {
+        border: 1.5px solid v.$point-20;
+        background-color: v.$point-5;
+        outline: none;
+
+        &::placeholder {
+          color: v.$grayscale-90;
+        }
+      }
+    }
+  }
+
+  .icon {
+    position: absolute;
+    top: 50%;
+    right: 0.8rem;
+    z-index: 999;
+    transform: translateY(-50%);
+
+    &:hover {
+      color: v.$grayscale-90;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.4;
     }
   }
 }
