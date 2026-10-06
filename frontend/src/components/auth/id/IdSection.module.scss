@@ -12,12 +12,3 @@
     width: 100%;
   }
 }
-
-.checkButton {
-  width: 8rem; // 버튼 너비 조절!!!
-
-  &:hover {
-    background-color: $grayscale-10;
-    transition: background-color 0.5s ease;
-  }
-}

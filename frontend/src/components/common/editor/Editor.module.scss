@@ -27,12 +27,14 @@
 }
 
 .content {
-  outline: 1px dotted blue;
+  height: 300px;
 
   > textarea {
     width: 100%;
     height: 100%;
     padding: 8px;
-    border: 1px solid #000;
+    border: 1px solid v.$grayscale-10;
+    border-radius: 0.5rem;
+    resize: none;
   }
 }
