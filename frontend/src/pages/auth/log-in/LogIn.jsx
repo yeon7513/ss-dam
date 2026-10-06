@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { HiEye, HiEyeOff } from "react-icons/hi"; // 1. 아이콘 import 추가
 import Button from "../../../components/common/button/Button";
 import TextInput from "../../../components/forms/text-input/TextInput";
 import styles from "./LogIn.module.scss";
-import { useAuth } from "../../../context/AuthContext.jsx"; // 로그인 페이지 전용 scss모듈
+import { useAuth } from "../../../context/AuthContext.jsx";
 
 const LogIn = () => {
   /* 로그인 상태 관리 */
   const [memberId, setMemberId] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // 2. 토글 상태 추가
   const navigate = useNavigate();
 
   const { login } = useAuth();
@@ -69,15 +71,26 @@ const LogIn = () => {
               value={memberId}
               onChange={(e) => setMemberId(e.target.value)}
             />
-            <TextInput
-              label="비밀번호"
-              placeholder="비밀번호 입력"
-              className={styles.loginInput}
-              type="password"
-              name="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <div className={styles.passwordInputWrapper}>
+              <TextInput
+                label="비밀번호"
+                placeholder="비밀번호 입력"
+                className={styles.loginInput}
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                className={styles.togglePasswordBtn}
+                onClick={() => setShowPassword((prev) => !prev)}
+                aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}
+              >
+                {showPassword ? <HiEyeOff size={20} /> : <HiEye size={20} />}
+              </button>{" "}
+              {/* 3. 닫는 태그 수정 */}
+            </div>
           </div>
 
           {/* 로그인 버튼 */}
@@ -105,7 +118,10 @@ const LogIn = () => {
                 아이디 찾기
               </Link>
               <span className={styles.divider}>|</span>
-              <Link to="/supports/find_account/password" className={styles.subLink}>
+              <Link
+                to="/supports/find_account/password"
+                className={styles.subLink}
+              >
                 비밀번호 찾기
               </Link>
             </div>
