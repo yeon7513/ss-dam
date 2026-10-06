@@ -1,102 +1,126 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import TabMenus from "../../components/common/tab-menus/TabMenus";
+import { useLoadData } from "../../hooks/useLoadData.js";
 import styles from "./Challenge.module.scss";
+import Card from "../../components/common/card/Card";
+import ImageBox from "../../components/common/image-box/ImageBox";
+import ChallengeSidebar from "./ChallengeSidebar";
+import TabMenus from "../../components/common/tab-menus/TabMenus";
+import Pagination from "../../components/common/pagination/Pagination";
 import { CHALLENGE_TABS } from "../../lib/challengeTabs";
-import LikeButton from "../../components/common/button/LikeButton";
 
-const MAIN_TABS = [
-  { label: "전체 챌린지", value: "ALL" },
-  { label: "인기 챌린지", value: "POPULAR" },
-];
 const Challenge = () => {
-  const [activeTab, setActiveTab] = useState(MAIN_TABS[0].value);
-  const [challenges, setChallenges] = useState([]);
-  const [ranking, setRanking] = useState([]);
+  const [activeTab, setActiveTab] = useState("IN_PROGRESS");
+  const [page, setPage] = useState(1);
 
-  useEffect(() => {
-    const fetchChallenges = async () => {
-      try {
-        const url =
-          activeTab === "ALL" ? "/api/challenge" : "/api/challenge/popular";
+  const { data, loading, error, message } = useLoadData(
+      `/api/challenge?progressStatus=${activeTab}`,
+  );
 
-        const response = await fetch(url);
-        if (response.ok) {
-          const result = await response.json();
-          setChallenges(result.data || []);
-        }
-      } catch (error) {
-        console.error("랭킹 데이터 조회 실패", error);
-      }
-    };
+  const challenges = data || [];
 
-    fetchChallenges();
-  }, [activeTab]);
+  const PER_PAGE = 5;
+  const last = Math.max(1, Math.ceil(challenges.length / PER_PAGE));
 
-  useEffect(() => {
-    const fetchRnking = async () => {
-      try {
-        const response = await fetch("/api/challenge/ranking");
-        if (response.ok) {
-          const result = await response.json();
-          setRanking(result.data || []);
-        }
-      } catch (error) {
-        console.error("랭킹 데이터 조회 실패", error);
-      }
-    };
-    fetchRnking();
-  }, []);
+  const pager = {
+    page,
+    list: Array.from({ length: last }, (_, i) => i + 1),
+  };
+
+  const pagedChallenges = challenges.slice(
+      (page - 1) * PER_PAGE,
+      page * PER_PAGE,
+  );
 
   return (
-    <div className={styles.container}>
-      <section className={styles.section}>
-        <TabMenus
-          tabs={MAIN_TABS}
-          activeStatus={activeTab}
-          onTabChange={setActiveTab}
-        />
-        <h4>
-          {activeTab === "ALL" ? "전체 챌린지" : "인기 챌린지"} 목록 (
-          {challenges.length}개)
-        </h4>
-        <ul>
-          {challenges.map((item) => (
-            <li key={item.code}>
-              <Link to={`/challenge/${item.code}`}>
-                <b>[{item.code}]</b>
-                {item.title}
-              </Link>
-            </li>
-          ))}
-        </ul>
-        {challenges.length === 0 && (
-          <p className={styles.emptyMsg}>표시할 챌린지가 없습니다.</p>
-        )}
-      </section>
+      <main className={styles.wrap}>
+        <div className={styles.sideNavWrap}>
+          <ChallengeSidebar />
+        </div>
 
-      <section className={styles.section}>
-        <h3>사용자 TOP 랭킹</h3>
-        <ol>
-          {ranking.map((user, index) => (
-            <li key={user.code || index}>
-              <b>{index + 1}위</b> {user.name} (랭킹/점수: {user.point ?? 0}
-              그루)
-            </li>
-          ))}
-        </ol>
-        {ranking.length === 0 && (
-          <p className={styles.emptyMsg}>랭킹 데이터가 존재하지 않습니다.</p>
-        )}
-        {/* 테스트 용 버튼 */}
-        <LikeButton
-          targetType="feeds"
-          targetCode={1}
-          initialIsLiked={false}
-          initialLikeCount={5}
-        />
-      </section>
-    </div>
+        <div className={styles.container}>
+          <div className={styles.filterBar}>
+            <TabMenus
+                className={styles.tabs}
+                tabs={CHALLENGE_TABS}
+                activeStatus={activeTab}
+                onTabChange={(value) => {
+                  setActiveTab(value);
+                  setPage(1);
+                }}
+            />
+          </div>
+
+          {loading ? (
+              <div className={styles.emptyState}>
+                챌린지를 불러오는 중입니다.
+              </div>
+          ) : error ? (
+              <div className={styles.emptyState}>
+                챌린지 목록을 불러오지 못했습니다.
+                {message && <span>{message}</span>}
+              </div>
+          ) : (
+              <>
+                <div className={styles.list}>
+                  {pagedChallenges.length > 0 ? (
+                      pagedChallenges.map((challenge) => (
+                          <Link
+                              key={challenge.code}
+                              to={`/challenge/${challenge.code}`}
+                              className={styles.link}
+                          >
+                            <Card className={styles.card}>
+                              <div className={styles.thumb}>
+                                <ImageBox
+                                    src={challenge.imageUrl}
+                                    alt={challenge.title}
+                                />
+                              </div>
+
+                              <div className={styles.body}>
+                                <div className={styles.head}>
+                          <span className={styles.status}>
+                            {
+                              CHALLENGE_TABS.find(
+                                  (tab) =>
+                                      tab.value === challenge.progressStatus,
+                              )?.label
+                            }
+                          </span>
+
+                                  <h3>{challenge.title}</h3>
+                                </div>
+
+                                <p className={styles.period}>
+                                  {challenge.startDate?.slice(0, 10)} -{" "}
+                                  {challenge.endDate?.slice(0, 10)}
+                                </p>
+
+                                <p className={styles.desc}>
+                                  {challenge.content}
+                                </p>
+                              </div>
+                            </Card>
+                          </Link>
+                      ))
+                  ) : (
+                      <p className={styles.emptyState}>
+                        표시할 챌린지가 없습니다.
+                      </p>
+                  )}
+                </div>
+
+                {challenges.length > 0 && (
+                    <Pagination
+                        pager={pager}
+                        onChangePage={setPage}
+                    />
+                )}
+              </>
+          )}
+        </div>
+      </main>
   );
 };
 
