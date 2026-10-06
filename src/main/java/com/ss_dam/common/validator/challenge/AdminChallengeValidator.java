@@ -10,11 +10,13 @@ import org.springframework.web.server.ResponseStatusException;
 import com.ss_dam.challenge.model.request.AdminChallengeSearch;
 import com.ss_dam.challenge.model.request.AdminChallengeWriteRequest;
 
-  // Validator: 제목·내용 길이, 필수값, 날짜 순서, 페이지 범위, 번호가 양수인지, 허용된 상태값인지 검사
-  //DB 조회 검사 제외 -> ex) requireChallengeExists() 는 기존 AdminChallengeServiceImpl에 작성
-  // 각 서비스에 남기는 검증은 존재 여부, 수정·삭제·완료·복구 가능 상태, DB 저장 결과 검사
-  
- // AdminChallengeValidator: 검색 조건, 챌린지 번호, 제목·내용·목표·기간·공개 상태·포인트·정원, 복구 사유
+// Validator: 제목·내용 길이, 필수값, 날짜 순서, 페이지 범위, 번호가 양수인지, 허용된 상태값인지 검사
+
+// DB 조회 검사 제외 -> ex) requireChallengeExists() 는 기존 AdminChallengeServiceImpl에 작성
+// 각 서비스에 남기는 검증은 존재 여부, 수정·삭제·완료·복구 가능 상태, DB 저장 결과 검사
+
+// AdminChallengeValidator: 검색 조건, 챌린지 번호, 제목·내용·목표·기간·공개 상태·포인트·정원, 복구 사유
+
 @Component
 public class AdminChallengeValidator {
 
