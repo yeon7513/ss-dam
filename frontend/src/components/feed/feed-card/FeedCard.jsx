@@ -27,7 +27,7 @@ function FeedCard({ feed, onClickDetail }) {
         {/* 콘텐츠 (내용) */}
         <div className={styles.detail}>
           <div className={styles.hashtags}>
-            {feed.hashtags.map((tag, idx) => (
+            {(feed.hashtags || []).map((tag, idx) => (
               <Hashtag key={idx} hashName={tag} />
             ))}
           </div>

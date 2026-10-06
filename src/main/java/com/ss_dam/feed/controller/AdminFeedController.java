@@ -9,11 +9,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ss_dam.common.ApiResponse;
 import com.ss_dam.common.pager.PageQuery;
+import com.ss_dam.common.pager.PageResult;
+import com.ss_dam.feed.model.filter.AdminFeedSearchFilter;
+import com.ss_dam.feed.model.response.AdminFeedView;
 import com.ss_dam.feed.model.response.AdminMemberFeedsView;
 import com.ss_dam.feed.service.AdminFeedService;
 
@@ -30,13 +32,15 @@ private AdminFeedService adminFeedService;
 
     // 관리자 피드 목록 조회
     @GetMapping
-    public ResponseEntity<ApiResponse<Void>> loadFeeds(
-            @RequestParam(required = false) String status) {
+    public ResponseEntity<ApiResponse<PageResult<AdminFeedView>>> loadFeeds(
+            @ModelAttribute AdminFeedSearchFilter filter) {
             //status파라미터로 ACTIVE, PRIVATE 상태 구분
             //EX)공개 피드 조회 : GET /api/admin/feeds?status=ACTIVE
 
         // TODO: 검색·페이지네이션·상태 필터 연결
-        return notImplemented();
+        PageResult<AdminFeedView> result = adminFeedService.loadFeeds(filter);
+        
+        return ResponseEntity.ok(ApiResponse.success("관리자 피드 목록 조회 성공", result));
     }
 
     // 관리자 피드 상세 조회

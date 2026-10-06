@@ -48,6 +48,16 @@
     }
   }
 
+  /* 등록/수정 스타일 */
+  &.submit {
+    background-color: v.$succ-color;
+    color: v.$color-white;
+
+    &:hover:not(:disabled) {
+      background-color: v.$grayscale-50;
+    }
+  }
+
   /* 작은 크기 */
   &.sm {
     padding: 0.7px;
