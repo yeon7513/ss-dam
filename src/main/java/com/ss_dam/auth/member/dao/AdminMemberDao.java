@@ -5,6 +5,8 @@ import java.util.Map;
 
 import com.ss_dam.auth.member.model.response.AdminMemberDetailView;
 import com.ss_dam.auth.member.model.response.AdminMemberView;
+import com.ss_dam.challenge.model.response.AdminMemberProofsView;
+import com.ss_dam.feed.model.response.UserFeedView;
 
 public interface AdminMemberDao {
 
@@ -31,11 +33,16 @@ public interface AdminMemberDao {
 
   //상단 통계 - 로그인 횟수
   long countMemberLogins(Long memberCode);
-
+  
   // 회원 상태 변경
   int updateMemberStatus(Map<String, Object> params);
 
-  // 관리자 회원 상태 변경 이력 저장
-  int insertMemberStatusLog(Map<String, Object> params);
+    // 회원 상세 - 인증글 통계
+    AdminMemberProofsView loadMemberProofSummary(
+            Map<String, Object> params);
+
+    // 회원 상세 - 인증글 페이지 목록
+    List<UserFeedView> loadMemberProofs(
+            Map<String, Object> params);
 
 }

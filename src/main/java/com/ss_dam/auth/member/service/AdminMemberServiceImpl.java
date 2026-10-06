@@ -1,5 +1,7 @@
 package com.ss_dam.auth.member.service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,18 +12,30 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.ss_dam.admin.log.service.AdminActivityLogService;
 import com.ss_dam.auth.member.dao.AdminMemberDao;
 import com.ss_dam.auth.member.model.filter.AdminMemberSearchFilter;
 import com.ss_dam.auth.member.model.response.AdminMemberDetailView;
 import com.ss_dam.auth.member.model.response.AdminMemberView;
+import com.ss_dam.challenge.model.response.AdminMemberProofsView;
+import com.ss_dam.common.pager.PageQuery;
 import com.ss_dam.common.pager.PageResult;
 import com.ss_dam.common.pager.Pager;
+import com.ss_dam.common.validator.PageQueryValidator;
+import com.ss_dam.feed.model.response.UserFeedView;
 
 @Service
 public class AdminMemberServiceImpl implements AdminMemberService{
 
   @Autowired 
   private AdminMemberDao adminMemberDao;
+
+
+  @Autowired 
+  private PageQueryValidator pageQueryValidator;
+
+  @Autowired
+	private AdminActivityLogService adminActivityLogService;
 
   //관리자 회원 목록 조회 및 검색
   @Override 
@@ -164,12 +178,46 @@ private void changeMemberStatus(
                 "현재 회원 상태에서는 요청한 변경을 할 수 없습니다.");
     }
 
-    int inserted = adminMemberDao.insertMemberStatusLog(params);
-
-    if (inserted != 1) {
-        throw new IllegalStateException(
-                "회원 상태 변경 이력 저장에 실패했습니다.");
-    }
+    adminActivityLogService.recordActivity(
+        adminCode,
+        "member",
+        memberCode,
+        processType,
+        reason,
+        LocalDateTime.now(ZoneId.of("Asia/Seoul")));
 }
 
+// 회원 상세 - 인증글 통계와 페이지 목록
+@Override
+@Transactional(readOnly = true)
+public AdminMemberProofsView loadMemberProofs(
+        Long memberCode, PageQuery pageQuery) {
+
+    pageQueryValidator.validate(pageQuery);
+
+    if (adminMemberDao.loadMember(memberCode) == null) {
+        throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "존재하지 않는 회원입니다.");
+    }
+
+    Map<String, Object> params = new HashMap<>();
+    params.put("memberCode", memberCode);
+
+    AdminMemberProofsView result =
+            adminMemberDao.loadMemberProofSummary(params);
+
+    Pager pager = new Pager(
+            pageQuery, result.getTotalProofCount());
+
+    params.put("offset", pageQuery.getOffset());
+    params.put("perPage", pager.getPerPage());
+
+    List<UserFeedView> proofs =
+            adminMemberDao.loadMemberProofs(params);
+
+    result.setProofs(PageResult.of(proofs, pager));
+
+    return result;
+}
 }
