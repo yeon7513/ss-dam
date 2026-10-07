@@ -12,22 +12,25 @@ const ProductDetail = () => {
   const navigate = useNavigate();
   const { code } = useParams();
 
-  const { data, loading, error } = useLoadData(`/api/market/products/${code}`)
+  const { data, loading, error } = useLoadData(`/api/market/products/${code}`);
 
   const detail = data || {};
 
   const handleClickDeletePost = () => {
     console.log("거래글 삭제");
-  }
+  };
 
   // 거래 신청
-  const { handleSubmit, error: connectionError } = useSubmitData("/api/chat/rooms", "POST");
+  const { handleSubmit, error: connectionError } = useSubmitData(
+    "/api/chat/rooms",
+    "POST",
+  );
   const handleTradeRequest = async () => {
     const requestData = {
       type: "DEAL",
       targetCode: detail.code,
       responderCode: detail.memberProfile.code,
-    }
+    };
 
     const { data: roomId, success } = await handleSubmit(requestData);
 
@@ -36,14 +39,18 @@ const ProductDetail = () => {
     } else {
       alert(connectionError);
     }
-  }
+  };
 
   if (loading) {
-    return <div>거래글 정보를 불러오고 있습니다.</div>
+    return <div>거래글 정보를 불러오고 있습니다.</div>;
   }
 
   if (error) {
-    if (error?.status === undefined || error?.status === 404 || !error?.success) {
+    if (
+      error?.status === undefined ||
+      error?.status === 404 ||
+      !error?.success
+    ) {
       navigate("/error/404");
     } else {
       navigate(`/error/${error?.status}`);
@@ -58,7 +65,9 @@ const ProductDetail = () => {
       <div className={styles.container}>
         {/* 브레드크럼 */}
         <div>
-          <button type="button" onClick={() => navigate(-1)}>목록으로</button>
+          <button type="button" onClick={() => navigate(-1)}>
+            목록으로
+          </button>
           브레드크럼
         </div>
 
@@ -95,12 +104,16 @@ const ProductDetail = () => {
         {/* 수정 & 삭제 버튼 */}
         <div>
           <Link to={`/market/edit/${code}`}>수정</Link>
-          <Button onClick={handleClickDeletePost}>삭제</Button>
+          <Button btnStyle="danger" onClick={handleClickDeletePost}>
+            삭제
+          </Button>
         </div>
 
         {/* 채팅 요청 */}
         <div>
-          <Button onClick={() => handleTradeRequest()}>거래 신청</Button>
+          <Button btnStyle="submit" onClick={() => handleTradeRequest()}>
+            거래 신청
+          </Button>
         </div>
       </div>
     </main>

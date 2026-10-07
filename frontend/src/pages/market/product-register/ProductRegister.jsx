@@ -55,7 +55,7 @@ const ProductRegister = () => {
             <CategorySelectBox categories={categories} setPost={setPost} />
           }
           cancelUrl="/market"
-          submitText="물품 등록"
+          submitText="등록"
         >
           <div>
             <label htmlFor="price">가격</label>

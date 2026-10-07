@@ -1,9 +1,9 @@
-import SockJS from "sockjs-client";
-import { Client } from "@stomp/stompjs";
-import { HOST } from "../lib/url.js";
+import { Client } from '@stomp/stompjs';
+import SockJS from 'sockjs-client';
+import { HOST } from '../lib/url.js';
 
 let stompClient = null;
-let isConnected = false;
+// let isConnected = false;
 const connectCallbacks = []; // 연결 완료 시 실행할 콜백 큐
 
 export const connectWebSocket = (onConnectCallback, onErrorCallback) => {
@@ -25,17 +25,17 @@ export const connectWebSocket = (onConnectCallback, onErrorCallback) => {
   // SockJS를 사용한 웹소켓 클라이언트 생성
   stompClient = new Client({
     webSocketFactory: () => new SockJS(`${HOST}/ws`),
-    debug: (str) => console.log("[STOMP DEBUG]: ", str),
+    debug: (str) => console.log('[STOMP DEBUG]: ', str),
     reconnectDelay: 5000,
     heartbeatIncoming: 4000,
     heartbeatOutgoing: 4000,
     onConnect: (frame) => {
-      console.log("STOMP Connected: ", frame);
-      isConnected = true;
+      console.log('STOMP Connected: ', frame);
+      // isConnected = true;
       flushCallbacks(); // 대기 중인 모든 구독 콜백 일괄 실행
     },
     onStompError: (frame) => {
-      console.error("STOMP Error: ", frame);
+      console.error('STOMP Error: ', frame);
       if (onErrorCallback) {
         onErrorCallback(frame);
       }
@@ -49,7 +49,7 @@ export const connectWebSocket = (onConnectCallback, onErrorCallback) => {
 const flushCallbacks = () => {
   while (connectCallbacks.length > 0) {
     const callback = connectCallbacks.shift();
-    if (typeof callback === "function") {
+    if (typeof callback === 'function') {
       callback();
     }
   }
@@ -62,8 +62,8 @@ export const subscribeToChatRoom = (roomId, onMessageCallback) => {
   }
 
   return stompClient.subscribe(`/sub/chat/room/${roomId}`, (message) => {
-    const parseData = typeof message.body === "string"
-      ? JSON.parse(message.body) : message;
+    const parseData =
+      typeof message.body === 'string' ? JSON.parse(message.body) : message;
 
     onMessageCallback(parseData);
   });
@@ -72,18 +72,24 @@ export const subscribeToChatRoom = (roomId, onMessageCallback) => {
 // 개인용 목록 & 알림 채널 구독
 export const subscribeToUsers = (memberCode, onUpdateCallback) => {
   if (!stompClient || !stompClient.connected) {
-    console.warn("stompClient가 아직 연결되지 않아 구독할 수 없습니다. (memberCode:", memberCode, ")");
+    console.warn(
+      'stompClient가 아직 연결되지 않아 구독할 수 없습니다. (memberCode:',
+      memberCode,
+      ')',
+    );
     return null;
   }
 
-  return stompClient.subscribe(`/sub/chat/users/${memberCode}/rooms`, (message) => {
-      const parseData = typeof message.body === "string"
-        ? JSON.parse(message.body) : message;
+  return stompClient.subscribe(
+    `/sub/chat/users/${memberCode}/rooms`,
+    (message) => {
+      const parseData =
+        typeof message.body === 'string' ? JSON.parse(message.body) : message;
 
       onUpdateCallback(parseData);
     },
-  )
-}
+  );
+};
 
 // 메시지 전송
 export const sendMessage = (destination, payload) => {
@@ -99,6 +105,6 @@ export const sendMessage = (destination, payload) => {
 export const disconnectWebSocket = () => {
   if (stompClient && stompClient.connected) {
     stompClient.disconnect;
-    console.log("웹소켓 연결 종료");
+    console.log('웹소켓 연결 종료');
   }
 };

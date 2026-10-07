@@ -32,7 +32,9 @@ export default function FeedManage() {
     `/api/admin/feeds${queryString}`,
   );
 
-  const { data: challengeData } = useLoadData("/api/admin/challenge?size=100");
+  const { data: challengeData } = useLoadData(
+    "/api/admin/challenge?perPage=100",
+  );
 
   const categoryOptions = useMemo(() => {
     if (!challengeData) return [];
