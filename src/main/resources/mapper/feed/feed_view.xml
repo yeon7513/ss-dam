@@ -160,6 +160,7 @@
   <select id="loadFeeds" resultMap="UserFeedViewMap">
     SELECT
     <include refid="FeedBasicColumns" />,
+    f.content,
     i.path AS thumbnail
     FROM (
     <!-- 부모 테이블을 정확히 perPage만큼 끊어서 가져온 후 조인  -->
@@ -194,10 +195,10 @@
         f.hitcount + (
         SELECT COUNT(*)
         FROM FEED_LIKE
-        WHERE feed_code = f.code ) * 2) DESC, f.code DESC
+        WHERE feed_code = f.code ) * 2) DESC, f.code DESC, fh.order_seq ASC
       </when>
       <otherwise>
-        ORDER BY f.created_at DESC, f.code DESC
+        ORDER BY f.created_at DESC, f.code DESC, fh.order_seq ASC
       </otherwise>
     </choose>
   </select>
@@ -215,7 +216,7 @@
     <!-- 해시태그 -->
     LEFT JOIN FEED_HASHTAG fh ON f.code = fh.feed_code
     WHERE f.code = #{feedCode}
-    ORDER BY i.order_seq ASC
+    ORDER BY i.order_seq ASC, fh.order_seq ASC
   </select>
 
   <!-- 피드 수정용 기존 데이터 조회 -->
@@ -232,15 +233,15 @@
     LEFT JOIN FEED_HASHTAG fh ON f.code = fh.feed_code
     WHERE f.code = #{feedCode}
     AND f.mem_code = #{memberCode}
-  </select>  
-  
+  </select>
+
   <select id="countFeedsByChallenge" resultType="int">
-  	SELECT COUNT(*)
-  	FROM FEED
-  	WHERE chal_code = #{chalCode}
-  	AND mem_code = #{memCode}
-  	AND status = 'active'
-  	AND delete_yn = 0
+    SELECT COUNT(*)
+    FROM FEED
+    WHERE chal_code = #{chalCode}
+    AND mem_code = #{memCode}
+    AND status = 'active'
+    AND delete_yn = 0
   </select>
 
 </mapper>

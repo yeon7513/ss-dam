@@ -1,5 +1,18 @@
 package com.ss_dam.comment.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ss_dam.auth.login.model.response.AuthProfile;
 import com.ss_dam.auth.login.model.response.MemberProfile;
 import com.ss_dam.comment.model.request.CommentCreate;
 import com.ss_dam.comment.model.request.CommentUpdate;
@@ -8,18 +21,18 @@ import com.ss_dam.comment.service.UserCommentService;
 import com.ss_dam.common.ApiResponse;
 import com.ss_dam.common.pager.PageQuery;
 import com.ss_dam.common.pager.PageResult;
+
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/comments")
 public class UserCommentController {
 
-  @Autowired
-  UserCommentService userCommentService;
+  private final UserCommentService userCommentService;
+
+  public UserCommentController(UserCommentService userCommentService) {
+    this.userCommentService = userCommentService;
+  }
 
   // 댓글 목록 조회
   @GetMapping("/{feedCode}")
@@ -36,16 +49,17 @@ public class UserCommentController {
     return ResponseEntity.ok(ApiResponse.success("댓글 목록 조회 성공", comments));
   }
 
-  //댓글 등록 (임시)
+  //댓글 등록용 
   @PostMapping
   public ResponseEntity<ApiResponse<CommentCreate>> registerComment(
-      @RequestBody CommentCreate comment, HttpSession session) {
+      @RequestBody CommentCreate comment,
+      HttpSession session) {
 
     // 로그인한 사용자만 댓글 작성 가능
     // 클라이언트쪽에서 가져올 필요 없이 서버 세션에서 사용자 PK를 가져옴
 
-    // 현재는 임시로 하드코딩 -> 로그인 해제 후 삭제할 것
-    comment.setMemCode(2L);
+    AuthProfile loginUser = (AuthProfile) session.getAttribute("loginUser");
+    comment.setMemCode(loginUser.getCode());
 
     CommentCreate createdComment = userCommentService.registerComment(comment);
 
@@ -54,10 +68,14 @@ public class UserCommentController {
         .body(ApiResponse.success("댓글 등록 성공", createdComment));
   }
 
-  //댓글 수정 (임시)
+
+
+  //댓글 수정 
   @PatchMapping("/{commentCode}")
-  public ResponseEntity<ApiResponse<Void>> updateComment(@PathVariable Long commentCode,
-      @RequestParam Long memCode, @RequestBody CommentUpdate request) {
+  public ResponseEntity<ApiResponse<Void>> updateComment(
+    @PathVariable Long commentCode,
+    @RequestBody CommentUpdate request,
+    HttpSession session) {
     //매개변수 : 댓글 번호, 회원 번호, 내용
     //임시로 쿼리 파라미터를 받는 방식, 나중에 memCode 제거하고 세션에서 가져오기
 

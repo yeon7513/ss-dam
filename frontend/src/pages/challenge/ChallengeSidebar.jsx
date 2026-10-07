@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
-import { CHALLENGE_TABS } from "../../lib/challengeTabs";
-import TabMenus from "../../components/common/tab-menus/TabMenus";
-import styles from "./ChallengeSidebar.module.scss";
+import { useEffect, useState } from 'react';
+import TabMenus from '../../components/common/tab-menus/TabMenus';
+import { CHALLENGE_TABS } from '../../lib/challengeTabs';
+import { formatImagePath } from '../../utils/formatImagePath';
+import styles from './ChallengeSidebar.module.scss';
 
 const ChallengeSidebar = ({ selectedCode, onSelectChallenge }) => {
-  const [activeStatus, setActiveStatus] = useState("IN_PROGRESS");
+  const [activeStatus, setActiveStatus] = useState('IN_PROGRESS');
   const [challengeList, setChallengeList] = useState([]);
 
   const currentTabLabel = CHALLENGE_TABS.find(
@@ -18,7 +19,7 @@ const ChallengeSidebar = ({ selectedCode, onSelectChallenge }) => {
           `/api/challenge?progressStatus=${activeStatus}`,
         );
         const result = await response.json();
-        console.log("사이드바 API 응답 결과:", result);
+        console.log('사이드바 API 응답 결과:', result);
 
         if (response.ok && result.success) {
           const list = result.data || [];
@@ -29,7 +30,7 @@ const ChallengeSidebar = ({ selectedCode, onSelectChallenge }) => {
           }
         }
       } catch (error) {
-        console.error("챌린지 목록 조회 오류", error);
+        console.error('챌린지 목록 조회 오류', error);
       }
     };
 
@@ -53,13 +54,13 @@ const ChallengeSidebar = ({ selectedCode, onSelectChallenge }) => {
           return (
             <div
               key={item.code}
-              className={`${styles.card} ${isSelected ? styles.selectedCard : ""}`}
+              className={`${styles.card} ${isSelected ? styles.selectedCard : ''}`}
               onClick={() => onSelectChallenge && onSelectChallenge(item.code)}
             >
               <div className={styles.thumbnailBox}>
                 {item.imageUrl ? (
                   <img
-                    src={item.imageUrl}
+                    src={formatImagePath(item.imageUrl)}
                     alt={item.title}
                     className={styles.thumbImg}
                   />

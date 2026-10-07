@@ -1,17 +1,22 @@
 package com.ss_dam.common.image.service;
 
-import com.ss_dam.common.image.dao.ImageDao;
-import com.ss_dam.common.image.model.Images;
+import java.io.File;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
+import com.ss_dam.common.image.dao.ImageDao;
+import com.ss_dam.common.image.model.Images;
 
 @Service
 public class ImageServiceImpl implements ImageService {
@@ -116,8 +121,7 @@ public class ImageServiceImpl implements ImageService {
       return image;
 
     } catch (Exception e) {
-      e.printStackTrace();
-      return null;
+      throw new IllegalStateException("이미지 업로드에 실패했습니다.", e);
     }
   }
 

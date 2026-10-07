@@ -1,0 +1,10 @@
+@use "../../../../scss/variables.scss" as v;
+@use "../../../../scss/mixin.scss" as mix;
+
+.closeButton {
+
+  .closeIcon {
+    @include mix.flex;
+    font-size: 1.25rem;
+  }
+}

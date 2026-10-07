@@ -59,6 +59,14 @@ public class AdminChallengeDaoImpl implements AdminChallengeDao {
                 params);
     }
 
+    // 수정 시 이미지 논리 삭제
+    @Override
+    public int deleteChallengeImages(Long code) {
+        return sql.update(
+                "adminChallenge.deleteChallengeImages",
+                Map.of("code", code));
+    }
+
     // 삭제 제한을 위한 참여 이력·인증글 존재 여부 확인
     @Override
     public boolean hasChallengeHistory(Long code) {

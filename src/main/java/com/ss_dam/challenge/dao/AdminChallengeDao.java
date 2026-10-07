@@ -25,6 +25,9 @@ public interface AdminChallengeDao {
     // 수정
     int updateChallenge(Map<String, Object> params);
 
+    // 수정 시 이미지 논리 삭제
+    int deleteChallengeImages(Long code);
+
     // 삭제 제한을 위한 참여·인증 이력 확인
     boolean hasChallengeHistory(Long code);
 

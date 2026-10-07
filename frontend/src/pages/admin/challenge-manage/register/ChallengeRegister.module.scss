@@ -1,0 +1,246 @@
+.container {
+  min-width: 0;
+  padding: 28px;
+  background: #f8f9fb;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+
+  h1 {
+    margin: 0;
+    font-size: 22px;
+  }
+
+  button {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #d8dde3;
+    border-radius: 50%;
+    background: #fff;
+    color: #66707a;
+    cursor: pointer;
+  }
+}
+
+.form {
+  padding: 22px;
+  border: 1px solid #e2e6eb;
+  background: #fff;
+}
+
+.fields {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.topGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: 22px;
+}
+
+.sectionLabel {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.imagePlaceholder {
+  display: flex;
+  min-height: 300px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px;
+  background: #f1f3f7;
+  color: #737c87;
+  text-align: center;
+
+  span {
+    font-size: 14px;
+  }
+
+  small {
+    font-size: 12px;
+  }
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: start;
+  gap: 16px;
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.field,
+.contentField {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 8px;
+  color: #374151;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.field input,
+.numberInput,
+.contentField textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 11px 12px;
+  border: 1px solid #e2e6eb;
+  border-radius: 3px;
+  background: #f5f6f9;
+  color: #374151;
+  font: inherit;
+  font-weight: 400;
+
+  &::placeholder {
+    color: #939aa4;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #879b6d;
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    background: #eef0f3;
+    color: #a0a7b0;
+    cursor: not-allowed;
+  }
+}
+
+.optionGroup {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+
+  legend {
+    margin-bottom: 8px;
+    padding: 0;
+    font-size: 13px;
+    font-weight: 600;
+  }
+}
+
+.radioRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+
+  label {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+  }
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 7px;
+  color: #66707a;
+  font-size: 12px;
+}
+
+.numberInput {
+  margin-top: 3px;
+}
+
+.contentField {
+  margin-top: 24px;
+
+  textarea {
+    min-height: 240px;
+    resize: vertical;
+    line-height: 1.7;
+  }
+
+  small {
+    color: #939aa4;
+    font-size: 11px;
+    font-weight: 400;
+    text-align: right;
+  }
+}
+
+.error {
+  margin: 16px 0 0;
+  color: #b91c1c;
+  font-size: 13px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 24px;
+
+  button {
+    min-width: 76px;
+    padding: 10px 18px;
+    border-radius: 3px;
+    font-size: 13px;
+    cursor: pointer;
+
+    &:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.submitButton {
+  border: 1px solid #4b5563;
+  background: #4b5563;
+  color: #fff;
+}
+
+.cancelButton {
+  border: 1px solid #d8dde3;
+  background: #fff;
+  color: #66707a;
+}
+
+@media (max-width: 900px) {
+  .topGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .imagePlaceholder {
+    min-height: 180px;
+  }
+}
+
+@media (max-width: 520px) {
+  .container {
+    padding: 14px;
+  }
+
+  .form {
+    padding: 16px;
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -97,8 +97,10 @@
     background-color: #216325;
   }
 
+  &:disabled,
   &.joined {
-    background-color: #a5d6a7;
+    background-color: #e0e0e0;
+    color: #888888;
     cursor: not-allowed;
   }
 }

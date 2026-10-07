@@ -1,7 +1,7 @@
 import { IoChatbubbleEllipses, IoHeartSharp } from "react-icons/io5";
 import Button from "../../../components/common/button/Button";
 import Hashtag from "../../../components/feed/hashtag/Hashtag";
-import ProfileCard from "../../../components/profile-card/ProfileCard";
+import ProfileCard from "../../../components/auth/profile-card/ProfileCard";
 import { formatCreatedAt } from "../../../utils/formatDate";
 import styles from "./FeedDetail.module.scss";
 import Slide from "../../../components/common/slide/Slide.jsx";
@@ -10,6 +10,7 @@ import { useLoadData } from "../../../hooks/useLoadData.js";
 import { useNavigate } from "react-router-dom";
 import { useSubmitData } from "../../../hooks/useSubmitData.js";
 import Comments from "../../../components/feed/comment/Comments.jsx";
+import CloseButton from "../../../components/common/button/close/CloseButton.jsx";
 
 const FeedDetail = ({ code, onClose }) => {
   const navigate = useNavigate();
@@ -53,14 +54,16 @@ const FeedDetail = ({ code, onClose }) => {
     return <div>데이터를 불러오는 데 실패했습니다. {error}</div>;
   }
 
+  console.log(detail);
+
   return (
     <div className={cn(styles.feedDetail)}>
-      <div className={styles.title}>
-        <div>
-          <button type="button" onClick={onClose}>X</button>
-          <span>{detail.chalTitle}</span>
-          <h2>{detail.title}</h2>
+      <div className={styles.header}>
+        <div className={styles.titleBox}>
+          <span className={styles.challengeName}>{detail.challengeName}</span>
+          <h2 className={styles.title}>{detail.title}</h2>
         </div>
+        <CloseButton className={styles.closeModalButton} onClick={onClose} />
       </div>
 
       <div className={styles.container}>
@@ -85,16 +88,14 @@ const FeedDetail = ({ code, onClose }) => {
           </div>
 
           {/* 수정 & 삭제 버튼 - 로그인한 사용자 전용 */}
-          <div>
-            <ul>
-              <li>
-                <Button type="button" onClick={() => navigate(`edit/${code}`)}>수정</Button>
-              </li>
-              <li>
-                <Button type="button" onClick={handleDeleteFeed}>삭제</Button>
-              </li>
-            </ul>
-          </div>
+          <ul className={styles.controlButtonGroup}>
+            <li>
+              <Button btnStyle="text" type="button" onClick={() => navigate(`edit/${code}`)}>수정</Button>
+            </li>
+            <li>
+              <Button btnStyle="text" type="button" onClick={handleDeleteFeed}>삭제</Button>
+            </li>
+          </ul>
 
           {/* 피드 정보 (날짜, 좋아요 수, 댓글 수 등) */}
           <div className={styles.meta}>

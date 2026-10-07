@@ -3,4 +3,12 @@
 
 .comment {
 
+  .profile {
+    @include mix.flex($jc: space-between, $ai: center);
+
+    .more {
+      padding: 0.25rem;
+      font-size: 1rem;
+    }
+  }
 }

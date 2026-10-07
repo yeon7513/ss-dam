@@ -1,7 +1,7 @@
 import { IoHeartSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import Card from "../../common/card/Card";
-import ProfileCard from "../../profile-card/ProfileCard";
+import ProfileCard from "../../auth/profile-card/ProfileCard";
 import styles from "./ProductCard.module.scss";
 import ImageBox from "../../common/image-box/ImageBox.jsx";
 

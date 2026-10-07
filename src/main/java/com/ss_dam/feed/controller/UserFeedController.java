@@ -85,13 +85,9 @@ public class UserFeedController {
   @PostMapping
   ResponseEntity<ApiResponse<Long>> registerFeed(FeedCreate feedCreate, HttpSession session) {
 
-    //    Login loginUser = (Login) session.getAttribute("loginUser");
-    //    feedCreate.setMemCode(loginUser.getCode());
-    //    feedCreate.setCreatedBy(loginUser.getMemberId());
-
-    // 임시로 회원 번호 1로...
-    feedCreate.setMemCode(1L);
-    feedCreate.setCreatedBy("user01");
+    AuthProfile loginUser = (AuthProfile) session.getAttribute("loginUser");
+    feedCreate.setMemCode(loginUser.getCode());
+    feedCreate.setCreatedBy(loginUser.getId());
 
     Long newFeedCode = userFeedService.registerFeed(feedCreate);
 
@@ -109,11 +105,8 @@ public class UserFeedController {
       HttpSession session) {
 
     // 로그인한 사용자가 피드를 작성한 사용자가 맞는지
-    //    Login loginUser = (Login) session.getAttribute("loginUser");
-    //    Long memberCode = (loginUser != null) ? loginUser.getCode() : null;
-
-    // 임시로 회원 번호 지정
-    Long memberCode = 1L;
+    AuthProfile loginUser = (AuthProfile) session.getAttribute("loginUser");
+    Long memberCode = (loginUser != null) ? loginUser.getCode() : null;
 
     FeedEditView feedDetailForEdit = userFeedService.findFeedDetailForEdit(feedCode, memberCode);
 
@@ -138,21 +131,17 @@ public class UserFeedController {
           .body(ApiResponse.fail("잘못된 요청입니다. 피드 식별자가 일치하지 않습니다."));
     }
 
-    //    Login loginUser = (Login) session.getAttribute("loginUser");
+    AuthProfile loginUser = (AuthProfile) session.getAttribute("loginUser");
     //    // -> 로그인하지 않은 사용자의 경우
-    //    if (loginUser == null) {
-    //      return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-    //          .body(ApiResponse.fail("로그인이 필요한 서비스입니다."));
-    //    }
-    //
-    //    // -> 로그인한 사용자 본인이 작성한 글이 맞는지 확인
-    //    if (!loginUser.getCode().equals(feedUpdate.getMemCode())) {
-    //      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponse.fail("수정 권한이 없습니다."));
-    //    }
+    if (loginUser == null) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+          .body(ApiResponse.fail("로그인이 필요한 서비스입니다."));
+    }
 
-    // 임시로 하드 코딩!
-    feedUpdate.setMemCode(1L);
-    feedUpdate.setUpdatedBy("user01");
+    //    // -> 로그인한 사용자 본인이 작성한 글이 맞는지 확인
+    if (!loginUser.getCode().equals(feedUpdate.getMemCode())) {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponse.fail("수정 권한이 없습니다."));
+    }
 
     userFeedService.updateFeed(feedUpdate);
 
@@ -165,22 +154,19 @@ public class UserFeedController {
   ResponseEntity<ApiResponse<Void>> deleteFeed(@PathVariable Long feedCode, Long memCode,
       HttpSession session) {
 
-    //    Login loginUser = (Login) session.getAttribute("loginUser");
+    AuthProfile loginUser = (AuthProfile) session.getAttribute("loginUser");
     //    // -> 로그인하지 않은 사용자의 경우
-    //    if (loginUser == null) {
-    //      return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-    //          .body(ApiResponse.fail("로그인이 필요한 서비스입니다."));
-    //    }
-    //
-    //    // -> 로그인한 사용자 본인이 작성한 글이 맞는지 확인
-    //    if (!loginUser.getCode().equals(memCode)) {
-    //      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponse.fail("삭제 권한이 없습니다."));
-    //    }
-    //
-    //    String updatedBy = loginUser.getMemberId();
+    if (loginUser == null) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+          .body(ApiResponse.fail("로그인이 필요한 서비스입니다."));
+    }
 
-    // 임시로 하드코딩
-    String updatedBy = "user01";
+    //    // -> 로그인한 사용자 본인이 작성한 글이 맞는지 확인
+    if (!loginUser.getCode().equals(memCode)) {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponse.fail("삭제 권한이 없습니다."));
+    }
+
+    String updatedBy = loginUser.getId();
 
     userFeedService.deleteFeed(feedCode, updatedBy);
 

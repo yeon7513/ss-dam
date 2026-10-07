@@ -2,7 +2,7 @@ import cn from "classnames";
 import { useState } from "react";
 import { handleSetField } from "../../../utils/changeHandler";
 import TextInput from "../../forms/text-input/TextInput";
-import CancelButton from "../button/CancelButton";
+import CancelButton from "../button/cancel/CancelButton.jsx";
 import Button from "./../button/Button";
 import UploadImage from "./../upload-images/UploadImages";
 import styles from "./Editor.module.scss";
@@ -16,6 +16,7 @@ function Editor({
   setPost,
   cancelUrl = "/feed",
   submitText = "등록",
+  extraOptions = null, // 관리자 전용 등록 옵션
 }) {
   const [selectedImages, setSelectedImages] = useState(post?.imagePaths || []);
 
@@ -49,11 +50,19 @@ function Editor({
             onChange={(e) => handleSetField(e, setPost)}
           />
         </div>
-        <div className={styles.images}>
+        <div className={styles.optionGroup}>
           <UploadImage
             selectedImages={selectedImages}
             setSelectedImages={setSelectedImages}
           />
+          {
+            // 관리자 전용 옵션 영역
+            extraOptions && (
+              <div className={styles.extra}>
+                {extraOptions}
+              </div>
+            )
+          }
         </div>
         <div className={styles.content}>
           <textarea
