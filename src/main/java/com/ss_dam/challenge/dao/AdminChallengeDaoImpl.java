@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.ss_dam.challenge.model.request.AdminChallengeSearch;
@@ -14,8 +13,11 @@ import com.ss_dam.challenge.model.response.AdminChallengeListView;
 @Repository
 public class AdminChallengeDaoImpl implements AdminChallengeDao {
 
-    @Autowired
-    private SqlSession sql;
+    private final SqlSession sql;
+
+    public AdminChallengeDaoImpl(SqlSession sql) {
+			this.sql = sql;
+    }
 
     // 챌린지 목록 - 전체 건수
     @Override

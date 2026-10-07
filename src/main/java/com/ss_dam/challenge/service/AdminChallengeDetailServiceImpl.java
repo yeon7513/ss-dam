@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,14 +33,19 @@ import com.ss_dam.common.validator.challenge.AdminChallengeValidator;
 public class AdminChallengeDetailServiceImpl
         implements AdminChallengeDetailService {
 
-    @Autowired
-    private AdminChallengeDetailDao adminChallengeDetailDao;
+	private final AdminChallengeDetailDao adminChallengeDetailDao;
+	private final AdminChallengeValidator adminChallengeValidator;
+	private final PageQueryValidator pageQueryValidator;
 
-    @Autowired
-    private AdminChallengeValidator adminChallengeValidator;
+	public AdminChallengeDetailServiceImpl (
+		AdminChallengeDetailDao adminChallengeDetailDao,
+		AdminChallengeValidator adminChallengeValidator,
+		PageQueryValidator pageQueryValidator) {
 
-    @Autowired
-    private PageQueryValidator pageQueryValidator;
+		this.adminChallengeDetailDao = adminChallengeDetailDao;
+		this.adminChallengeValidator = adminChallengeValidator;
+		this.pageQueryValidator = pageQueryValidator;
+		}
 
     // 챌린지 상세 조회
     @Override

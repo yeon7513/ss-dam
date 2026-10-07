@@ -34,7 +34,6 @@ public class AdminChallengeServiceImpl implements AdminChallengeService {
 	private final PageQueryValidator pageQueryValidator;
 	private final AdminActivityLogService adminActivityLogService;
 
-	// 생성자
 	public AdminChallengeServiceImpl (AdminChallengeDao adminChallengeDao, 
 								ImageService imageService,
                 AdminChallengeValidator adminChallengeValidator, 

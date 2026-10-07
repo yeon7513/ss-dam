@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,15 +26,18 @@ import com.ss_dam.feed.model.response.UserFeedView;
 @Service
 public class AdminMemberServiceImpl implements AdminMemberService{
 
-  @Autowired 
-  private AdminMemberDao adminMemberDao;
+	private final AdminMemberDao adminMemberDao;
+	private final PageQueryValidator pageQueryValidator;
+	private final AdminActivityLogService adminActivityLogService;
 
-
-  @Autowired 
-  private PageQueryValidator pageQueryValidator;
-
-  @Autowired
-	private AdminActivityLogService adminActivityLogService;
+	public AdminMemberServiceImpl(
+		AdminMemberDao adminMemberDao,
+		PageQueryValidator pageQueryValidator,
+		AdminActivityLogService adminActivityLogService) {
+		this.adminMemberDao = adminMemberDao;
+		this.pageQueryValidator = pageQueryValidator;
+		this.adminActivityLogService = adminActivityLogService;
+	}
 
   //관리자 회원 목록 조회 및 검색
   @Override 

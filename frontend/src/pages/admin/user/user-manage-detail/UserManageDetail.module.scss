@@ -1,5 +1,5 @@
-@use "../../../../scss/variables.scss" as v;
-@use "../../../../scss/mixin.scss" as mix;
+@use '../../../../scss/variables.scss' as v;
+@use '../../../../scss/mixin.scss' as mix;
 
 .container {
   padding: 28px;
@@ -87,48 +87,68 @@
 
 .profileInfo {
   min-width: 0;
+  align-self: center;
 }
 
 .identity {
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-wrap: wrap;
-  gap: 6px;
-  overflow-wrap: anywhere;
+  gap: 10px;
+  position: relative;
+  top: -30px;
 
   strong {
-    font-size: 15px;
+    font-size: 17px;
+    font-weight: 700;
     color: #252b33;
   }
 }
 
+.memberName {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px; // 이모티콘과 이름 사이 간격
+}
+
+.ratingIcon {
+  font-size: 20px;
+  line-height: 1;
+}
+
 .status {
-  padding: 3px 7px;
+  padding: 3px 8px;
   border-radius: 12px;
   background: #f0f2f5;
-  font-size: 11px;
+  font-size: 13px;
   color: #505966;
 }
 
 .memberId {
-  font-size: 12px;
+  font-size: 15px;
   color: #687180;
 }
 
 .dates {
   display: flex;
+  justify-content: flex-end;
   flex-wrap: wrap;
   gap: 4px 10px;
   margin-top: 8px;
-  font-size: 10px;
+  font-size: 11px;
+  line-height: 1.5;
   color: #87909d;
+  text-align: right;
+  position: relative;
+  top: -8px;
 }
 
 .details {
   display: grid;
   gap: 12px;
-  margin: 16px 0 0;
-  font-size: 12px;
+  margin: 25px 0 0;
+  font-size: 16px;
 
   > div {
     display: flex;
@@ -175,7 +195,7 @@
   }
 
   strong {
-    font-size: 17px;
+    font-size: 22px;
     color: #252b33;
     overflow-wrap: anywhere;
     max-width: 90%;

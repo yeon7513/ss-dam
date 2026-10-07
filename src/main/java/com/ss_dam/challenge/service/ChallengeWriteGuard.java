@@ -3,7 +3,6 @@ package com.ss_dam.challenge.service;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -26,8 +25,11 @@ import com.ss_dam.challenge.model.response.ChallengeWriteState;
 @Service
 public class ChallengeWriteGuard {
 
-    @Autowired
-    private UserChallengeDao userChallengeDao;
+	private final UserChallengeDao userChallengeDao;
+
+	public ChallengeWriteGuard(UserChallengeDao userChallengeDao) {
+		this.userChallengeDao = userChallengeDao;
+	}
 
     @Transactional(propagation = Propagation.MANDATORY)
     public ChallengeWriteState checkAndLock(Long code) {
