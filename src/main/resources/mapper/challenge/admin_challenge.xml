@@ -246,6 +246,15 @@
 
     </update>
 
+    <!-- 수정 시 이미지 논리 삭제-->
+    <update id="deleteChallengeImages" parameterType="map">
+        UPDATE IMAGES
+        SET DELETE_YN = 1
+        WHERE TARGET_CODE = #{code}
+        AND TYPE = 'challenge'
+        AND DELETE_YN = 0
+    </update>
+
     <!-- 삭제 제한을 위한 참여·인증 이력 확인 -->
     <!-- 취소된 참여와 삭제된 인증글도 이력에 포함 -->
     <select id="hasChallengeHistory"

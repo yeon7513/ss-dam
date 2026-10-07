@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { formatImagePath } from '../../../utils/formatImagePath';
 
 import DashboardHeader from '../../../components/admin/dashboard-header/DashboardHeader';
 import Pagination from '../../../components/common/pagination/Pagination';
@@ -166,7 +167,7 @@ export default function ChallengeManage() {
               <div className={styles.thumbnail}>
                 {challenge.thumbnail ? (
                   <img
-                    src={challenge.thumbnail}
+                    src={formatImagePath(challenge.thumbnail)}
                     alt={`${challenge.title} 대표 이미지`}
                   />
                 ) : (

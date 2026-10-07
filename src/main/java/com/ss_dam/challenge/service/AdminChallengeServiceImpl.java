@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.ss_dam.admin.log.service.AdminActivityLogService;
@@ -19,6 +19,7 @@ import com.ss_dam.challenge.model.request.AdminChallengeSearch;
 import com.ss_dam.challenge.model.request.AdminChallengeWriteRequest;
 import com.ss_dam.challenge.model.response.AdminChallengeEditState;
 import com.ss_dam.challenge.model.response.AdminChallengeListView;
+import com.ss_dam.common.image.service.ImageService;
 import com.ss_dam.common.pager.PageResult;
 import com.ss_dam.common.pager.Pager;
 import com.ss_dam.common.validator.PageQueryValidator;
@@ -27,18 +28,24 @@ import com.ss_dam.common.validator.challenge.AdminChallengeValidator;
 @Service
 public class AdminChallengeServiceImpl implements AdminChallengeService {
 
-    @Autowired
-    private AdminChallengeDao adminChallengeDao;
+	private final AdminChallengeDao adminChallengeDao;
+	private final ImageService imageService;
+	private final AdminChallengeValidator adminChallengeValidator;
+	private final PageQueryValidator pageQueryValidator;
+	private final AdminActivityLogService adminActivityLogService;
 
-    @Autowired
-    private AdminChallengeValidator adminChallengeValidator;
-
-    @Autowired
-    private PageQueryValidator pageQueryValidator;
-
-    @Autowired
-    private AdminActivityLogService adminActivityLogService;
-
+	// 생성자
+	public AdminChallengeServiceImpl (AdminChallengeDao adminChallengeDao, 
+								ImageService imageService,
+                AdminChallengeValidator adminChallengeValidator, 
+                PageQueryValidator pageQueryValidator, 
+                AdminActivityLogService adminActivityLogService) {
+    this.adminChallengeDao = adminChallengeDao;
+		this.imageService = imageService;
+    this.adminChallengeValidator = adminChallengeValidator;
+    this.pageQueryValidator = pageQueryValidator;
+    this.adminActivityLogService = adminActivityLogService;
+}
     // 챌린지 목록 조회
     @Override
     @Transactional(readOnly = true)
@@ -56,11 +63,12 @@ public class AdminChallengeServiceImpl implements AdminChallengeService {
         return PageResult.of(content, new Pager(search, total));
     }
 
-    // 챌린지 등록
+    // 챌린지 등록 
     @Override
     @Transactional
     public Long registerChallenge(
             AdminChallengeWriteRequest request,
+						List<MultipartFile> files,
             Long adminCode,
             String adminId) {
 
@@ -95,6 +103,7 @@ public class AdminChallengeServiceImpl implements AdminChallengeService {
         params.put("goal", request.getGoal().trim());
         params.put("maxParticipants", request.getMaxParticipants());
 
+				// 1. 챌린지 저장
         int inserted = adminChallengeDao.createChallenge(params);
 
         if (inserted != 1 || params.get("code") == null) {
@@ -102,10 +111,16 @@ public class AdminChallengeServiceImpl implements AdminChallengeService {
                     "챌린지 등록에 실패했습니다.");
         }
 
+				// xml의 userGenertateKey로 params에 들어온 챌린지 코드
         Long challengeCode =
                 ((Number) params.get("code")).longValue();
 
-        // 등록 이력 저장
+				// 2. 생성된 챌린지 코드에 이미지 연결
+				if (files != null && !files.isEmpty()) {
+					imageService.uploadImages(files, "challenge", challengeCode); 
+				}
+
+        // 3. 등록 이력 저장
         adminActivityLogService.recordActivity(
                 adminCode,
                 "challenge",
@@ -122,9 +137,11 @@ public class AdminChallengeServiceImpl implements AdminChallengeService {
     @Transactional
     public void updateChallenge(
             Long code,
-            AdminChallengeWriteRequest request,
-            Long adminCode,
-            String adminId) {
+						AdminChallengeWriteRequest request,
+						List<MultipartFile> files,
+						boolean replaceImages,
+						Long adminCode,
+						String adminId) {
 
         adminChallengeValidator.validateCode(code);
         adminChallengeValidator.validateWriteRequest(request);
@@ -147,6 +164,13 @@ public class AdminChallengeServiceImpl implements AdminChallengeService {
                 "WAITING".equals(existing.getProgressStatus())
                         && existing.getStartDate() != null
                         && existing.getStartDate().isAfter(now);
+
+			if (!replaceImages && files != null && !files.isEmpty()) {
+					throw new ResponseStatusException(
+									HttpStatus.BAD_REQUEST,
+									"이미지 변경 여부를 확인해주세요.");
+			}
+
 
         if (beforeStart) {
 
@@ -204,6 +228,26 @@ public class AdminChallengeServiceImpl implements AdminChallengeService {
         params.put("maxParticipants", request.getMaxParticipants());
 
         adminChallengeDao.updateChallenge(params);
+
+			// 이미지 변경을 선택한 경우에만 실행
+			if (replaceImages) {
+					// 기존 이미지 논리 삭제
+					adminChallengeDao.deleteChallengeImages(code);
+
+					// 새 이미지 저장
+					if (files != null && !files.isEmpty()) {
+							imageService.uploadImages(files, "challenge", code);
+					}
+			}
+
+			// 기존 활동 이력 저장 코드 유지
+			adminActivityLogService.recordActivity(
+							adminCode,
+							"challenge",
+							code,
+							"UPDATE",
+							"챌린지 수정 요청 처리: " + request.getTitle().trim(),
+							now);
 
         // 기존 동작 유지: 동일 값 수정 요청도 처리 이력 기록
         adminActivityLogService.recordActivity(

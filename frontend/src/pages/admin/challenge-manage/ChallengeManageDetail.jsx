@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import DashboardHeader from '../../../components/admin/dashboard-header/DashboardHeader';
 import Pagination from '../../../components/common/pagination/Pagination';
@@ -334,6 +334,7 @@ function ChallengeRanking({ code, refreshKey }) {
 
 export default function ChallengeManageDetail() {
   const { code } = useParams();
+  const navigate = useNavigate();
   const [refreshKey, setRefreshKey] = useState(0);
 
   const [ending, setEnding] = useState(false);
@@ -502,7 +503,13 @@ export default function ChallengeManageDetail() {
                 </dl>
 
                 <div className={styles.actions}>
-                  <button type="button" disabled>
+                  <button
+                    type="button"
+                    disabled={challenge.deleteYn === true}
+                    onClick={() =>
+                      navigate(`/admin/challenge_manage/edit/${code}`)
+                    }
+                  >
                     챌린지 수정
                   </button>
 

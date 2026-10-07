@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import UploadImage from '../../../../components/common/upload-images/UploadImages.jsx';
 
 import styles from './ChallengeRegister.module.scss';
 
@@ -7,6 +8,8 @@ const DEFAULT_POINT = 500;
 
 export default function ChallengeRegister() {
   const navigate = useNavigate();
+
+  const [selectedImages, setSelectedImages] = useState([]);
 
   const [form, setForm] = useState({
     title: '',
@@ -109,14 +112,27 @@ export default function ChallengeRegister() {
 
     setSubmitting(true);
 
+    // 챌린지 정보 + 이미지 파일 구성
+    const formData = new FormData();
+
+    formData.append(
+      'request',
+      new Blob([JSON.stringify(payload)], {
+        type: 'application/json',
+      }),
+    );
+
+    selectedImages.forEach((file) => {
+      formData.append('files', file);
+    });
+
+    setSubmitting(true);
+
     try {
       const response = await fetch('/api/admin/challenge', {
         method: 'POST',
         credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
+        body: formData,
       });
 
       const result = await response.json().catch(() => null);
@@ -134,13 +150,15 @@ export default function ChallengeRegister() {
         );
       }
 
-      // 성공 응답의 data는 생성된 챌린지 번호
+      // 생성된 챌린지 상세 화면으로 이동
       if (result.data != null) {
         navigate(`/admin/challenge_manage/${result.data}`, {
           replace: true,
         });
       } else {
-        navigate('/admin/challenge_manage', { replace: true });
+        navigate('/admin/challenge_manage', {
+          replace: true,
+        });
       }
     } catch (err) {
       setError(
@@ -173,10 +191,10 @@ export default function ChallengeRegister() {
             <section>
               <h2 className={styles.sectionLabel}>대표 이미지</h2>
 
-              <div className={styles.imagePlaceholder}>
-                <span>등록된 이미지가 없습니다.</span>
-                <small>이미지 등록 기능은 추후 제공됩니다.</small>
-              </div>
+              <UploadImage
+                selectedImages={selectedImages}
+                setSelectedImages={setSelectedImages}
+              />
             </section>
 
             <div className={styles.formGrid}>

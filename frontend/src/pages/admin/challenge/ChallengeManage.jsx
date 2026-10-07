@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 
 import DashboardHeader from '../../../components/admin/dashboard-header/DashboardHeader';
 import Pagination from '../../../components/common/pagination/Pagination';
+import ChallengeManageFilters from '../challenge-manage/ChallengeManageFilters';
 import styles from './ChallengeManage.module.scss';
-import ChallengeManageFilters from './ChallengeManageFilters';
 
 const INITIAL_FILTERS = {
   page: 1,
