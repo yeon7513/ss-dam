@@ -25,11 +25,8 @@ function RegisterComment({ code, onAddNewComment }) {
 
 
       if (success) {
-        console.log("success data: ", data);
         // 새로운 댓글을 부모 컴포넌트에 전달
         onAddNewComment(data);
-        alert("댓글 등록 완료");
-
         form.comment.value = "";
       }
 

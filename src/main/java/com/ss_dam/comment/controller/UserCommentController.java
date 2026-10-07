@@ -41,7 +41,7 @@ public class UserCommentController {
 
   //댓글 등록 (임시)
   @PostMapping
-  public ResponseEntity<ApiResponse<CommentCreate>> registerComment(
+  public ResponseEntity<ApiResponse<UserCommentView>> registerComment(
       @RequestBody CommentCreate comment, HttpSession session) {
 
     // 로그인한 사용자만 댓글 작성 가능
@@ -50,7 +50,7 @@ public class UserCommentController {
     AuthProfile loginUser = (AuthProfile) session.getAttribute("loginUser");
     comment.setMemCode(loginUser.getCode());
 
-    CommentCreate createdComment = userCommentService.registerComment(comment);
+    UserCommentView createdComment = userCommentService.registerComment(comment);
 
     // 데이터 생성이라 HttpStatus.CREATED -> 201 상태 코드 적용
     return ResponseEntity.status(HttpStatus.CREATED)
@@ -60,9 +60,10 @@ public class UserCommentController {
   //댓글 수정 (임시)
   @PatchMapping("/{commentCode}")
   public ResponseEntity<ApiResponse<Void>> updateComment(@PathVariable Long commentCode,
-      @RequestParam Long memCode, @RequestBody CommentUpdate request) {
-    //매개변수 : 댓글 번호, 회원 번호, 내용
-    //임시로 쿼리 파라미터를 받는 방식, 나중에 memCode 제거하고 세션에서 가져오기
+      @RequestBody CommentUpdate request, HttpSession session) {
+
+    AuthProfile loginUser = (AuthProfile) session.getAttribute("loginUser");
+    Long memCode = loginUser.getCode();
 
     userCommentService.updateComment(commentCode, memCode, request);
 
