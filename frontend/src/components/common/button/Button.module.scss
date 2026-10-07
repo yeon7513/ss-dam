@@ -30,31 +30,57 @@
 
   /* 테두리 스타일 */
   &.outline {
-    border: 1.5px solid v.$grayscale-50;
+    border: 1.8px solid v.$grayscale-50;
     color: v.$grayscale-90;
+    font-weight: 700;
 
     &:hover:not(:disabled) {
-      background-color: v.$grayscale-5;
+      background-color: v.$grayscale-50;
+      color: v.$color-white;
     }
   }
 
-  /* 취소/경고 스타일 */
+  /* 취소/경고/삭제 채우기 스타일 */
   &.danger {
     background-color: v.$dan-color;
     color: v.$color-white;
 
     &:hover:not(:disabled) {
-      background-color: color-mix(in srgb, v.$dan-color, #000 10%);
+      background-color: color-mix(in srgb, v.$dan-color, v.$grayscale-100 10%);
     }
   }
 
-  /* 등록/수정 스타일 */
+  /* 취소/경고/삭제 테두리 스타일 */
+  &.danger_o {
+    border: 1.8px solid v.$dan-color;
+    color: v.$dan-color;
+    font-weight: 700;
+
+    &:hover:not(:disabled) {
+      background-color: v.$dan-color;
+      color: v.$color-white;
+    }
+  }
+
+  /* 등록/수정 채우기 스타일 */
   &.submit {
     background-color: v.$succ-color;
     color: v.$color-white;
 
     &:hover:not(:disabled) {
-      filter: brightness(0.8);
+      background-color: color-mix(in srgb, v.$succ-color, v.$grayscale-100 10%);
+    }
+  }
+
+  /* 등록/수정 테두리 스타일 */
+  &.submit_o {
+    border: 1.8px solid v.$succ-color;
+    color: v.$succ-color;
+    font-weight: 700;
+
+    &:hover:not(:disabled) {
+      background-color: v.$succ-color;
+      color: v.$color-white;
     }
   }
 

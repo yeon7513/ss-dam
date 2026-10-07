@@ -13,8 +13,19 @@ const ProductDetail = () => {
   const { code } = useParams();
 
   const { data, loading, error } = useLoadData(`/api/market/products/${code}`);
-
   const detail = data || {};
+
+  // 사이드바 카테고리 목록 데이터
+  const { data: categoriesData } = useLoadData("/api/market/categories");
+  const categories = categoriesData || [];
+
+  const handleSearch = ({ categoryCode }) => {
+    if (categoryCode) {
+      navigate(`/market?category=${categoryCode}`);
+    } else {
+      navigate("/market");
+    }
+  };
 
   const handleClickDeletePost = () => {
     console.log("거래글 삭제");
@@ -29,7 +40,7 @@ const ProductDetail = () => {
     const requestData = {
       type: "DEAL",
       targetCode: detail.code,
-      responderCode: detail.memberProfile.code,
+      responderCode: detail.memberProfile?.code,
     };
 
     const { data: roomId, success } = await handleSubmit(requestData);
@@ -60,15 +71,17 @@ const ProductDetail = () => {
   return (
     <main className={styles.wrap}>
       {/* 사이드 메뉴 */}
-      <MarketSideNav />
+      <div className={styles.sideNavWrap}>
+        <MarketSideNav categories={categories} onSearch={handleSearch} />
+      </div>
 
       <div className={styles.container}>
         {/* 브레드크럼 */}
-        <div>
+        <div className={styles.breadcrumb}>
           <button type="button" onClick={() => navigate(-1)}>
             목록으로
           </button>
-          브레드크럼
+          브레드크럼크럼
         </div>
 
         <div className={styles.contents}>
@@ -83,7 +96,7 @@ const ProductDetail = () => {
 
             <div>
               <span>{detail.createdAt}</span>
-              <h3>{detail.price.toLocaleString()}그루</h3>
+              <h3>{detail.price.toLocaleString()} 그루</h3>
             </div>
 
             <p>{detail.content}</p>
@@ -98,21 +111,37 @@ const ProductDetail = () => {
                 {detail.hitcount}
               </li>
             </ul>
+            {/* 수정 & 삭제 버튼 */}
+            <div className={styles.actionButtons}>
+              <Button btnStyle="submit_o">
+                <Link to={`/market/edit/${code}`}>수정</Link>{" "}
+              </Button>
+              <Button btnStyle="danger_o" onClick={handleClickDeletePost}>
+                삭제
+              </Button>
+            </div>
           </div>
-        </div>
-
-        {/* 수정 & 삭제 버튼 */}
-        <div>
-          <Link to={`/market/edit/${code}`}>수정</Link>
-          <Button btnStyle="danger" onClick={handleClickDeletePost}>
-            삭제
-          </Button>
         </div>
 
         {/* 채팅 요청 */}
         <div>
           <Button btnStyle="submit" onClick={() => handleTradeRequest()}>
-            거래 신청
+            채팅으로 거래 신청
+          </Button>
+        </div>
+        <div>
+          <Button btnStyle="danger" onClick={() => handleTradeRequest()}>
+            삭제해야 하는 버튼
+          </Button>
+        </div>
+        <div>
+          <Button btnStyle="fill" onClick={() => handleTradeRequest()}>
+            채워야 하는 버튼
+          </Button>
+        </div>
+        <div>
+          <Button btnStyle="outline" onClick={() => handleTradeRequest()}>
+            테두리는 버튼
           </Button>
         </div>
       </div>
