@@ -18,8 +18,6 @@ function Comments({ targetCode }) {
   const { data, loding, error } = useLoadData(`/api/comments/${targetCode}${queryParams}`);
   const [comments, setComments] = useState(data?.content || []);
 
-  console.log("init data: ", data);
-
   // const comments = data?.content || [];
 
   // 새로운 댓글 등록 시 목록

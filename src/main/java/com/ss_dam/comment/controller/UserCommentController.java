@@ -51,9 +51,8 @@ public class UserCommentController {
 
   //댓글 등록용 
   @PostMapping
-  public ResponseEntity<ApiResponse<CommentCreate>> registerComment(
-      @RequestBody CommentCreate comment,
-      HttpSession session) {
+  public ResponseEntity<ApiResponse<UserCommentView>> registerComment(
+      @RequestBody CommentCreate comment, HttpSession session) {
 
     // 로그인한 사용자만 댓글 작성 가능
     // 클라이언트쪽에서 가져올 필요 없이 서버 세션에서 사용자 PK를 가져옴
@@ -61,7 +60,7 @@ public class UserCommentController {
     AuthProfile loginUser = (AuthProfile) session.getAttribute("loginUser");
     comment.setMemCode(loginUser.getCode());
 
-    CommentCreate createdComment = userCommentService.registerComment(comment);
+    UserCommentView createdComment = userCommentService.registerComment(comment);
 
     // 데이터 생성이라 HttpStatus.CREATED -> 201 상태 코드 적용
     return ResponseEntity.status(HttpStatus.CREATED)
@@ -72,12 +71,11 @@ public class UserCommentController {
 
   //댓글 수정 
   @PatchMapping("/{commentCode}")
-  public ResponseEntity<ApiResponse<Void>> updateComment(
-    @PathVariable Long commentCode,
-    @RequestBody CommentUpdate request,
-    HttpSession session) {
-    //매개변수 : 댓글 번호, 회원 번호, 내용
-    //임시로 쿼리 파라미터를 받는 방식, 나중에 memCode 제거하고 세션에서 가져오기
+  public ResponseEntity<ApiResponse<Void>> updateComment(@PathVariable Long commentCode,
+      @RequestBody CommentUpdate request, HttpSession session) {
+
+    AuthProfile loginUser = (AuthProfile) session.getAttribute("loginUser");
+    Long memCode = loginUser.getCode();
 
     userCommentService.updateComment(commentCode, memCode, request);
 
@@ -103,10 +101,10 @@ public class UserCommentController {
 	/*
 	주의할 점은 현재 구조에서는 클라이언트가 memCode를 직접 보냅니다.
 	임시 구현으로는 동작하지만, 로그인 기능과 연결할 때는 memCode를 요청에서 받지 않고
-	 HttpSession의 loginUser에서 가져오는 것이 안전합니다.
+	HttpSession의 loginUser에서 가져오는 것이 안전합니다.
 
-	 클라이언트가 보내는 memCode는 조작할 수 있기 때문에 로그인 기능이 연결되면,
-	 댓글 등록·수정·삭제 모두 반드시 세션의 loginUser.getCode()로 교체
+	클라이언트가 보내는 memCode는 조작할 수 있기 때문에 로그인 기능이 연결되면,
+	댓글 등록·수정·삭제 모두 반드시 세션의 loginUser.getCode()로 교체
 
 	*/
 

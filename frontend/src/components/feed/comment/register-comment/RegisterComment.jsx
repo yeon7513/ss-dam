@@ -25,12 +25,9 @@ function RegisterComment({ code, onAddNewComment }) {
 
 
       if (success) {
-        console.log("success data: ", data);
         // 새로운 댓글을 부모 컴포넌트에 전달
         onAddNewComment(data);
-        alert("댓글 등록 완료");
-
-        form.reset();
+        form.comment.value = "";
       }
 
     } catch (err) {
@@ -38,9 +35,8 @@ function RegisterComment({ code, onAddNewComment }) {
     }
   }
 
-
   return (
-    <form onSubmit={handleRegisterComment}>
+    <form className={styles.wrap} onSubmit={handleRegisterComment}>
       <TextInput
         id="comment"
         name="comment"

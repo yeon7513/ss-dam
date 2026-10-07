@@ -32,9 +32,7 @@ function ProfileCard({
       <div className={styles.info}>
         <div className={styles.name}>
           <span className={styles.memberId}>{memberProfile.id}</span>
-          {badge && (
-            <span className={styles.badge}>{badge}</span>
-          )}
+          {badge}
         </div>
 
         {!isMinimal && (

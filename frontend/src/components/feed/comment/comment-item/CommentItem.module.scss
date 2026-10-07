@@ -2,13 +2,63 @@
 @use "../../../../scss/mixin.scss" as mix;
 
 .comment {
+  padding: 1rem 0;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid v.$grayscale-10
+  }
 
   .profile {
     @include mix.flex($jc: space-between, $ai: center);
 
+    .badge {
+      @include mix.flex();
+      gap: 0.5rem;
+
+      // 시간
+      .date {
+        @include mix.flex;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: v.$grayscale-50;
+
+        &:before {
+          content: "";
+          display: block;
+          margin: 0 0.5rem;
+          width: 3px;
+          height: 3px;
+          border-radius: 50%;
+          background-color: v.$grayscale-50;
+        }
+      }
+
+      // 내 댓글 표시
+      .mine {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        border: 1.5px solid v.$point-20;
+        border-radius: 0.5rem;
+        color: v.$point-50;
+      }
+    }
+
     .more {
       padding: 0.25rem;
       font-size: 1rem;
+      color: v.$grayscale-50;
+    }
+  }
+
+  .contents {
+    > p {
+      margin: 0.8rem 1rem;
+    }
+
+    .meta {
+      @include mix.flex($jc: flex-end);
     }
   }
 }

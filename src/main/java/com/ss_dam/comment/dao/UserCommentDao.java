@@ -21,4 +21,6 @@ public interface UserCommentDao {
   int deleteComment(Map<String, Object> params);
 
   float loadCommentsTotalCount(Long feedCode);
+
+  UserCommentView findCommentByCode(Long code);
 }
