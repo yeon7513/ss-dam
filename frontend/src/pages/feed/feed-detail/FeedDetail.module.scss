@@ -20,8 +20,10 @@
   // 등록한 이미지
   .images {
     position: sticky;
+    top: 2rem;
     width: 50%;
     height: 540px;
+    border: 1px solid v.$grayscale-20;
   }
 }
 

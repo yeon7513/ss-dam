@@ -160,6 +160,7 @@
   <select id="loadFeeds" resultMap="UserFeedViewMap">
     SELECT
     <include refid="FeedBasicColumns" />,
+    f.content,
     i.path AS thumbnail
     FROM (
     <!-- 부모 테이블을 정확히 perPage만큼 끊어서 가져온 후 조인  -->
@@ -232,15 +233,15 @@
     LEFT JOIN FEED_HASHTAG fh ON f.code = fh.feed_code
     WHERE f.code = #{feedCode}
     AND f.mem_code = #{memberCode}
-  </select>  
-  
+  </select>
+
   <select id="countFeedsByChallenge" resultType="int">
-  	SELECT COUNT(*)
-  	FROM FEED
-  	WHERE chal_code = #{chalCode}
-  	AND mem_code = #{memCode}
-  	AND status = 'active'
-  	AND delete_yn = 0
+    SELECT COUNT(*)
+    FROM FEED
+    WHERE chal_code = #{chalCode}
+    AND mem_code = #{memCode}
+    AND status = 'active'
+    AND delete_yn = 0
   </select>
 
 </mapper>
