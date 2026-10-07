@@ -137,10 +137,14 @@ const ProductDetail = () => {
 
             {/* 수정 & 삭제 버튼 */}
             <div className={styles.actionButtons}>
-              <Button btnStyle="submit_o">
-                <Link to={`/market/edit/${code}`}>수정</Link>{" "}
+              <Button
+                btnStyle="word"
+                size="sm"
+                onClick={() => navigate(`/market/edit/${code}`)}
+              >
+                수정
               </Button>
-              <Button btnStyle="danger_o" onClick={handleClickDeletePost}>
+              <Button btnStyle="word" size="sm" onClick={handleClickDeletePost}>
                 삭제
               </Button>
             </div>
