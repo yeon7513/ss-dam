@@ -56,13 +56,19 @@
   }
 
   .hashtags {
-    @include mix.textLine(1);
-    @include mix.flex($jc: flex-start);
+    display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
+    max-height: 1rem;
+    overflow: hidden;
     margin-top: auto;
-    font-size: 0.875rem;
-    outline: 1px dotted red;
+
+    .tagItem {
+      @include mix.textLine(1);
+      min-width: 0;
+      max-width: 100%;
+      word-break: break-all;
+    }
   }
 }
 
