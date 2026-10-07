@@ -1,6 +1,6 @@
 import { IoChatbubbleEllipses, IoHeartSharp } from "react-icons/io5";
 import Card from "../../common/card/Card";
-import ProfileCard from "../../profile-card/ProfileCard";
+import ProfileCard from "../../auth/profile-card/ProfileCard";
 import Hashtag from "../hashtag/Hashtag";
 import styles from "./FeedCard.module.scss";
 import ImageBox from "../../common/image-box/ImageBox.jsx";
