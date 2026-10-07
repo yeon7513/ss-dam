@@ -30,7 +30,7 @@ function RegisterComment({ code, onAddNewComment }) {
         onAddNewComment(data);
         alert("댓글 등록 완료");
 
-        form.reset();
+        form.comment.value = "";
       }
 
     } catch (err) {
@@ -38,9 +38,8 @@ function RegisterComment({ code, onAddNewComment }) {
     }
   }
 
-
   return (
-    <form onSubmit={handleRegisterComment}>
+    <form className={styles.wrap} onSubmit={handleRegisterComment}>
       <TextInput
         id="comment"
         name="comment"
