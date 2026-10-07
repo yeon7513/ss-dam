@@ -18,10 +18,17 @@
 
   <!-- 해시태그 등록 -->
   <insert id="registerHashtags">
-    INSERT INTO FEED_HASHTAG (feed_code, tag_name)
+    INSERT INTO FEED_HASHTAG (feed_code, tag_name, order_seq)
     VALUES
-    <foreach collection="list" item="item" separator=",">
-      (#{item.feedCode}, #{item.tagName})
+    <foreach collection="list" item="item" index="idx" separator=",">
+      <!--
+        #{idx + 1}이 안됨..
+        -> SQL 인젝션 문제때문에 말그대로 "idx+1"이라는 문자열로 인식해서
+        숫자 타입인데 문자를 넣어서 삽입 거부 중임.
+        찾아보니 <bind> 태그로 새로운 변수를 만들 수 있다고 함.
+        -->
+      <bind name="seq" value="idx + 1" />
+      (#{item.feedCode}, #{item.tagName}, #{seq})
     </foreach>
   </insert>
 
@@ -43,7 +50,6 @@
     delete_yn = #{deleteYn}
     WHERE code = #{code}
   </update>
-
 
 
   <!-- 피드 삭제 (피드 작성자) -->

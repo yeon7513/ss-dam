@@ -88,16 +88,14 @@ const FeedDetail = ({ code, onClose }) => {
           </div>
 
           {/* 수정 & 삭제 버튼 - 로그인한 사용자 전용 */}
-          <div>
-            <ul>
-              <li>
-                <Button type="button" onClick={() => navigate(`edit/${code}`)}>수정</Button>
-              </li>
-              <li>
-                <Button type="button" onClick={handleDeleteFeed}>삭제</Button>
-              </li>
-            </ul>
-          </div>
+          <ul className={styles.controlButtonGroup}>
+            <li>
+              <Button btnStyle="text" type="button" onClick={() => navigate(`edit/${code}`)}>수정</Button>
+            </li>
+            <li>
+              <Button btnStyle="text" type="button" onClick={handleDeleteFeed}>삭제</Button>
+            </li>
+          </ul>
 
           {/* 피드 정보 (날짜, 좋아요 수, 댓글 수 등) */}
           <div className={styles.meta}>

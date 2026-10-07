@@ -34,6 +34,8 @@ const Feed = () => {
 
   const feeds = data?.content || [];
 
+  console.log(feeds[0]);
+
   const [sort, setSort] = useState(SORT_MENU[0].value);
   const handleClickSort = (sort) => {
     setSort(sort);

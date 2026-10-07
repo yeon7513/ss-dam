@@ -13,16 +13,14 @@
 
       .challengeName {
         display: block;
-        padding: 0.5rem 1.2rem;
+        margin-bottom: 0.5rem;
         width: fit-content;
-        border: 1px solid v.$point-20;
-        border-radius: 999px;
-        color: v.$point-50;
-
+        color: v.$point-60;
+        font-weight: 700;
       }
 
       .title {
-        outline: 1px dotted red;
+        font-size: 1.5rem;
       }
 
     }
@@ -57,6 +55,7 @@
   // 등록한 이미지
   .images {
     position: sticky;
+    top: 2rem;
     width: 50%;
     height: 540px;
   }
@@ -70,6 +69,16 @@
   > p {
     margin-bottom: 1rem;
     outline: 1px dotted red;
+  }
+
+  .hashtags {
+    @include mix.flex($jc: flex-start);
+    gap: 0.5rem;
+  }
+
+  .controlButtonGroup {
+    @include mix.flex($jc: flex-end);
+    gap: 0.5rem;
   }
 }
 

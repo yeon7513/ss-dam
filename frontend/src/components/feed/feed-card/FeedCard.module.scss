@@ -56,8 +56,13 @@
   }
 
   .hashtags {
+    @include mix.textLine(1);
+    @include mix.flex($jc: flex-start);
+    flex-wrap: wrap;
+    gap: 0.5rem;
     margin-top: auto;
     font-size: 0.875rem;
+    outline: 1px dotted red;
   }
 }
 

@@ -7,10 +7,10 @@ function Hashtag({ className, hashName, isButton = false, onDeleteHash }) {
   if (isButton) {
     return (
       <div className={cn(styles.hashtagItem, styles.tagButton, className)}>
-        <button type="button" onClick={() => onDeleteHash(hashName)}>
+        <div className={styles.registeredTag} onClick={() => onDeleteHash(hashName)}>
           <span className={styles.tagName}># {hashName}</span>
           <CloseButton />
-        </button>
+        </div>
       </div>
     )
   }

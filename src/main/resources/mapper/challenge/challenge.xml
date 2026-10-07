@@ -305,7 +305,7 @@
     AND MEM_CODE = #{memCode}
     AND STATUS = 'JOINED'
     AND CANCELED_AT IS NULL
-    AND DELETE_YN = 0
+    <!--    AND DELETE_YN = 0-->
     )
   </select>
 
