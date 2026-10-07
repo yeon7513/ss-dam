@@ -11,7 +11,7 @@ export const TAB_LIST = [
 
 export const INITIAL_FILTERS = {
   page: 1,
-  perPage: 10,
+  perPage: 8,
   status: "",
   startDate: "",
   endDate: "",

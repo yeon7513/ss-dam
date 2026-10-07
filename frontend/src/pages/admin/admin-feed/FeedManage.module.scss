@@ -205,8 +205,10 @@
     position: relative;
     flex: 1;
     align-items: center;
+    gap: 8px;
 
     input[type="text"] {
+      flex: 1;
       width: 100%;
       height: 3.4rem;
       padding: 0 12px;
@@ -217,8 +219,9 @@
       border: 1.5px solid v.$point-20;
       background-color: v.$color-white;
 
-      transition: background-color 0.5s ease,
-      color 0.2s ease;
+      transition:
+        background-color 0.5s ease,
+        color 0.2s ease;
 
       &::placeholder {
         color: v.$grayscale-50;
@@ -231,6 +234,13 @@
           color: v.$point-60;
         }
       }
+    }
+
+    .searchBtn {
+      flex-shrink: 0;
+      padding-left: 1.2rem;
+      padding-right: 1.2rem;
+      min-width: 5.5rem;
     }
 
     .searchIcon {
