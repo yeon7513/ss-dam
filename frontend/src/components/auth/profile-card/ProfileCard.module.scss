@@ -1,5 +1,5 @@
-@use '../../scss/variables.scss' as v;
-@use '../../scss/mixin.scss' as mix;
+@use '../../../scss/variables' as v;
+@use '../../../scss/mixin' as mix;
 
 // 공통
 .profileImage {
@@ -15,7 +15,6 @@
   height: 100%;
 
   .memberId {
-    font-size: 1rem;
     font-weight: 500;
     color: v.$grayscale-90;
   }
@@ -26,18 +25,29 @@
     font-size: 0.75rem;
     color: v.$point-60;
   }
+
+  .badge {
+    display: inline-block;
+    margin-left: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: 1.5px solid v.$point-20;
+    border-radius: 0.5rem;
+    color: v.$point-50;
+  }
 }
 
 .more {
   > button {
     @include mix.flex;
-    padding: 0.5rem 0 0.5rem 0.5rem;
+    padding: 0.5rem;
     font-size: 1rem;
   }
 }
 
 // 기본
-.profileCard {
+.defaultProfile {
   @include mix.flex($jc: space-between);
   gap: 0.75rem;
   width: 100%;
@@ -45,11 +55,18 @@
   background-color: v.$color-white;
 
   .profileImage {
-    width: 3rem;
-    height: 3rem;
+    width: 3.5rem;
+    height: 3.5rem;
   }
 
+  .info {
+    justify-content: center;
+    gap: 0.5rem;
 
+    .memberId {
+      font-size: 18px;
+    }
+  }
 }
 
 // 세로 버전
@@ -67,5 +84,12 @@
 
 // 미니멀 버전
 .minimalProfile {
+  @include mix.flex;
+  gap: 0.75rem;
+
+  .profileImage {
+    width: 3rem;
+    height: 3rem;
+  }
 
 }

@@ -1,7 +1,7 @@
 import { IoChatbubbleEllipses, IoHeartSharp } from "react-icons/io5";
 import Button from "../../../components/common/button/Button";
 import Hashtag from "../../../components/feed/hashtag/Hashtag";
-import ProfileCard from "../../../components/profile-card/ProfileCard";
+import ProfileCard from "../../../components/auth/profile-card/ProfileCard";
 import { formatCreatedAt } from "../../../utils/formatDate";
 import styles from "./FeedDetail.module.scss";
 import Slide from "../../../components/common/slide/Slide.jsx";

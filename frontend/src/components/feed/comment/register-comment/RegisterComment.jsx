@@ -5,7 +5,7 @@ import styles from "./RegisterComment.module.scss";
 import { useAuth } from "../../../../context/AuthContext.jsx";
 import { useSubmitData } from "../../../../hooks/useSubmitData.js";
 
-function RegisterComment() {
+function RegisterComment({ code, onAddNewComment }) {
   const { isLoggedIn } = useAuth();
 
   const { handleSubmit } = useSubmitData("/api/comments", "POST");
@@ -21,10 +21,16 @@ function RegisterComment() {
     }
 
     try {
-      const { success } = await handleSubmit(newComment);
+      const { success, data } = await handleSubmit(newComment);
+
 
       if (success) {
+        console.log("success data: ", data);
+        // 새로운 댓글을 부모 컴포넌트에 전달
+        onAddNewComment(data);
         alert("댓글 등록 완료");
+
+        form.reset();
       }
 
     } catch (err) {
@@ -32,9 +38,9 @@ function RegisterComment() {
     }
   }
 
-  
+
   return (
-    <form>
+    <form onSubmit={handleRegisterComment}>
       <TextInput
         id="comment"
         name="comment"
