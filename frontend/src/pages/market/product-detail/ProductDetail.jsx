@@ -81,7 +81,7 @@ const ProductDetail = () => {
           <button type="button" onClick={() => navigate(-1)}>
             목록으로
           </button>
-          브레드크럼크럼
+          브레드크롱
         </div>
 
         <div className={styles.contents}>
@@ -92,25 +92,49 @@ const ProductDetail = () => {
 
           {/* 상세 내용 시작 */}
           <div className={styles.productDetails}>
-            <h2>{detail.title}</h2>
+            <div className={styles.headerRow}>
+              {/* 제목/일시 영역 */}
+              <div className={styles.titleSection}>
+                {/* 상품 제목 */}
+                <div className={styles.title}>
+                  <h2>{detail.title}</h2>
+                </div>
 
-            <div>
-              <span>{detail.createdAt}</span>
-              <h3>{detail.price.toLocaleString()} 그루</h3>
+                {/* 작성일시 */}
+                <div className={styles.dateInfo}>
+                  <span>{detail.createdAt}</span>
+                </div>
+              </div>
+
+              {/* 채팅 요청 */}
+              <div className={styles.chatButton}>
+                <Button btnStyle="submit" onClick={() => handleTradeRequest()}>
+                  채팅으로 거래 신청
+                </Button>
+              </div>
             </div>
 
+            {/* 본문 내용 */}
             <p>{detail.content}</p>
 
-            <ul>
-              <li>
-                Pick <IoHeartSharp />
-                {detail.countPick}
-              </li>
-              <li>
-                조회수
-                {detail.hitcount}
-              </li>
-            </ul>
+            <div className={styles.metaRow}>
+              {/* Pick(픽) & 조회수 */}
+              <ul>
+                <li>
+                  Pick <IoHeartSharp />
+                  {detail.countPick}
+                </li>
+                <li>조회수 {detail.hitcount}</li>
+              </ul>
+
+              {/* 가격 */}
+              <div className={styles.priceInfo}>
+                <h3>
+                  {detail.price.toLocaleString()} <span>그루</span>
+                </h3>
+              </div>
+            </div>
+
             {/* 수정 & 삭제 버튼 */}
             <div className={styles.actionButtons}>
               <Button btnStyle="submit_o">
@@ -121,28 +145,6 @@ const ProductDetail = () => {
               </Button>
             </div>
           </div>
-        </div>
-
-        {/* 채팅 요청 */}
-        <div>
-          <Button btnStyle="submit" onClick={() => handleTradeRequest()}>
-            채팅으로 거래 신청
-          </Button>
-        </div>
-        <div>
-          <Button btnStyle="danger" onClick={() => handleTradeRequest()}>
-            삭제해야 하는 버튼
-          </Button>
-        </div>
-        <div>
-          <Button btnStyle="fill" onClick={() => handleTradeRequest()}>
-            채워야 하는 버튼
-          </Button>
-        </div>
-        <div>
-          <Button btnStyle="outline" onClick={() => handleTradeRequest()}>
-            테두리는 버튼
-          </Button>
         </div>
       </div>
     </main>
