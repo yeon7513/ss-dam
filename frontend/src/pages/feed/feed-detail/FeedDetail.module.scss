@@ -65,16 +65,17 @@
 // 실제 본문 내용
 .content.detail {
   flex: 1;
-  background-color: yellow;
+  padding-top: 1rem;
 
   > p {
-    margin-bottom: 1rem;
+    margin: 1rem 0 2rem;
     outline: 1px dotted red;
   }
 
   .hashtags {
     @include mix.flex($jc: flex-start);
     gap: 0.5rem;
+    flex-wrap: wrap;
   }
 
   .controlButtonGroup {
