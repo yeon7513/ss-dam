@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { CHALLENGE_TABS } from '../../lib/challengeTabs';
 import { formatImagePath } from '../../utils/formatImagePath';
 import styles from './ChallengeDetail.module.scss';
@@ -6,7 +7,12 @@ import ChallengeInfoCard from './ChallengeInfoCard';
 import ChallengeSidebar from './ChallengeSidebar';
 
 const ChallengeDetail = () => {
-  const [selectedCode, setSelectedCode] = useState(null);
+  const { code } = useParams();
+  const [selectedCode, setSelectedCode] = useState(code);
+
+  useEffect(() => {
+    setSelectedCode(code);
+  }, [code]);
   const [mainDetail, setMainDetail] = useState(null);
 
   useEffect(() => {

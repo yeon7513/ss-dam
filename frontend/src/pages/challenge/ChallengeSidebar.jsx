@@ -25,7 +25,7 @@ const ChallengeSidebar = ({ selectedCode, onSelectChallenge }) => {
           const list = result.data || [];
           setChallengeList(list);
 
-          if (list.length > 0 && onSelectChallenge) {
+          if (list.length > 0 && onSelectChallenge && !selectedCode) {
             onSelectChallenge(list[0].code);
           }
         }
@@ -35,7 +35,7 @@ const ChallengeSidebar = ({ selectedCode, onSelectChallenge }) => {
     };
 
     fetchChallenges();
-  }, [activeStatus, onSelectChallenge]);
+  }, [activeStatus, onSelectChallenge, selectedCode]);
 
   return (
     <aside className={styles.sidebarContainer}>
