@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
-import styles from "./ChallengeDetail.module.scss";
-import ChallengeSidebar from "./ChallengeSidebar";
-import ChallengeInfoCard from "./ChallengeInfoCard";
-import { CHALLENGE_TABS } from "../../lib/challengeTabs";
+import { useEffect, useState } from 'react';
+import { CHALLENGE_TABS } from '../../lib/challengeTabs';
+import { formatImagePath } from '../../utils/formatImagePath';
+import styles from './ChallengeDetail.module.scss';
+import ChallengeInfoCard from './ChallengeInfoCard';
+import ChallengeSidebar from './ChallengeSidebar';
 
 const ChallengeDetail = () => {
   const [selectedCode, setSelectedCode] = useState(null);
@@ -21,7 +22,7 @@ const ChallengeDetail = () => {
           setMainDetail(null);
         }
       } catch (error) {
-        console.error("메인 상세 정보 조회 오류", error);
+        console.error('메인 상세 정보 조회 오류', error);
       }
     };
     fetchMainDetail(selectedCode);
@@ -48,7 +49,7 @@ const ChallengeDetail = () => {
               <span className={styles.statusBadge}>
                 {CHALLENGE_TABS.find(
                   (tab) => tab.value === mainDetail?.progressStatus,
-                )?.label || "상태 미정"}
+                )?.label || '상태 미정'}
               </span>
             </div>
 
@@ -69,7 +70,7 @@ const ChallengeDetail = () => {
           <div className={styles.bannerContainer}>
             {mainDetail?.imageUrl ? (
               <img
-                src={mainDetail.imageUrl}
+                src={formatImagePath(mainDetail.imageUrl)}
                 alt={mainDetail.title}
                 className={styles.bannerImg}
               />
