@@ -188,14 +188,12 @@
     AND STATUS = 'JOINED') AS participantCount,
     c.GOAL AS goal,
     (SELECT COUNT(*)
-    FROM FEED f
-    <where>
-      f.CHAL_CODE = c.CODE
-      <if test="memCode != 0 or memCode != null">
+    FROM FEED f    
+      WHERE f.CHAL_CODE = c.CODE
+      <if test="memCode != 0 and memCode != null">
         AND f.MEM_CODE = #{memCode}
       </if>
-      AND f.DELETE_YN = false) AS proofCount,
-    </where>
+      AND f.DELETE_YN = false) AS proofCount,    
     (DATEDIFF(c.END_DATE, c.START_DATE) + 1) AS totalProofCount,
     c.POINT_EARNED as pointEarn,
     EXISTS(

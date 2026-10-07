@@ -26,9 +26,14 @@
         -> SQL 인젝션 문제때문에 말그대로 "idx+1"이라는 문자열로 인식해서
         숫자 타입인데 문자를 넣어서 삽입 거부 중임.
         찾아보니 <bind> 태그로 새로운 변수를 만들 수 있다고 함.
-        -->
-      <bind name="seq" value="idx + 1" />
-      (#{item.feedCode}, #{item.tagName}, #{seq})
+
+        ++
+        <bind name="seq" value="idx + 1" />
+        적용해보니 똑같은 값으로 들어가버림..
+        ${value}로 넣어야 들어갈 듯??
+      -->
+
+      (#{item.feedCode}, #{item.tagName}, ${idx + 1})
     </foreach>
   </insert>
 

@@ -26,9 +26,10 @@ function FeedCard({ feed, onClickDetail }) {
 
         {/* 콘텐츠 (내용) */}
         <div className={styles.detail}>
+          <p>{feed.content}</p>
           <div className={styles.hashtags}>
-            {(feed.hashtags || []).map((tag, idx) => (
-              <Hashtag key={idx} hashName={tag} />
+            {feed.hashtags?.map((tag, idx) => (
+              <Hashtag key={idx} hashName={tag} className={styles.tagItem} />
             ))}
           </div>
         </div>

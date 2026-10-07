@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import styles from "./Comments.module.scss";
-import TextInput from "../../forms/text-input/TextInput";
-import Button from "../../common/button/Button";
 import Comment from "./comment-item/CommentItem.jsx";
 import cn from "classnames";
 import { useLoadData } from "../../../hooks/useLoadData.js";
 import Pagination from "../../common/pagination/Pagination.jsx";
 import { buildQueryString } from "../../../utils/buildQueryString.js";
+import RegisterComment from "./register-comment/RegisterComment.jsx";
 
 function Comments({ targetCode }) {
   const [currentPage, setCurrentPage] = useState(1);
@@ -22,9 +21,6 @@ function Comments({ targetCode }) {
   const { data, loding, error } = useLoadData(`/api/comments/${targetCode}${queryParams}`);
 
   const comments = data?.content || [];
-
-  console.log("data: ", data);
-  console.log("comments: ", comments);
 
   // 댓글 부분 옮길 것...
   // const { handleSubmit } = useSubmitData("/api/comments", "POST");
@@ -62,20 +58,7 @@ function Comments({ targetCode }) {
   return (
     <div className={cn(styles.content, styles.comment)}>
       {/* 댓글 등록 */}
-      <form className={styles.postComment}>
-        <TextInput
-          className={styles.field}
-          id="comment"
-          name="comment"
-          // disabled={!isLoggedIn}
-          // placeholder={
-          //   isLoggedIn
-          //     ? "댓글을 작성해주세요."
-          //     : "로그인 후 댓글을 작성할 수 있습니다."
-          // }
-        />
-        <Button className={styles.registerButton} type="submit">등록</Button>
-      </form>
+      <RegisterComment />
 
       {/* 등록된 댓글 리스트 */}
       <div className={styles.comments}>

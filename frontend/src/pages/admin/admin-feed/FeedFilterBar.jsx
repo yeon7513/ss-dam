@@ -6,6 +6,7 @@ import { MdArrowForwardIos, MdSearch, MdClose } from "react-icons/md";
 import RadioInput from "../../../components/forms/radio-input/RadioInput.jsx";
 import SelectBox from "../../../components/forms/select-box/SelectBox.jsx";
 import TextInput from "../../../components/forms/text-input/TextInput.jsx";
+import Button from "../../../components/common/button/Button.jsx";
 import styles from "./FeedManage.module.scss";
 
 export default function FeedFilterBar({
@@ -20,6 +21,20 @@ export default function FeedFilterBar({
   const [regionInput, setRegionInput] = useState("");
 
   const handleChange = (e) => handleSetField(e, setDraftFilters);
+
+  const handleSortChange = (e) => {
+    const { name, value } = e.target;
+    const nextFilters = {
+      ...draftFilters,
+      [name]: value,
+    };
+
+    setDraftFilters(nextFilters);
+    onSearch({
+      ...nextFilters,
+      region: regionList.join(","),
+    });
+  };
 
   const handleRegionKeyDown = useCallback(
     (e) => {
@@ -96,7 +111,7 @@ export default function FeedFilterBar({
             label="인기순"
             value="POPULAR"
             isChecked={draftFilters.likeCount === "POPULAR"}
-            onChange={handleChange}
+            onChange={handleSortChange}
           />
           <RadioInput
             id="likeCount-newest"
@@ -104,7 +119,7 @@ export default function FeedFilterBar({
             label="최신순"
             value="NEWEST"
             isChecked={draftFilters.likeCount === "NEWEST"}
-            onChange={handleChange}
+            onChange={handleSortChange}
           />
         </div>
 
@@ -118,13 +133,14 @@ export default function FeedFilterBar({
             aria-label="검색어 입력"
           />
 
-          <button
+          <Button
             type="submit"
+            btnStyle="submit"
+            size="lg"
             className={styles.searchBtn}
-            aria-label="검색하기"
           >
-            <MdSearch className={styles.searchIcon} aria-hidden="true" />
-          </button>
+            검색
+          </Button>
         </div>
       </div>
 

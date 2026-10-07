@@ -160,6 +160,7 @@
   <select id="loadFeeds" resultMap="UserFeedViewMap">
     SELECT
     <include refid="FeedBasicColumns" />,
+    f.content,
     i.path AS thumbnail
     FROM (
     <!-- 부모 테이블을 정확히 perPage만큼 끊어서 가져온 후 조인  -->
