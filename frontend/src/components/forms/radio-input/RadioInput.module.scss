@@ -8,12 +8,13 @@
   align-self: stretch;
 
   input[type="radio"] {
-    position: absolute;
+    display: none;
+    //position: absolute;
+    //
+    //width: 100%;
+    //padding: 0.8rem;
 
-    width: 100%;
-    padding: 0.8rem;
-
-    opacity: 0;
+    //opacity: 0;
   }
 
   label {

@@ -23,6 +23,7 @@
     title = #{title},
     content = #{content},
     price = #{price},
+    deal_status = #{dealStatus},
     updated_by = #{updatedBy},
     updated_at = NOW(),
     delete_yn = #{deleteYn}

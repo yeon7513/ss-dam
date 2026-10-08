@@ -213,6 +213,7 @@
     p.title,
     p.content,
     p.price,
+    p.deal_status,
     product_category.top_cate_code AS main_category_code,
     product_category.sub_cate_code AS sub_category_code,
     i.path AS image_paths
