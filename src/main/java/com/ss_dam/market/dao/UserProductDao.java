@@ -1,6 +1,7 @@
 package com.ss_dam.market.dao;
 
 import com.ss_dam.common.pager.PageQuery;
+import com.ss_dam.market.model.request.ProductCreate;
 import com.ss_dam.market.model.request.ProductUpdate;
 import com.ss_dam.market.model.response.ProductDetail;
 import com.ss_dam.market.model.response.ProductEditView;
@@ -21,4 +22,6 @@ public interface UserProductDao {
   void deleteProductPost(Map<String, Object> params);
 
   float loadProductsTotalCount(PageQuery pageQuery);
+
+  void registerProductPost(ProductCreate productCreate);
 }

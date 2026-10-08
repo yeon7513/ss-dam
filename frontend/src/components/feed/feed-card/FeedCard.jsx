@@ -4,8 +4,12 @@ import ProfileCard from "../../auth/profile-card/ProfileCard";
 import Hashtag from "../hashtag/Hashtag";
 import styles from "./FeedCard.module.scss";
 import ImageBox from "../../common/image-box/ImageBox.jsx";
+import { formatCreatedAt } from "../../../utils/formatDate.js";
+import { FaEye } from "react-icons/fa6";
 
 function FeedCard({ feed, onClickDetail }) {
+  console.log(feed);
+
   return (
     <Card className={styles.feed} onClick={() => onClickDetail(feed.code)}>
       {/* 프로필 카드 */}
@@ -49,9 +53,16 @@ function FeedCard({ feed, onClickDetail }) {
               </span>
               {feed.countFeedComment}
             </div>
+            <div className={styles.icon}>
+              <span className={styles.hitcount}>
+                <FaEye />
+              </span>
+              {feed.hitcount}
+            </div>
           </div>
+
           <div>
-            <span>{feed.createdAt}</span>
+            <span>{formatCreatedAt(feed.createdAt)}</span>
           </div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 package com.ss_dam.feed.controller;
 
 import com.ss_dam.auth.login.model.response.AuthProfile;
+import com.ss_dam.auth.login.model.response.MemberProfile;
 import com.ss_dam.common.ApiResponse;
 import com.ss_dam.common.pager.PageResult;
 import com.ss_dam.feed.model.filter.UserFeedSearchFilter;
@@ -131,8 +132,8 @@ public class UserFeedController {
           .body(ApiResponse.fail("잘못된 요청입니다. 피드 식별자가 일치하지 않습니다."));
     }
 
-    AuthProfile loginUser = (AuthProfile) session.getAttribute("loginUser");
-    //    // -> 로그인하지 않은 사용자의 경우
+    MemberProfile loginUser = (MemberProfile) session.getAttribute("loginUser");
+    // -> 로그인하지 않은 사용자의 경우
     if (loginUser == null) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
           .body(ApiResponse.fail("로그인이 필요한 서비스입니다."));
@@ -154,7 +155,7 @@ public class UserFeedController {
   ResponseEntity<ApiResponse<Void>> deleteFeed(@PathVariable Long feedCode, Long memCode,
       HttpSession session) {
 
-    AuthProfile loginUser = (AuthProfile) session.getAttribute("loginUser");
+    MemberProfile loginUser = (MemberProfile) session.getAttribute("loginUser");
     //    // -> 로그인하지 않은 사용자의 경우
     if (loginUser == null) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED)

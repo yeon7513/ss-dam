@@ -4,6 +4,8 @@ import CategorySelectBox from "../../../components/market/category-select-box/Ca
 import { useSubmitData } from "../../../hooks/useSubmitData.js";
 import { createFormData } from "../../../utils/createFormData.js";
 import { useNavigate } from "react-router-dom";
+import TextInput from "../../../components/forms/text-input/TextInput.jsx";
+import { handleSetField } from "../../../utils/changeHandler.js";
 
 function ProductUpdateForm({ initPost, categories }) {
   const [updatedPost, setUpdatedPost] = useState(initPost);
@@ -51,7 +53,18 @@ function ProductUpdateForm({ initPost, categories }) {
         onSubmit={handleSubmitUpdatedPost}
         submitText="수정"
         cancelUrl={`/market/${initPost?.code}`}
-      />
+      >
+        <div>
+          <label htmlFor="price">가격</label>
+          <TextInput
+            id="price"
+            type="text"
+            name="price"
+            value={updatedPost?.price}
+            onChange={(e) => handleSetField(e, setUpdatedPost)}
+          />
+        </div>
+      </Editor>
     </form>
   );
 }

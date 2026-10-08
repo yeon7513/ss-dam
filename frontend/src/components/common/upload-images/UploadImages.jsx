@@ -104,7 +104,7 @@ function UploadImage({ className, selectedImages, setSelectedImages }) {
                   <button
                     className={cn(styles.badge, styles.changeRepresentativeImageButton)}
                     type="button"
-                    onClick={(e) => handleSetRepresentativeImage(e)}
+                    onClick={(e) => handleSetRepresentativeImage(idx)}
                   >
                     대표로 설정
                   </button>

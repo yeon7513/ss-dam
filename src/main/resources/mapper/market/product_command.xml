@@ -5,12 +5,24 @@
 
 <mapper namespace="productCommand">
 
+  <!-- 거래글 등록 -->
+  <insert id="registerProductPost">
+    INSERT INTO MARKET_PRODUCT
+    (cate_code, mem_code, title, content, price, hitcount, post_status, created_by, created_at, delete_yn, deal_status)
+    VALUES
+    (#{cateCode}, #{memCode}, #{title}, #{content}, #{price}, 0, 'ACTIVE', #{createdBy}, NOW(), 0, 'ON_SALE')
+    <selectKey keyProperty="code" resultType="long" order="AFTER">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+  </insert>
+
   <!-- 거래글 수정 -->
   <update id="updateProductPost">
     UPDATE MARKET_PRODUCT
     SET
     title = #{title},
     content = #{content},
+    price = #{price},
     updated_by = #{updatedBy},
     updated_at = NOW(),
     delete_yn = #{deleteYn}
