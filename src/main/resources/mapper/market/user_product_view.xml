@@ -74,7 +74,6 @@
     MP.code,
     MP.title,
     MP.price,
-    MP.hitcount,
     MP.deal_status,
     MP.created_at,
     MP.updated_at,

@@ -119,6 +119,7 @@ public class UserProductController {
     return ResponseEntity.ok(ApiResponse.success("거래글 수정 완료", null));
   }
 
+  // 거래글 삭제
   @DeleteMapping("/{prodCode}")
   ResponseEntity<ApiResponse<Void>> deleteProductPost(@PathVariable Long prodCode,
       HttpSession session) {

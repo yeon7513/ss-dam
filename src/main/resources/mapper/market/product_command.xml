@@ -5,6 +5,12 @@
 
 <mapper namespace="productCommand">
 
+  <!-- 거래글 조회 로그 삽입 -->
+  <insert id="">
+    INSERT IGNORE INTO MARKET_PROD_HIT_LOG (prod_code, mem_code, created_at)
+    VALUES (#{prodCode}, #{memCode}, NOW())
+  </insert>
+
   <!-- 거래글 등록 -->
   <insert id="registerProductPost">
     INSERT INTO MARKET_PRODUCT

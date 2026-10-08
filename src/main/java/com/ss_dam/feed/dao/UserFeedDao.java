@@ -31,4 +31,6 @@ public interface UserFeedDao {
   float loadFeedsTotalCount(PageQuery pageQuery);
 
   int countFeedsByChallenge(int chalCode, int memCode);
+
+  void registerFeedHitcountLog(Map<String, Object> params);
 }

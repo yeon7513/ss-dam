@@ -1,9 +1,9 @@
 package com.ss_dam.feed.controller;
 
 import com.ss_dam.auth.login.model.response.AuthProfile;
-import com.ss_dam.auth.login.model.response.MemberProfile;
 import com.ss_dam.common.ApiResponse;
 import com.ss_dam.common.pager.PageResult;
+import com.ss_dam.common.validator.auth.AuthValidator;
 import com.ss_dam.feed.model.filter.UserFeedSearchFilter;
 import com.ss_dam.feed.model.request.FeedCreate;
 import com.ss_dam.feed.model.request.FeedUpdate;
@@ -11,7 +11,6 @@ import com.ss_dam.feed.model.response.FeedDetail;
 import com.ss_dam.feed.model.response.FeedEditView;
 import com.ss_dam.feed.model.response.UserFeedView;
 import com.ss_dam.feed.service.UserFeedService;
-
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,9 +27,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/feeds") // 26.06.30 엔드포인트 수정 -> 일반 사용자용(비회원, 회원)은 /user 안붙임
 public class UserFeedController {
 
+  private final AuthValidator authValidator;
   private final UserFeedService userFeedService;
 
-  public UserFeedController(UserFeedService userFeedService) {
+  public UserFeedController(AuthValidator authValidator, UserFeedService userFeedService) {
+    this.authValidator = authValidator;
     this.userFeedService = userFeedService;
   }
 
@@ -52,7 +53,7 @@ public class UserFeedController {
     //    System.out.println("=== 세션 디버깅 끝 ===");
 
     // 로그인한 사용자의 좋아요 여부를 받아오기 위해 세션에서 정보를 꺼내옴.
-    AuthProfile loginUser = (AuthProfile) session.getAttribute("loginUser");
+    AuthProfile loginUser = authValidator.getLoginUser(session);
     // NullException을 방지하기 위해 삼항연산자로 분기 처리함.
     // -> 로그인 했을 경우, 해당 사용자의 고유 번호를 넘겨줌
     // -> 로그인하지 않았을 경우는 처음부터 null을 넘겨 무조건 false가 나오게 처리
@@ -68,10 +69,9 @@ public class UserFeedController {
   @GetMapping("/{feedCode}")
   ResponseEntity<ApiResponse<FeedDetail>> findFeedDetailByFeedCode(@PathVariable Long feedCode,
       HttpSession session) {
-    AuthProfile loginUser = (AuthProfile) session.getAttribute("loginUser");
-    Long memberCode = (loginUser != null) ? loginUser.getCode() : null;
+    AuthProfile loginUser = authValidator.getLoginUser(session);
 
-    FeedDetail feedDetail = userFeedService.findFeedDetailByFeedCode(feedCode, memberCode);
+    FeedDetail feedDetail = userFeedService.findFeedDetailByFeedCode(feedCode, loginUser);
 
     if (feedDetail == null) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -86,11 +86,9 @@ public class UserFeedController {
   @PostMapping
   ResponseEntity<ApiResponse<Long>> registerFeed(FeedCreate feedCreate, HttpSession session) {
 
-    AuthProfile loginUser = (AuthProfile) session.getAttribute("loginUser");
-    feedCreate.setMemCode(loginUser.getCode());
-    feedCreate.setCreatedBy(loginUser.getId());
+    AuthProfile loginUser = authValidator.requireLogin(session);
 
-    Long newFeedCode = userFeedService.registerFeed(feedCreate);
+    Long newFeedCode = userFeedService.registerFeed(feedCreate, loginUser);
 
     if (newFeedCode == null || newFeedCode == 0) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.fail("피드 등록에 실패했습니다."));
@@ -106,10 +104,10 @@ public class UserFeedController {
       HttpSession session) {
 
     // 로그인한 사용자가 피드를 작성한 사용자가 맞는지
-    AuthProfile loginUser = (AuthProfile) session.getAttribute("loginUser");
-    Long memberCode = (loginUser != null) ? loginUser.getCode() : null;
+    AuthProfile loginUser = authValidator.requireLogin(session);
 
-    FeedEditView feedDetailForEdit = userFeedService.findFeedDetailForEdit(feedCode, memberCode);
+    FeedEditView feedDetailForEdit =
+        userFeedService.findFeedDetailForEdit(feedCode, loginUser.getCode());
 
     if (feedDetailForEdit == null) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -132,19 +130,9 @@ public class UserFeedController {
           .body(ApiResponse.fail("잘못된 요청입니다. 피드 식별자가 일치하지 않습니다."));
     }
 
-    MemberProfile loginUser = (MemberProfile) session.getAttribute("loginUser");
-    // -> 로그인하지 않은 사용자의 경우
-    if (loginUser == null) {
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-          .body(ApiResponse.fail("로그인이 필요한 서비스입니다."));
-    }
+    AuthProfile loginUser = authValidator.requireLogin(session);
 
-    //    // -> 로그인한 사용자 본인이 작성한 글이 맞는지 확인
-    if (!loginUser.getCode().equals(feedUpdate.getMemCode())) {
-      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponse.fail("수정 권한이 없습니다."));
-    }
-
-    userFeedService.updateFeed(feedUpdate);
+    userFeedService.updateFeed(feedUpdate, loginUser);
 
     return ResponseEntity.ok(ApiResponse.success("피드 수정 완료", null));
   }
@@ -152,24 +140,11 @@ public class UserFeedController {
 
   // 피드 삭제
   @DeleteMapping("/{feedCode}")
-  ResponseEntity<ApiResponse<Void>> deleteFeed(@PathVariable Long feedCode, Long memCode,
-      HttpSession session) {
+  ResponseEntity<ApiResponse<Void>> deleteFeed(@PathVariable Long feedCode, HttpSession session) {
 
-    MemberProfile loginUser = (MemberProfile) session.getAttribute("loginUser");
-    //    // -> 로그인하지 않은 사용자의 경우
-    if (loginUser == null) {
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-          .body(ApiResponse.fail("로그인이 필요한 서비스입니다."));
-    }
+    AuthProfile loginUser = authValidator.requireLogin(session);
 
-    //    // -> 로그인한 사용자 본인이 작성한 글이 맞는지 확인
-    if (!loginUser.getCode().equals(memCode)) {
-      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponse.fail("삭제 권한이 없습니다."));
-    }
-
-    String updatedBy = loginUser.getId();
-
-    userFeedService.deleteFeed(feedCode, updatedBy);
+    userFeedService.deleteFeed(feedCode, loginUser);
 
     return ResponseEntity.ok(ApiResponse.success("피드 삭제 완료", null));
   }

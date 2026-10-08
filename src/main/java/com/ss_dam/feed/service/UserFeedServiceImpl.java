@@ -1,18 +1,6 @@
 package com.ss_dam.feed.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
-
+import com.ss_dam.auth.login.model.response.AuthProfile;
 import com.ss_dam.challenge.dao.UserChallengeDao;
 import com.ss_dam.challenge.service.ChallengeWriteGuard;
 import com.ss_dam.comment.service.UserCommentService;
@@ -26,33 +14,40 @@ import com.ss_dam.feed.model.request.FeedUpdate;
 import com.ss_dam.feed.model.response.FeedDetail;
 import com.ss_dam.feed.model.response.FeedEditView;
 import com.ss_dam.feed.model.response.UserFeedView;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.*;
 
 @Service
 public class UserFeedServiceImpl implements UserFeedService {
-  
-  private final UserFeedDao userFeedDao;  
-  private final UserCommentService userCommentService;  
+
+  private final UserFeedDao userFeedDao;
+  private final UserCommentService userCommentService;
   private final ImageService imageService;
-  
-  public UserFeedServiceImpl(UserFeedDao userFeedDao, UserCommentService userCommentService, ImageService imageService) {
-	  this.userFeedDao = userFeedDao;
-	  this.userCommentService = userCommentService;
-	  this.imageService = imageService;
+  private final ChallengeWriteGuard challengeWriteGuard;
+  private final UserChallengeDao userChallengeDao;
+
+  public UserFeedServiceImpl(UserFeedDao userFeedDao, UserCommentService userCommentService,
+      ImageService imageService, ChallengeWriteGuard challengeWriteGuard,
+      UserChallengeDao userChallengeDao) {
+    this.userFeedDao = userFeedDao;
+    this.userCommentService = userCommentService;
+    this.imageService = imageService;
+    this.challengeWriteGuard = challengeWriteGuard;
+    this.userChallengeDao = userChallengeDao;
   }
-
-  @Autowired
-  private ChallengeWriteGuard challengeWriteGuard;
-
-  @Autowired
-  private UserChallengeDao userChallengeDao;
-
 
   // 피드 목록 조회
   @Override
   public PageResult<UserFeedView> loadFeeds(UserFeedSearchFilter filter, Long memberCode) {
     Map<String, Object> params = new HashMap<>();
 
-    params.put("memberCode", memberCode);
+    params.put("memCode", memberCode);
     params.put("offset", filter.getOffset());
     params.put("perPage", filter.getPerPage());
     params.put("chalCode", filter.getChalCode());
@@ -67,14 +62,42 @@ public class UserFeedServiceImpl implements UserFeedService {
 
 
   // 피드 단일 상세 조회 -> 아무나 볼 수 있는 단순 게시글
+  @Transactional
   @Override
-  public FeedDetail findFeedDetailByFeedCode(Long FeedCode, Long memberCode) {
+  public FeedDetail findFeedDetailByFeedCode(Long feedCode, AuthProfile loginUser) {
+
+    boolean isMember = loginUser != null && "MEMBER".equalsIgnoreCase(loginUser.getRole());
+    Long memberCode = (isMember) ? loginUser.getCode() : null;
 
     Map<String, Object> params = new HashMap<>();
-    params.put("memberCode", memberCode);
-    params.put("feedCode", FeedCode);
+    params.put("memCode", memberCode);
+    params.put("feedCode", feedCode);
 
     FeedDetail feedDetail = userFeedDao.findFeedDetailByFeedCode(params);
+
+    // 존재하지 않으면 아래 코드는 실행되지 않도록
+    // 바로 null을 반환함.
+    if (feedDetail == null) {
+      return null;
+    }
+
+    // 작성자가 아닌 다른 사람이 맞는지 판별
+    // -> 내가 본 글의 조회수는 제외하기 위해
+    // --> isOther == true : 타인이기 때문에 조회수 증가 O
+    // --> isOther == false : 글을 올린 장본인이기 때문에 조회수 증가 X
+    boolean isOther = !Objects.equals(feedDetail.getMemberProfile().getCode(), memberCode);
+    // Objects.equals() ??
+    // -> Objects.equals(a, b)는 주소 비교(==)를 먼저 실행해서 최적화한 뒤,
+    // -> 주소가 다르면 Null 안전성(a != null)을 챙기면서
+    // -> 내부 equals()를 통해 최종적으로 "값 비교"를 수행해 주는 가장 안전한 메서드라고 함.
+    // -->  인텔리제이가 이렇게 바꾸라고 난리쳐서 찾아봄..
+    // ---> 비로그인 사용자라면, memberCode가 null이니 예외가 발생할 수 있어서 그런가봄~
+
+    // 조회 로그 추가
+    // -> 단, 관리자 및 비회원, 글 작성자는 제외
+    if (isMember && isOther) {
+      userFeedDao.registerFeedHitcountLog(params);
+    }
 
     return feedDetail;
   }
@@ -83,50 +106,40 @@ public class UserFeedServiceImpl implements UserFeedService {
   // 피드 등록
   @Transactional(isolation = Isolation.READ_COMMITTED)
   @Override
-  public Long registerFeed(FeedCreate feedCreate) {
+  public Long registerFeed(FeedCreate feedCreate, AuthProfile loginUser) {
 
-      // 1. 회원 정보 확인
-      if (feedCreate.getMemCode() == null
-              || feedCreate.getMemCode() < 1) {
+    feedCreate.setMemCode(loginUser.getCode());
+    feedCreate.setCreatedBy(loginUser.getId());
 
-          throw new ResponseStatusException(
-                  HttpStatus.UNAUTHORIZED,
-                  "로그인이 필요합니다.");
-      }
+    // 2. 챌린지 상태·기간 검사 및 행 잠금
+    challengeWriteGuard.checkAndLock(feedCreate.getChalCode());
 
-      // 2. 챌린지 상태·기간 검사 및 행 잠금
-      challengeWriteGuard.checkAndLock(feedCreate.getChalCode());
+    // 3. 해당 챌린지에 참여 중인지 확인
+    boolean joined = userChallengeDao.hasActiveParticipation(
+        Map.of("code", feedCreate.getChalCode(), "memCode", feedCreate.getMemCode()));
 
-      // 3. 해당 챌린지에 참여 중인지 확인
-      boolean joined =
-              userChallengeDao.hasActiveParticipation(
-                      Map.of(
-                              "code", feedCreate.getChalCode(),
-                              "memCode", feedCreate.getMemCode()));
+    if (!joined) {
+      throw new ResponseStatusException(HttpStatus.CONFLICT, "참여 중인 챌린지에만 인증할 수 있습니다.");
+    }
 
-      if (!joined) {
-          throw new ResponseStatusException(
-                  HttpStatus.CONFLICT,
-                  "참여 중인 챌린지에만 인증할 수 있습니다.");
-      }
+    // 4. 피드 등록
+    Long newFeedCode = userFeedDao.registerFeed(feedCreate);
 
-      // 4. 피드 등록
-      Long newFeedCode = userFeedDao.registerFeed(feedCreate);
+    if (newFeedCode == null || newFeedCode <= 0) {
+      throw new IllegalStateException("피드 등록에 실패했습니다.");
+    }
 
-      if (newFeedCode == null || newFeedCode <= 0) {
-          throw new IllegalStateException(
-                  "피드 등록에 실패했습니다.");
-      }
+    // 이미지 등록
+    if (feedCreate.getImages() == null || feedCreate.getImages().isEmpty()) {
+      imageService.uploadImages(feedCreate.getImages(), "feed", newFeedCode);
+    }
 
-      // 이미지 등록
-      imageService.uploadImages(
-              feedCreate.getImages(), "feed", newFeedCode);
+    // 해시태그 등록
+    if (feedCreate.getHashtags() == null || feedCreate.getHashtags().isEmpty()) {
+      registerHashtags(feedCreate.getHashtags(), newFeedCode);
+    }
 
-      // 해시태그 등록
-      registerHashtags(
-              feedCreate.getHashtags(), newFeedCode);
-
-      return newFeedCode;
+    return newFeedCode;
   }
 
 
@@ -135,7 +148,7 @@ public class UserFeedServiceImpl implements UserFeedService {
   public FeedEditView findFeedDetailForEdit(Long feedCode, Long memberCode) {
     Map<String, Long> params = new HashMap<>();
     params.put("feedCode", feedCode);
-    params.put("memberCode", memberCode);
+    params.put("memCode", memberCode);
 
     return userFeedDao.findFeedDetailForEdit(params);
   }
@@ -144,7 +157,9 @@ public class UserFeedServiceImpl implements UserFeedService {
   // 피드 수정 -> 피드 포함, 해시태그, 이미지
   @Transactional
   @Override
-  public void updateFeed(FeedUpdate feedUpdate) {
+  public void updateFeed(FeedUpdate feedUpdate, AuthProfile loginUser) {
+    feedUpdate.setUpdatedBy(loginUser.getId());
+
     // 피드 수정 실행
     userFeedDao.updateFeed(feedUpdate);
 
@@ -175,7 +190,9 @@ public class UserFeedServiceImpl implements UserFeedService {
 
   // 피드 삭제 요청 메소드
   @Override
-  public void deleteFeed(Long feedCode, String updatedBy) {
+  public void deleteFeed(Long feedCode, AuthProfile loginUser) {
+    String updatedBy = loginUser.getId();
+
     Map<String, Object> params = new HashMap<>();
     params.put("feedCode", feedCode);
     params.put("updatedBy", updatedBy);
@@ -217,7 +234,7 @@ public class UserFeedServiceImpl implements UserFeedService {
   @Override
   public int getProofCount(int chalCode, int memCode) {
 
-	return userFeedDao.countFeedsByChallenge(chalCode, memCode);
+    return userFeedDao.countFeedsByChallenge(chalCode, memCode);
   }
 
 }

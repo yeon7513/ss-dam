@@ -38,29 +38,35 @@ function FeedCard({ feed, onClickDetail }) {
           </div>
         </div>
 
-        {/* 좋아요 & 댓글 & 작성일(시간) */}
+        {/* 조회수 & 좋아요 & 댓글 / 작성일(시간) */}
         <div className={styles.info}>
+
+          {/* 상호작용 수 */}
           <div className={styles.count}>
-            <div className={styles.icon}>
-              <span className={styles.like}>
-                <IoHeartSharp />
-              </span>
-              {feed.countFeedLike}
-            </div>
-            <div className={styles.icon}>
-              <span className={styles.comment}>
-                <IoChatbubbleEllipses />
-              </span>
-              {feed.countFeedComment}
-            </div>
+            {/* 조회수 */}
             <div className={styles.icon}>
               <span className={styles.hitcount}>
                 <FaEye />
               </span>
               {feed.hitcount}
             </div>
+            {/* 좋아요 수 */}
+            <div className={styles.icon}>
+              <span className={styles.like}>
+                <IoHeartSharp />
+              </span>
+              {feed.countFeedLike}
+            </div>
+            {/* 댓글 수 */}
+            <div className={styles.icon}>
+              <span className={styles.comment}>
+                <IoChatbubbleEllipses />
+              </span>
+              {feed.countFeedComment}
+            </div>
           </div>
 
+          {/* 작성일 */}
           <div>
             <span>{formatCreatedAt(feed.createdAt)}</span>
           </div>
