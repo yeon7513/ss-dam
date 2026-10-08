@@ -57,6 +57,13 @@
     ON m.code = i.target_code AND i.TYPE = 'profile'
     ) AS writer
     ON writer.code = MP.mem_code
+    <!-- 조회수 -->
+    LEFT JOIN (
+    SELECT mphl.prod_code, count(mphl.prod_code) AS hit_cnt
+    FROM MARKET_PROD_HIT_LOG AS mphl
+    GROUP BY mphl.prod_code
+    ) AS hit_log
+    ON MP.code = hit_log.prod_code
     <!-- Pick 개수 -->
     LEFT JOIN (
     SELECT pick.prod_code, count(*) AS cnt
@@ -67,7 +74,7 @@
     ON pick_cnt.prod_code = MP.code
     <!-- 로그인한 사용자의 Pick 여부 -->
     LEFT JOIN MARKET_PROD_PICK AS my_pick
-    ON my_pick.prod_code = MP.code AND my_pick.mem_code = #{memberCode} AND my_pick.delete_yn = 0
+    ON my_pick.prod_code = MP.code AND my_pick.mem_code = #{memCode} AND my_pick.delete_yn = 0
   </sql>
 
   <sql id="ProductBasicColumns">
@@ -83,6 +90,7 @@
     writer.id AS m_id,
     writer.rating AS m_rating,
     writer.path AS m_profile_image,
+    IFNULL(hit_log.hit_cnt, 0) AS hitcount,
     IFNULL(pick_cnt.cnt, 0) AS count_pick,
     IF(my_pick.prod_code IS NOT NULL, 1, 0) AS picked_yn
   </sql>
@@ -230,7 +238,7 @@
     LEFT JOIN IMAGES i
     ON p.code = i.target_code AND i.type = 'market'
     WHERE p.code = #{prodCode}
-    AND p.mem_code = #{memberCode}
+    AND p.mem_code = #{memCode}
   </select>
 
 </mapper>

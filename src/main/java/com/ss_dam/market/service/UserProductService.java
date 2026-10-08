@@ -12,7 +12,7 @@ import com.ss_dam.market.model.response.UserProductView;
 public interface UserProductService {
   PageResult<UserProductView> loadProducts(UserProductSearchFilter filter, Long memberCode);
 
-  ProductDetail findProductDetailByProdCode(Long prodCode, Long memberCode);
+  ProductDetail findProductDetailByProdCode(Long prodCode, AuthProfile loginUser);
 
   ProductEditView findProductDetailForEdit(Long prodCode, Long memberCode);
 
