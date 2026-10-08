@@ -19,7 +19,7 @@ export const DELETE_YN_OPTIONS = [
 
 // SearchBox.jsx 컴포넌트
 export const SEARCH_OPTIONS = [
-  { code: "", name: "전체 검색" },
+  // { code: "", name: "전체 검색" },
   { code: "title", name: "제목" },
   { code: "author", name: "작성자 아이디" },
 ];
