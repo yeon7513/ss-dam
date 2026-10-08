@@ -1,17 +1,25 @@
 package com.ss_dam.auth.member.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.ss_dam.auth.login.model.response.MemberProfile;
 import com.ss_dam.auth.member.Member;
 import com.ss_dam.auth.member.service.MemberService;
 import com.ss_dam.common.ApiResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/member")
 public class UserMemberController {
+  
 
   @Autowired
   MemberService memberService;
