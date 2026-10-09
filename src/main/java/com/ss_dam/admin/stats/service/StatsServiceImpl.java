@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,9 +24,12 @@ import com.ss_dam.admin.stats.model.response.SellerRanking;
 @Transactional(readOnly = true) //조회용 트랜잭션 적용
 public class StatsServiceImpl implements StatsService {
 
-    //Spring이 DashboardDaoImpl 객체를 찾아 주입
-    @Autowired 
-    private StatsDao dashboardDao;
+    private final StatsDao statsDao;
+
+    public StatsServiceImpl (StatsDao statsDao) {
+        this.statsDao = statsDao;
+    }
+
 
     //조회 기간에 해당하는 대시보드 통계 반환
     @Override 
@@ -52,20 +54,20 @@ public class StatsServiceImpl implements StatsService {
         LocalDateTime previousEnd = start;
 
         //3. 각 기간 종료 시점의 누적 회원 수
-        long totalMemberCount = dashboardDao.countTotalMembers(end);
-        long previousTotalMemberCount = dashboardDao.countTotalMembers(previousEnd);
+        long totalMemberCount = statsDao.countTotalMembers(end);
+        long previousTotalMemberCount = statsDao.countTotalMembers(previousEnd);
 
         //4. 각 기간에 가입한 신규 회원 수
-        long newMemberCount = dashboardDao.countNewMembers(start, end);
-        long previousNewMemberCount = dashboardDao.countNewMembers(previousStart, previousEnd);
+        long newMemberCount = statsDao.countNewMembers(start, end);
+        long previousNewMemberCount = statsDao.countNewMembers(previousStart, previousEnd);
 
         //5. 각 기간에 등록된 신규 피드 수
-        long newFeedCount = dashboardDao.countNewFeeds(start, end);
-        long previousNewFeedCount = dashboardDao.countNewFeeds(previousStart, previousEnd);
+        long newFeedCount = statsDao.countNewFeeds(start, end);
+        long previousNewFeedCount = statsDao.countNewFeeds(previousStart, previousEnd);
 
         //6. 각 기간에 등록된 신규 거래 수
-        long newTradeCount = dashboardDao.countNewTrades(start, end);
-        long previousNewTradeCount = dashboardDao.countNewTrades(previousStart, previousEnd);
+        long newTradeCount = statsDao.countNewTrades(start, end);
+        long previousNewTradeCount = statsDao.countNewTrades(previousStart, previousEnd);
 
         //7. 조회한 건수를 DTO에 설정
         DashboardSummary summary = new DashboardSummary();
@@ -109,7 +111,7 @@ public class StatsServiceImpl implements StatsService {
         LocalDateTime end = to.plusDays(1).atStartOfDay();
 
         //4.월별 신규 가입 회원 수 조회
-        return dashboardDao.findMemberStatistics(start, end);
+        return statsDao.findMemberStatistics(start, end);
     }
 
     // 종료된 챌린지의 참여 건수와 달성률 조회
@@ -126,7 +128,7 @@ public class StatsServiceImpl implements StatsService {
 
         //3.전체 참여 건수와 달성 건수 조회
         ChallengeStatistics result = 
-            dashboardDao.findChallengeStatistics(start, end);
+            statsDao.findChallengeStatistics(start, end);
 
         long total = result.getTotalParticipationCount();
         long completed = result.getCompletedParticipationCount();
@@ -164,7 +166,7 @@ public class StatsServiceImpl implements StatsService {
 
         //3. 참여자 수 내림차순으로 조회
         List<ChallengeRanking> rankings = 
-            dashboardDao.findChallengeRanking(start, end);
+            statsDao.findChallengeRanking(start, end);
 
         //4. 동일 참여자 수는 공동 순위로 설정
         int rank = 0;
@@ -199,7 +201,7 @@ public class StatsServiceImpl implements StatsService {
 
         //3. 지역별 참여 건수 조회
         List<RegionStatistics> regions = 
-            dashboardDao.findRegionStatistics(start, end);
+            statsDao.findRegionStatistics(start, end);
         
         //4. 전체 참여 건수 계산
         long totalCount = 0;
@@ -252,10 +254,10 @@ public class StatsServiceImpl implements StatsService {
 
         //4. 이번 기간과 이전 기간의 판매 실적 조회
         List<SellerRanking> rankings = 
-            dashboardDao.findSellerRanking(start, end);
+            statsDao.findSellerRanking(start, end);
         
         List<SellerRanking> previousRankings =
-            dashboardDao.findSellerRanking(previousStart, previousEnd);
+            statsDao.findSellerRanking(previousStart, previousEnd);
         
         //5. 판매자 아이디별 이전 판매 금액 저장
         Map<String, Long> previousSales = new HashMap<>();

@@ -1,21 +1,26 @@
 package com.ss_dam.auth.member.service;
 
+import org.springframework.stereotype.Service;
+
 import com.ss_dam.auth.login.model.response.MemberProfile;
 import com.ss_dam.auth.member.Member;
 import com.ss_dam.auth.member.dao.MemberDao;
 import com.ss_dam.common.image.service.ImageService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 public class MemberServiceImpl implements MemberService {
 
-  @Autowired
-  ImageService imageService;
+  private final MemberDao memberDao;
+  private final ImageService imageService;
 
-  @Autowired
-  MemberDao memberDao;
-
+  public MemberServiceImpl (
+    MemberDao memberDao,
+    ImageService imageService
+  ) {
+    this.memberDao = memberDao;
+    this.imageService = imageService;
+  }
+  
   @Override
   public MemberProfile searchProfileByMemberCode(Long code) {
     return memberDao.searchProfileByMemberCode(code);

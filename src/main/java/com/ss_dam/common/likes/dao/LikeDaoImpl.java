@@ -4,14 +4,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class LikeDaoImpl implements LikeDao {
 
-    @Autowired
-    SqlSession sql;
+	private final SqlSession sql;
+
+	public LikeDaoImpl (SqlSession sql) {
+		this.sql = sql;
+	}
 
 	@Override
 	public void upsertFeedLike(long feedCode, long memCode) {

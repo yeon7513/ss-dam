@@ -1,16 +1,16 @@
 package com.ss_dam.auth.find.controller;
 
-import com.ss_dam.auth.find.model.ChangePassword;
-import com.ss_dam.auth.find.model.FindMember;
-import com.ss_dam.auth.find.service.FindMemberService;
-import com.ss_dam.auth.login.model.response.MemberProfile;
-import com.ss_dam.common.ApiResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.ss_dam.auth.find.model.ChangePassword;
+import com.ss_dam.auth.find.model.FindMember;
+import com.ss_dam.auth.find.service.FindMemberService;
+import com.ss_dam.auth.login.model.response.MemberProfile;
+import com.ss_dam.common.ApiResponse;
 
 @RestController
 @RequestMapping("/api/auth/find")

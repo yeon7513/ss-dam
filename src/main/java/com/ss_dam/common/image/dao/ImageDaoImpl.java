@@ -1,18 +1,21 @@
 package com.ss_dam.common.image.dao;
 
-import com.ss_dam.common.image.model.Images;
-import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
 import java.util.List;
 import java.util.Map;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.stereotype.Repository;
+
+import com.ss_dam.common.image.model.Images;
 
 @Repository
 public class ImageDaoImpl implements ImageDao {
 
-  @Autowired
-  SqlSession sql;
+  private SqlSession sql;
+
+  public ImageDaoImpl (SqlSession sql) {
+    this.sql = sql;
+  }
 
   @Override
   public List<Images> findImagesByCode(Map<String, Object> params) {

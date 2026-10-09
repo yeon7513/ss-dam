@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,11 +20,16 @@ import com.ss_dam.common.pager.Pager;
 @Service
 public class AdminReportServiceImpl implements AdminReportService {
 
-    @Autowired
-    private AdminReportDao adminReportDao;
+	private final AdminReportDao adminReportDao;
+	private final AdminMemberDao adminMemberDao;
 
-    @Autowired
-    private AdminMemberDao adminMemberDao;
+	public AdminReportServiceImpl (
+		AdminReportDao adminReportDao,
+		AdminMemberDao adminMemberDao
+	) {
+		this.adminReportDao = adminReportDao;
+		this.adminMemberDao = adminMemberDao;
+	}
 
       //관리자 회원 상세 - 신고내역 탭
         @Override

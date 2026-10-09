@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +20,11 @@ import com.ss_dam.common.image.model.Images;
 @Service
 public class ImageServiceImpl implements ImageService {
 
-  @Autowired
-  ImageDao imageDao;
+  private ImageDao imageDao;
+
+  public ImageServiceImpl (ImageDao imageDao) {
+    this.imageDao = imageDao;
+  }
 
   @Value("${kopo.upload.path}")
   private String uploadPath;

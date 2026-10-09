@@ -1,17 +1,20 @@
 package com.ss_dam.common.category.market.service;
 
-import com.ss_dam.common.category.market.dao.AdminMarketCategoryDao;
-import com.ss_dam.common.category.market.model.response.AdminMarketCategoryView;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.ss_dam.common.category.market.dao.AdminMarketCategoryDao;
+import com.ss_dam.common.category.market.model.response.AdminMarketCategoryView;
 
 @Service
 public class AdminMarketCategoryServiceImpl implements AdminMarketCategoryService {
 
-  @Autowired
-  AdminMarketCategoryDao adminMarketCategoryDao;
+  private final AdminMarketCategoryDao adminMarketCategoryDao;
+
+  public AdminMarketCategoryServiceImpl (AdminMarketCategoryDao adminMarketCategoryDao) {
+    this.adminMarketCategoryDao = adminMarketCategoryDao;
+  }
 
   @Override
   public List<AdminMarketCategoryView> loadAllMarketCategories() {

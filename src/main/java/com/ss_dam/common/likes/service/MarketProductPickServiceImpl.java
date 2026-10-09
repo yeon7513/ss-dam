@@ -1,14 +1,17 @@
 package com.ss_dam.common.likes.service;
 
-import com.ss_dam.common.likes.dao.MarketProductPickDao;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.ss_dam.common.likes.dao.MarketProductPickDao;
 
 @Service
 public class MarketProductPickServiceImpl implements MarketProductPickService {
 
-  @Autowired
-  MarketProductPickDao pickDao;
+  private final MarketProductPickDao pickDao;
+
+  public MarketProductPickServiceImpl (MarketProductPickDao pickDao) {
+    this.pickDao = pickDao;
+  }
 
   @Override
   public boolean toggleProdPick(long prodCode, long memCode) {

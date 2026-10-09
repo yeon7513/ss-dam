@@ -1,17 +1,20 @@
 package com.ss_dam.common.category.market.service;
 
-import com.ss_dam.common.category.market.dao.UserMarketCategoryDao;
-import com.ss_dam.common.category.market.model.response.UserMarketCategoryView;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.ss_dam.common.category.market.dao.UserMarketCategoryDao;
+import com.ss_dam.common.category.market.model.response.UserMarketCategoryView;
 
 @Service
 public class UserMarketCategoryServiceImpl implements UserMarketCategoryService {
 
-  @Autowired
-  UserMarketCategoryDao userMarketCategoryDao;
+  private final UserMarketCategoryDao userMarketCategoryDao;
+
+  public UserMarketCategoryServiceImpl (UserMarketCategoryDao userMarketCategoryDao) {
+    this.userMarketCategoryDao = userMarketCategoryDao;
+  }
 
   @Override
   public List<UserMarketCategoryView> loadActiveMarketCategories() {

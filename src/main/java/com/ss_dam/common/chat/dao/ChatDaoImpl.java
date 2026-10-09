@@ -1,23 +1,26 @@
 package com.ss_dam.common.chat.dao;
 
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.stereotype.Repository;
+
 import com.ss_dam.common.chat.model.filter.ChatRoomSearchFilter;
 import com.ss_dam.common.chat.model.request.ChatMessageCreate;
 import com.ss_dam.common.chat.model.request.ChatRoomRequest;
 import com.ss_dam.common.chat.model.response.ChatDetailView;
 import com.ss_dam.common.chat.model.response.ChatMessageView;
 import com.ss_dam.common.chat.model.response.ChatRoomView;
-import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
-import java.util.List;
-import java.util.Map;
 
 @Repository
 public class ChatDaoImpl implements ChatDao {
 
-  @Autowired
-  SqlSession sql;
+  private SqlSession sql;
+
+  public ChatDaoImpl (SqlSession sql) {
+    this.sql = sql;
+  }
 
   // roomId 찾기
   @Override

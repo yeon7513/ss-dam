@@ -1,17 +1,20 @@
 package com.ss_dam.common.category.market.dao;
 
-import com.ss_dam.common.category.market.model.response.AdminMarketCategoryView;
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import com.ss_dam.common.category.market.model.response.AdminMarketCategoryView;
 
 @Repository
 public class AdminMarketCategoryDaoImpl implements AdminMarketCategoryDao {
 
-  @Autowired
-  SqlSession sql;
+  private final SqlSession sql;
+
+  public AdminMarketCategoryDaoImpl (SqlSession sql) {
+    this.sql = sql;
+  }
 
   @Override
   public List<AdminMarketCategoryView> loadAllMarketCategories() {

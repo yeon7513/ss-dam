@@ -1,17 +1,20 @@
 package com.ss_dam.common.category.challenge.dao;
 
-import com.ss_dam.common.category.challenge.model.response.AdminChallengeCategoryView;
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import com.ss_dam.common.category.challenge.model.response.AdminChallengeCategoryView;
 
 @Repository
 public class AdminChallengeCategoryDaoImpl implements AdminChallengeCategoryDao {
 
-  @Autowired
-  SqlSession sql;
+  private final SqlSession sql;
+
+  public AdminChallengeCategoryDaoImpl (SqlSession sql) {
+    this.sql = sql;
+  }
 
   @Override
   public List<AdminChallengeCategoryView> loadAllChallengeCategories() {

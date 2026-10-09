@@ -1,17 +1,20 @@
 package com.ss_dam.common.category.challenge.service;
 
-import com.ss_dam.common.category.challenge.dao.AdminChallengeCategoryDao;
-import com.ss_dam.common.category.challenge.model.response.AdminChallengeCategoryView;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 
-@Service
-public class AdminChallengeCategoryServiceImpl implements AdminChallengeCategoryService {
+import org.springframework.stereotype.Service;
 
-  @Autowired
-  AdminChallengeCategoryDao adminChallengeCategoryDao;
+import com.ss_dam.common.category.challenge.dao.AdminChallengeCategoryDao;
+import com.ss_dam.common.category.challenge.model.response.AdminChallengeCategoryView;
+
+@Service
+public class AdminChallengeCategoryServiceImpl implements AdminChallengeCategoryService { 
+
+  private final AdminChallengeCategoryDao adminChallengeCategoryDao;
+
+  public AdminChallengeCategoryServiceImpl (AdminChallengeCategoryDao adminChallengeCategoryDao) {
+    this.adminChallengeCategoryDao = adminChallengeCategoryDao;
+  }
 
   @Override
   public List<AdminChallengeCategoryView> loadAllChallengeCategories() {
