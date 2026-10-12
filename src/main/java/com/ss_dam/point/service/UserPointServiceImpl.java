@@ -12,6 +12,7 @@ public class UserPointServiceImpl implements UserPointService {
         this.pointDao = pointDao;
     }
 
+	//보유하고 있는 포인트 조회
     @Override
 	public int getPointBalance(Long code) {
 		return pointDao.getPointBalance(code);

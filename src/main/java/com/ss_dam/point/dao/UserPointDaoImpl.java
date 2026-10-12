@@ -1,8 +1,10 @@
 package com.ss_dam.point.dao;
 
 import org.apache.ibatis.session.SqlSession;
+import org.springframework.stereotype.Repository;
 
-public class UserPointDaoImpl extends UserPointDao{
+@Repository
+public class UserPointDaoImpl implements UserPointDao{
 
     private final SqlSession sql;
 
