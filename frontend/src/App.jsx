@@ -8,6 +8,7 @@ import ChallengeGuide from "./pages/about/challenge-guide/ChallengeGuide.jsx";
 import MarketGuide from "./pages/about/market-guide/MarketGuide.jsx";
 import AccountManage from "./pages/admin/account-manage/AccountManage.jsx";
 import FeedManage from "./pages/admin/admin-feed/FeedManage";
+import FeedManageDetail from "./pages/admin/admin-feed/FeedManageDetail.jsx";
 import ChallengeManage from "./pages/admin/challenge-manage/ChallengeManage.jsx";
 import ChallengeManageDetail from "./pages/admin/challenge-manage/ChallengeManageDetail.jsx";
 import ChallengeRegister from "./pages/admin/challenge-manage/register/ChallengeRegister.jsx";
