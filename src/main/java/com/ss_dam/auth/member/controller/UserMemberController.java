@@ -1,6 +1,5 @@
 package com.ss_dam.auth.member.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,10 +18,12 @@ import com.ss_dam.common.ApiResponse;
 @RestController
 @RequestMapping("/api/member")
 public class UserMemberController {
-  
 
-  @Autowired
-  MemberService memberService;
+  private final MemberService memberService;
+
+  public UserMemberController (MemberService memberService) {
+    this.memberService = memberService;
+  }
 
   @GetMapping("/{memCode}")
   public ResponseEntity<ApiResponse<MemberProfile>> searchProfileByMemberCode(

@@ -1,6 +1,5 @@
 package com.ss_dam.admin.report.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,10 +23,11 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/api/admin/reports")
 public class AdminReportController {
 
-@Autowired 
-private AdminReportService adminReportService;
+	private final AdminReportService adminReportService;
 
-
+	public AdminReportController (AdminReportService adminReportService) {
+		this.adminReportService = adminReportService;
+	}
 
     // 관리자 신고 목록 조회
     // 조건 생략 시 해당 조건으로 제한하지 않음

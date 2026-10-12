@@ -12,6 +12,8 @@ import ChallengeManage from "./pages/admin/challenge-manage/ChallengeManage.jsx"
 import ChallengeManageDetail from "./pages/admin/challenge-manage/ChallengeManageDetail.jsx";
 import ChallengeRegister from "./pages/admin/challenge-manage/register/ChallengeRegister.jsx";
 import ChallengeUpdate from "./pages/admin/challenge-manage/update/ChallengeUpdate.jsx";
+import ChallengeResult from './pages/admin/challenge-result/ChallengeResult';
+import ChallengeResultDetail from './pages/admin/challenge-result/ChallengeResultDetail';
 import MarketManage from "./pages/admin/market/MarketManage";
 import MarketManageDetail from "./pages/admin/market/MarketManageDetail.jsx";
 import OperationStatus from "./pages/admin/OperationStatus";
@@ -49,6 +51,7 @@ import Points from "./pages/my-page/points/Points";
 import SupportDetail from "./pages/support/SupportDetail";
 import Supports from "./pages/support/Supports";
 import FeedManageDetail from "./pages/admin/admin-feed/FeedManageDetail.jsx";
+
 
 function App() {
   return (
@@ -154,12 +157,18 @@ function App() {
             <Route path="register" element={<ChallengeRegister />} />
             <Route path="edit/:code" element={<ChallengeUpdate />} />
             <Route path=":code" element={<ChallengeManageDetail />} />
+            <Route path="challenge-result" element={<ChallengeResult />} />
+            <Route
+              path="challenge-result/:code"
+              element={<ChallengeResultDetail />}
+            />
           </Route>
 
           {/* 시스템 관리 */}
           <Route path="system_manage">
             <Route index element={<AccountManage />} />
           </Route>
+
         </Route>
       </Route>
 

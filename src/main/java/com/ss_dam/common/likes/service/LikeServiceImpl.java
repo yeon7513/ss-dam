@@ -1,6 +1,5 @@
 package com.ss_dam.common.likes.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ss_dam.common.likes.dao.LikeDao;
@@ -8,9 +7,12 @@ import com.ss_dam.common.likes.dao.LikeDao;
 @Service
 public class LikeServiceImpl implements LikeService {
 
-    @Autowired
-    LikeDao likeDao;
-    
+	private final LikeDao likeDao;
+
+	public LikeServiceImpl (LikeDao likeDao) {
+		this.likeDao = likeDao;
+	}
+
 	@Override
 	public boolean toggleFeedLike(long feedCode, long memCode) {
 		

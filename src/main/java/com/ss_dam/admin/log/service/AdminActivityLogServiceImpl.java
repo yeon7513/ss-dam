@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,23 +21,27 @@ import com.ss_dam.common.validator.PageQueryValidator;
 import com.ss_dam.common.validator.challenge.AdminChallengeValidator;
 
 @Service
-public class AdminActivityLogServiceImpl
-        implements AdminActivityLogService {
+public class AdminActivityLogServiceImpl implements AdminActivityLogService {
 
-    @Autowired
-    private AdminActivityLogDao adminActivityLogDao;
+	private final AdminActivityLogDao adminActivityLogDao;
+	private final AdminMemberDao adminMemberDao;
+	private final AdminChallengeDetailDao adminChallengeDetailDao;
+	private final AdminChallengeValidator adminChallengeValidator;
+	private final PageQueryValidator pageQueryValidator;
 
-    @Autowired
-    private AdminMemberDao adminMemberDao;
-
-    @Autowired
-    private AdminChallengeDetailDao adminChallengeDetailDao;
-
-    @Autowired
-    private PageQueryValidator pageQueryValidator;
-
-    @Autowired
-    private AdminChallengeValidator adminChallengeValidator;
+	public AdminActivityLogServiceImpl (
+		AdminActivityLogDao adminActivityLogDao,
+		AdminMemberDao adminMemberDao,
+		AdminChallengeDetailDao adminChallengeDetailDao,
+		AdminChallengeValidator adminChallengeValidator,
+		PageQueryValidator pageQueryValidator
+	) {
+		this.adminActivityLogDao = adminActivityLogDao;
+		this.adminMemberDao = adminMemberDao;
+		this.adminChallengeDetailDao = adminChallengeDetailDao;
+		this.adminChallengeValidator = adminChallengeValidator;
+		this.pageQueryValidator = pageQueryValidator;
+	}
 
     // 회원 정지·해제 이력 조회
     @Override
