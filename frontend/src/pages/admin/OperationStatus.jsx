@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import DashboardHeader from "../../components/admin/dashboard-header/DashboardHeader.jsx";
-import AdminLogCard from "./OperationStatus/AdminLogCard/AdminLogCard.jsx";
-import DashboardCharts from "./OperationStatus/DashboardCharts/DashboardCharts.jsx";
-import PendingReports from "./OperationStatus/PendingReports/PendingReports.jsx";
-import RegionParticipation from "./OperationStatus/RegionParticipation/RegionParticipation.jsx";
-import SummaryStats from "./OperationStatus/SummaryStats/SummaryStats.jsx";
-import TopSellers from "./OperationStatus/TopSellers/TopSellers.jsx";
+import AdminLogCard from "./operation-status/admin-log-card/AdminLogCard.jsx";
+import DashboardCharts from "./operation-status/dashboard-charts/DashboardCharts.jsx";
+import PendingReports from "./operation-status/pending-reports/PendingReports.jsx";
+import RegionParticipation from "./operation-status/region-participation/RegionParticipation.jsx";
+import SummaryStats from "./operation-status/summary-stats/SummaryStats.jsx";
+import TopSellers from "./operation-status/top-sellers/TopSellers.jsx";
 import styles from "./OperationStatus.module.scss";
 
 const OperationStatus = () => {
