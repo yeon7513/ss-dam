@@ -138,7 +138,7 @@ function App() {
           {/* 피드 관리 */}
           <Route path="feed_manage">
             <Route index element={<FeedManage />} />
-            <Route path=":code" element={<AdminFeedDetail />} />
+            <Route path=":code" element={<FeedManageDetail />} />
           </Route>
 
           {/* 마켓 관리 */}

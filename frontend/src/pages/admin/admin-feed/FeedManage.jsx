@@ -11,9 +11,14 @@ import { useLoadData } from "../../../hooks/useLoadData";
 
 import styles from "./FeedManage.module.scss";
 
-import { INITIAL_FILTERS, TAB_LIST } from "../../../constants/FeedManage.constants.jsx";
+import {
+  INITIAL_FILTERS,
+  TAB_LIST,
+} from "../../../constants/FeedManage.constants.jsx";
+import { useNavigate } from "react-router-dom";
 
 export default function FeedManage() {
+  const navigate = useNavigate();
   const { searchFilter, queryString, handleChangePages, handleSearch } =
     useSearchQuery(INITIAL_FILTERS);
 
@@ -58,10 +63,7 @@ export default function FeedManage() {
 
   return (
     <div className={styles.dashboardBody}>
-      <DashboardHeader
-        title="피드 목록"
-        onRefresh={handleRefresh}
-      />
+      <DashboardHeader title="피드 목록" onRefresh={handleRefresh} />
 
       <div className={styles.mainContainer}>
         <TabMenus
@@ -88,7 +90,11 @@ export default function FeedManage() {
             </div>
           ) : feedList.length > 0 ? (
             feedList.map((feed) => (
-              <FeedCard key={feed.id || feed.feedCode} feed={feed} />
+              <FeedCard
+                key={feed.id || feed.feedCode || feed.code}
+                feed={feed}
+                onClickDetail={(code) => navigate(`/admin/feed_manage/${code}`)}
+              />
             ))
           ) : (
             <div className={styles.emptyState}>조회된 피드가 없습니다</div>

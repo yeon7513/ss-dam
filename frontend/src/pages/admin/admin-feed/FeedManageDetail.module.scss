@@ -1,0 +1,168 @@
+@use "../../../scss/variables.scss" as v;
+@use "../../../scss/mixin.scss" as mix;
+
+// 1. 메인 레이아웃 카드
+.feedDetail {
+  padding: 2rem;
+  background-color: v.$color-white;
+  border-radius: 12px;
+  box-shadow: v.$box-shadow;
+  border: 1px solid v.$grayscale-20;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+// 2. 상단 헤더 (목록으로 버튼 + 제목)
+.header {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid v.$grayscale-20;
+}
+
+.backButton {
+  @include mix.flex($jc: flex-start, $ai: center);
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: v.$grayscale-90; // $grayscale-60 -> $grayscale-90 수정
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 1.25rem;
+  padding: 0;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: v.$point-60;
+  }
+
+  > svg {
+    font-size: 1.2rem;
+  }
+}
+
+.titleBox {
+  .challengeName {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background-color: v.$point-5;
+    color: v.$point-60;
+    font-size: 0.875rem;
+    font-weight: 700;
+    border-radius: 20px;
+    margin-bottom: 0.75rem;
+  }
+
+  .title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: v.$grayscale-100;
+    line-height: 1.3;
+  }
+}
+
+// 3. 본문 2단 컨테이너
+.container {
+  @include mix.flex($jc: space-between, $ai: flex-start);
+  gap: 2.5rem;
+}
+
+// 좌측 이미지 영역
+.images {
+  flex: 1;
+  min-width: 0;
+  position: sticky;
+  top: 2rem;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid v.$grayscale-20;
+  background-color: v.$grayscale-5;
+}
+
+// 우측 상세 내용 영역
+.content.detail {
+  flex: 1.1;
+  min-width: 0;
+  @include mix.flex($fd: column, $ai: stretch); // $fd 사용!
+  gap: 1.5rem;
+
+  > p {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: v.$grayscale-90; // $grayscale-80 -> $grayscale-90 수정
+    white-space: pre-line;
+    margin: 0.5rem 0;
+  }
+}
+
+.hashtags {
+  @include mix.flex($jc: flex-start);
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.controlButtonGroup {
+  @include mix.flex($jc: flex-end);
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  list-style: none;
+  padding: 0;
+
+  button {
+    color: v.$dan-color; // #e74c3c -> $dan-color 수정
+    font-weight: 600;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// 메타 정보 (날짜, 댓글 수, 좋아요 수)
+.meta {
+  @include mix.flex($jc: space-between, $ai: center);
+  padding: 1rem 0;
+  border-top: 1px solid v.$grayscale-20;
+  border-bottom: 1px solid v.$grayscale-20;
+  color: v.$grayscale-50; // $grayscale-60 -> $grayscale-50 수정
+  font-size: 0.9rem;
+
+  > div {
+    @include mix.flex($jc: flex-end, $ai: center);
+    gap: 1rem;
+
+    span {
+      @include mix.flex($ai: center);
+      gap: 0.3rem;
+
+      svg {
+        font-size: 1.1rem;
+      }
+    }
+  }
+}
+
+// 4. 로딩 및 에러
+.loading,
+.error {
+  padding: 4rem;
+  text-align: center;
+  font-size: 1.1rem;
+  color: v.$grayscale-90;
+}
+
+.error {
+  color: v.$dan-color;
+}
+
+// 5. 반응형 (모바일/태블릿)
+@media (max-width: 992px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .images,
+  .content.detail {
+    width: 100%;
+  }
+}
