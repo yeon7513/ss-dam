@@ -6,6 +6,7 @@ import Layout from "./layout/Layout";
 import About from "./pages/about/About";
 import ChallengeGuide from "./pages/about/challenge-guide/ChallengeGuide.jsx";
 import MarketGuide from "./pages/about/market-guide/MarketGuide.jsx";
+import AccountManage from "./pages/admin/account-manage/AccountManage.jsx";
 import FeedManage from "./pages/admin/admin-feed/FeedManage";
 import ChallengeManage from "./pages/admin/challenge-manage/ChallengeManage.jsx";
 import ChallengeManageDetail from "./pages/admin/challenge-manage/ChallengeManageDetail.jsx";
@@ -47,7 +48,6 @@ import MyPage from "./pages/my-page/MyPage.jsx";
 import Points from "./pages/my-page/points/Points";
 import SupportDetail from "./pages/support/SupportDetail";
 import Supports from "./pages/support/Supports";
-import AccountManage from "./pages/admin/account-manage/AccountManage.jsx";
 
 function App() {
   return (
@@ -136,7 +136,10 @@ function App() {
           <Route path="user_manage/:code" element={<UserManageDetail />} />
 
           {/* 피드 관리 */}
-          <Route path="feed_manage" element={<FeedManage />} />
+          <Route path="feed_manage">
+            <Route index element={<FeedManage />} />
+            <Route path=":code" element={<AdminFeedDetail />} />
+          </Route>
 
           {/* 마켓 관리 */}
           <Route path="market_manage">
