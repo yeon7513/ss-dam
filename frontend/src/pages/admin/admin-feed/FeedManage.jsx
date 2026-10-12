@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useRef, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { MdArrowForwardIos, MdSearch, MdClose } from "react-icons/md";
 
 import DashboardHeader from "../../../components/admin/dashboard-header/DashboardHeader.jsx";
@@ -19,6 +20,8 @@ import {
 } from "../../../constants/FeedManage.constants.jsx";
 
 export default function FeedManage() {
+  const navigate = useNavigate();
+
   const [lastUpdated, setLastUpdated] = useState(
     () => `${new Date().toLocaleString("sv-SE")} 기준`,
   );
@@ -110,7 +113,11 @@ export default function FeedManage() {
             </div>
           ) : feedList.length > 0 ? (
             feedList.map((feed) => (
-              <FeedCard key={feed.id || feed.feedCode} feed={feed} />
+              <FeedCard
+                key={feed.id || feed.feedCode || feed.code}
+                feed={feed}
+                onClickDetail={(code) => navigate(`/admin/feed_manage/${code}`)}
+              />
             ))
           ) : (
             <div className={styles.emptyState}>조회된 피드가 없습니다</div>

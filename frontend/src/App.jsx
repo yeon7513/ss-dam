@@ -133,7 +133,7 @@ function App() {
           <Route path="user_manage/:code" element={<UserManageDetail />} />
           <Route path="feed_manage">
             <Route index element={<FeedManage />} />
-            <Route path=":code" element={<AdminFeedDetail />} />
+            <Route path=":code" element={<FeedManageDetail />} />
           </Route>
 
           <Route path="market_manage">
