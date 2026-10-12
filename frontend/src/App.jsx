@@ -48,7 +48,6 @@ import MyPage from "./pages/my-page/MyPage.jsx";
 import Points from "./pages/my-page/points/Points";
 import SupportDetail from "./pages/support/SupportDetail";
 import Supports from "./pages/support/Supports";
-import AdminFeedDetail from "./pages/admin/admin-feed/FeedManageDetail.jsx";
 
 function App() {
   return (
