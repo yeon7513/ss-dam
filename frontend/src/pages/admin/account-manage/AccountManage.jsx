@@ -5,7 +5,7 @@ import { useSearchQuery } from "../../../hooks/useSearchQuery.js";
 
 function AccountManage() {
 
-  const { data } = useLoadData();
+  const { data } = useLoadData("/api/admin/account");
   const { handleSearch } = useSearchQuery();
 
   return (

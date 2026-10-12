@@ -10,14 +10,15 @@ import ProfileCard from "../../../components/auth/profile-card/ProfileCard.jsx";
 import { formatCreatedAt } from "../../../utils/formatDate";
 import styles from "./FeedManageDetail.module.scss";
 import Slide from "../../../components/common/slide/Slide.jsx";
-import cn from "classnames";
 import { useLoadData } from "../../../hooks/useLoadData.js";
 import { useSubmitData } from "../../../hooks/useSubmitData.js";
 import Comments from "../../../components/feed/comment/Comments.jsx";
+import { useState } from "react";
 
 const FeedManageDetail = () => {
   const { code } = useParams();
   const navigate = useNavigate();
+  const [reason, setReason] = useState("");
 
   const { data, loading, error } = useLoadData(`/api/feeds/${code}`);
   const detail = data || {};
@@ -27,19 +28,53 @@ const FeedManageDetail = () => {
     "DELETE",
   );
 
-  const handleDeleteFeed = async () => {
-    const memCode = detail.memberProfile?.code;
+  const { handleSubmit: handleSubmitRestoreFeed } = useSubmitData(
+    `/api/admin/feeds/${code}/restore`,
+    "PATCH",
+  );
 
-    if (confirm("삭제된 피드는 복구되지 않습니다. 정말 삭제하시겠습니까?")) {
+  const isDeleted =
+    ["Y", "1", 1, true].includes(detail?.deleteYn) ||
+    detail?.status === "DELETED";
+
+  const authorId =
+    detail.memberProfile?.id || detail.memberProfile?.nickname || "-";
+
+  const handleDelete = async () => {
+    if (!reason.trim()) {
+      alert("처리 사유를 입력해주세요");
+      return;
+    }
+    if (confirm("피드를 비활성화(삭제)하시겠습니까?")) {
       try {
-        const { success } = await handleSubmitDeleteFeed(memCode, "DELETE");
+        const { success } = await handleSubmitDeleteFeed({ reason }, "DELETE");
 
         if (success) {
-          alert("피드 비활성화에 성공했습니다");
+          alert("피드가 비활성화되었습니다");
           navigate("/admin/feed_manage");
         }
       } catch (err) {
-        alert("서버와 통신에 실패했습니다");
+        alert("서버 통신 실패");
+        console.error(err);
+      }
+    }
+  };
+
+  const handleRestore = async () => {
+    if (!reason.trim()) {
+      alert("처리 사유를 입력해주세요");
+      return;
+    }
+    if (confirm("이 피드를 다시 활성화(복구)하시겠습니까?")) {
+      try {
+        const { success } = await handleSubmitRestoreFeed({ reason });
+
+        if (success) {
+          alert("피드가 성공적으로 복구되었습니다");
+          navigate("/admin/feed_manage");
+        }
+      } catch (err) {
+        alert("서버 통신 실패");
         console.error(err);
       }
     }
@@ -58,59 +93,123 @@ const FeedManageDetail = () => {
   }
 
   return (
-    <div className={cn(styles.feedDetail)}>
-      <div className={styles.header}>
-        <button
-          type="button"
-          className={styles.backButton}
-          onClick={() => navigate(-1)}
-        >
-          <IoArrowBack /> 목록으로
+    <div className={styles["admin-detail-wrapper"]}>
+      <div className={styles["detail-header"]}>
+        <h2>
+          피드 상세 관리{" "}
+          <span className={styles["code-tag"]}>CODE #{code}</span>
+        </h2>
+        <button className={styles["btn-back"]} onClick={() => navigate(-1)}>
+          목록으로 돌아가기
         </button>
+      </div>
 
-        <div className={styles.titleBox}>
-          <span className={styles.challengeName}>{detail.challengeName}</span>
-          <h2 className={styles.title}>{detail.title}</h2>
+      <div className={styles["summary-bar"]}>
+        <div className={styles["summary-item"]}>
+          <span className={styles.label}>작성자 ID</span>
+          <span className={styles.value}>{authorId}</span>
+        </div>
+        <div className={styles["summary-item"]}>
+          <span className={styles.label}>챌린지</span>
+          <span className={styles.value}>{detail.challengeName || "-"}</span>
+        </div>
+        <div className={styles["summary-item"]}>
+          <span className={styles.label}>활성화 여부</span>
+          <span
+            className={`${styles["active-badge"]} ${
+              !isDeleted ? styles.active : styles.inactive
+            }`}
+          >
+            {!isDeleted ? "활성화" : "비활성화(삭제)"}
+          </span>
+        </div>
+        <div className={styles["summary-item"]}>
+          <span className={styles.label}>등록일</span>
+          <span className={styles.value}>
+            {detail.createdAt ? formatCreatedAt(detail.createdAt) : "-"}
+          </span>
         </div>
       </div>
 
-      <div className={styles.container}>
-        <div className={styles.images}>
-          <Slide images={detail.imagePaths} isLoop={true} />
-        </div>
+      <div className={styles["detail-grid"]}>
+        <div className={styles["left-content"]}>
+          <div className={styles["feed-card"]}>
+            <div className={styles["feed-header-title"]}>
+              {detail.challengeName && (
+                <span className={styles["challenge-tag"]}>
+                  {detail.challengeName}
+                </span>
+              )}
+              <h3 className={styles["feed-title"]}>
+                {detail.title || "피드 상세 내용"}
+              </h3>
+            </div>
 
-        <div className={cn(styles.content, styles.detail)}>
-          <ProfileCard memberProfile={detail.memberProfile} />
+            <div className={styles["feed-main-layout"]}>
+              <div className={styles["feed-images"]}>
+                <Slide images={detail.imagePaths} isLoop={true} />
+              </div>
 
-          <p>{detail.content}</p>
+              <div className={styles["feed-info"]}>
+                <ProfileCard memberProfile={detail.memberProfile} />
 
-          <div className={styles.hashtags}>
-            {detail.hashtags?.map((tag, idx) => (
-              <Hashtag key={idx} hashName={tag} />
-            ))}
-          </div>
+                <div className={styles["content-box"]}>
+                  {detail.content || "등록된 본문 내용이 없습니다."}
+                </div>
 
-          <ul className={styles.controlButtonGroup}>
-            <li>
-              <Button btnStyle="text" type="button" onClick={handleDeleteFeed}>
-                삭제
-              </Button>
-            </li>
-          </ul>
+                <div className={styles.hashtags}>
+                  {detail.hashtags?.map((tag, idx) => (
+                    <Hashtag key={idx} hashName={tag} />
+                  ))}
+                </div>
 
-          <div className={styles.meta}>
-            <span>{formatCreatedAt(detail.createdAt)}</span>
-            <div>
-              <span>
-                <IoChatbubbleEllipses /> {detail.countFeedComment}
-              </span>
-              <span>
-                <IoHeartSharp /> {detail.countFeedLike}
-              </span>
+                <div className={styles.meta}>
+                  <span>
+                    <IoChatbubbleEllipses /> {detail.countFeedComment || 0}
+                  </span>
+                  <span>
+                    <IoHeartSharp /> {detail.countFeedLike || 0}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
 
-          <Comments targetCode={code} />
+          <div className={styles.card}>
+            <h3 className={styles["card-title"]}>댓글 관리</h3>
+            <Comments targetCode={code} />
+          </div>
+        </div>
+
+        <div className={styles["right-content"]}>
+          <div className={`${styles.card} ${styles["action-card"]}`}>
+            <h3 className={styles["card-title"]}>관리자 상태 조치</h3>
+            <p className={styles["action-desc"]}>
+              삭제 또는 복구 사유를 입력한 뒤 변경 버튼을 누르세요.
+            </p>
+            <textarea
+              className={styles["reason-textarea"]}
+              placeholder="처리 사유를 입력하세요..."
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+            />
+            <div className={styles["button-group"]}>
+              <button
+                className={`${styles["btn-action"]} ${styles["btn-delete"]}`}
+                onClick={handleDelete}
+                disabled={isDeleted}
+              >
+                비활성화 (삭제)
+              </button>
+              <button
+                className={`${styles["btn-action"]} ${styles["btn-restore"]}`}
+                onClick={handleRestore}
+                disabled={!isDeleted}
+              >
+                활성화 (복구)
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
