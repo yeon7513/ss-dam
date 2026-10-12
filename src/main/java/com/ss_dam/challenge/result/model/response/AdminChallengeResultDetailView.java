@@ -1,10 +1,10 @@
-package com.ss_dam.challenge.model.response.analysis_response;
+package com.ss_dam.challenge.result.model.response;
 
 import java.time.LocalDateTime;
 
 // 종료 챌린지 데이터 분석 - 상세 상단 정보
 
-public class AdminChallengeAnalysisDetailView {
+public class AdminChallengeResultDetailView {
 
     private Long code;
     private String title;

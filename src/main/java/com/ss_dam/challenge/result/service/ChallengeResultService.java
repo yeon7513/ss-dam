@@ -1,4 +1,4 @@
-package com.ss_dam.challenge.service;
+package com.ss_dam.challenge.result.service;
 
 // ChallengeResultService는 챌린지 하나의 종료 결과를 계산해서 한 번만 저장하는 역할
 /**

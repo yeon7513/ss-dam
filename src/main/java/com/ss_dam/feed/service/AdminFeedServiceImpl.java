@@ -17,6 +17,7 @@ import com.ss_dam.feed.dao.AdminFeedDao;
 import com.ss_dam.feed.model.filter.AdminFeedSearchFilter;
 import com.ss_dam.feed.model.response.AdminFeedView;
 import com.ss_dam.feed.model.response.AdminMemberFeedsView;
+import com.ss_dam.feed.model.response.UserFeedView;
 
 @Service
 public class AdminFeedServiceImpl implements AdminFeedService {

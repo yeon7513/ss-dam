@@ -29,7 +29,7 @@ export const ADMIN_MENU = [
     category: "챌린지 관리",
     subMenus: [
       { name: "진행 현황", path: "/admin/challenge_manage" },
-      { name: "종료 데이터 분석", path: "" },
+      { name: "종료 데이터 분석", path: "/admin/challenge-result" },
     ],
   },
   {

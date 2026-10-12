@@ -1,4 +1,4 @@
-package com.ss_dam.challenge.model.response.analysis_response;
+package com.ss_dam.challenge.result.model.response;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -6,7 +6,7 @@ import java.util.List;
 
 // 종료 챌린지 데이터 분석 - 통계 카드와 차트
 
-public class AdminChallengeAnalysisStatisticsView {
+public class AdminChallengeResultStatisticsView {
 
     // 통계 카드
     private Long proofCount;

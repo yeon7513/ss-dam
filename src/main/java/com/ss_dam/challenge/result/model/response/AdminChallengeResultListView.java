@@ -1,11 +1,11 @@
-package com.ss_dam.challenge.model.response.analysis_response;
+package com.ss_dam.challenge.result.model.response;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 // 종료 챌린지 데이터 분석 - 목록 카드
 
-public class AdminChallengeAnalysisListView {
+public class AdminChallengeResultListView {
 
     private Long code;
     private String title;

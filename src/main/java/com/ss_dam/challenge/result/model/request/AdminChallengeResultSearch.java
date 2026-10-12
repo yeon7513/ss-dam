@@ -1,4 +1,4 @@
-package com.ss_dam.challenge.model.request.analysis_request;
+package com.ss_dam.challenge.result.model.request;
 
 import java.time.LocalDate;
 
@@ -8,7 +8,7 @@ import com.ss_dam.common.pager.PageQuery;
 
 // 종료 챌린지 데이터 분석- 목록 검색 조건
 
-public class AdminChallengeAnalysisSearch extends PageQuery {
+public class AdminChallengeResultSearch extends PageQuery {
 
     // 조회 기간과 챌린지 진행 기간이 겹치는 항목 조회
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)

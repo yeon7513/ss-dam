@@ -1,4 +1,4 @@
-package com.ss_dam.challenge.service;
+package com.ss_dam.challenge.result.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,12 +13,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.ss_dam.challenge.dao.AdminChallengeAnalysisDao;
-import com.ss_dam.challenge.model.request.analysis_request.AdminChallengeAnalysisSearch;
 import com.ss_dam.challenge.model.response.AdminChallengeRankingView;
-import com.ss_dam.challenge.model.response.analysis_response.AdminChallengeAnalysisDetailView;
-import com.ss_dam.challenge.model.response.analysis_response.AdminChallengeAnalysisListView;
-import com.ss_dam.challenge.model.response.analysis_response.AdminChallengeAnalysisStatisticsView;
+import com.ss_dam.challenge.result.dao.AdminChallengeResultDao;
+import com.ss_dam.challenge.result.model.request.AdminChallengeResultSearch;
+import com.ss_dam.challenge.result.model.response.AdminChallengeResultDetailView;
+import com.ss_dam.challenge.result.model.response.AdminChallengeResultListView;
+import com.ss_dam.challenge.result.model.response.AdminChallengeResultStatisticsView;
 import com.ss_dam.common.pager.PageQuery;
 import com.ss_dam.common.pager.PageResult;
 import com.ss_dam.common.pager.Pager;
@@ -27,8 +27,7 @@ import com.ss_dam.common.validator.challenge.AdminChallengeValidator;
 
 @Service
 @Transactional(readOnly = true)
-public class AdminChallengeAnalysisServiceImpl
-        implements AdminChallengeAnalysisService {
+public class AdminChallengeResultServiceImpl implements AdminChallengeResultService {
 
     private static final ZoneId SEOUL = ZoneId.of("Asia/Seoul");
 
@@ -39,24 +38,27 @@ public class AdminChallengeAnalysisServiceImpl
             "ACHIEVEMENT_DESC",
             "ACHIEVEMENT_ASC");
 
-    private final AdminChallengeAnalysisDao analysisDao;
+    private final AdminChallengeResultDao resultDao;
+		private final ChallengeResultCacheService cacheService;
     private final AdminChallengeValidator challengeValidator;
     private final PageQueryValidator pageQueryValidator;
 
-    public AdminChallengeAnalysisServiceImpl(
-            AdminChallengeAnalysisDao analysisDao,
+    public AdminChallengeResultServiceImpl(
+            AdminChallengeResultDao resultDao,
+						ChallengeResultCacheService cacheService,
             AdminChallengeValidator challengeValidator,
             PageQueryValidator pageQueryValidator) {
 
-        this.analysisDao = analysisDao;
+        this.resultDao = resultDao;
+				this.cacheService = cacheService;
         this.challengeValidator = challengeValidator;
         this.pageQueryValidator = pageQueryValidator;
     }
 
     // 종료 결과 목록 조회
     @Override
-    public PageResult<AdminChallengeAnalysisListView> loadChallenges(
-            AdminChallengeAnalysisSearch search) {
+    public PageResult<AdminChallengeResultListView> loadChallenges(
+            AdminChallengeResultSearch search) {
 
         pageQueryValidator.validate(search);
         validateSearch(search);
@@ -64,12 +66,12 @@ public class AdminChallengeAnalysisServiceImpl
         Map<String, Object> params = createSearchParams(search);
 
         // 결과 저장이 완료된 챌린지만 조회
-        long total = analysisDao.countChallenges(params);
+        long total = resultDao.countChallenges(params);
 
-        List<AdminChallengeAnalysisListView> content =
+        List<AdminChallengeResultListView> content =
                 total == 0
                         ? List.of()
-                        : analysisDao.loadChallenges(params);
+                        : resultDao.loadChallenges(params);
 
         return PageResult.of(
                 content,
@@ -78,12 +80,12 @@ public class AdminChallengeAnalysisServiceImpl
 
     // 상세 정보 조회
     @Override
-    public AdminChallengeAnalysisDetailView loadChallenge(Long code) {
+    public AdminChallengeResultDetailView loadChallenge(Long code) {
 
         requireAnalysisReady(code);
 
-        AdminChallengeAnalysisDetailView result =
-                analysisDao.loadChallenge(code);
+        AdminChallengeResultDetailView result =
+                resultDao.loadChallenge(code);
 
         if (result == null) {
             throw incompleteResult();
@@ -93,56 +95,27 @@ public class AdminChallengeAnalysisServiceImpl
     }
 
     // 최종 통계 및 차트 조회
-    @Override
-    public AdminChallengeAnalysisStatisticsView loadChallengeStatistics(
-            Long code) {
+		@Override
+		public AdminChallengeResultStatisticsView loadChallengeStatistics(
+						Long code) {
 
-        requireAnalysisReady(code);
+				// 캐시가 있어도 현재 조회 가능 여부는 확인
+				requireAnalysisReady(code);
 
-        AdminChallengeAnalysisStatisticsView result =
-                analysisDao.loadStatistics(code);
-
-        if (result == null) {
-            throw incompleteResult();
-        }
-
-        // 종료 시 저장한 시간대별 인증 수
-        result.setHourlyProofs(
-                analysisDao.loadHourlyProofs(code));
-
-        // 종료 시 저장한 지역별 참여 인원
-        result.setRegionParticipants(
-                analysisDao.loadRegionParticipants(code));
-
-        return result;
-    }
+				return cacheService.loadStatistics(code);
+		}
 
     // 최종 참여 순위 조회
-    @Override
-    public PageResult<AdminChallengeRankingView> loadChallengeRanking(
-            Long code,
-            PageQuery pageQuery) {
+		@Override
+		public PageResult<AdminChallengeRankingView> loadChallengeRanking(
+						Long code,
+						PageQuery pageQuery) {
 
-        pageQueryValidator.validate(pageQuery);
-        requireAnalysisReady(code);
+				pageQueryValidator.validate(pageQuery);
+				requireAnalysisReady(code);
 
-        Map<String, Object> params = new HashMap<>();
-        params.put("code", code);
-        params.put("offset", pageQuery.getOffset());
-        params.put("perPage", pageQuery.getPerPage());
-
-        // 현재 참여자가 아닌, 저장된 최종 순위의 회원 수
-        long total = analysisDao.countRankingMembers(code);
-
-        List<AdminChallengeRankingView> content =
-                total == 0
-                        ? List.of()
-                        : analysisDao.loadChallengeRanking(params);
-
-        return PageResult.of(
-                content,
-                new Pager(pageQuery, total));
-    }
+				return cacheService.loadRanking(code, pageQuery);
+		}
 
     // 종료 여부 및 종료 결과 저장 완료 여부 확인
     private void requireAnalysisReady(Long code) {
@@ -154,14 +127,14 @@ public class AdminChallengeAnalysisServiceImpl
         params.put("now", LocalDateTime.now(SEOUL));
 
         // 삭제되지 않았고, 종료 상태이며, 종료 시각이 지난 챌린지
-        if (!analysisDao.existsEndedChallenge(params)) {
+        if (!resultDao.existsEndedChallenge(params)) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
                     "조회 가능한 종료 챌린지가 없습니다.");
         }
 
         // 요약·차트·회원별 순위가 모두 저장된 상태인지 확인
-        if (!analysisDao.isSnapshotReady(code)) {
+        if (!resultDao.isSnapshotReady(code)) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
                     "종료 결과가 아직 확정되지 않았습니다.");
@@ -170,7 +143,7 @@ public class AdminChallengeAnalysisServiceImpl
 
     // 목록 조회 파라미터 구성
     private Map<String, Object> createSearchParams(
-            AdminChallengeAnalysisSearch search) {
+            AdminChallengeResultSearch search) {
 
         Map<String, Object> params = new HashMap<>();
 
@@ -209,7 +182,7 @@ public class AdminChallengeAnalysisServiceImpl
     }
 
     // 검색 조건 검증
-    private void validateSearch(AdminChallengeAnalysisSearch search) {
+    private void validateSearch(AdminChallengeResultSearch search) {
 
         validateDate(search.getFromDate());
         validateDate(search.getToDate());

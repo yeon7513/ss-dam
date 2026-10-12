@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="adminChallengeResult">
+
+    <!-- 목록 검색 공통 조건 -->
+    <sql id="listConditions">
+
+        WHERE c.DELETE_YN = 0
+          AND c.PROGRESS_STATUS = 'ENDED'
+          AND c.END_DATE &lt;= #{now}
+          AND r.STATUS = 'COMPLETED'
+
+        <!-- 카테고리는 챌린지 자체를 의미 -->
+        <if test="categoryCode != null">
+            AND c.CODE = #{categoryCode}
+        </if>
+
+        <!-- 조회 기간과 진행 기간이 겹치는 챌린지 -->
+        <if test="from != null">
+            AND c.END_DATE &gt; #{from}
+        </if>
+
+        <if test="toExclusive != null">
+            AND c.START_DATE &lt; #{toExclusive}
+        </if>
+
+        <!-- 제목 또는 내용에 검색어 포함 -->
+        <if test="keyword != null and keyword != ''">
+            AND (
+                LOCATE(#{keyword}, c.TITLE) &gt; 0
+                OR LOCATE(#{keyword}, c.CONTENT) &gt; 0
+            )
+        </if>
+
+    </sql>
+
+    <!-- 1. 종료 결과 목록 전체 건수 -->
+    <select id="countChallenges"
+            parameterType="map"
+            resultType="long">
+
+        SELECT COUNT(*)
+
+        FROM CHALLENGE c
+
+        JOIN CHALLENGE_RESULT r
+            ON r.CHAL_CODE = c.CODE
+
+        <include refid="listConditions"/>
+
+    </select>
+
+    <!-- 2. 종료 결과 목록 -->
+    <select id="loadChallenges"
+            parameterType="map"
+            resultType="com.ss_dam.challenge.result.model.response.AdminChallengeResultListView">
+
+        SELECT
+            c.CODE AS code,
+            c.TITLE AS title,
+            c.CONTENT AS content,
+
+            c.START_DATE AS startDate,
+            c.END_DATE AS endDate,
+            c.CREATED_AT AS createdAt,
+
+            a.EMP_ID AS adminId,
+            a.ROLE AS adminRole,
+
+            (
+                SELECT i.PATH
+                FROM IMAGES i
+                WHERE i.TARGET_CODE = c.CODE
+                  AND i.TYPE = 'challenge'
+                  AND i.DELETE_YN = 0
+                ORDER BY i.ORDER_SEQ ASC, i.PATH ASC
+                LIMIT 1
+            ) AS thumbnail,
+
+            r.PARTICIPANT_COUNT AS participantCount,
+
+            r.AVERAGE_ACHIEVEMENT_RATE
+                AS averageAchievementRate,
+
+            NULL AS rewardPaid
+
+        FROM CHALLENGE c
+
+        JOIN CHALLENGE_RESULT r
+            ON r.CHAL_CODE = c.CODE
+
+        LEFT JOIN ADMIN_ACCOUNT a
+            ON a.CODE = c.ADM_CODE
+
+        <include refid="listConditions"/>
+
+        <choose>
+
+            <when test="sort == 'PARTICIPANTS_DESC'">
+                ORDER BY
+                    r.PARTICIPANT_COUNT DESC,
+                    c.CODE DESC
+            </when>
+
+            <when test="sort == 'PARTICIPANTS_ASC'">
+                ORDER BY
+                    r.PARTICIPANT_COUNT ASC,
+                    c.CODE DESC
+            </when>
+
+            <when test="sort == 'ACHIEVEMENT_DESC'">
+                ORDER BY
+                    r.AVERAGE_ACHIEVEMENT_RATE DESC,
+                    c.CODE DESC
+            </when>
+
+            <when test="sort == 'ACHIEVEMENT_ASC'">
+                ORDER BY
+                    r.AVERAGE_ACHIEVEMENT_RATE ASC,
+                    c.CODE DESC
+            </when>
+
+            <otherwise>
+                ORDER BY
+                    c.END_DATE DESC,
+                    c.CODE DESC
+            </otherwise>
+
+        </choose>
+
+        LIMIT #{perPage} OFFSET #{offset}
+
+    </select>
+
+    <!-- 3. 조회 가능한 종료 챌린지인지 확인 -->
+    <select id="existsEndedChallenge"
+            parameterType="map"
+            resultType="boolean">
+
+        SELECT EXISTS (
+            SELECT 1
+            FROM CHALLENGE c
+            WHERE c.CODE = #{code}
+              AND c.DELETE_YN = 0
+              AND c.PROGRESS_STATUS = 'ENDED'
+              AND c.END_DATE &lt;= #{now}
+        )
+
+    </select>
+
+    <!-- 4. 종료 결과 저장 완료 여부 -->
+    <select id="isSnapshotReady"
+            parameterType="map"
+            resultType="boolean">
+
+        SELECT EXISTS (
+            SELECT 1
+            FROM CHALLENGE_RESULT r
+            WHERE r.CHAL_CODE = #{code}
+              AND r.STATUS = 'COMPLETED'
+        )
+
+    </select>
+
+    <!-- 5. 상세 기본 정보 -->
+    <select id="loadChallenge"
+            parameterType="map"
+            resultType="com.ss_dam.challenge.result.model.response.AdminChallengeResultDetailView">
+
+        SELECT
+            c.CODE AS code,
+            c.TITLE AS title,
+            c.CONTENT AS content,
+
+            <!-- 챌린지 자체가 카테고리인 현재 구조 -->
+            c.TITLE AS categoryName,
+
+            c.GOAL AS goal,
+            c.START_DATE AS startDate,
+            c.END_DATE AS endDate,
+            c.CREATED_AT AS createdAt,
+            c.PROGRESS_STATUS AS progressStatus,
+
+            c.POINT_EARNED AS pointEarned,
+            c.MAX_PARTICIPANTS AS maxParticipants,
+
+            a.EMP_ID AS adminId,
+            a.ROLE AS adminRole,
+
+            (
+                SELECT i.PATH
+                FROM IMAGES i
+                WHERE i.TARGET_CODE = c.CODE
+                  AND i.TYPE = 'challenge'
+                  AND i.DELETE_YN = 0
+                ORDER BY i.ORDER_SEQ ASC, i.PATH ASC
+                LIMIT 1
+            ) AS thumbnail,
+
+            NULL AS totalPaidPoints,
+            NULL AS rewardPaid
+
+        FROM CHALLENGE c
+
+        JOIN CHALLENGE_RESULT r
+            ON r.CHAL_CODE = c.CODE
+           AND r.STATUS = 'COMPLETED'
+
+        LEFT JOIN ADMIN_ACCOUNT a
+            ON a.CODE = c.ADM_CODE
+
+        WHERE c.CODE = #{code}
+          AND c.DELETE_YN = 0
+          AND c.PROGRESS_STATUS = 'ENDED'
+
+    </select>
+
+    <!-- 내부 DTO 명시적 매핑 -->
+    <resultMap id="challengeResultRowMap"
+               type="com.ss_dam.challenge.result.model.internal.ChallengeResultRow">
+
+        <id column="CODE" property="code"/>
+
+        <result column="CHAL_CODE"
+                property="challengeCode"/>
+
+        <result column="PROOF_COUNT"
+                property="proofCount"/>
+
+        <result column="PARTICIPANT_COUNT"
+                property="participantCount"/>
+
+        <result column="AVERAGE_LIKE_COUNT"
+                property="averageLikeCount"/>
+
+        <result column="AVERAGE_ACHIEVEMENT_RATE"
+                property="averageAchievementRate"/>
+
+        <result column="SUCCESS_RATE"
+                property="successRate"/>
+
+        <result column="MEMBER_RESULTS_JSON"
+                property="memberResultsJson"
+                javaType="java.lang.String"/>
+
+        <result column="HOURLY_RESULTS_JSON"
+                property="hourlyResultsJson"
+                javaType="java.lang.String"/>
+
+        <result column="REGION_RESULTS_JSON"
+                property="regionResultsJson"
+                javaType="java.lang.String"/>
+
+        <result column="ENDED_AT"
+                property="endedAt"/>
+
+        <result column="SAVED_AT"
+                property="savedAt"/>
+
+        <result column="STATUS"
+                property="status"/>
+
+    </resultMap>
+
+    <!-- 6. 캐시 적재용 최종 결과 조회 -->
+    <select id="loadCompletedResult"
+            parameterType="map"
+            resultMap="challengeResultRowMap">
+
+        SELECT
+            r.CODE,
+            r.CHAL_CODE,
+            r.PROOF_COUNT,
+            r.PARTICIPANT_COUNT,
+            r.AVERAGE_LIKE_COUNT,
+            r.AVERAGE_ACHIEVEMENT_RATE,
+            r.SUCCESS_RATE,
+            r.MEMBER_RESULTS_JSON,
+            r.HOURLY_RESULTS_JSON,
+            r.REGION_RESULTS_JSON,
+            r.ENDED_AT,
+            r.SAVED_AT,
+            r.STATUS
+
+        FROM CHALLENGE_RESULT r
+
+        JOIN CHALLENGE c
+            ON c.CODE = r.CHAL_CODE
+
+        WHERE r.CHAL_CODE = #{code}
+          AND r.STATUS = 'COMPLETED'
+          AND c.DELETE_YN = 0
+          AND c.PROGRESS_STATUS = 'ENDED'
+
+    </select>
+
+</mapper>
