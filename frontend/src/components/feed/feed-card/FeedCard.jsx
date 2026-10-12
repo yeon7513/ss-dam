@@ -43,13 +43,6 @@ function FeedCard({ feed, onClickDetail }) {
 
           {/* 상호작용 수 */}
           <div className={styles.count}>
-            {/* 조회수 */}
-            <div className={styles.icon}>
-              <span className={styles.hitcount}>
-                <FaEye />
-              </span>
-              {feed.hitcount}
-            </div>
             {/* 좋아요 수 */}
             <div className={styles.icon}>
               <span className={styles.like}>
@@ -63,6 +56,13 @@ function FeedCard({ feed, onClickDetail }) {
                 <IoChatbubbleEllipses />
               </span>
               {feed.countFeedComment}
+            </div>
+            {/* 조회수 */}
+            <div className={styles.icon}>
+              <span className={styles.hitcount}>
+                <FaEye />
+              </span>
+              {feed.hitcount}
             </div>
           </div>
 

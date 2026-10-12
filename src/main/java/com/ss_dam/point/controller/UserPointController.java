@@ -20,6 +20,7 @@ public class UserPointController {
     this.pointService = pointService;
   }
 
+  // 보유 포인트 조회
   @GetMapping("/balance")
   public ResponseEntity<ApiResponse<Integer>> getPointBalance(HttpSession session) {
 

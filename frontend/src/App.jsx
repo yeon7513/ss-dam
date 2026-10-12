@@ -47,6 +47,7 @@ import MyPage from "./pages/my-page/MyPage.jsx";
 import Points from "./pages/my-page/points/Points";
 import SupportDetail from "./pages/support/SupportDetail";
 import Supports from "./pages/support/Supports";
+import AccountManage from "./pages/admin/account-manage/AccountManage.jsx";
 
 function App() {
   return (
@@ -127,21 +128,33 @@ function App() {
       {/* 관리자 - 대시보드 */}
       <Route element={<AdminRoute />}>
         <Route path="/admin" element={<AdminLayout />}>
+          {/* 운영 현황 */}
           <Route index element={<OperationStatus />} />
+
+          {/* 회원 관리 */}
           <Route path="user_manage" element={<UserManage />} />
           <Route path="user_manage/:code" element={<UserManageDetail />} />
+
+          {/* 피드 관리 */}
           <Route path="feed_manage" element={<FeedManage />} />
 
+          {/* 마켓 관리 */}
           <Route path="market_manage">
             <Route index element={<MarketManage />} />
             <Route path=":code" element={<MarketManageDetail />} />
           </Route>
 
+          {/* 챌린지 관리 */}
           <Route path="challenge_manage">
             <Route index element={<ChallengeManage />} />
             <Route path="register" element={<ChallengeRegister />} />
             <Route path="edit/:code" element={<ChallengeUpdate />} />
             <Route path=":code" element={<ChallengeManageDetail />} />
+          </Route>
+
+          {/* 시스템 관리 */}
+          <Route path="system_manage">
+            <Route index element={<AccountManage />} />
           </Route>
         </Route>
       </Route>

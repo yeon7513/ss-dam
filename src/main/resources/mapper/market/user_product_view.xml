@@ -72,6 +72,14 @@
     GROUP BY pick.prod_code
     ) AS pick_cnt
     ON pick_cnt.prod_code = MP.code
+    <!-- 생성된 채팅방의 수 -->
+    LEFT JOIN (
+    SELECT CR.target_code, count(*) AS chat_cnt
+    FROM CHAT_ROOM AS CR
+    WHERE TYPE = 'deal'
+    GROUP BY CR.target_code
+    ) AS chat
+    ON chat.target_code = MP.code
     <!-- 로그인한 사용자의 Pick 여부 -->
     LEFT JOIN MARKET_PROD_PICK AS my_pick
     ON my_pick.prod_code = MP.code AND my_pick.mem_code = #{memCode} AND my_pick.delete_yn = 0
@@ -92,6 +100,7 @@
     writer.path AS m_profile_image,
     IFNULL(hit_log.hit_cnt, 0) AS hitcount,
     IFNULL(pick_cnt.cnt, 0) AS count_pick,
+    IFNULL(chat.chat_cnt, 0) AS count_chat_room,
     IF(my_pick.prod_code IS NOT NULL, 1, 0) AS picked_yn
   </sql>
 

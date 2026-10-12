@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useLoadData } from "../../../hooks/useLoadData.js";
 import MarketSideNav from "../../../components/market/side-nav/MarketSideNav.jsx";
 import Slide from "../../../components/common/slide/Slide.jsx";
@@ -7,6 +7,7 @@ import { IoHeartSharp } from "react-icons/io5";
 import styles from "./ProductDetail.module.scss";
 import Button from "../../../components/common/button/Button.jsx";
 import { useSubmitData } from "../../../hooks/useSubmitData.js";
+import { formatCreatedAt } from "../../../utils/formatDate.js";
 
 const ProductDetail = () => {
   const navigate = useNavigate();
@@ -102,7 +103,7 @@ const ProductDetail = () => {
 
                 {/* 작성일시 */}
                 <div className={styles.dateInfo}>
-                  <span>{detail.createdAt}</span>
+                  <span>{formatCreatedAt(detail.createdAt)}</span>
                 </div>
               </div>
 
@@ -123,6 +124,9 @@ const ProductDetail = () => {
                 <li>
                   Pick <IoHeartSharp />
                   {detail.countPick}
+                </li>
+                <li>
+                  채팅 {detail.countChatRoom}
                 </li>
                 <li>조회수 {detail.hitcount}</li>
               </ul>

@@ -1,5 +1,4 @@
-import React, { useState, useCallback, useRef, useMemo } from "react";
-import { MdArrowForwardIos, MdSearch, MdClose } from "react-icons/md";
+import React, { useCallback, useMemo } from "react";
 
 import DashboardHeader from "../../../components/admin/dashboard-header/DashboardHeader.jsx";
 import Pagination from "../../../components/common/pagination/Pagination";
@@ -12,19 +11,9 @@ import { useLoadData } from "../../../hooks/useLoadData";
 
 import styles from "./FeedManage.module.scss";
 
-import {
-  INITIAL_FILTERS,
-  REFRESH_SPIN_DURATION,
-  TAB_LIST,
-} from "../../../constants/FeedManage.constants.jsx";
+import { INITIAL_FILTERS, TAB_LIST } from "../../../constants/FeedManage.constants.jsx";
 
 export default function FeedManage() {
-  const [lastUpdated, setLastUpdated] = useState(
-    () => `${new Date().toLocaleString("sv-SE")} 기준`,
-  );
-  const [isSpinning, setIsSpinning] = useState(false);
-  const timerRef = useRef(null);
-
   const { searchFilter, queryString, handleChangePages, handleSearch } =
     useSearchQuery(INITIAL_FILTERS);
 
@@ -64,25 +53,14 @@ export default function FeedManage() {
   };
 
   const handleRefresh = useCallback(() => {
-    if (isSpinning) return;
-
-    setIsSpinning(true);
     handleSearch(INITIAL_FILTERS);
-    setLastUpdated(`${new Date().toLocaleString("sv-SE")} 기준`);
-
-    timerRef.current = setTimeout(
-      () => setIsSpinning(false),
-      REFRESH_SPIN_DURATION,
-    );
-  }, [isSpinning, handleSearch]);
+  }, [handleSearch]);
 
   return (
     <div className={styles.dashboardBody}>
       <DashboardHeader
         title="피드 목록"
-        lastUpdated={lastUpdated}
-        isSpinning={isSpinning}
-        handleRefresh={handleRefresh}
+        onRefresh={handleRefresh}
       />
 
       <div className={styles.mainContainer}>

@@ -35,7 +35,7 @@ export const ADMIN_MENU = [
   {
     category: "시스템 관리",
     subMenus: [
-      { name: "관리자 계정 관리", path: "" },
+      { name: "관리자 계정 관리", path: "/admin/system_manage" },
       { name: "관리자 활동 로그", path: "" },
     ],
   },

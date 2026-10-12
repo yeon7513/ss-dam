@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import DashboardHeader from "../../components/admin/dashboard-header/DashboardHeader.jsx";
 import AdminLogCard from "./OperationStatus/AdminLogCard/AdminLogCard.jsx";
 import DashboardCharts from "./OperationStatus/DashboardCharts/DashboardCharts.jsx";
@@ -24,11 +24,6 @@ const OperationStatus = () => {
   const [pendingReportsData] = useState([]);
   const [participationData, setParticipationData] = useState([]);
   const [topSellersData, setTopSellersData] = useState([]);
-  const [lastUpdated, setLastUpdated] = useState("");
-  const [isSpinning, setIsSpinning] = useState(false);
-
-  const updateCurrentTime = () =>
-    setLastUpdated(`${new Date().toLocaleString("sv-SE")} 기준`);
 
   const fetchAdminDashboardData = async () => {
     const queryParam = `?from=${fromDate}&to=${toDate}`;
@@ -103,44 +98,12 @@ const OperationStatus = () => {
     }
   };
 
-  const handleRefresh = async () => {
-    if (isSpinning) return;
-    setIsSpinning(true);
-
-    try {
-      await fetchAdminDashboardData();
-      updateCurrentTime();
-    } catch (error) {
-      // 데이터 새로고침 실패 시 예외를 처리함.
-      console.error("데이터 갱신 실패:", error);
-    } finally {
-      setTimeout(() => {
-        setIsSpinning(false);
-      }, 1000);
-    }
-  };
-
-  useEffect(() => {
-    updateCurrentTime();
-    fetchAdminDashboardData();
-
-    // 1분마다 현재 시각을 자동 갱신함.
-    const timer = setInterval(() => {
-      updateCurrentTime();
-    }, 60000);
-
-    return () => clearInterval(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <div className={styles.dashboardBody}>
       {/* 대시보드 헤더 영역 */}
       <DashboardHeader
         title="운영 현황"
-        lastUpdated={lastUpdated}
-        isSpinning={isSpinning}
-        handleRefresh={handleRefresh}
+        onRefresh={fetchAdminDashboardData}
       />
 
       {/* 상단 레이아웃 영역 */}
