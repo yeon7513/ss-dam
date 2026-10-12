@@ -1,18 +1,22 @@
 @use "../../../scss/variables.scss" as v;
 @use "../../../scss/mixin.scss" as mix;
 
+/* 전체 영역 */
 .wrap {
   @include mix.wrap;
 }
 
+/* 메인 컨테이너 영역 */
 .container {
   flex: 1;
 }
 
+/* 브레드크럼 영역 */
 .breadcrumb {
   margin-bottom: 2rem;
 }
 
+/* 상품 콘텐츠 영역 */
 .contents {
   @include mix.flex($ai: stretch);
   gap: 2rem;
@@ -20,16 +24,18 @@
   margin-bottom: 2rem;
 }
 
+/* 상품 이미지 영역 */
 .productImages {
   width: 31.25rem;
-  border-radius: 0.3rem; // 이미지 모서리를 둥글게 함.
   overflow: hidden;
+  border-radius: 0.3rem; // 이미지 모서리를 둥글게 처리함.
 }
 
+/* 상품 상세 정보 영역 */
 .productDetails {
   position: relative; // 버튼 위치의 기준점을 설정함.
   flex: 1;
-  padding-bottom: 80px; // 하단 버튼과 내용 중첩을 방지하는 여백을 지정함.
+  padding-bottom: 80px; // 하단 버튼과의 중첩을 방지하는 여백을 지정함.
 
   /* 상단 헤더 영역 */
   .headerRow {
@@ -38,54 +44,59 @@
     align-items: center;
     margin-bottom: 1.5rem;
     padding-bottom: 19px;
-    border-bottom: 1px solid v.$grayscale-20; // 하단 구분선을 헤더 전체 영역으로 이동함.
+    border-bottom: 1px solid v.$grayscale-20; // 하단 구분선 스타일을 지정함.
 
+    /* 제목 정보 영역 */
     .titleSection {
       display: flex;
       flex-direction: column;
       gap: 0.4rem;
 
+      /* 상품 제목 영역 */
       .title h2 {
+        color: v.$grayscale-90;
         font-size: 1.5rem;
         font-weight: 700;
         word-break: keep-all; // 단어 단위로 줄바꿈을 처리함.
       }
 
+      /* 작성일시 영역 */
       .dateInfo span {
-        font-size: 0.9rem;
         color: v.$grayscale-50;
+        font-size: 0.9rem;
       }
     }
 
+    /* 거래 신청 버튼 영역 */
     .chatButton {
-      flex-shrink: 0; // 제목 길이가 늘어나도 버튼 형태의 축소를 방지함.
+      flex-shrink: 0; // 제목 길이가 늘어나도 버튼 축소를 방지함.
     }
   }
 
-  /* 본문 영역 */
+  /* 본문 내용 영역 */
   p {
     min-height: 7.5rem; // 본문의 최소 높이를 확보함.
     margin-bottom: 1.5rem;
+    color: v.$grayscale-90;
     font-size: 1rem;
     line-height: 1.6;
-    color: v.$grayscale-90;
     white-space: pre-wrap; // 줄바꿈 및 공백을 유지함.
     word-break: break-all;
   }
 
-  /* 상세 정보 및 가격 영역 */
+  /* 하단 메타 정보 영역 */
   .metaRow {
     display: flex;
     justify-content: space-between;
     align-items: center;
 
-    /* 관심 수 및 조회수 목록 */
+    /* 반응 정보 영역 */
     ul {
       display: flex;
       align-items: center;
       gap: 1.25rem;
-      font-size: 0.875rem;
       color: v.$grayscale-90;
+      font-size: 0.875rem;
 
       li {
         display: flex;
@@ -93,35 +104,36 @@
         gap: 0.3rem;
 
         svg {
-          font-size: 1rem;
           color: v.$dan-color;
+          font-size: 1rem;
         }
       }
     }
 
-    /* 가격 영역 */
+    /* 가격 정보 영역 */
     .priceInfo h3 {
-      display: flex; // 정렬 속성 적용을 위해 플렉스 레이아웃을 지정함.
+      display: flex;
       align-items: baseline;
       gap: 0.3rem; // 가격과 단위 간격을 지정함.
+      color: v.$grayscale-90;
       font-size: 1.5rem;
       font-weight: 700;
-      color: v.$grayscale-90;
 
       span {
+        color: v.$grayscale-90;
         font-size: 1rem;
         font-weight: 500;
-        color: v.$grayscale-90;
       }
     }
   }
 
-  /* 수정 및 삭제 버튼 영역 */
+  /* 게시글 관리 버튼 영역 */
   .actionButtons {
     display: flex;
     position: absolute;
     bottom: 0;
     right: 0;
-    gap: 0.3rem;
+    align-items: center;
+    gap: 0.2rem;
   }
 }
