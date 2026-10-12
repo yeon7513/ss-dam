@@ -8,6 +8,10 @@
   background-color: v.$grayscale-5;
   font-family: v.$font-main;
   color: v.$grayscale-90;
+
+  .dashboardBody {
+    padding: 1.5rem;
+  }
 }
 
 .mainContent {
