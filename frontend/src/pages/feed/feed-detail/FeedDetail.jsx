@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { useSubmitData } from "../../../hooks/useSubmitData.js";
 import Comments from "../../../components/feed/comment/Comments.jsx";
 import CloseButton from "../../../components/common/button/close/CloseButton.jsx";
+import { FaEye } from "react-icons/fa6";
 
 const FeedDetail = ({ code, onClose }) => {
   const navigate = useNavigate();
@@ -101,6 +102,10 @@ const FeedDetail = ({ code, onClose }) => {
           <div className={styles.meta}>
             <span>{formatCreatedAt(detail.createdAt)}</span>
             <div>
+              <span className={styles.hitcount}>
+                <FaEye />
+                {detail.hitcount}
+              </span>
               <span>
                 <IoChatbubbleEllipses /> {detail.countFeedComment}
               </span>

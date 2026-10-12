@@ -1,10 +1,10 @@
-import cn from 'classnames';
-import styles from './TextInput.module.scss';
+import cn from "classnames";
+import styles from "./TextInput.module.scss";
 
 function TextInput({
   className,
-  label = '',
-  type = 'text',
+  label = "",
+  type = "text",
   name,
   onChange,
   icon,
@@ -22,11 +22,7 @@ function TextInput({
           autoComplete="off"
           {...props}
         />
-        {icon && (
-          <div className={styles.icon}>
-            {icon}
-          </div>
-        )}
+        {icon && <div className={styles.icon}>{icon}</div>}
       </div>
     </div>
   );

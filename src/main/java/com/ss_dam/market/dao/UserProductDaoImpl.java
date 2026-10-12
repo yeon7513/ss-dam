@@ -1,12 +1,12 @@
 package com.ss_dam.market.dao;
 
 import com.ss_dam.common.pager.PageQuery;
+import com.ss_dam.market.model.request.ProductCreate;
 import com.ss_dam.market.model.request.ProductUpdate;
 import com.ss_dam.market.model.response.ProductDetail;
 import com.ss_dam.market.model.response.ProductEditView;
 import com.ss_dam.market.model.response.UserProductView;
 import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,8 +15,11 @@ import java.util.Map;
 @Repository
 public class UserProductDaoImpl implements UserProductDao {
 
-  @Autowired
-  SqlSession sql;
+  private final SqlSession sql;
+
+  public UserProductDaoImpl(SqlSession sql) {
+    this.sql = sql;
+  }
 
   @Override
   public List<UserProductView> loadProducts(Map<String, Object> params) {
@@ -46,6 +49,16 @@ public class UserProductDaoImpl implements UserProductDao {
   @Override
   public float loadProductsTotalCount(PageQuery pageQuery) {
     return sql.selectOne("userProductView.loadProductsTotalCount", pageQuery);
+  }
+
+  @Override
+  public void registerProductPost(ProductCreate productCreate) {
+    sql.insert("productCommand.registerProductPost", productCreate);
+  }
+
+  @Override
+  public void registerProductPostHitcountLog(Map<String, Object> params) {
+    sql.insert("productCommand.registerProductPostHitcountLog", params);
   }
 
 }

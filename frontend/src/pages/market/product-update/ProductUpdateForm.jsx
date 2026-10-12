@@ -4,14 +4,22 @@ import CategorySelectBox from "../../../components/market/category-select-box/Ca
 import { useSubmitData } from "../../../hooks/useSubmitData.js";
 import { createFormData } from "../../../utils/createFormData.js";
 import { useNavigate } from "react-router-dom";
+import TextInput from "../../../components/forms/text-input/TextInput.jsx";
+import { handleSetField } from "../../../utils/changeHandler.js";
+import RadioInput from "../../../components/forms/radio-input/RadioInput.jsx";
+import styles from "./ProductUpdate.module.scss";
+
+const DEAL_STATUS = [
+  { label: "판매중", name: "dealStatus", value: "ON_SALE" },
+  { label: "예약중", name: "dealStatus", value: "IN_PROGRESS" },
+  { label: "판매완료", name: "dealStatus", value: "SOLD" },
+]
 
 function ProductUpdateForm({ initPost, categories }) {
   const [updatedPost, setUpdatedPost] = useState(initPost);
   const navigate = useNavigate();
 
   console.log("updatedPost: ", updatedPost);
-
-
   console.log(updatedPost?.code);
 
   // 수정 완료 전송 핸들러
@@ -51,7 +59,33 @@ function ProductUpdateForm({ initPost, categories }) {
         onSubmit={handleSubmitUpdatedPost}
         submitText="수정"
         cancelUrl={`/market/${initPost?.code}`}
-      />
+      >
+        <div className={styles.meta}>
+          <div className={styles.price}>
+            <label htmlFor="price">가격</label>
+            <TextInput
+              id="price"
+              type="text"
+              name="price"
+              value={updatedPost?.price}
+              onChange={(e) => handleSetField(e, setUpdatedPost)}
+            />
+          </div>
+          <div className={styles.dealStatus}>
+            {DEAL_STATUS.map((status, idx) => (
+              <RadioInput
+                key={idx}
+                id={status.value}
+                name={status.name}
+                label={status.label}
+                value={status.value}
+                isChecked={status.value === updatedPost?.dealStatus}
+                onChange={(e) => handleSetField(e, setUpdatedPost)}
+              />
+            ))}
+          </div>
+        </div>
+      </Editor>
     </form>
   );
 }

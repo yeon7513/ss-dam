@@ -8,8 +8,6 @@ import CategorySelectBox from "../../../components/market/category-select-box/Ca
 import TextInput from "../../../components/forms/text-input/TextInput.jsx";
 import { handleSetField } from "../../../utils/changeHandler.js";
 
-import styles from "./ProductRegister.module.scss";
-
 const ProductRegister = () => {
   const navigate = useNavigate();
   const [post, setPost] = useState({});
@@ -60,10 +58,10 @@ const ProductRegister = () => {
           <div>
             <label htmlFor="price">가격</label>
             <TextInput
+              id="price"
               type="text"
               name="price"
-              id="price"
-              onChange={(e) => handleSetField({ e, setPost })}
+              onChange={(e) => handleSetField(e, setPost)}
             />
           </div>
         </Editor>

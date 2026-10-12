@@ -110,6 +110,13 @@
     FROM MEMBER_ACCOUNT m
     LEFT JOIN IMAGES i ON m.code = i.target_code AND i.TYPE = 'profile'
     ) AS mp ON mp.code = f.mem_code
+    <!-- 조회수 -->
+    LEFT JOIN (
+    SELECT fhl.feed_code, count(fhl.feed_code) AS hit_cnt
+    FROM FEED_HIT_LOG AS fhl
+    GROUP BY fhl.feed_code
+    ) AS hit_log
+    ON f.code = hit_log.feed_code
     <!-- 좋아요 개수 -->
     LEFT JOIN (
     SELECT fl.feed_code, count(*) AS cnt
@@ -126,14 +133,13 @@
     ) AS cnt_comment ON cnt_comment.feed_code = f.code
     <!-- 로그인한 사용자의 좋아요 여부 -->
     LEFT JOIN FEED_LIKE my_like
-    ON my_like.feed_code = f.code AND my_like.mem_code = #{memberCode} AND my_like.delete_yn = 0
+    ON my_like.feed_code = f.code AND my_like.mem_code = #{memCode} AND my_like.delete_yn = 0
   </sql>
 
   <!-- 공통 피드 기본 컬럼 -->
   <sql id="FeedBasicColumns">
     f.code,
     f.title,
-    f.hitcount,
     f.created_at,
     f.updated_at,
     ch.title AS challenge_name,
@@ -142,6 +148,7 @@
     mp.rating AS m_rating,
     mp.path AS m_profile_image,
     fh.tag_name AS hashtags,
+    IFNULL(hit_log.hit_cnt, 0) AS hitcount,
     IFNULL(cnt_comment.cnt, 0) AS count_feed_comment,
     IFNULL(cnt_like.cnt, 0) AS count_feed_like,
     IF(my_like.feed_code IS NOT NULL, 1, 0) AS liked_yn
@@ -232,7 +239,7 @@
     LEFT JOIN IMAGES i ON f.code = i.target_code AND i.type = 'feed'
     LEFT JOIN FEED_HASHTAG fh ON f.code = fh.feed_code
     WHERE f.code = #{feedCode}
-    AND f.mem_code = #{memberCode}
+    AND f.mem_code = #{memCode}
   </select>
 
   <select id="countFeedsByChallenge" resultType="int">

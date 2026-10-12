@@ -6,6 +6,12 @@
 <!-- 이 매퍼는 insert, update용 -->
 <mapper namespace="feedCommand">
 
+  <!-- 피드 조회 로그 삽입 -->
+  <insert id="registerFeedHitcountLog">
+    INSERT IGNORE INTO FEED_HIT_LOG (feed_code, mem_code, created_at)
+    VALUES (#{feedCode}, #{memCode}, NOW())
+  </insert>
+
   <!-- 피드 등록 -->
   <insert id="registerFeed">
     INSERT INTO FEED (chal_code, mem_code, title, content, hitcount, status, created_by, created_at, delete_yn)

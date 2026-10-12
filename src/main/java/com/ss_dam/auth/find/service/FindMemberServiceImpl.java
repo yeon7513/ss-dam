@@ -1,11 +1,11 @@
 package com.ss_dam.auth.find.service;
 
+import org.springframework.stereotype.Service;
+
 import com.ss_dam.auth.find.dao.FindMemberDao;
 import com.ss_dam.auth.find.model.ChangePassword;
 import com.ss_dam.auth.find.model.FindMember;
 import com.ss_dam.auth.login.model.response.MemberProfile;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 public class FindMemberServiceImpl implements FindMemberService{

@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.ss_dam.admin.stats.model.response.ChallengeRanking;
@@ -18,9 +17,12 @@ import com.ss_dam.admin.stats.model.response.SellerRanking;
 @Repository //DAO 구현 클래스를 Spring Bean으로 등록
 public class StatsDaoImpl implements StatsDao {
     
-   @Autowired 
-   private SqlSession sql;
+    private final SqlSession sql;
 
+    public StatsDaoImpl (SqlSession sql) {
+        this.sql = sql;
+    }
+ 
    @Override 
    public long countTotalMembers(LocalDateTime end) {
     Map<String, Object> params = new HashMap<>();

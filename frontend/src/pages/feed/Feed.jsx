@@ -86,7 +86,13 @@ const Feed = () => {
         {/* 목록 렌더링 */}
         <div className={styles.list}>
           {feeds.length > 0 ? (
-            feeds.map((feed) => <FeedCard key={feed.code} feed={feed} onClickDetail={handleOpenDetail} />)
+            feeds.map((feed) => (
+              <FeedCard
+                key={feed.code}
+                feed={feed}
+                onClickDetail={handleOpenDetail}
+              />
+            ))
           ) : (
             <p>검색된 피드가 없습니다.</p>
           )}

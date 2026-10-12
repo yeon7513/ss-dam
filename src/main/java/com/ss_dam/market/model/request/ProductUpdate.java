@@ -1,5 +1,6 @@
 package com.ss_dam.market.model.request;
 
+import com.ss_dam.market.enums.DealStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -11,6 +12,7 @@ public class ProductUpdate {
   private String title; // 제목
   private String content; // 내용
   private int price; // 가격
+  private DealStatus dealStatus;
   private String updatedBy; // 수정한 사용자 아이디 (게시글 작성자 또는 관리자)
   private String updatedAt; // 수정일
   private boolean deleteYn; // 삭제 여부
@@ -127,5 +129,13 @@ public class ProductUpdate {
 
   public void setMemCode(Long memCode) {
     this.memCode = memCode;
+  }
+
+  public DealStatus getDealStatus() {
+    return dealStatus;
+  }
+
+  public void setDealStatus(DealStatus dealStatus) {
+    this.dealStatus = dealStatus;
   }
 }

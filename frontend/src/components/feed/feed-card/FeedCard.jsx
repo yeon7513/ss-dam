@@ -4,8 +4,12 @@ import ProfileCard from "../../auth/profile-card/ProfileCard";
 import Hashtag from "../hashtag/Hashtag";
 import styles from "./FeedCard.module.scss";
 import ImageBox from "../../common/image-box/ImageBox.jsx";
+import { formatCreatedAt } from "../../../utils/formatDate.js";
+import { FaEye } from "react-icons/fa6";
 
 function FeedCard({ feed, onClickDetail }) {
+  console.log(feed);
+
   return (
     <Card className={styles.feed} onClick={() => onClickDetail(feed.code)}>
       {/* 프로필 카드 */}
@@ -34,15 +38,26 @@ function FeedCard({ feed, onClickDetail }) {
           </div>
         </div>
 
-        {/* 좋아요 & 댓글 & 작성일(시간) */}
+        {/* 조회수 & 좋아요 & 댓글 / 작성일(시간) */}
         <div className={styles.info}>
+
+          {/* 상호작용 수 */}
           <div className={styles.count}>
+            {/* 조회수 */}
+            <div className={styles.icon}>
+              <span className={styles.hitcount}>
+                <FaEye />
+              </span>
+              {feed.hitcount}
+            </div>
+            {/* 좋아요 수 */}
             <div className={styles.icon}>
               <span className={styles.like}>
                 <IoHeartSharp />
               </span>
               {feed.countFeedLike}
             </div>
+            {/* 댓글 수 */}
             <div className={styles.icon}>
               <span className={styles.comment}>
                 <IoChatbubbleEllipses />
@@ -50,8 +65,10 @@ function FeedCard({ feed, onClickDetail }) {
               {feed.countFeedComment}
             </div>
           </div>
+
+          {/* 작성일 */}
           <div>
-            <span>{feed.createdAt}</span>
+            <span>{formatCreatedAt(feed.createdAt)}</span>
           </div>
         </div>
       </div>

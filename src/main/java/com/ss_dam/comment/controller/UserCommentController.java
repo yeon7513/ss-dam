@@ -1,19 +1,6 @@
 package com.ss_dam.comment.controller;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.ss_dam.auth.login.model.response.AuthProfile;
-import com.ss_dam.auth.login.model.response.MemberProfile;
 import com.ss_dam.comment.model.request.CommentCreate;
 import com.ss_dam.comment.model.request.CommentUpdate;
 import com.ss_dam.comment.model.response.UserCommentView;
@@ -21,8 +8,10 @@ import com.ss_dam.comment.service.UserCommentService;
 import com.ss_dam.common.ApiResponse;
 import com.ss_dam.common.pager.PageQuery;
 import com.ss_dam.common.pager.PageResult;
-
 import jakarta.servlet.http.HttpSession;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/comments")
@@ -40,7 +29,7 @@ public class UserCommentController {
       @PathVariable Long feedCode, PageQuery pageQuery, HttpSession session) {
 
     // 로그인한 사용자의 좋아요 여부 확인
-    MemberProfile loginUser = (MemberProfile) session.getAttribute("loginUser");
+    AuthProfile loginUser = (AuthProfile) session.getAttribute("loginUser");
     Long memberCode = (loginUser != null) ? loginUser.getCode() : null;
 
     PageResult<UserCommentView> comments =
@@ -88,7 +77,10 @@ public class UserCommentController {
   //댓글 삭제(soft delete -> delete_yn=0을 delete_yn=1로 변경)
   @DeleteMapping("/{commentCode}")
   public ResponseEntity<ApiResponse<Void>> deleteComment(@PathVariable Long commentCode,
-      @RequestParam Long memCode) {
+      HttpSession session) {
+
+    AuthProfile loginUser = (AuthProfile) session.getAttribute("loginUser");
+    Long memCode = loginUser.getCode();
 
     //현재는 임시로 memCode를 쿼리 파라미터로 받음
     userCommentService.deleteComment(commentCode, memCode);

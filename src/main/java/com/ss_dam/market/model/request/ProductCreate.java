@@ -8,6 +8,7 @@ public class ProductCreate {
   private Long code; // 등록 후 새로 받을 PK
   private Long cateCode; // 카테고리 고유 번호
   private Long memCode; // 작성자 고유 번호
+  private String createdBy; // 작성자 아이디
   private String title; // 제목
   private String content; // 내용
   private int price; // 가격
@@ -70,5 +71,13 @@ public class ProductCreate {
 
   public void setImages(List<MultipartFile> images) {
     this.images = images;
+  }
+
+  public String getCreatedBy() {
+    return createdBy;
+  }
+
+  public void setCreatedBy(String createdBy) {
+    this.createdBy = createdBy;
   }
 }
