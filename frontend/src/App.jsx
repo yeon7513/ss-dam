@@ -157,12 +157,12 @@ function App() {
             <Route path="register" element={<ChallengeRegister />} />
             <Route path="edit/:code" element={<ChallengeUpdate />} />
             <Route path=":code" element={<ChallengeManageDetail />} />
-            <Route path="challenge-result" element={<ChallengeResult />} />
-            <Route
-              path="challenge-result/:code"
-              element={<ChallengeResultDetail />}
-            />
+
           </Route>
+
+          {/* 챌린지 종료 데이터 분석 */}
+          <Route path="challenge-result" element={<ChallengeResult />} />
+          <Route path="challenge-result/:code" element={<ChallengeResultDetail />}/>
 
           {/* 시스템 관리 */}
           <Route path="system_manage">
