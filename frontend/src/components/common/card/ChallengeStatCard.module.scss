@@ -1,0 +1,28 @@
+.statCard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid #e2e6eb;
+  background: #fff;
+
+  > span {
+    color: #737c87;
+    font-size: 12px;
+  }
+
+  strong {
+    font-size: 23px;
+  }
+
+  small {
+    color: #737c87;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 520px) {
+  .statCard {
+    padding: 12px;
+  }
+}
