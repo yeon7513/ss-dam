@@ -51,6 +51,7 @@ import Supports from "./pages/support/Supports";
 import FeedManageDetail from "./pages/admin/admin-feed/FeedManageDetail.jsx";
 import ProtectedRoute from "./routes/ProtectedRoute.jsx";
 import AdminRoute from "./routes/AdminRoute.jsx";
+import AccountRegister from "./pages/admin/account-manage/account-register/AccountRegister.jsx";
 
 
 function App() {
@@ -167,6 +168,7 @@ function App() {
           {/* 시스템 관리 */}
           <Route path="system_manage">
             <Route index element={<AccountManage />} />
+            <Route path="account_register" element={<AccountRegister />} />
           </Route>
 
         </Route>

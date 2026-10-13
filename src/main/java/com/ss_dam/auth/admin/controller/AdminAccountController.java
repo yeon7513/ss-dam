@@ -5,8 +5,11 @@ import com.ss_dam.auth.admin.model.request.AdminAccountCreate;
 import com.ss_dam.auth.admin.model.response.AdminAccountDetail;
 import com.ss_dam.auth.admin.model.response.AdminAccountView;
 import com.ss_dam.auth.admin.service.AdminAccountService;
+import com.ss_dam.auth.login.model.response.AuthProfile;
 import com.ss_dam.common.ApiResponse;
 import com.ss_dam.common.pager.PageResult;
+import com.ss_dam.common.validator.auth.AuthValidator;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +22,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/admin/account")
 public class AdminAccountController {
 
+  private final AuthValidator authValidator;
   private final AdminAccountService adminAccountService;
 
-  public AdminAccountController(AdminAccountService adminAccountService) {
+  public AdminAccountController(AuthValidator authValidator,
+      AdminAccountService adminAccountService) {
+    this.authValidator = authValidator;
     this.adminAccountService = adminAccountService;
   }
 
@@ -49,12 +55,15 @@ public class AdminAccountController {
 
   // 관리자 계정 생성
   @PostMapping
-  ResponseEntity<ApiResponse<AdminAccountDetail>> registerAdminAccount(
-      AdminAccountCreate adminAccountCreate) {
+  ResponseEntity<ApiResponse<Long>> registerAdminAccount(
+      @RequestBody AdminAccountCreate adminAccountCreate, HttpSession session) {
 
-    AdminAccountDetail newAdminAccount = null;
+    AuthProfile loginAdmin = authValidator.requireLogin(session);
 
-    return ResponseEntity.ok(ApiResponse.success("관리자 계정 생성 성공", newAdminAccount));
+    Long newAdminAccountCode =
+        adminAccountService.registerAdminAccount(adminAccountCreate, loginAdmin);
+
+    return ResponseEntity.ok(ApiResponse.success("관리자 계정 생성 성공", newAdminAccountCode));
   }
 
 

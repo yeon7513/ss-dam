@@ -1,6 +1,7 @@
 package com.ss_dam.auth.admin.dao;
 
 import com.ss_dam.auth.admin.model.filter.AdminAccountSearchFilter;
+import com.ss_dam.auth.admin.model.request.AdminAccountCreate;
 import com.ss_dam.auth.admin.model.response.AdminAccountDetail;
 import com.ss_dam.auth.admin.model.response.AdminAccountView;
 
@@ -13,4 +14,6 @@ public interface AdminAccountDao {
   float loadAdminAccountTotalCount(AdminAccountSearchFilter filter);
 
   AdminAccountDetail findAdminAccountByCode(Long code);
+
+  void registerAdminAccount(AdminAccountCreate adminAccountCreate);
 }

@@ -1,6 +1,7 @@
 package com.ss_dam.auth.admin.dao;
 
 import com.ss_dam.auth.admin.model.filter.AdminAccountSearchFilter;
+import com.ss_dam.auth.admin.model.request.AdminAccountCreate;
 import com.ss_dam.auth.admin.model.response.AdminAccountDetail;
 import com.ss_dam.auth.admin.model.response.AdminAccountView;
 import org.apache.ibatis.session.SqlSession;
@@ -31,5 +32,10 @@ public class AdminAccountDaoImpl implements AdminAccountDao {
   @Override
   public AdminAccountDetail findAdminAccountByCode(Long code) {
     return sql.selectOne("adminAccount.findAdminAccountByCode", code);
+  }
+
+  @Override
+  public void registerAdminAccount(AdminAccountCreate adminAccountCreate) {
+    sql.insert("adminAccount.registerAdminAccount", adminAccountCreate);
   }
 }

@@ -2,8 +2,10 @@ package com.ss_dam.auth.admin.service;
 
 import com.ss_dam.auth.admin.dao.AdminAccountDao;
 import com.ss_dam.auth.admin.model.filter.AdminAccountSearchFilter;
+import com.ss_dam.auth.admin.model.request.AdminAccountCreate;
 import com.ss_dam.auth.admin.model.response.AdminAccountDetail;
 import com.ss_dam.auth.admin.model.response.AdminAccountView;
+import com.ss_dam.auth.login.model.response.AuthProfile;
 import com.ss_dam.common.pager.PageResult;
 import org.springframework.stereotype.Service;
 
@@ -45,5 +47,14 @@ public class AdminAccountServiceImpl implements AdminAccountService {
   @Override
   public AdminAccountDetail findAdminAccountByCode(Long code) {
     return adminAccountDao.findAdminAccountByCode(code);
+  }
+
+  @Override
+  public Long registerAdminAccount(AdminAccountCreate adminAccountCreate, AuthProfile loginAdmin) {
+    adminAccountCreate.setAdmCode(loginAdmin.getCode());
+
+    adminAccountDao.registerAdminAccount(adminAccountCreate);
+
+    return adminAccountCreate.getCode();
   }
 }

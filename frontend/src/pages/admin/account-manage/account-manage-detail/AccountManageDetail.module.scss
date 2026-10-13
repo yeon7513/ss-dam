@@ -4,7 +4,6 @@
 
 .detail {
   width: 60%;
-  height: 100%;
 
   &.notice {
     @include mix.flex($fd: column, $ai: center);

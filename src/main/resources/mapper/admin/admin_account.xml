@@ -114,9 +114,9 @@
   <!-- 관리자 계정 생성 -->
   <insert id="registerAdminAccount">
     INSERT INTO ADMIN_ACCOUNT
-    (adm_code, emp_id, password, name, phone, dept, role, created_at, delete_yn)
+    (adm_code, emp_id, password, name, dept, role, created_at, delete_yn)
     VALUES
-    (#{admCode}, #{empId}, #{password}, #{name}, #{phone}, #{dept}, #{role}, now(), 0)
+    (#{admCode}, #{empId}, #{password}, #{name}, #{dept}, #{role}, now(), 0)
 
     <selectKey keyProperty="code" resultType="long" order="AFTER">
       SELECT LAST_INSERT_ID()
