@@ -20,9 +20,11 @@ const FeedDetail = ({ code, onClose }) => {
 
   const detail = data || {};
 
-
   // 피드 삭제 요청 훅
-  const { handleSubmit: handleSubmitDeleteFeed } = useSubmitData(`/api/feeds/${code}`, "DELETE");
+  const { handleSubmit: handleSubmitDeleteFeed } = useSubmitData(
+    `/api/feeds/${code}`,
+    "DELETE",
+  );
 
   // 피드 삭제 핸들러
   const handleDeleteFeed = async () => {
@@ -39,13 +41,12 @@ const FeedDetail = ({ code, onClose }) => {
           // 새로고침
           window.location.reload();
         }
-
       } catch (err) {
         alert("서버와 통신에 실패했습니다.");
         console.error(err);
       }
     }
-  }
+  };
 
   if (loading) {
     return <div>데이터를 불러오는 중입니다.</div>;
@@ -83,7 +84,7 @@ const FeedDetail = ({ code, onClose }) => {
 
           {/* 해시태그 */}
           <div className={styles.hashtags}>
-            {detail.hashtags.map((tag, idx) => (
+            {detail.hashtags?.map((tag, idx) => (
               <Hashtag key={idx} hashName={tag} />
             ))}
           </div>
@@ -91,10 +92,18 @@ const FeedDetail = ({ code, onClose }) => {
           {/* 수정 & 삭제 버튼 - 로그인한 사용자 전용 */}
           <ul className={styles.controlButtonGroup}>
             <li>
-              <Button btnStyle="text" type="button" onClick={() => navigate(`edit/${code}`)}>수정</Button>
+              <Button
+                btnStyle="text"
+                type="button"
+                onClick={() => navigate(`edit/${code}`)}
+              >
+                수정
+              </Button>
             </li>
             <li>
-              <Button btnStyle="text" type="button" onClick={handleDeleteFeed}>삭제</Button>
+              <Button btnStyle="text" type="button" onClick={handleDeleteFeed}>
+                삭제
+              </Button>
             </li>
           </ul>
 

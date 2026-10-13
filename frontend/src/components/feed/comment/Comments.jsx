@@ -46,10 +46,12 @@ function Comments({ targetCode, readOnly = false }) {
   return (
     <div className={cn(styles.content, styles.comment)}>
       {/* 댓글 등록 */}
-      <RegisterComment
-        code={targetCode}
-        onAddNewComment={handleAddNewComment}
-      />
+      {!readOnly && (
+        <RegisterComment
+          code={targetCode}
+          onAddNewComment={handleAddNewComment}
+        />
+      )}
 
       {/* 등록된 댓글 리스트 */}
       <div className={styles.comments}>
