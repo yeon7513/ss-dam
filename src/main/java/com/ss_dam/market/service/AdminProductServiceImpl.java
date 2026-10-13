@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,13 +24,17 @@ import com.ss_dam.market.model.response.AdminProductView;
 
 @Service
 public class AdminProductServiceImpl implements AdminProductService {
+	
+	private AdminProductDao adminProductDao;
+	private AdminMemberDao adminMemberDao;
 
-  @Autowired
-  private AdminProductDao adminProductDao;
-
-  //관리자 회원 상세 - 회원 존재 확인용 DAO
-  @Autowired 
-  private AdminMemberDao adminMemberDao;
+	public AdminProductServiceImpl (
+		AdminProductDao adminProductDao,
+		AdminMemberDao adminMemberDao
+	) {
+		this.adminProductDao = adminProductDao;
+		this.adminMemberDao = adminMemberDao;
+	}
 
   
 

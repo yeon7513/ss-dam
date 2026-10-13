@@ -54,10 +54,9 @@ public class UserProductController {
 
     // 로그인한 사용자의 Pick 여부를 받아오기 위해 세션에서 로그인 정보를 가져옴.
     AuthProfile loginUser = authValidator.getLoginUser(session);
-    Long memberCode = (loginUser != null) ? loginUser.getCode() : null;
 
     ProductDetail productDetail =
-        userProductService.findProductDetailByProdCode(prodCode, memberCode);
+        userProductService.findProductDetailByProdCode(prodCode, loginUser);
 
     if (productDetail == null) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.fail("존재하지 않는 거래글입니다."));

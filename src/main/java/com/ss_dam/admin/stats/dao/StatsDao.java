@@ -14,14 +14,14 @@ public interface StatsDao {
   //종료 시점 이전까지 가입한 누적 회원 수
   long countTotalMembers(LocalDateTime end);
 
-    //조회 기간에 등록된 신규 피드 수
-    long countNewFeeds(LocalDateTime start, LocalDateTime end);
+  //조회 기간에 등록된 신규 피드 수
+  long countNewFeeds(LocalDateTime start, LocalDateTime end);
 
-    //조회 기간에 등록된 신규 거래 수
-    long countNewTrades(LocalDateTime start, LocalDateTime end);
-    
-    //조회 기간의 월별 신규 가입 회원 수
-    long countNewMembers(LocalDateTime start, LocalDateTime end);
+  //조회 기간에 등록된 신규 거래 수
+  long countNewTrades(LocalDateTime start, LocalDateTime end);
+  
+  //조회 기간의 월별 신규 가입 회원 수
+  long countNewMembers(LocalDateTime start, LocalDateTime end);
 
   // 조회 기간에 가입한 회원 수를 월별 집계
   List<MemberStatistics> findMemberStatistics(

@@ -28,11 +28,6 @@ export default function ChallengeManage() {
 
   const [loading, setLoading] = useState(false);
   const [loadError, setLoadError] = useState('');
-  const [isSpinning, setIsSpinning] = useState(false);
-
-  const [currentTime, setCurrentTime] = useState(
-    () => `${new Date().toLocaleString('sv-SE')} 기준`,
-  );
 
   const fetchChallenges = useCallback(async () => {
     setLoading(true);
@@ -66,7 +61,6 @@ export default function ChallengeManage() {
 
       setChallenges(result.data.content);
       setPager(result.data.pager);
-      setCurrentTime(`${new Date().toLocaleString('sv-SE')} 기준`);
     } catch (error) {
       console.error('챌린지 목록 조회 실패:', error);
 
@@ -111,28 +105,13 @@ export default function ChallengeManage() {
     setSearchParams(INITIAL_FILTERS);
   };
 
-  const handleRefresh = async () => {
-    if (loading || isSpinning) return;
-
-    setIsSpinning(true);
-
-    try {
-      await fetchChallenges();
-    } finally {
-      setTimeout(() => {
-        setIsSpinning(false);
-      }, 1000);
-    }
-  };
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
         <DashboardHeader
           title="챌린지 진행 현황"
-          lastUpdated={currentTime}
-          isSpinning={isSpinning}
-          handleRefresh={handleRefresh}
+          onRefresh={fetchChallenges}
         />
 
         <Link

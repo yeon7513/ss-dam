@@ -1,6 +1,5 @@
 package com.ss_dam.feed.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,9 +26,12 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/api/admin/feeds")
 public class AdminFeedController {
 
-@Autowired 
-private AdminFeedService adminFeedService;
-
+  private final AdminFeedService adminFeedService;
+  
+  public AdminFeedController (AdminFeedService adminFeedService) {
+    this.adminFeedService = adminFeedService;
+  }
+  
     // 관리자 피드 목록 조회
     @GetMapping
     public ResponseEntity<ApiResponse<PageResult<AdminFeedView>>> loadFeeds(

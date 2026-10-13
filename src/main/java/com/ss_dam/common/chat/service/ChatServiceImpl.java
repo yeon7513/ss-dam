@@ -1,6 +1,13 @@
 package com.ss_dam.common.chat.service;
 
-import com.ss_dam.auth.login.model.response.MemberProfile;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.ss_dam.auth.member.service.MemberService;
 import com.ss_dam.common.chat.dao.ChatDao;
 import com.ss_dam.common.chat.model.filter.ChatRoomSearchFilter;
@@ -8,31 +15,26 @@ import com.ss_dam.common.chat.model.request.ChatMessageCreate;
 import com.ss_dam.common.chat.model.request.ChatRoomRequest;
 import com.ss_dam.common.chat.model.response.ChatDetailView;
 import com.ss_dam.common.chat.model.response.ChatMessageView;
-import com.ss_dam.common.chat.model.response.ChatRoomInfo;
 import com.ss_dam.common.chat.model.response.ChatRoomView;
 import com.ss_dam.common.pager.PageResult;
-import com.ss_dam.market.model.response.UserProductView;
 import com.ss_dam.market.service.UserProductService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 @Service
 public class ChatServiceImpl implements ChatService {
 
-  @Autowired
-  MemberService memberService;
+  private ChatDao chatDao;
+  private MemberService memberService;
+  private UserProductService userProductService;
 
-  @Autowired
-  UserProductService userProductService;
-
-  @Autowired
-  ChatDao chatDao;
+  public ChatServiceImpl (
+    ChatDao chatDao,
+    MemberService memberService,
+    UserProductService userProductService
+  ) {
+    this.chatDao = chatDao;
+    this.memberService = memberService;
+    this.userProductService = userProductService;
+  }
 
   // 채팅방 불러오기 및 생성
   // 있으면? -> 채팅방 PK 반환 / 없으면? -> 생성 후 roomId(UUID) 반환
@@ -121,22 +123,22 @@ public class ChatServiceImpl implements ChatService {
     return chatDao.findRoomCodeByRoomId(roomId);
   }
 
-  // 채팅방에 대한 상세 정보 불러오기 -> 안쓸것같기도한디..
-  private ChatRoomInfo loadChatRoomInfo(Long MemberCode, String type, Long targetCode) {
-    ChatRoomInfo info = new ChatRoomInfo();
-
-    MemberProfile memberProfile = memberService.searchProfileByMemberCode(MemberCode);
-    info.setOtherMemberProfile(memberProfile);
-
-    if (type.equals("DEAL") && targetCode != null) {
-      UserProductView product =
-          userProductService.findProductDetailByProdCode(targetCode, MemberCode);
-      info.setProductInfo(product);
-    } else {
-      info.setProductInfo(null);
-    }
-
-    return info;
-  }
+  //  // 채팅방에 대한 상세 정보 불러오기 -> 안쓸것같기도한디..
+  //  private ChatRoomInfo loadChatRoomInfo(Long MemberCode, String type, Long targetCode) {
+  //    ChatRoomInfo info = new ChatRoomInfo();
+  //
+  //    MemberProfile memberProfile = memberService.searchProfileByMemberCode(MemberCode);
+  //    info.setOtherMemberProfile(memberProfile);
+  //
+  //    if (type.equals("DEAL") && targetCode != null) {
+  //      UserProductView product =
+  //          userProductService.findProductDetailByProdCode(targetCode, MemberCode);
+  //      info.setProductInfo(product);
+  //    } else {
+  //      info.setProductInfo(null);
+  //    }
+  //
+  //    return info;
+  //  }
 
 }

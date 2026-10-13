@@ -8,7 +8,6 @@ public class UserProductView {
   private Long code; // 물품 등록 고유 번호
   private String title; // 제목
   private int price; // 가격
-  private int hitcount; // 조회수
   private DealStatus dealStatus; // 판매 상태
   private String createdAt; // 작성일
   private String updatedAt; // 수정일
@@ -22,6 +21,8 @@ public class UserProductView {
 
   // 상호작용 지표
   private int countPick; // Pick 수
+  private int countChatRoom; // 채팅방 수
+  private int hitcount; // 조회수
   private boolean pickedYn; // Pick 클릭 여부 (로그인한 사용자 전용)
 
   // 대표 이미지
@@ -130,5 +131,13 @@ public class UserProductView {
 
   public void setDealStatus(DealStatus dealStatus) {
     this.dealStatus = dealStatus;
+  }
+
+  public int getCountChatRoom() {
+    return countChatRoom;
+  }
+
+  public void setCountChatRoom(int countChatRoom) {
+    this.countChatRoom = countChatRoom;
   }
 }

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="adminAccount">
+
+  <!-- 관리자 상세 조회용 resultMap -->
+  <resultMap id="AdminAccountDetailMap" type="AdminAccountDetail" autoMapping="true">
+    <id column="code" property="code" />
+
+    <!-- 계정을 생성한 관리자 정보 -->
+    <association
+        property="supervisor"
+        columnPrefix="sv_"
+        javaType="AdminSupervisorView"
+        notNullColumn="code"
+        autoMapping="true"
+    >
+      <id column="code" property="code" />
+    </association>
+  </resultMap>
+
+
+  <!-- ================================================== -->
+
+
+  <!-- 검색 필터 -->
+  <sql id="AdminAccountSearchFilter">
+    <where>
+      <!-- 키워드 검색 -->
+      <if test="keyword != null and keyword.trim() != ''">
+        AND (
+        AA.emp_id LIKE CONCAT('%', #{keyword}, '%')
+        OR AA.name LIKE CONCAT('%', #{keyword}, '%'))
+      </if>
+      <!-- 권한별 조회 -->
+      <if test="role != null and role != ''">
+        AND AA.role = #{role}
+      </if>
+      <!-- 부서별 조회 -->
+      <if test="dept != null and dept != ''">
+        AND AA.dept = #{dept}
+      </if>
+      <!-- 삭제 여부 필터 -->
+      <if test="deleted != null">
+        AND AA.delete_yn = #{deleted}
+      </if>
+      <!-- 생성일 범위 -->
+      <if test="fromDate != null and toDate == null">
+        AND DATE(AA.created_at) >= #{fromDate}
+      </if>
+      <if test="fromDate != null and toDate != null">
+        AND DATE(AA.created_at) BETWEEN #{fromDate} AND #{toDate}
+      </if>
+    </where>
+  </sql>
+
+  <!-- 공통 컬럼 -->
+  <sql id="AdminAccountBasicColumns">
+    AA.code,
+    AA.emp_id,
+    AA.name,
+    AA.dept,
+    AA.role,
+    AA.created_at,
+    AA.logged_at,
+    AA.delete_yn
+  </sql>
+
+
+  <!-- ================================================== -->
+
+
+  <!-- 관리자 계정 전체 개수 조회 -->
+  <select id="loadAdminAccountTotalCount" resultType="Float">
+    SELECT count(*)
+    FROM ADMIN_ACCOUNT AS AA
+    <include refid="AdminAccountSearchFilter" />
+  </select>
+
+  <!-- 관리자 계정 목록 조회 -->
+  <select id="loadAdminAccounts" resultType="AdminAccountView">
+    SELECT
+    <include refid="AdminAccountBasicColumns" />
+    FROM (
+    SELECT *
+    FROM ADMIN_ACCOUNT AS AA
+    <include refid="AdminAccountSearchFilter" />
+    ORDER BY AA.created_at DESC, AA.code DESC
+    LIMIT #{offset}, #{perPage}
+    ) AS AA
+  </select>
+
+  <!-- 관리자 계정 상세 조회 -->
+  <select id="findAdminAccountByCode" resultMap="AdminAccountDetailMap">
+    SELECT
+    <include refid="AdminAccountBasicColumns" />,
+    AA.phone,
+    supervisor.code AS sv_code,
+    supervisor.emp_id AS sv_emp_id,
+    supervisor.name AS sv_name,
+    supervisor.dept AS sv_dept,
+    supervisor.role AS sv_role
+    FROM ADMIN_ACCOUNT AS AA
+    LEFT JOIN ADMIN_ACCOUNT AS supervisor
+    ON AA.adm_code = supervisor.code
+    WHERE AA.code = #{code}
+  </select>
+
+
+  <!-- ================================================== -->
+
+  <!-- 관리자 계정 생성 -->
+  <insert id="registerAdminAccount">
+    INSERT INTO ADMIN_ACCOUNT
+    (adm_code, emp_id, password, name, phone, dept, role, created_at, delete_yn)
+    VALUES
+    (#{admCode}, #{empId}, #{password}, #{name}, #{phone}, #{dept}, #{role}, now(), 0)
+
+    <selectKey keyProperty="code" resultType="long" order="AFTER">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+  </insert>
+
+  <!-- ================================================== -->
+
+  <!-- 관리자 정보 수정 (본인) -->
+  <update id="updateMyAccount">
+    UPDATE ADMIN_ACCOUNT
+    SET
+    <set>
+      <!-- 비밀번호는 빈 값이 아닐 경우에만 수정 대상에 포함시킴 -->
+      <if test="password != null and password != ''">
+        password = #{password}
+      </if>
+      name = #{name},
+      dept = #{dept},
+      phone = #{phone},
+      updated_at = now()
+    </set>
+    WHERE code = #{code}
+  </update>
+
+  <!-- 관리자 정보 수정 (상사) -->
+  <update id="updateAccountBySupervisor">
+    UPDATE ADMIN_ACCOUNT
+    SET
+    role = #{role},
+    dept = #{dept},
+    updated_at = now()
+    WHERE code = #{targetCode}
+  </update>
+
+  <!-- ================================================== -->
+
+  <!-- 관리자 계정 삭제 (Soft Delete) & 복구 (Soft Restore) -->
+  <update id="updateAdminAccountStatusBySupervisor">
+    UPDATE ADMIN_ACCOUNT
+    SET
+    delete_yn = #{deleteYn},
+    updated_at = now()
+    WHERE code = #{targetCode}
+    AND delete_yn != #{deleteYn}
+  </update>
+
+</mapper>

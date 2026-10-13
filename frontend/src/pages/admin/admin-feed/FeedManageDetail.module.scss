@@ -1,0 +1,281 @@
+@use "../../../scss/variables.scss" as v;
+@use "../../../scss/mixin.scss" as mix;
+
+.admin-detail-loading {
+  @include mix.flex($jc: center, $ai: center);
+  min-height: 300px;
+  font-size: 1rem;
+  color: v.$grayscale-50;
+}
+
+.admin-detail-wrapper {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.detail-header {
+  @include mix.flex($jc: space-between, $ai: center);
+  margin-bottom: 20px;
+
+  h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: v.$grayscale-100;
+    @include mix.flex($ai: center);
+    gap: 12px;
+  }
+}
+
+.code-tag {
+  font-size: 13px;
+  color: v.$primary-40;
+  background-color: v.$primary-5;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.btn-back {
+  padding: 8px 16px;
+  background-color: v.$color-white;
+  border: 1px solid v.$grayscale-20;
+  border-radius: 6px;
+  color: v.$grayscale-90;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background-color: v.$grayscale-5;
+    border-color: v.$grayscale-50;
+  }
+}
+
+.summary-bar {
+  @include mix.flex($jc: space-around, $ai: center);
+  gap: 16px;
+  background-color: v.$color-white;
+  border: 1px solid v.$grayscale-20;
+  border-radius: 8px;
+  padding: 16px 24px;
+  margin-bottom: 24px;
+  box-shadow: v.$box-shadow;
+}
+
+.summary-item {
+  flex: 1;
+  @include mix.flex($fd: column, $ai: flex-start);
+  gap: 6px;
+
+  .label {
+    font-size: 12px;
+    color: v.$grayscale-50;
+  }
+
+  .value {
+    font-size: 15px;
+    font-weight: 600;
+    color: v.$grayscale-100;
+  }
+}
+
+.active-badge {
+  display: inline-block;
+  width: fit-content;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+
+  &.active {
+    background-color: rgba(v.$succ-color, 0.15);
+    color: v.$succ-color;
+  }
+
+  &.inactive {
+    background-color: rgba(v.$dan-color, 0.15);
+    color: v.$dan-color;
+  }
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+}
+
+.card {
+  background-color: v.$color-white;
+  border: 1px solid v.$grayscale-20;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: v.$box-shadow;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: v.$grayscale-100;
+}
+
+.feed-card {
+  @extend .card;
+
+  .feed-header-title {
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid v.$grayscale-20;
+
+    .challenge-tag {
+      display: inline-block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: v.$point-60;
+      margin-bottom: 0.25rem;
+    }
+
+    .feed-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: v.$grayscale-100;
+    }
+  }
+
+  .feed-main-layout {
+    @include mix.flex($jc: space-between, $ai: flex-start);
+    gap: 1.5rem;
+
+    .feed-images {
+      flex: 1.1;
+      min-width: 0;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid v.$grayscale-20;
+      background-color: v.$grayscale-5;
+    }
+
+    .feed-info {
+      flex: 1;
+      min-width: 0;
+      @include mix.flex($fd: column, $ai: stretch);
+      gap: 1rem;
+
+      .content-box {
+        min-height: 120px;
+        padding: 14px;
+        background-color: v.$grayscale-5;
+        border: 1px solid v.$grayscale-20;
+        border-radius: 6px;
+        white-space: pre-wrap;
+        line-height: 1.6;
+        font-size: 14px;
+        color: v.$grayscale-90;
+      }
+
+      .hashtags {
+        @include mix.flex($jc: flex-start);
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+
+      .meta {
+        @include mix.flex($jc: flex-end, $ai: center);
+        gap: 16px;
+        color: v.$grayscale-50;
+        font-size: 14px;
+        padding-top: 12px;
+        border-top: 1px solid v.$grayscale-20;
+
+        span {
+          @include mix.flex($ai: center);
+          gap: 4px;
+        }
+      }
+    }
+  }
+}
+
+.action-card {
+  position: sticky;
+  top: 20px;
+}
+
+.action-desc {
+  font-size: 13px;
+  color: v.$grayscale-50;
+  margin-bottom: 12px;
+}
+
+.reason-textarea {
+  width: 100%;
+  height: 120px;
+  padding: 12px;
+  border: 1px solid v.$grayscale-20;
+  border-radius: 6px;
+  resize: none;
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-family: inherit;
+  box-sizing: border-box;
+
+  &:focus {
+    outline: none;
+    border-color: v.$primary-40;
+    box-shadow: 0 0 0 2px rgba(57, 158, 109, 0.1);
+  }
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-action {
+  flex: 1;
+  padding: 10px 0;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    opacity 0.2s;
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  &.btn-delete {
+    background-color: v.$dan-color;
+    color: v.$color-white;
+
+    &:hover:not(:disabled) {
+      opacity: 0.9;
+    }
+  }
+
+  &.btn-restore {
+    background-color: v.$primary-40;
+    color: v.$color-white;
+
+    &:hover:not(:disabled) {
+      background-color: v.$primary-50;
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .feed-card .feed-main-layout {
+    flex-direction: column;
+  }
+}

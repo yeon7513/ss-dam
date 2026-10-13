@@ -2,7 +2,6 @@ package com.ss_dam.market.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,15 +28,16 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 
-//아직 관리자 권한 검증 X
-//세션 이용 X -> memCode이용 
-
 @RestController
 @RequestMapping("/api/admin/products")
 public class AdminProductController {
 
-   @Autowired
-    private AdminProductService adminProductService;
+	private final AdminProductService adminProductService;
+
+	public AdminProductController (AdminProductService adminProductService) {
+		this.adminProductService = adminProductService;
+	}
+
 
     //관리자 상품 목록 조회
     //Pager: 검색 조건 및 페이지네이션

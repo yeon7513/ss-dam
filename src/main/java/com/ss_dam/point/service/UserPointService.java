@@ -5,3 +5,4 @@ public interface UserPointService {
 	int getPointBalance(Long code);
 
 }
+//

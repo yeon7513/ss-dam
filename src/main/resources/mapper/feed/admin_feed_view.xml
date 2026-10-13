@@ -53,8 +53,7 @@
 
     SELECT
         COUNT(*) AS total_feed_count,
-        COALESCE(SUM(likes.like_count), 0) AS total_like_count,
-        COALESCE(SUM(f.HITCOUNT), 0) AS total_hit_count
+        COALESCE(SUM(likes.like_count), 0) AS total_like_count       
     FROM FEED f
 
     LEFT JOIN (
@@ -74,8 +73,7 @@
 
     SELECT
         f.CODE AS code,
-        f.TITLE AS title,
-        f.HITCOUNT AS hitcount,
+        f.TITLE AS title,        
         f.CREATED_AT AS created_at,
         f.UPDATED_AT AS updated_at,
         ch.TITLE AS challenge_name,
@@ -243,8 +241,7 @@
     SELECT
         f.CODE AS code,
         f.TITLE AS title,
-        f.CONTENT AS content,
-        f.HITCOUNT AS hitcount,
+        f.CONTENT AS content,        
         f.CREATED_AT AS created_at,
         f.UPDATED_AT AS updated_at,
         f.STATUS AS status,

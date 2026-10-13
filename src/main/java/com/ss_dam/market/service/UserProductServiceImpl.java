@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class UserProductServiceImpl implements UserProductService {
@@ -34,7 +35,7 @@ public class UserProductServiceImpl implements UserProductService {
   public PageResult<UserProductView> loadProducts(UserProductSearchFilter filter, Long memberCode) {
     Map<String, Object> params = new HashMap<>();
 
-    params.put("memberCode", memberCode);
+    params.put("memCode", memberCode);
 
     // 페이지네이션
     params.put("offset", filter.getOffset());
@@ -54,14 +55,30 @@ public class UserProductServiceImpl implements UserProductService {
 
 
   // 상세 조회
+  @Transactional
   @Override
-  public ProductDetail findProductDetailByProdCode(Long prodCode, Long memberCode) {
+  public ProductDetail findProductDetailByProdCode(Long prodCode, AuthProfile loginUser) {
+
+    boolean isMember = loginUser != null && "MEMBER".equalsIgnoreCase(loginUser.getRole());
+    Long memberCode = (isMember) ? loginUser.getCode() : null;
+
     Map<String, Object> params = new HashMap<>();
-
     params.put("prodCode", prodCode);
-    params.put("memberCode", memberCode);
+    params.put("memCode", memberCode);
 
-    return userProductDao.findProductDetailByProdCode(params);
+    ProductDetail productDetail = userProductDao.findProductDetailByProdCode(params);
+
+    if (productDetail == null) {
+      return null;
+    }
+
+    boolean isOther = !Objects.equals(productDetail.getMemberProfile().getCode(), memberCode);
+
+    if (isMember && isOther) {
+      userProductDao.registerProductPostHitcountLog(params);
+    }
+
+    return productDetail;
   }
 
 
@@ -70,7 +87,7 @@ public class UserProductServiceImpl implements UserProductService {
   public ProductEditView findProductDetailForEdit(Long prodCode, Long memberCode) {
     Map<String, Object> params = new HashMap<>();
     params.put("prodCode", prodCode);
-    params.put("memberCode", memberCode);
+    params.put("memCode", memberCode);
 
     return userProductDao.findProductDetailForEdit(params);
   }
@@ -109,6 +126,7 @@ public class UserProductServiceImpl implements UserProductService {
     userProductDao.deleteProductPost(params);
   }
 
+  // 게시글 등록
   @Transactional
   @Override
   public Long registerProductPost(ProductCreate productCreate, AuthProfile loginUser) {

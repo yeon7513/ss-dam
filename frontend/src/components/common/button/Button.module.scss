@@ -26,6 +26,34 @@
     &:hover:not(:disabled) {
       background-color: v.$grayscale-10;
     }
+
+    /* 위험 채우기 스타일 */
+    &.danger {
+      background-color: v.$dan-color;
+      color: v.$color-white;
+
+      &:hover:not(:disabled) {
+        background-color: color-mix(
+          in srgb,
+          v.$dan-color,
+          v.$grayscale-100 10%
+        );
+      }
+    }
+
+    /* 제출 채우기 스타일 */
+    &.submit {
+      background-color: v.$succ-color;
+      color: v.$color-white;
+
+      &:hover:not(:disabled) {
+        background-color: color-mix(
+          in srgb,
+          v.$succ-color,
+          v.$grayscale-100 10%
+        );
+      }
+    }
   }
 
   /* 테두리 스타일 */
@@ -38,49 +66,27 @@
       background-color: v.$grayscale-50;
       color: v.$color-white;
     }
-  }
 
-  /* 위험 채우기 스타일 */
-  &.danger {
-    background-color: v.$dan-color;
-    color: v.$color-white;
+    // 위험 or 경고
+    &.danger {
+      border: 1.8px solid v.$dan-color;
+      color: v.$dan-color;
 
-    &:hover:not(:disabled) {
-      background-color: color-mix(in srgb, v.$dan-color, v.$grayscale-100 10%);
+      &:hover:not(:disabled) {
+        background-color: v.$dan-color;
+        color: v.$color-white;
+      }
     }
-  }
 
-  /* 위험 테두리 스타일 */
-  &.o_danger {
-    border: 1.8px solid v.$dan-color;
-    font-weight: 700;
-    color: v.$dan-color;
+    /* 제출 테두리 스타일 */
+    &.submit {
+      border: 1.8px solid v.$succ-color;
+      color: v.$succ-color;
 
-    &:hover:not(:disabled) {
-      background-color: v.$dan-color;
-      color: v.$color-white;
-    }
-  }
-
-  /* 제출 채우기 스타일 */
-  &.submit {
-    background-color: v.$succ-color;
-    color: v.$color-white;
-
-    &:hover:not(:disabled) {
-      background-color: color-mix(in srgb, v.$succ-color, v.$grayscale-100 10%);
-    }
-  }
-
-  /* 제출 테두리 스타일 */
-  &.o_submit {
-    border: 1.8px solid v.$succ-color;
-    font-weight: 700;
-    color: v.$succ-color;
-
-    &:hover:not(:disabled) {
-      background-color: v.$succ-color;
-      color: v.$color-white;
+      &:hover:not(:disabled) {
+        background-color: v.$succ-color;
+        color: v.$color-white;
+      }
     }
   }
 
@@ -88,11 +94,24 @@
   &.word {
     padding: 0;
     font-size: 1rem;
-    color: var(--btn-color, v.$grayscale-90);
+    color: v.$grayscale-90;
 
     &:hover:not(:disabled) {
       font-weight: 700;
-      color: var(--btn-hover-color, var(--btn-color, v.$grayscale-90));
+    }
+
+    // 위험 or 경고
+    &.danger {
+      &:hover:not(:disabled) {
+        color: v.$dan-color;
+      }
+    }
+
+    /* 제출 테두리 스타일 */
+    &.submit {
+      &:hover:not(:disabled) {
+        color: v.$succ-color;
+      }
     }
   }
 

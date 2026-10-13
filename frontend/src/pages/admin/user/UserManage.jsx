@@ -32,12 +32,6 @@ export default function UserManage() {
   // 데이터 조회 중인지 나타내는 상태
   const [loading, setLoading] = useState(false);
   const [loadError, setLoadError] = useState("");
-  const [isSpinning, setIsSpinning] = useState(false);
-
-  //import DashboardHeader 기능 추가-> 새로고침 + 우측 상단 시간 계산 기능
-  const [currentTime, setCurrentTime] = useState(
-    () => `${new Date().toLocaleString("sv-SE")} 기준`,
-  );
 
   // 서버에 전달할 조회 조건
   const [searchParams, setSearchParams] = useState({
@@ -91,7 +85,6 @@ export default function UserManage() {
 
       setMembers(result.data.content);
       setPager(result.data.pager);
-      setCurrentTime(`${new Date().toLocaleString("sv-SE")} 기준`);
     } catch (error) {
       // 요청 실패나 JSON 처리 중 발생한 오류를 콘솔에 출력
       console.error("Fetch Error", error);
@@ -145,30 +138,13 @@ export default function UserManage() {
     }));
   };
 
-  //import DashboardHeader 기능 추가
-  const handleRefresh = async () => {
-    if (loading || isSpinning) return;
-
-    setIsSpinning(true);
-
-    try {
-      await fetchMembers();
-    } finally {
-      setTimeout(() => {
-        setIsSpinning(false);
-      }, 1000);
-    }
-  };
-
   return (
     <div className={styles.container}>
       {/* 제목 + 새로고침 + 현재 시각 */}
       <div className={styles.header}>
         <DashboardHeader
           title="관리자 회원 관리"
-          lastUpdated={currentTime}
-          isSpinning={isSpinning}
-          handleRefresh={handleRefresh}
+          onRefresh={fetchMembers}
         />
       </div>
 

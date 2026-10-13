@@ -11,7 +11,7 @@ function FeedCard({ feed, onClickDetail }) {
   console.log(feed);
 
   return (
-    <Card className={styles.feed} onClick={() => onClickDetail(feed.code)}>
+    <Card className={styles.feed} onClick={() => onClickDetail?.(feed.code)}>
       {/* 프로필 카드 */}
       <ProfileCard memberProfile={feed.memberProfile} />
 
@@ -40,16 +40,8 @@ function FeedCard({ feed, onClickDetail }) {
 
         {/* 조회수 & 좋아요 & 댓글 / 작성일(시간) */}
         <div className={styles.info}>
-
           {/* 상호작용 수 */}
           <div className={styles.count}>
-            {/* 조회수 */}
-            <div className={styles.icon}>
-              <span className={styles.hitcount}>
-                <FaEye />
-              </span>
-              {feed.hitcount}
-            </div>
             {/* 좋아요 수 */}
             <div className={styles.icon}>
               <span className={styles.like}>
@@ -63,6 +55,13 @@ function FeedCard({ feed, onClickDetail }) {
                 <IoChatbubbleEllipses />
               </span>
               {feed.countFeedComment}
+            </div>
+            {/* 조회수 */}
+            <div className={styles.icon}>
+              <span className={styles.hitcount}>
+                <FaEye />
+              </span>
+              {feed.hitcount}
             </div>
           </div>
 

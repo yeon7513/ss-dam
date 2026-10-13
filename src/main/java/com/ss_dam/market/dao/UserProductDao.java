@@ -24,4 +24,6 @@ public interface UserProductDao {
   float loadProductsTotalCount(PageQuery pageQuery);
 
   void registerProductPost(ProductCreate productCreate);
+
+  void registerProductPostHitcountLog(Map<String, Object> params);
 }
