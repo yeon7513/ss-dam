@@ -1,0 +1,42 @@
+.legend {
+  display: flex;
+  gap: 14px;
+  color: #737c87;
+  font-size: 12px;
+
+  span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+}
+
+.achievedDot {
+  background: #858e99;
+}
+
+.remainingDot {
+  background: #c5cbd3;
+}
+
+.gauge {
+  max-width: 300px;
+  margin: 8px auto 0;
+
+  svg {
+    display: block;
+    width: 100%;
+  }
+
+  text {
+    fill: #66707a;
+    font-size: 19px;
+    font-weight: 700;
+  }
+}
