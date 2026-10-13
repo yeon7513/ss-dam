@@ -5,107 +5,352 @@
 
 <mapper namespace="adminReport">
 
-  <!-- 신고 통계 -->
-<resultMap id="memberReportSummaryMap"
-           type="AdminMemberReportsView"
-           autoMapping="true">
-</resultMap>
+    <!-- 신고 통계 -->
+    <resultMap id="memberReportSummaryMap"
+               type="AdminMemberReportsView"
+               autoMapping="true">
+    </resultMap>
 
-<!-- 신고 한 건 -->
-<resultMap id="memberReportMap"
-           type="ReportView"
-           autoMapping="true">
+    <!-- 신고 한 건 -->
+    <resultMap id="memberReportMap"
+               type="ReportView"
+               autoMapping="true">
 
-    <id column="CODE" property="code"/>
+        <id column="CODE" property="code"/>
 
-    <!-- MEM_CODE는 reporterCode와 이름이 달라 직접 매핑 -->
-    <result column="MEM_CODE" property="reporterCode"/>
-</resultMap>
+        <!-- MEM_CODE는 reporterCode와 이름이 달라 직접 매핑 -->
+        <result column="MEM_CODE" property="reporterCode"/>
+    </resultMap>
 
-<!-- 해당 회원이 받은 신고 조건: 한 번만 정의 -->
-<sql id="memberReceivedReportConditions">
-    WHERE (
-        (
-            r.TARGET_TYPE = 'feed'
-            AND EXISTS (
-                SELECT 1
-                FROM FEED f
-                WHERE f.CODE = r.TARGET_CODE
-                  AND f.MEM_CODE = #{memberCode}
-            )
-        )
-        OR
-        (
-            r.TARGET_TYPE = 'comment'
-            AND EXISTS (
-                SELECT 1
-                FROM COMMENTS c
-                WHERE c.CODE = r.TARGET_CODE
-                  AND c.MEM_CODE = #{memberCode}
-            )
-        )
-        OR
-        (
-            r.TARGET_TYPE = 'market'
-            AND EXISTS (
-                SELECT 1
-                FROM MARKET_PRODUCT p
-                WHERE p.CODE = r.TARGET_CODE
-                  AND p.MEM_CODE = #{memberCode}
-            )
-        )
-    )
-</sql>
+    <!-- 관리자 신고 목록 기본 정보 -->
+    <resultMap id="reportListMap"
+               type="com.ss_dam.admin.report.model.response.ReportView"
+               autoMapping="false">
 
-<!-- 전체 신고 / 처리 대기 / 처리 완료 -->
-<select id="loadMemberReportSummary"
-        parameterType="map"
-        resultMap="memberReportSummaryMap">
+        <id column="CODE" property="code"/>
 
-    SELECT
-        COUNT(*) AS total_report_count,
+        <!-- MEM_CODE는 reporterCode와 이름이 달라 직접 매핑 -->
+        <result column="MEM_CODE" property="reporterCode"/>
 
-        COALESCE(SUM(
+        <result column="TARGET_TYPE" property="targetType"/>
+        <result column="TARGET_CODE" property="targetCode"/>
+        <result column="REASON_TYPE" property="reasonType"/>
+        <result column="CONTENT" property="content"/>
+        <result column="STATUS" property="status"/>
+        <result column="CREATED_AT" property="createdAt"/>
+    </resultMap>
+
+    <!-- 관리자 신고 상세: 기본 정보 매핑 상속 -->
+    <resultMap id="reportDetailMap"
+               type="com.ss_dam.admin.report.model.response.AdminReportDetailView"
+               extends="reportListMap"
+               autoMapping="false">
+
+        <!-- 신고자 로그인 ID -->
+        <result column="REPORTER_ID" property="reporterId"/>
+
+        <!-- 신고 대상 콘텐츠 작성자 정보 -->
+        <result column="TARGET_MEMBER_CODE" property="targetMemberCode"/>
+        <result column="TARGET_MEMBER_ID" property="targetMemberId"/>
+
+        <!-- 원본 처리 이력 및 처리 관리자 -->
+        <result column="PROCESS_LOG_CODE" property="processLogCode"/>
+        <result column="ADM_CODE" property="admCode"/>
+
+        <result column="PROCESSED_ADMIN_ID" property="processedAdminId"/>
+        <result column="PROCESSED_ADMIN_NAME" property="processedAdminName"/>
+        <result column="PROCESSED_ADMIN_ROLE" property="processedAdminRole"/>
+
+        <!-- 처리 결과 -->
+        <result column="PROCESSED_AT" property="processedAt"/>
+        <result column="ACTION_TYPE" property="actionType"/>
+        <result column="PROCESS_MEMO" property="processMemo"/>
+
+        <!-- 처리·취소·복구 이력으로 계산한 조치 상태 -->
+        <result column="ACTION_STATUS" property="actionStatus"/>
+
+        <!-- 정지 조치 정보 -->
+        <result column="SUSPENSION_PERIOD" property="suspensionPeriod"/>
+        <result column="SUSPENDED_UNTIL" property="suspendedUntil"/>
+    </resultMap>
+
+    <!-- 관리자 신고 목록 공통 검색 조건 -->
+    <!-- 목록과 전체 개수 조회에 동일한 조건 적용 -->
+    <sql id="reportSearchConditions">
+        <where>
+            <choose>
+                <!-- 미처리 신고: 접수 + 검토 중 -->
+                <when test="pendingOnly">
+                    AND r.STATUS IN ('PENDING', 'IN_REVIEW')
+                </when>
+
+                <!-- 특정 신고 상태 조회 -->
+                <when test="status != null">
+                    AND r.STATUS = #{status}
+                </when>
+            </choose>
+
+            <!-- 신고 대상 유형: feed, comment, market -->
+            <if test="targetType != null">
+                AND r.TARGET_TYPE = #{targetType}
+            </if>
+
+            <!-- 신고 사유 -->
+            <if test="reasonType != null">
+                AND r.REASON_TYPE = #{reasonType}
+            </if>
+
+            <!-- 시작일 00:00 이상 -->
+            <if test="startAt != null">
+                AND r.CREATED_AT &gt;= #{startAt}
+            </if>
+
+            <!-- 종료일 전체 포함: 다음 날 00:00 미만 -->
+            <if test="endAtExclusive != null">
+                AND r.CREATED_AT &lt; #{endAtExclusive}
+            </if>
+
+            <!-- 신고 번호·대상 콘텐츠 번호·신고 상세 내용 검색 -->
+            <!-- 서비스에서 %, _를 일반 문자로 검색하도록 처리 -->
+            <if test="keywordPattern != null">
+                AND (
+                    CAST(r.CODE AS CHAR)
+                        LIKE #{keywordPattern} ESCAPE '!'
+                    OR CAST(r.TARGET_CODE AS CHAR)
+                        LIKE #{keywordPattern} ESCAPE '!'
+                    OR r.CONTENT
+                        LIKE #{keywordPattern} ESCAPE '!'
+                )
+            </if>
+        </where>
+    </sql>
+
+    <!-- 관리자 신고 검색 결과 개수 -->
+    <select id="countReports"
+            parameterType="map"
+            resultType="long">
+
+        SELECT COUNT(*)
+        FROM REPORT r
+
+        <include refid="reportSearchConditions"/>
+    </select>
+
+    <!-- 관리자 신고 목록 + 페이지네이션 -->
+    <select id="loadReports"
+            parameterType="map"
+            resultMap="reportListMap">
+
+        SELECT
+            r.CODE,
+            r.MEM_CODE,
+            r.TARGET_TYPE,
+            r.TARGET_CODE,
+            r.REASON_TYPE,
+            r.CONTENT,
+            r.STATUS,
+            r.CREATED_AT
+
+        FROM REPORT r
+
+        <include refid="reportSearchConditions"/>
+
+        ORDER BY r.CREATED_AT DESC, r.CODE DESC
+
+        LIMIT #{perPage} OFFSET #{offset}
+    </select>
+
+    <!-- 관리자 신고 상세 -->
+    <!-- 처리 전·후 동일하게 조회 -->
+    <!-- 처리 이력이 없는 신고도 조회되도록 LEFT JOIN 사용 -->
+    <select id="loadReport"
+            parameterType="map"
+            resultMap="reportDetailMap">
+
+        SELECT
+            r.CODE,
+            r.MEM_CODE,
+            r.TARGET_TYPE,
+            r.TARGET_CODE,
+            r.REASON_TYPE,
+            r.CONTENT,
+            r.STATUS,
+            r.CREATED_AT,
+
+            reporter.ID AS REPORTER_ID,
+
+            COALESCE(f.MEM_CODE, c.MEM_CODE, p.MEM_CODE)
+                AS TARGET_MEMBER_CODE,
+
+            targetMember.ID AS TARGET_MEMBER_ID,
+
+            processLog.CODE AS PROCESS_LOG_CODE,
+            processLog.ADM_CODE,
+
+            adminAccount.EMP_ID AS PROCESSED_ADMIN_ID,
+            adminAccount.NAME AS PROCESSED_ADMIN_NAME,
+            adminAccount.ROLE AS PROCESSED_ADMIN_ROLE,
+
+            processLog.CREATED_AT AS PROCESSED_AT,
+            processLog.ACTION_TYPE,
+            processLog.PROCESS_MEMO,
+
             CASE
-                WHEN r.STATUS IN ('PENDING', 'IN_REVIEW') THEN 1
-                ELSE 0
-            END
-        ), 0) AS pending_report_count,
+                WHEN processLog.CODE IS NULL
+                    OR processLog.ACTION_TYPE IS NULL
+                    OR processLog.ACTION_TYPE = 'REJECT'
+                    THEN NULL
 
-        COALESCE(SUM(
-            CASE
-                WHEN r.STATUS = 'RESOLVED' THEN 1
-                ELSE 0
-            END
-        ), 0) AS resolved_report_count
+                WHEN changeLog.EVENT_TYPE = 'CANCEL'
+                    THEN 'CANCELED'
 
-    FROM REPORT r
+                ELSE 'ACTIVE'
+            END AS ACTION_STATUS,
 
-    <include refid="memberReceivedReportConditions"/>
-</select>
+            processLog.SUSPENSION_PERIOD,
+            processLog.SUSPENDED_UNTIL
 
-<!-- 신고 목록 + 페이지네이션 -->
-<select id="loadMemberReports"
-        parameterType="map"
-        resultMap="memberReportMap">
+        FROM REPORT r
 
-    SELECT
-        r.CODE,
-        r.MEM_CODE,
-        r.TARGET_TYPE,
-        r.TARGET_CODE,
-        r.REASON_TYPE,
-        r.CONTENT,
-        r.STATUS,
-        r.CREATED_AT
+        <!-- 신고자 정보 -->
+        LEFT JOIN MEMBER_ACCOUNT reporter
+            ON reporter.CODE = r.MEM_CODE
 
-    FROM REPORT r
+        <!-- 신고 대상이 피드인 경우 -->
+        LEFT JOIN FEED f
+            ON r.TARGET_TYPE = 'feed'
+            AND f.CODE = r.TARGET_CODE
 
-    <include refid="memberReceivedReportConditions"/>
+        <!-- 신고 대상이 댓글인 경우 -->
+        LEFT JOIN COMMENTS c
+            ON r.TARGET_TYPE = 'comment'
+            AND c.CODE = r.TARGET_CODE
 
-    ORDER BY r.CREATED_AT DESC, r.CODE DESC
-    LIMIT #{perPage} OFFSET #{offset}
-</select>
+        <!-- 신고 대상이 상품인 경우 -->
+        LEFT JOIN MARKET_PRODUCT p
+            ON r.TARGET_TYPE = 'market'
+            AND p.CODE = r.TARGET_CODE
 
+        <!-- 신고 대상 콘텐츠 작성자 정보 -->
+        LEFT JOIN MEMBER_ACCOUNT targetMember
+            ON targetMember.CODE =
+                COALESCE(f.MEM_CODE, c.MEM_CODE, p.MEM_CODE)
+
+        <!-- 가장 최근에 수행한 원본 처리 이력 한 건 -->
+        <!-- 검토 시작·취소·복구 이력은 원본 처리에서 제외 -->
+        LEFT JOIN REPORT_LOG processLog
+            ON processLog.CODE = (
+                SELECT history.CODE
+                FROM REPORT_LOG history
+                WHERE history.REPORT_CODE = r.CODE
+                  AND history.EVENT_TYPE = 'PROCESS'
+                ORDER BY history.CREATED_AT DESC, history.CODE DESC
+                LIMIT 1
+            )
+
+        <!-- 원본 처리를 수행한 관리자 정보 -->
+        LEFT JOIN ADMIN_ACCOUNT adminAccount
+            ON adminAccount.CODE = processLog.ADM_CODE
+
+        <!-- 해당 원본 처리에 대한 최신 취소·복구 이력 한 건 -->
+        <!-- RELATED_LOG_CODE는 원본 PROCESS 이력 번호를 참조 -->
+        LEFT JOIN REPORT_LOG changeLog
+            ON changeLog.CODE = (
+                SELECT changes.CODE
+                FROM REPORT_LOG changes
+                WHERE changes.REPORT_CODE = r.CODE
+                  AND changes.RELATED_LOG_CODE = processLog.CODE
+                  AND changes.EVENT_TYPE IN ('CANCEL', 'RESTORE')
+                ORDER BY changes.CREATED_AT DESC, changes.CODE DESC
+                LIMIT 1
+            )
+
+        WHERE r.CODE = #{reportCode}
+    </select>
+
+    <!-- 해당 회원이 받은 신고 조건: 한 번만 정의 -->
+    <sql id="memberReceivedReportConditions">
+        WHERE (
+            (
+                r.TARGET_TYPE = 'feed'
+                AND EXISTS (
+                    SELECT 1
+                    FROM FEED f
+                    WHERE f.CODE = r.TARGET_CODE
+                      AND f.MEM_CODE = #{memberCode}
+                )
+            )
+            OR
+            (
+                r.TARGET_TYPE = 'comment'
+                AND EXISTS (
+                    SELECT 1
+                    FROM COMMENTS c
+                    WHERE c.CODE = r.TARGET_CODE
+                      AND c.MEM_CODE = #{memberCode}
+                )
+            )
+            OR
+            (
+                r.TARGET_TYPE = 'market'
+                AND EXISTS (
+                    SELECT 1
+                    FROM MARKET_PRODUCT p
+                    WHERE p.CODE = r.TARGET_CODE
+                      AND p.MEM_CODE = #{memberCode}
+                )
+            )
+        )
+    </sql>
+
+    <!-- 전체 신고 / 처리 대기 / 처리 완료 -->
+    <select id="loadMemberReportSummary"
+            parameterType="map"
+            resultMap="memberReportSummaryMap">
+
+        SELECT
+            COUNT(*) AS total_report_count,
+
+            COALESCE(SUM(
+                CASE
+                    WHEN r.STATUS IN ('PENDING', 'IN_REVIEW') THEN 1
+                    ELSE 0
+                END
+            ), 0) AS pending_report_count,
+
+            COALESCE(SUM(
+                CASE
+                    WHEN r.STATUS = 'RESOLVED' THEN 1
+                    ELSE 0
+                END
+            ), 0) AS resolved_report_count
+
+        FROM REPORT r
+
+        <include refid="memberReceivedReportConditions"/>
+    </select>
+
+    <!-- 신고 목록 + 페이지네이션 -->
+    <select id="loadMemberReports"
+            parameterType="map"
+            resultMap="memberReportMap">
+
+        SELECT
+            r.CODE,
+            r.MEM_CODE,
+            r.TARGET_TYPE,
+            r.TARGET_CODE,
+            r.REASON_TYPE,
+            r.CONTENT,
+            r.STATUS,
+            r.CREATED_AT
+
+        FROM REPORT r
+
+        <include refid="memberReceivedReportConditions"/>
+
+        ORDER BY r.CREATED_AT DESC, r.CODE DESC
+        LIMIT #{perPage} OFFSET #{offset}
+    </select>
 
 </mapper>

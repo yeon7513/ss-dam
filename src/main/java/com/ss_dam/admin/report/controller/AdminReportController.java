@@ -7,13 +7,16 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ss_dam.admin.report.model.request.AdminReportQuery;
 import com.ss_dam.admin.report.model.response.AdminMemberReportsView;
+import com.ss_dam.admin.report.model.response.ReportView;
+import com.ss_dam.admin.report.model.response.AdminReportDetailView;
 import com.ss_dam.admin.report.service.AdminReportService;
 import com.ss_dam.common.ApiResponse;
 import com.ss_dam.common.pager.PageQuery;
+import com.ss_dam.common.pager.PageResult;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -30,26 +33,27 @@ public class AdminReportController {
 	}
 
     // 관리자 신고 목록 조회
-    // 조건 생략 시 해당 조건으로 제한하지 않음
     @GetMapping
-    public ResponseEntity<ApiResponse<Void>> loadReports(
-            @RequestParam(required = false) String status,
-            @RequestParam(required = false) String targetType,
-            @RequestParam(required = false) String keyword) {
+    public ResponseEntity<ApiResponse<PageResult<ReportView>>> loadReports(
+            @ModelAttribute AdminReportQuery query) {
 
-        // TODO: 신고 상태·대상 유형 필터 연결
-        // TODO: 검색 범위 정의 및 페이지네이션 연결
-        return notImplemented();
+        PageResult<ReportView> result = adminReportService.loadReports(query);
+
+        return ResponseEntity.ok(
+                ApiResponse.success("관리자 신고 목록 조회 성공", result));
     }
 
-    // 신고 상세 조회
-    @GetMapping("/{reportCode}")
-    public ResponseEntity<ApiResponse<Void>> loadReport(
-            @PathVariable Long reportCode) {
+		// 관리자 신고 상세 조회
+	@GetMapping("/{reportCode}")
+	public ResponseEntity<ApiResponse<AdminReportDetailView>> loadReport(
+					@PathVariable Long reportCode) {
 
-        // TODO: 신고 내용·신고 대상·처리 정보 조회
-        return notImplemented();
-    }
+			AdminReportDetailView result =
+							adminReportService.loadReport(reportCode);
+
+			return ResponseEntity.ok(
+							ApiResponse.success("관리자 신고 상세 조회 성공", result));
+	}	
 
     // 신고 검토 시작
     @PatchMapping("/{reportCode}/review")
