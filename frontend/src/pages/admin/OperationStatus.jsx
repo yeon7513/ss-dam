@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import AdminLogCard from "./OperationStatus/AdminLogCard/AdminLogCard.jsx";
-import DashboardCharts from "./OperationStatus/DashboardCharts/DashboardCharts.jsx";
-import PendingReports from "./OperationStatus/PendingReports/PendingReports.jsx";
-import RegionParticipation from "./OperationStatus/RegionParticipation/RegionParticipation.jsx";
-import SummaryStats from "./OperationStatus/SummaryStats/SummaryStats.jsx";
-import TopSellers from "./OperationStatus/TopSellers/TopSellers.jsx";
+import DashboardHeader from "../../components/admin/dashboard-header/DashboardHeader.jsx";
+import AdminLogCard from "./operation-status/admin-log-card/AdminLogCard.jsx";
+import DashboardCharts from "./operation-status/dashboard-charts/DashboardCharts.jsx";
+import PendingReports from "./operation-status/pending-reports/PendingReports.jsx";
+import RegionParticipation from "./operation-status/region-participation/RegionParticipation.jsx";
+import SummaryStats from "./operation-status/summary-stats/SummaryStats.jsx";
+import TopSellers from "./operation-status/top-sellers/TopSellers.jsx";
 import styles from "./OperationStatus.module.scss";
 import PanelHeader from "../../layout/admin/panel-header/PanelHeader.jsx";
 
@@ -101,10 +102,7 @@ const OperationStatus = () => {
   return (
     <div className={styles.dashboardBody}>
       {/* 대시보드 헤더 영역 */}
-      <PanelHeader
-        title="운영 현황"
-        onRefresh={fetchAdminDashboardData}
-      />
+      <PanelHeader title="운영 현황" onRefresh={fetchAdminDashboardData} />
 
       {/* 상단 레이아웃 영역 */}
       <div className={styles.topGrid}>
