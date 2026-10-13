@@ -1,8 +1,10 @@
 import styles from './MemberCard.module.scss';
 import { Link } from 'react-router-dom';
+import ImageBox from "../../common/image-box/ImageBox.jsx";
 
 // 등급별 아이콘
 const RATING_ICONS = {
+  0: '🏷️',
   1: '🌱',
   2: '🌿',
   3: '🌳',
@@ -10,54 +12,73 @@ const RATING_ICONS = {
   5: '👑',
 };
 
-export default function MemberCard({ member }) {
+export default function MemberCard({ member, type = 'user' }) {
+  const isAdmin = type === "admin";
+  const detailPath = isAdmin
+    ? `/admin/system_manage/account/${member.code}`
+    : `/admin/user_manage/${member.code}`;
+
+  const cardData = {
+    id: member.id || member.empId,
+    name: member.name,
+    path: member.path,
+    statusBadge: isAdmin ? (member.deleteYn ? "비활성" : "활성") : member.status,
+    subInfo: isAdmin ? `${member.dept ?? "-"} / ${member.role ?? "-"}` : `등급 ${member.rating} / 랭킹 ${member.ranking ?? "-"}`,
+    createdAt: member.createdAt,
+    loggedAt: member.loggedAt,
+  }
+
   const formatDate = (value) =>
     value
       ? new Date(value).toLocaleDateString('ko-KR')
       : '-';
 
+  console.log(member);
+
   return (
     <Link
-      to={`/admin/user_manage/${member.code}`}
+      to={detailPath}
       className={styles.card}
-      aria-label={`${member.name || member.id} 회원 상세 보기`}
     >
-      {/* 프로필 사진 연결 전에는 기본 아이콘 표시 */}
-      <div className={styles.avatar}>
-        <svg
-          width="22"
-          height="22"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          aria-hidden="true"
-        >
-          <circle cx="12" cy="8" r="3" />
-          <path d="M7 19v-2a5 5 0 0 1 10 0v2H7Z" />
-        </svg>
-      </div>
+      {/*프로필 사진 */}
+      {!isAdmin && (
+        <div className={styles.avatar}>
+          <ImageBox src={member.path} />
+        </div>
+      )}
 
       <div className={styles.info}>
-        <h3 className={styles.name}>
-          <span
-            className={styles.ratingIcon}
-            role="img"
-            aria-label={`${member.rating ?? '미정'}등급`}
-            title={`${member.rating ?? '미정'}등급`}
-          >
-            {RATING_ICONS[member.rating] ?? '🏷️'}
-          </span>
-
-          <span>{member.name || '-'}</span>
-        </h3>
-        <p className={styles.id}>{member.id}</p>
-
-        <div className={styles.dates}>
-          <p>회원 가입일: {formatDate(member.createdAt)}</p>
-          <p>마지막 로그인: {formatDate(member.loggedAt)}</p>
+        {/* 아이디 & 이름 */}
+        <div className={styles.group}>
+          <h3 className={styles.name}>
+            <span className={styles.badge}>
+              {cardData.statusBadge}
+            </span>
+            <span>{cardData.name || '-'}</span>
+          </h3>
+          <p className={styles.id}>
+            {cardData.id}
+          </p>
         </div>
+
+        {/* 회원: 등급, 랭킹 / 관리자: 부서, 권한 */}
+        <div>
+          <p className={styles.subInfo}>{cardData.subInfo}</p>
+        </div>
+
+        {/* 날짜 정보 (생성 & 마지막로그인) */}
+        <div className={styles.dates}>
+          <p>
+            <span>{isAdmin ? "계정 생성일" : "회원 가입일"}</span>
+            <span>{formatDate(cardData.createdAt)}</span>
+          </p>
+          <p>
+            <span>마지막 로그인</span>
+            <span>{formatDate(cardData.loggedAt)}</span>
+          </p>
+        </div>
+
       </div>
-     </Link>
+    </Link>
   );
 }

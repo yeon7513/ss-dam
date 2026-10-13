@@ -1,5 +1,7 @@
 package com.ss_dam.auth.member.model.response;
 
+import com.ss_dam.auth.member.enums.MemberStatus;
+
 import java.time.LocalDateTime;
 
 //AdminMemberDetailView에는 사진·회원 정보·상단 숫자만 
@@ -13,185 +15,175 @@ import java.time.LocalDateTime;
 public class AdminMemberDetailView {
 
 
-    private Long code;                 // 회원 번호
-    private String id;                 // 아이디
-    private String name;               // 이름
-    private String phone;              // 연락처
-    private String address;            // 주소
-    private Integer rating;            // 등급
-    private Integer point;             // 보유 포인트
-    private String status;             // DB 회원 상태
-    private LocalDateTime createdAt;   // 가입일
-    private LocalDateTime updatedAt;   // 수정일
-    private LocalDateTime loggedAt;    // 마지막 로그인
-    private Boolean deleteYn;          // 삭제 여부
+  //상단 통계 - 로그인 횟수
+  public Long loginCount;
+  private Long code;                 // 회원 번호
+  private String id;                 // 아이디
+  private String name;               // 이름
+  private String phone;              // 연락처
+  private String address;            // 주소
+  private Integer rating;            // 등급
+  private Integer point;             // 보유 포인트
+  private MemberStatus status;             // DB 회원 상태
+  private LocalDateTime createdAt;   // 가입일
+  private LocalDateTime updatedAt;   // 수정일
+  private LocalDateTime loggedAt;    // 마지막 로그인
+  private Boolean deleteYn;          // 삭제 여부
+  // IMAGES 테이블에서 조회한 프로필 사진 경로
+  private String path;
 
+  /*상단 통계 부분 (신고 누적 수, 피드 활동, 거래 활동, 로그인 횟수)*/
+  //완료한 챌린지 수
+  private Long completedChallengeCount;
+  //상단 통계 - 신고 누적 수
+  private Long receivedReportCount;
+  //상단 통계 - 피드 활동 (회원이 작성한 피드 수)
+  private Long feedCount;
+  //상단 통계 - 거래 활동 (회원이 작성한 거래 수)
+  private Long tradeCount;
 
-    // IMAGES 테이블에서 조회한 프로필 사진 경로
-    private String path;
+  public Long getCode() {
+    return code;
+  }
 
-    //완료한 챌린지 수
-    private Long completedChallengeCount;
+  public void setCode(Long code) {
+    this.code = code;
+  }
 
-    /*상단 통계 부분 (신고 누적 수, 피드 활동, 거래 활동, 로그인 횟수)*/
+  public String getId() {
+    return id;
+  }
 
-    //상단 통계 - 신고 누적 수
-    private Long receivedReportCount;
+  public void setId(String id) {
+    this.id = id;
+  }
 
+  public String getName() {
+    return name;
+  }
 
-    //상단 통계 - 피드 활동 (회원이 작성한 피드 수)
-    private Long feedCount;
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    //상단 통계 - 거래 활동 (회원이 작성한 거래 수) 
-    private Long tradeCount;
+  public String getPhone() {
+    return phone;
+  }
 
-    //상단 통계 - 로그인 횟수 
-    public Long loginCount;
-    
+  public void setPhone(String phone) {
+    this.phone = phone;
+  }
 
+  public String getAddress() {
+    return address;
+  }
 
-    public Long getCode() {
-        return code;
-    }
+  public void setAddress(String address) {
+    this.address = address;
+  }
 
-    public void setCode(Long code) {
-        this.code = code;
-    }
+  public Integer getRating() {
+    return rating;
+  }
 
-    public String getId() {
-        return id;
-    }
+  public void setRating(Integer rating) {
+    this.rating = rating;
+  }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+  public Integer getPoint() {
+    return point;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public void setPoint(Integer point) {
+    this.point = point;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public MemberStatus getStatus() {
+    return status;
+  }
 
-    public String getPhone() {
-        return phone;
-    }
+  public void setStatus(MemberStatus status) {
+    this.status = status;
+  }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
 
-    public String getAddress() {
-        return address;
-    }
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
+  public LocalDateTime getUpdatedAt() {
+    return updatedAt;
+  }
 
-    public Integer getRating() {
-        return rating;
-    }
+  public void setUpdatedAt(LocalDateTime updatedAt) {
+    this.updatedAt = updatedAt;
+  }
 
-    public void setRating(Integer rating) {
-        this.rating = rating;
-    }
+  public LocalDateTime getLoggedAt() {
+    return loggedAt;
+  }
 
-    public Integer getPoint() {
-        return point;
-    }
+  public void setLoggedAt(LocalDateTime loggedAt) {
+    this.loggedAt = loggedAt;
+  }
 
-    public void setPoint(Integer point) {
-        this.point = point;
-    }
+  public Boolean getDeleteYn() {
+    return deleteYn;
+  }
 
-    public String getStatus() {
-        return status;
-    }
+  public void setDeleteYn(Boolean deleteYn) {
+    this.deleteYn = deleteYn;
+  }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+  public String getPath() {
+    return path;
+  }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
+  public void setPath(String path) {
+    this.path = path;
+  }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
+  public Long getFeedCount() {
+    return feedCount;
+  }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
+  public void setFeedCount(Long feedCount) {
+    this.feedCount = feedCount;
+  }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
+  public Long getReceivedReportCount() {
+    return receivedReportCount;
+  }
 
-    public LocalDateTime getLoggedAt() {
-        return loggedAt;
-    }
+  public void setReceivedReportCount(Long receivedReportCount) {
+    this.receivedReportCount = receivedReportCount;
+  }
 
-    public void setLoggedAt(LocalDateTime loggedAt) {
-        this.loggedAt = loggedAt;
-    }
+  public Long getTradeCount() {
+    return tradeCount;
+  }
 
-    public Boolean getDeleteYn() {
-        return deleteYn;
-    }
+  public void setTradeCount(Long tradeCount) {
+    this.tradeCount = tradeCount;
+  }
 
-    public void setDeleteYn(Boolean deleteYn) {
-        this.deleteYn = deleteYn;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public Long getFeedCount() {
-        return feedCount;
-    }
-
-    public void setFeedCount(Long feedCount) {
-        this.feedCount = feedCount;
-    }
-
-    public Long getReceivedReportCount() {
-        return receivedReportCount;
-    }
-
-    public void setReceivedReportCount(Long receivedReportCount) {
-        this.receivedReportCount = receivedReportCount;
-    }
-
-    public Long getTradeCount() {
-        return tradeCount;
-    }
-
-    public void setTradeCount(Long tradeCount) {
-        this.tradeCount = tradeCount;
-    }
-
-    public Long getLoginCount() {
+  public Long getLoginCount() {
     return loginCount;
-    }
+  }
 
-    public void setLoginCount(Long loginCount) {
-        this.loginCount = loginCount;
-    }
+  public void setLoginCount(Long loginCount) {
+    this.loginCount = loginCount;
+  }
 
-    public Long getCompletedChallengeCount() {
-        return completedChallengeCount;
-    }
+  public Long getCompletedChallengeCount() {
+    return completedChallengeCount;
+  }
 
-    public void setCompletedChallengeCount(Long completedChallengeCount) {
-        this.completedChallengeCount = completedChallengeCount;
-    }
-            
+  public void setCompletedChallengeCount(Long completedChallengeCount) {
+    this.completedChallengeCount = completedChallengeCount;
+  }
+
 }

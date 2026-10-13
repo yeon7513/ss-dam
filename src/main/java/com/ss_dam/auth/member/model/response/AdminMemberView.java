@@ -1,5 +1,7 @@
 package com.ss_dam.auth.member.model.response;
 
+import com.ss_dam.auth.member.enums.MemberStatus;
+
 import java.time.LocalDateTime;
 
 /*관리자에게 많은 정보를 보여주더라도 Member(Member.java)를 그대로 반환하기보다는, 필요한 정보를 담은 AdminMemberView를 사용하는 게 좋습니다.
@@ -15,96 +17,97 @@ import java.time.LocalDateTime;
 //phone, point 제외 -> 상세조회에서 확인
 //수정일, 마지막 로그인 도 제외 -> 상세조회
 
+
 public class AdminMemberView {
 
-    private Long code;                // 회원 번호
-    private String id;                // 아이디
-    private String name;              // 이름
-    private String address;           // 주소
-    private String status;            // DB 회원 상태
-    private Integer rating;           // 등급
-    private Integer ranking;          // 랭킹
-    private LocalDateTime createdAt;   // 가입일
-    private LocalDateTime loggedAt;    //최근 접속일
-    private Boolean deleteYn;         // 삭제 여부
+  private Long code;                // 회원 번호
+  private String id;                // 아이디
+  private String name;              // 이름
+  private String address;           // 주소
+  private MemberStatus status;            // DB 회원 상태
+  private Integer rating;           // 등급
+  private Integer ranking;          // 랭킹
+  private LocalDateTime createdAt;   // 가입일
+  private LocalDateTime loggedAt;    //최근 접속일
+  private Boolean deleteYn;         // 삭제 여부
 
-    public Long getCode() {
-        return code;
-    }
+  public Long getCode() {
+    return code;
+  }
 
-    public void setCode(Long code) {
-        this.code = code;
-    }
+  public void setCode(Long code) {
+    this.code = code;
+  }
 
-    public String getId() {
-        return id;
-    }
+  public String getId() {
+    return id;
+  }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+  public void setId(String id) {
+    this.id = id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public String getAddress() {
-        return address;
-    }
+  public String getAddress() {
+    return address;
+  }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
+  public void setAddress(String address) {
+    this.address = address;
+  }
 
-    public String getStatus() {
-        return status;
-    }
+  public MemberStatus getStatus() {
+    return status;
+  }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+  public void setStatus(MemberStatus status) {
+    this.status = status;
+  }
 
-    public Integer getRating() {
-        return rating;
-    }
+  public Integer getRating() {
+    return rating;
+  }
 
-    public void setRating(Integer rating) {
-        this.rating = rating;
-    }
+  public void setRating(Integer rating) {
+    this.rating = rating;
+  }
 
-    public Integer getRanking() {
-        return ranking;
-    }
+  public Integer getRanking() {
+    return ranking;
+  }
 
-    public void setRanking(Integer ranking) {
-        this.ranking = ranking;
-    }
+  public void setRanking(Integer ranking) {
+    this.ranking = ranking;
+  }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
 
-    public LocalDateTime getLoggedAt() {
-        return loggedAt;
-    }
+  public LocalDateTime getLoggedAt() {
+    return loggedAt;
+  }
 
-    public void setLoggedAt(LocalDateTime loggedAt) {
-        this.loggedAt = loggedAt;
-    }
+  public void setLoggedAt(LocalDateTime loggedAt) {
+    this.loggedAt = loggedAt;
+  }
 
-    public Boolean getDeleteYn() {
-        return deleteYn;
-    }
+  public Boolean getDeleteYn() {
+    return deleteYn;
+  }
 
-    public void setDeleteYn(Boolean deleteYn) {
-        this.deleteYn = deleteYn;
-    }
+  public void setDeleteYn(Boolean deleteYn) {
+    this.deleteYn = deleteYn;
+  }
 }

@@ -5,7 +5,7 @@ import com.ss_dam.common.pager.PageQuery;
 public class AdminAccountSearchFilter extends PageQuery {
   private String role; // 권한별
   private String dept; // 부서별
-  private boolean deleted; // 삭제 여부
+  private Boolean deleted; // 삭제 여부
   private String fromDate; // 계정 생성일 검색 시작일
   private String toDate; // 계정 생성일 검색 종료일
 
@@ -26,11 +26,11 @@ public class AdminAccountSearchFilter extends PageQuery {
     this.dept = dept;
   }
 
-  public boolean isDeleted() {
+  public Boolean isDeleted() {
     return deleted;
   }
 
-  public void setDeleted(boolean deleted) {
+  public void setDeleted(Boolean deleted) {
     this.deleted = deleted;
   }
 

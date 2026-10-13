@@ -23,7 +23,7 @@ import cn from "classnames";
 */
 
 export default function DataTable({ columns, data, className }) {
-  if (!data || data.length == 0) {
+  if (!data || data.length === 0) {
     return <div className={styles.stateMassage}>조회된 데이터가 없습니다</div>;
   }
 
