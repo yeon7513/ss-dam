@@ -4,6 +4,38 @@ import { handleSetField } from "../../../utils/changeHandler";
 import TextInput from "../../forms/text-input/TextInput";
 import styles from "./PasswordSection.module.scss";
 
+/**
+ * 비밀번호 및 비밀번호 확인 입력 섹션 컴포넌트
+ *
+ * @component
+ * @param {Object} props - 컴포넌트 Props
+ * @param {Object} props.form - 부모 컴포넌트의 폼 상태 객체 (예: { password: "" })
+ * @param {React.Dispatch<React.SetStateAction<Object>>} props.setForm - 폼 상태 변경 함수
+ * @param {string} props.passwordCheck - 비밀번호 확인 입력값
+ * @param {React.Dispatch<React.SetStateAction<string>>} props.setPasswordCheck - 비밀번호 확인 입력값 변경 함수
+ * @param {boolean} props.isPasswordMatched - 비밀번호와 비밀번호 확인의 일치 여부 상태값
+ * @param {React.Dispatch<React.SetStateAction<boolean>>} props.setIsPasswordMatched - 비밀번호 일치 여부 변경 함수
+ * @param {string} props.passwordError - 비밀번호 유효성 에러 메시지
+ * @param {React.Dispatch<React.SetStateAction<string>>} props.setPasswordError - 비밀번호 유효성 에러 메시지 변경 함수
+ *
+ * @example
+ * const [form, setForm] = useState({ password: "" });
+ * const [passwordCheck, setPasswordCheck] = useState("");
+ * const [isPasswordMatched, setIsPasswordMatched] = useState(false);
+ * const [passwordError, setPasswordError] = useState("");
+ *
+ * <PasswordSection
+ *   form={form}
+ *   setForm={setForm}
+ *   passwordCheck={passwordCheck}
+ *   setPasswordCheck={setPasswordCheck}
+ *   isPasswordMatched={isPasswordMatched}
+ *   setIsPasswordMatched={setIsPasswordMatched}
+ *   passwordError={passwordError}
+ *   setPasswordError={setPasswordError}
+ * />
+ */
+
 const passwordRegex =
   /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
 

@@ -20,11 +20,11 @@ const FeedManageDetail = () => {
   const navigate = useNavigate();
   const [reason, setReason] = useState("");
 
-  const { data, loading, error } = useLoadData(`/api/feeds/${code}`);
+  const { data, loading, error } = useLoadData(`/api/admin/feeds/${code}`);
   const detail = data || {};
 
   const { handleSubmit: handleSubmitDeleteFeed } = useSubmitData(
-    `/api/feeds/${code}`,
+    `/api/admin/feeds/${code}`,
     "DELETE",
   );
 
@@ -39,6 +39,15 @@ const FeedManageDetail = () => {
 
   const authorId =
     detail.memberProfile?.id || detail.memberProfile?.nickname || "-";
+
+  const handleOpenUserDetail = () => {
+    const memberCode = detail.memberProfile?.code;
+    if (!memberCode) {
+      alert("회원 정보를 찾을 수 없습니다");
+      return;
+    }
+    window.open(`/admin/user_manage/${memberCode}`, "_blank");
+  };
 
   const handleDelete = async () => {
     if (!reason.trim()) {
@@ -120,7 +129,7 @@ const FeedManageDetail = () => {
               !isDeleted ? styles.active : styles.inactive
             }`}
           >
-            {!isDeleted ? "활성화" : "비활성화(삭제)"}
+            {!isDeleted ? "활성화" : "비활성화"}
           </span>
         </div>
         <div className={styles["summary-item"]}>
@@ -151,7 +160,11 @@ const FeedManageDetail = () => {
               </div>
 
               <div className={styles["feed-info"]}>
-                <ProfileCard memberProfile={detail.memberProfile} />
+                <ProfileCard
+                  memberProfile={detail.memberProfile}
+                  onMoreClick={handleOpenUserDetail}
+                  moreText="유저 정보"
+                />
 
                 <div className={styles["content-box"]}>
                   {detail.content || "등록된 본문 내용이 없습니다."}
@@ -177,7 +190,7 @@ const FeedManageDetail = () => {
 
           <div className={styles.card}>
             <h3 className={styles["card-title"]}>댓글 관리</h3>
-            <Comments targetCode={code} />
+            <Comments targetCode={code} readOnly={true} />
           </div>
         </div>
 

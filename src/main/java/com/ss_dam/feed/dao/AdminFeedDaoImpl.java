@@ -7,6 +7,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import com.ss_dam.feed.model.filter.AdminFeedSearchFilter;
+import com.ss_dam.feed.model.response.AdminFeedLogView;
 import com.ss_dam.feed.model.response.AdminFeedView;
 import com.ss_dam.feed.model.response.AdminMemberFeedsView;
 import com.ss_dam.feed.model.response.UserFeedView;
@@ -48,6 +49,36 @@ public class AdminFeedDaoImpl implements AdminFeedDao {
 	public int countFeeds(AdminFeedSearchFilter filter) {
 		
 		return sql.selectOne("adminFeedView.countFeeds", filter);
+	}
+
+	@Override
+	public int deleteFeed(Long feedCode) {
+		
+		return sql.update("adminFeedView.deleteFeed", feedCode);
+	}
+
+	@Override
+	public int restoreFeed(Long feedCode) {
+		
+		return sql.update("adminFeedView.restoreFeed", feedCode);
+	}
+
+	@Override
+	public List<AdminFeedLogView> loadFeedLogs(Long feedCode) {
+		
+		return sql.selectList("adminFeedView.loadFeedLogs", feedCode);
+	}
+
+	@Override
+	public int insertActivityLog(Map<String, Object> params) {
+		
+		return sql.insert("adminFeedView.insertActivityLog", params);
+	}
+
+	@Override
+	public AdminFeedView loadFeed(Long feedCode) {
+
+		return sql.selectOne("adminFeedView.loadFeed", feedCode);
 	}
 
 }

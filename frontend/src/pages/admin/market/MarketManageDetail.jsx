@@ -24,7 +24,9 @@ export default function MarketManageDetail() {
 
   const authorId = product?.createdBy || product?.memberProfile.id || "-";
 
-  const isDeleted = Boolean(product?.deleteYn);
+  const isDeleted =
+    ["Y", "1", 1, true].includes(product?.deleteYn) ||
+    product?.status === "DELETED";
 
   return (
     <div className={styles["admin-detail-wrapper"]}>

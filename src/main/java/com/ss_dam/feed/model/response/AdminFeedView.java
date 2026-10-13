@@ -12,6 +12,7 @@ public class AdminFeedView extends UserFeedView {
   private int countFeedReport; // 신고 누적 수
   private String authorStatus; // 작성자 활성 상태
   private String countAuthorReport; // 작성자 누적 신고 수
+  private String deleteYn;
 
   // 관리자 활동 로그
   // 목록에서 간단하게 조회할 활동 내역
@@ -65,4 +66,13 @@ public class AdminFeedView extends UserFeedView {
   public void setAdminActivitySummary(AdminActivitySummary adminActivitySummary) {
     this.adminActivitySummary = adminActivitySummary;
   }
+
+  public String getDeleteYn() {
+	return deleteYn;
+  }
+
+  public void setDeleteYn(String deleteYn) {
+	this.deleteYn = deleteYn;
+  }
+  
 }

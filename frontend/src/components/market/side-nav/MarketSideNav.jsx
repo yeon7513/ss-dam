@@ -39,8 +39,13 @@ function MarketSideNav({ categories, isLoggedIn, onSearch }) {
           </Button>
         ) : (
           <div className={styles.loginNotice}>
-            <p>로그인하세요.</p>
-            <Button fullWidth={true} onClick={() => navigate("/login")}>로그인</Button>
+            {/* <p>
+              로그인하고 따뜻한 친환경 <br />
+              거래를 시작해보세요!
+            </p> */}
+            <Button fullWidth={true} onClick={() => navigate("/login")}>
+              로그인
+            </Button>
           </div>
         )}
       </div>
