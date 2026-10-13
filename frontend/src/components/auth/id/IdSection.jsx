@@ -3,6 +3,28 @@ import Button from "../../common/button/Button";
 import TextInput from "../../forms/text-input/TextInput";
 import styles from "./IdSection.module.scss";
 
+/**
+ * 아이디 입력 및 중복 확인 섹션 컴포넌트
+ *
+ * @component
+ * @param {Object} props - 컴포넌트 Props
+ * @param {Object} props.form - 부모 컴포넌트의 폼 상태 객체 (예: { id: '', password: '' })
+ * @param {React.Dispatch<React.SetStateAction<Object>>} props.setForm - 폼 상태 변경 함수
+ * @param {boolean} props.isIdChecked - 아이디 중복 확인 완료 여부 상태값
+ * @param {React.Dispatch<React.SetStateAction<boolean>>} props.setIsIdChecked - 중복 확인 상태 변경 함수
+ *
+ * @example
+ * const [form, setForm] = useState({ id: "" });
+ * const [isIdChecked, setIsIdChecked] = useState(false);
+ *
+ * <IdSection
+ *   form={form}
+ *   setForm={setForm}
+ *   isIdChecked={isIdChecked}
+ *   setIsIdChecked={setIsIdChecked}
+ * />
+ */
+
 const IdSection = ({ form, setForm, isIdChecked, setIsIdChecked }) => {
   // 아이디 정규식 검증 함수
   const validateId = (id) => {
