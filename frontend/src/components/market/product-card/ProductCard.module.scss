@@ -5,6 +5,7 @@
 .productItem {
   position: relative;
   top: 0;
+  flex-direction: column;
   transition: 0.3s;
   cursor: pointer;
 
