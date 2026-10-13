@@ -1,6 +1,6 @@
 import cn from "classnames";
 import { Link } from "react-router-dom";
-import Sidebar from "../../layout/sidebar/Sidebar";
+import Sidebar from "../../layout/default/sidebar/Sidebar.jsx";
 import ImageBox from "../../components/common/image-box/ImageBox";
 import styles from "./ChallengeSideNav.module.scss";   // Sidebar import 뒤
 
