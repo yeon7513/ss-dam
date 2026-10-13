@@ -25,6 +25,9 @@ const options = {
     },
     y: {
       beginAtZero: true,
+      ticks: {
+        stepSize: 1,
+      }
     },
   },
 };
@@ -61,9 +64,12 @@ export default function MonthlyMemberChart({
 
   return (
     <div
-      style={{ position: 'relative', height: '200px', width: '100%' }}
+      style={{ position: 'relative', width: '100%', height: '220px', minWidth: 0 }}
     >
-      <Line data={data} options={options} />
+      <Line
+        data={data}
+        options={options}
+      />
     </div>
   );
 }

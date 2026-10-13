@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import ChartCard from "../../../../components/common/card/ChartCard.jsx";
 import styles from "./DashboardCharts.module.scss";
 
+import ChallengeCompletionChart from '../../../../components/common/chart/dashboard/ChallengeCompletionChart.jsx';
 import MonthlyMemberChart from '../../../../components/common/chart/dashboard/MonthlyMemberChart.jsx';
 
 async function fetchMonthlyMembers(year, signal) {
@@ -37,10 +38,34 @@ async function fetchMonthlyMembers(year, signal) {
   });
 }
 
+async function fetchChallengeStatistics(year, signal) {
+  const response = await fetch(
+    `/api/admin/stats/challenges?from=${year}-01-01&to=${year}-12-31`,
+    { signal },
+  );
+
+  if (!response.ok) {
+    throw new Error(`챌린지 통계 조회 실패 (${response.status})`);
+  }
+
+  const result = await response.json();
+
+  if (!result.success || !result.data) {
+    throw new Error(result.message || '챌린지 통계 응답을 확인해주세요.');
+  }
+
+  return result.data;
+}
+
 const DashboardCharts = () => {
 
+  // 회원 통계 저장
   const [memberCounts, setMemberCounts] = useState(null);
   const [error, setError] = useState('');
+
+  // 챌린지 통계 저장
+  const [challengeStats, setChallengeStats] = useState(null);
+  const [challengeError, setChallengeError] = useState('');
 
   useEffect(() => {
     const controller = new AbortController();
@@ -63,8 +88,33 @@ const DashboardCharts = () => {
 
     loadMembers();
 
-    return () => controller.abort();
+      return () => controller.abort();
   }, []);
+
+
+useEffect(() => {
+  const controller = new AbortController();
+  const year = new Date().getFullYear();
+
+  async function loadChallenges() {
+    try {
+      const data = await fetchChallengeStatistics(
+        year,
+        controller.signal,
+      );
+
+      setChallengeStats(data);
+    } catch (error) {
+      if (error.name !== 'AbortError') {
+        setChallengeError(error.message);
+      }
+    }
+  }
+
+  loadChallenges();
+
+  return () => controller.abort();
+}, []);
 
   /* 중단 대시보드 차트 영역 */
   return (
@@ -97,9 +147,17 @@ const DashboardCharts = () => {
           { label: "미달성", isDark: false },
         ]}
       >
-        <div className={styles.chartPlaceholder}>
-          <span>[ 달성률 도넛 차트 영역 (67%) ]</span>
-        </div>
+        {challengeError ? (
+          <p>{challengeError}</p>
+        ) : challengeStats === null ? (
+          <p>챌린지 통계를 불러오는 중입니다.</p>
+        ) : challengeStats.completionRate == null ? (
+          <p>조회 기간에 집계할 참여 데이터가 없습니다.</p>
+        ) : (
+          <ChallengeCompletionChart
+            rate={challengeStats.completionRate}
+          />
+        )}
       </ChartCard>
 
       {/* 챌린지 인기 순위 차트 카드 */}
@@ -119,3 +177,4 @@ const DashboardCharts = () => {
 };
 
 export default DashboardCharts;
+
