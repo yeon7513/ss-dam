@@ -1,7 +1,8 @@
 import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Button from "../../common/button/Button.jsx";
 import styles from "./MarketSideNav.module.scss";
+import { useAuth } from "../../../context/AuthContext.jsx";
 
 function MarketSideNav({ categories, onSearch }) {
   const navigate = useNavigate();
@@ -20,38 +21,34 @@ function MarketSideNav({ categories, onSearch }) {
     onSearch({ categoryCode });
   };
 
-  /* 물품 등록 처리 */
-  const handleRegisterClick = () => {
-    // 저장된 접근 토큰을 확인함.
-    const token = localStorage.getItem("accessToken");
 
-    if (!token) {
-      // 비로그인 상태 시 안내 후 로그인 페이지로 이동함.
-      alert("로그인이 필요한 서비스입니다.");
-      navigate("/login");
-      return;
-    }
-
-    // 로그인 상태 시 물품 등록 페이지로 이동함.
-    navigate("/market/register");
-  };
+  // Context API로 관리 중인 로그인 상태
+  const { isLoggedIn } = useAuth();
 
   /* 전체 선택 상태 확인 */
   const isAllSelected = location.pathname === "/market" && !location.search;
+
 
   return (
     /* 사이드 메뉴 영역 */
     <div className={styles.sideNav}>
       {/* 물품 등록 영역 */}
       <div>
-        <Button
-          btnStyle="fill"
-          size="lg"
-          fullWidth
-          onClick={handleRegisterClick}
-        >
-          물품 등록
-        </Button>
+        {isLoggedIn ? (
+          <Button
+            btnStyle="fill"
+            size="lg"
+            fullWidth
+            onClick={() => navigate("/market/register")}
+          >
+            물품 등록
+          </Button>
+        ) : (
+          <div className={styles.loginNotice}>
+            <p>로그인하세요.</p>
+            <Button fullWidth={true} onClick={() => navigate("/login")}>로그인</Button>
+          </div>
+        )}
       </div>
 
       {/* 메인 메뉴 영역 */}
