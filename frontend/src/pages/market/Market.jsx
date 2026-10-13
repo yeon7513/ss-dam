@@ -1,12 +1,13 @@
-import { useLoadData } from "../../hooks/useLoadData.js";
-import styles from "../market/Market.module.scss";
+import { useState } from "react";
 import ProductCard from "../../components/market/product-card/ProductCard.jsx";
 import MarketSideNav from "../../components/market/side-nav/MarketSideNav.jsx";
 import SearchBox from "../../components/common/search-box/SearchBox.jsx";
-import { useState } from "react";
 import TabMenus from "../../components/common/tab-menus/TabMenus.jsx";
 import Pagination from "../../components/common/pagination/Pagination.jsx";
+import { useAuth } from "../../context/AuthContext.jsx";
+import { useLoadData } from "../../hooks/useLoadData.js";
 import { useSearchQuery } from "../../hooks/useSearchQuery.js";
+import styles from "../market/Market.module.scss";
 
 const SORT_MENU = [
   { label: "최신등록순", value: "createdAt" },
@@ -21,6 +22,10 @@ const DEAL_STATUS = [
 ];
 
 const Market = () => {
+  /* 사용자 정보 조회 */
+  const { isLoggedIn, user } = useAuth();
+
+  /* 검색 쿼리 상태 관리 */
   const { searchFilter, queryString, handleChangePages, handleSearch } =
     useSearchQuery({
       page: 1,
@@ -31,54 +36,55 @@ const Market = () => {
       sortTarget: "createdAt",
     });
 
-  console.log("queryString: ", queryString);
-
+  /* 정렬 상태 관리 */
   const [sort, setSort] = useState(SORT_MENU[0].value);
 
-  // 목록 데이터
-  const { data, loading, error, message } = useLoadData(
-    `/api/market/products${queryString}`,
-  );
-
+  /* 상품 목록 및 카테고리 데이터 조회 */
+  const { data } = useLoadData(`/api/market/products${queryString}`);
   const products = data?.content || [];
-
-  // 검색용 카테고리 조회
   const { data: categories } = useLoadData("/api/market/categories");
 
+  /* 정렬 변경 처리 */
   const handleClickSort = (sort) => {
     setSort(sort);
-    handleSearch({
-      sortTarget: sort,
-    });
+    handleSearch({ sortTarget: sort });
   };
 
   return (
+    /* 마켓 메인 영역 */
     <main className={styles.wrap}>
-      {/* 마켓 사이드바 */}
+      {/* 마켓 사이드바 영역 */}
       <div className={styles.sideNavWrap}>
-        <MarketSideNav categories={categories} onSearch={handleSearch} />
+        <MarketSideNav
+          categories={categories}
+          isLoggedIn={isLoggedIn}
+          memberProfile={user}
+          onSearch={handleSearch}
+        />
       </div>
-      {/* 목록 렌더링 */}
+
+      {/* 상품 목록 컨테이너 영역 */}
       <div className={styles.container}>
+        {/* 필터 바 영역 */}
         <div className={styles.filterBar}>
-          {/* 정렬 탭 메뉴 */}
           <TabMenus
-            className={styles.sortTab}
             tabs={SORT_MENU}
             activeStatus={sort}
+            className={styles.sortTab}
             onTabChange={handleClickSort}
           />
-          {/* 검색 필드 */}
           <SearchBox
-            className={styles.searchBox}
-            isRadio={true}
-            name="dealStatus"
-            initSelectValue={searchFilter.dealStatus}
             initKeyword={searchFilter.keyword}
+            initSelectValue={searchFilter.dealStatus}
+            isRadio
             options={DEAL_STATUS}
+            className={styles.searchBox}
+            name="dealStatus"
             onSearch={handleSearch}
           />
         </div>
+
+        {/* 상품 목록 영역 */}
         <div className={styles.list}>
           {products.length > 0 ? (
             products.map((product) => (
@@ -88,6 +94,8 @@ const Market = () => {
             <p className={styles.emptyState}>검색된 거래글이 없습니다.</p>
           )}
         </div>
+
+        {/* 페이지네이션 영역 */}
         <Pagination pager={data?.pager} onChangePage={handleChangePages} />
       </div>
     </main>

@@ -1,15 +1,13 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-
 import Button from "../../common/button/Button.jsx";
-
 import styles from "./MarketSideNav.module.scss";
 
 function MarketSideNav({ categories, onSearch }) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  /* URL 쿼리 스트링에서 선택된 카테고리 코드 추출 */
+  /* URL 선택 카테고리 코드 추출 */
   const searchParams = new URLSearchParams(location.search);
   const selectedCategory =
     searchParams.get("category") || searchParams.get("categoryCode");
@@ -22,10 +20,27 @@ function MarketSideNav({ categories, onSearch }) {
     onSearch({ categoryCode });
   };
 
-  /* 전체 조회 상태 확인 */
+  /* 물품 등록 처리 */
+  const handleRegisterClick = () => {
+    // 저장된 접근 토큰을 확인함.
+    const token = localStorage.getItem("accessToken");
+
+    if (!token) {
+      // 비로그인 상태 시 안내 후 로그인 페이지로 이동함.
+      alert("로그인이 필요한 서비스입니다.");
+      navigate("/login");
+      return;
+    }
+
+    // 로그인 상태 시 물품 등록 페이지로 이동함.
+    navigate("/market/register");
+  };
+
+  /* 전체 선택 상태 확인 */
   const isAllSelected = location.pathname === "/market" && !location.search;
 
   return (
+    /* 사이드 메뉴 영역 */
     <div className={styles.sideNav}>
       {/* 물품 등록 영역 */}
       <div>
@@ -33,7 +48,7 @@ function MarketSideNav({ categories, onSearch }) {
           btnStyle="fill"
           size="lg"
           fullWidth
-          onClick={() => navigate("/market/register")}
+          onClick={handleRegisterClick}
         >
           물품 등록
         </Button>
