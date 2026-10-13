@@ -2,22 +2,20 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import Pagination from '../../../components/common/pagination/Pagination';
-import { formatImagePath } from '../../../utils/formatImagePath';
+import { formatDate } from '../../../utils/formatDate';
+import { formatNumber } from '../../../utils/formatNumber';
+import { END_CHALLENGE_MESSAGES, parseApiResponse, } from '../../../utils/parseApiResponse';
 
+import StatCard from '../../../components/common/card/ChallengeStatCard';
+import ImageBox from '../../../components/common/image-box/ImageBox';
+
+import AchievementChart from '../../../components/common/chart/AchievementChart';
+import ParticipantChart from '../../../components/common/chart/ParticipantChart';
+
+import PanelHeader from '../../../layout/admin/panel-header/PanelHeader.jsx';
 import styles from './ChallengeManageDetail.module.scss';
-import PanelHeader from "../../../layout/admin/panel-header/PanelHeader.jsx";
 
-const STATUS_LABELS = {
-  WAITING: '대기',
-  IN_PROGRESS: '진행 중',
-  ENDED: '종료',
-};
-
-const formatDate = (value) =>
-  value ? String(value).replace('T', ' ').slice(0, 16) : '-';
-
-const formatNumber = (value) =>
-  value == null ? '-' : Number(value).toLocaleString('ko-KR');
+const STATUS_LABELS = {WAITING: '대기', IN_PROGRESS: '진행 중', ENDED: '종료',};
 
 function formatChange(value) {
   if (value == null) return '전일 대비 계산 불가';
@@ -46,29 +44,12 @@ function useChallengeData(url, refreshKey) {
           signal: controller.signal,
         });
 
-        const result = await response.json().catch(() => null);
-
-        if (!response.ok || !result?.success) {
-          const messages = {
-            401: '로그인이 필요합니다.',
-            403: '조회 권한이 없습니다.',
-            404: '조회할 데이터가 없습니다.',
-          };
-
-          throw new Error(
-            messages[response.status] ||
-            result?.message ||
-            '데이터를 불러오지 못했습니다.',
-          );
-        }
-
-        if (result.data == null) {
-          throw new Error('응답 데이터가 없습니다.');
-        }
+        // JSON 변환과 응답 검사는 util에서 처리
+        const data = await parseApiResponse(response);
 
         if (!controller.signal.aborted) {
           setState({
-            data: result.data,
+            data,
             loading: false,
             error: '',
           });
@@ -95,175 +76,12 @@ function useChallengeData(url, refreshKey) {
   return state;
 }
 
-function ChallengeImage({ path, title }) {
-  const [failed, setFailed] = useState(false);
-
-  return (
-    <div className={styles.thumbnail}>
-      {path && !failed ? (
-        <img
-          src={formatImagePath(path)}
-          alt={`${title} 대표 이미지`}
-          onError={() => setFailed(true)}
-        />
-      ) : (
-        <span>등록된 이미지가 없습니다.</span>
-      )}
-    </div>
-  );
-}
-
-function StatCard({ title, value, description }) {
-  return (
-    <article className={styles.statCard}>
-      <span>{title}</span>
-      <strong>{value}</strong>
-      {description && <small>{description}</small>}
-    </article>
-  );
-}
-
-function ParticipantChart({ points }) {
-  if (!points.length) {
-    return <p className={styles.message}>시간별 데이터가 없습니다.</p>;
-  }
-
-  const maxCount = Math.max(
-    1,
-    ...points.flatMap((point) => [
-      Number(point.todayCount ?? 0),
-      Number(point.yesterdayCount ?? 0),
-    ]),
-  );
-
-  return (
-    <>
-      <div className={styles.legend}>
-        <span>
-          <i className={styles.todayDot} /> 오늘
-        </span>
-        <span>
-          <i className={styles.yesterdayDot} /> 어제
-        </span>
-      </div>
-
-      <p className={styles.chartNote}>
-        시간별 신규 참여자 · 세로축 최대 {formatNumber(maxCount)}명
-      </p>
-
-      <div className={styles.chartScroll}>
-        <div className={styles.barChart}>
-          {points.map((point) => {
-            const today = point.todayCount;
-            const yesterday = point.yesterdayCount;
-
-            return (
-              <div className={styles.hourColumn} key={point.hour}>
-                <div
-                  className={styles.barPair}
-                  role="img"
-                  aria-label={`${point.hour}시: 오늘 ${
-                    today == null ? '미집계' : `${today}명`
-                  }, 어제 ${yesterday}명`}
-                  title={`${point.hour}시 · 오늘 ${
-                    today == null ? '미집계' : `${today}명`
-                  } / 어제 ${yesterday}명`}
-                >
-                  <div
-                    className={styles.todayBar}
-                    style={{
-                      height:
-                        today == null ? '0%' : `${(today / maxCount) * 100}%`,
-                    }}
-                  />
-
-                  <div
-                    className={styles.yesterdayBar}
-                    style={{
-                      height: `${(yesterday / maxCount) * 100}%`,
-                    }}
-                  />
-                </div>
-
-                <span className={styles.hourLabel}>
-                  {point.hour % 3 === 0 ? `${point.hour}시` : ''}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      <p className={styles.chartNote}>
-        오늘 아직 도달하지 않은 시간은 미집계 상태입니다.
-      </p>
-    </>
-  );
-}
-
-function AchievementChart({ value }) {
-  const rate = value == null ? null : Math.min(100, Math.max(0, Number(value)));
-
-  return (
-    <>
-      <div className={styles.legend}>
-        <span>
-          <i className={styles.todayDot} /> 달성률
-        </span>
-        <span>
-          <i className={styles.yesterdayDot} /> 남은 비율
-        </span>
-      </div>
-
-      <div className={styles.gauge}>
-        <svg
-          viewBox="0 0 200 200"
-          role="img"
-          aria-label={rate == null ? '달성률 데이터 없음' : `달성률 ${rate}%`}
-        >
-          <circle
-            cx="100"
-            cy="100"
-            r="75"
-            fill="none"
-            stroke="#e2e5ea"
-            strokeWidth="16"
-            strokeLinecap="round"
-            pathLength="100"
-            strokeDasharray="75 100"
-            transform="rotate(135 100 100)"
-          />
-
-          {rate > 0 && (
-            <circle
-              cx="100"
-              cy="100"
-              r="75"
-              fill="none"
-              stroke="#858e99"
-              strokeWidth="16"
-              strokeLinecap="round"
-              pathLength="100"
-              strokeDasharray={`${rate * 0.75} 100`}
-              transform="rotate(135 100 100)"
-            />
-          )}
-
-          <text x="100" y="160" textAnchor="middle">
-            {rate == null ? '-' : `${rate}%`}
-          </text>
-        </svg>
-      </div>
-    </>
-  );
-}
-
 function ChallengeRanking({ code, refreshKey }) {
   const [page, setPage] = useState(1);
 
   const { data, loading, error } = useChallengeData(
     `/api/admin/challenge/${encodeURIComponent(code)}/ranking` +
-    `?page=${page}&perPage=10&perGroup=5`,
+      `?page=${page}&perPage=10&perGroup=5`,
     refreshKey,
   );
 
@@ -375,22 +193,15 @@ export default function ChallengeManageDetail() {
         },
       );
 
-      const result = await response.json().catch(() => null);
-
-      if (!response.ok || !result?.success) {
-        const messages = {
-          401: '로그인이 필요합니다.',
-          403: '조기 완료 권한이 없습니다.',
-          404: '존재하지 않거나 삭제된 챌린지입니다.',
-          409: '현재 진행 기간인 챌린지만 조기 완료할 수 있습니다.',
-        };
-
-        throw new Error(
-          result?.message ||
-          messages[response.status] ||
-          '챌린지 조기 완료에 실패했습니다.',
-        );
-      }
+      await parseApiResponse(
+        response,
+        END_CHALLENGE_MESSAGES,
+        '챌린지 조기 완료에 실패했습니다.',
+        {
+          requireData: false,
+          preferServerMessage: true,
+        },
+      );
 
       setActionMessage('챌린지를 조기 완료했습니다.');
 
@@ -447,11 +258,12 @@ export default function ChallengeManageDetail() {
             <h2>챌린지 정보</h2>
 
             <div className={styles.summary}>
-              <ChallengeImage
-                path={challenge.thumbnail}
-                title={challenge.title}
-              />
-
+              <div className={styles.thumbnail}>
+								<ImageBox
+									src={challenge.thumbnail}
+									alt={`${challenge.title} 대표 이미지`}
+								/>
+							</div>
               <div>
                 <dl className={styles.details}>
                   <div>

@@ -18,13 +18,18 @@ export const formatCreatedAt = (createdAt) => {
     } else if (diffMinutes > 0) {
       return `${diffMinutes}분 전`;
     } else {
-      return "방금 전";
+      return '방금 전';
     }
   } else {
     // 오늘이 아니면 "YYYY년 MM월 DD일" 형식으로
     const year = createdDate.getFullYear();
-    const month = String(createdDate.getMonth() + 1).padStart(2, "0");
-    const day = String(createdDate.getDate()).padStart(2, "0");
+    const month = String(createdDate.getMonth() + 1).padStart(2, '0');
+    const day = String(createdDate.getDate()).padStart(2, '0');
     return `${year}년 ${month}월 ${day}일`;
   }
 };
+
+// 날짜 값이 있으면 'YYYY-MM-DD HH:mm' 형식으로 표시하고, 없으면 '-' 반환
+// 예: '2026-10-13T14:30:00' → '2026-10-13 14:30'
+export const formatDate = (value) =>
+  value ? String(value).replace('T', ' ').slice(0, 16) : '-';

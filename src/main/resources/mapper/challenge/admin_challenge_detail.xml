@@ -291,7 +291,11 @@
             f.CODE,
             f.MEM_CODE,
             DATE(f.CREATED_AT) AS PROOF_DATE,
-            COALESCE(f.HITCOUNT, 0) AS VIEW_COUNT
+            (
+                SELECT COUNT(*)
+                FROM FEED_HIT_LOG hit
+                WHERE hit.FEED_CODE = f.CODE
+            ) AS VIEW_COUNT
 
         FROM FEED f
 
