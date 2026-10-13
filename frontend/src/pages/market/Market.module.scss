@@ -1,50 +1,59 @@
 @use "../../scss/variables.scss" as v;
 @use "../../scss/mixin.scss" as mix;
 
+/* 마켓 메인 영역 */
 .wrap {
   @include mix.wrap;
 }
 
-/* 마켓 사이드바 */
+/* 마켓 사이드바 영역 */
 .sideNavWrap {
   position: sticky;
-  top: 20px;
+  top: 1.25rem;
   align-self: flex-start;
 }
 
+/* 상품 목록 컨테이너 영역 */
 .container {
   flex: 1;
 
+  /* 필터 바 영역 */
   .filterBar {
     @include mix.flex($jc: space-between);
     margin-bottom: 2rem;
 
+    /* 정렬 탭 영역 */
     .sortTab {
-      // 버튼 개수, 글자 길이에 따라 자동 길이 조절함.
+      // 버튼 개수 및 글자 길이에 따라 자동 길이 조절함.
       width: fit-content;
     }
 
-    .searchBar {
-      flex: 1;
+    /* 검색 상자 영역 */
+    .searchBox {
+      display: flex;
+      justify-content: flex-end;
     }
   }
 }
 
+/* 상품 목록 영역 */
 .list {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
 
-  /* media - tablet */
+  /* 태블릿 반응형 영역 */
   @media screen and (max-width: 1300px) {
-    width: 75%;
     grid-template-columns: repeat(2, 1fr);
+
+    width: 75%;
   }
 
-  /* media - mobile */
+  /* 모바일 반응형 영역 */
   @media screen and (max-width: 767px) {
     display: flex;
     flex-direction: column;
+
     width: 100%;
     margin: 0;
   }

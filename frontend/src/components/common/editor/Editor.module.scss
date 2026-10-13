@@ -1,22 +1,39 @@
 @use "../../../scss/variables.scss" as v;
 @use "../../../scss/mixin.scss" as mix;
 
+/* 에디터 영역 */
 .editor {
   padding: 48px;
 
   > h3 {
-    margin-bottom: 24px;
+    margin-bottom: 1.5rem;
+
     font-size: 1.5rem;
     color: v.$grayscale-90;
   }
 
+  /* 에디터 컨테이너 영역 */
   .container {
     display: flex;
     flex-direction: column;
+
     gap: 1.5rem;
   }
 }
 
+/* 제목 입력 영역 */
+.title {
+  @include mix.flex;
+  width: 60%;
+
+  gap: 0.5rem;
+
+  > input {
+    width: 100%;
+  }
+}
+
+/* 옵션 그룹 영역 */
 .optionGroup {
   @include mix.flex;
   gap: 1.5rem;
@@ -25,46 +42,44 @@
     flex: 1;
   }
 
+  /* 추가 옵션 영역 */
   .extra {
-    padding: 2rem;
+    padding: 32px;
     border: 1px solid v.$grayscale-10;
+
     border-radius: 0.5rem;
   }
 }
 
-.title {
-  @include mix.flex;
-  gap: 0.5rem;
-  width: 60%;
-
-  > input {
-    width: 100%;
-  }
-}
-
+/* 본문 입력 영역 */
 .content {
-  height: 300px;
+  height: 18.75rem;
 
   > textarea {
     width: 100%;
     height: 100%;
-    padding: 0.8rem;
+    padding: 13px;
     border: 1px solid v.$grayscale-10;
+
     border-radius: 0.5rem;
+
     font-size: 1rem;
+
     resize: none;
   }
 }
 
+/* 폼 하단 영역 */
 .formFooter {
-  @include mix.flex($jc: space-between, $ai: flex-end);
+  @include mix.flex($jc: space-between, $ai: center);
 
+  /* 제출 버튼 그룹 영역 */
   .submitGroup {
     @include mix.flex;
     gap: 0.5rem;
 
     button {
-      width: 100px;
+      width: 6.25rem;
     }
   }
 }
