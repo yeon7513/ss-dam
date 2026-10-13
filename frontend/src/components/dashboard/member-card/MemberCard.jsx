@@ -1,18 +1,12 @@
 import React from 'react';
 
 import styles from './MemberCard.module.scss';
-import { useNavigate } from 'react-router-dom';
 import ImageBox from "../../common/image-box/ImageBox.jsx";
 import Card from "../../common/card/Card.jsx";
 import cn from 'classnames';
 
-function MemberCard({ member, type = 'user' }) {
-  const navigate = useNavigate();
-
+function MemberCard({ member, type = 'user', onClickDetail }) {
   const isAdmin = type === "admin";
-  const detailPath = isAdmin
-    ? `/admin/system_manage/account/${member.code}`
-    : `/admin/user_manage/${member.code}`;
 
   const cardData = {
     id: member.id || member.empId,
@@ -28,19 +22,19 @@ function MemberCard({ member, type = 'user' }) {
       (
         <>
           <span className={cn(styles.meta, styles.dept)}>
-            부서 {member.dept ?? "미정"}
+            부서 / {member.dept ?? "미정"}
           </span>
           <span className={cn(styles.meta, styles.role)}>
-            권한 {member.role.label ?? "미정"}
+            권한 / {member.role.label ?? "미정"}
           </span>
         </>
       ) : (
         <>
           <span className={cn(styles.meta, styles.rating)}>
-            등급 {member.rating}
+            등급 / {member.rating}
           </span>
           <span className={cn(styles.meta, styles.ranking)}>
-            랭킹 {member.ranking ?? "-"}
+            랭킹 / {member.ranking ?? "-"}
           </span>
         </>
       ),
@@ -59,10 +53,8 @@ function MemberCard({ member, type = 'user' }) {
       ? new Date(value).toLocaleDateString('ko-KR')
       : '-';
 
-  console.log(member);
-
   return (
-    <Card className={styles.memberCard} onClick={() => navigate(detailPath)}>
+    <Card className={styles.memberCard} onClick={onClickDetail}>
       {/*프로필 사진 */}
       {!isAdmin && (
         <div className={styles.avatar}>

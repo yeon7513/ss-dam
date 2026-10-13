@@ -3,18 +3,18 @@ import Footer from "./footer/Footer.jsx";
 import Header from "./header/Header.jsx";
 import styles from "./Layout.module.scss";
 import { HiChatBubbleLeftRight } from "react-icons/hi2";
+import { useAuth } from "../../context/AuthContext.jsx";
 
 function Layout() {
-  const isLogin = sessionStorage.getItem("userCode") !== null;
+  const { isLoggedIn } = useAuth();
 
-  console.log(isLogin);
 
   return (
     <div className={styles.wrapper}>
       <Header />
       <Outlet />
       <Footer />
-      {isLogin && (
+      {isLoggedIn && (
         <div className={styles.chatIcon}>
           <Link to="/chat">
             <HiChatBubbleLeftRight />

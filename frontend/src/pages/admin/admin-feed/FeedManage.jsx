@@ -19,7 +19,7 @@ export default function FeedManage() {
   const { searchFilter, queryString, handleChangePages, handleSearch } =
     useSearchQuery(INITIAL_FILTERS);
 
-  const { data, loading, error } = useLoadData(
+  const { data, loading, error, refetch } = useLoadData(
     `/api/admin/feeds${queryString}`,
   );
 

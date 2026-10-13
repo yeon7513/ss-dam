@@ -1,16 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLoadData } from "../../../hooks/useLoadData.js";
 import { useSearchQuery } from "../../../hooks/useSearchQuery.js";
 import PanelHeader from "../../../layout/admin/panel-header/PanelHeader.jsx";
 import Pagination from "../../../components/common/pagination/Pagination.jsx";
 import { useNavigate } from "react-router-dom";
 import MemberCard from "../../../components/dashboard/member-card/MemberCard.jsx";
+import styles from "./AccountManage.module.scss";
+import AccountManageDetail from "./account-manage-detail/AccountManageDetail.jsx";
+import Button from "../../../components/common/button/Button.jsx";
 
 function AccountManage() {
-  const { data: adminAccounts } = useLoadData("/api/admin/account");
+  const [detailCode, setDetailCode] = useState(null);
+
+
+  const navigate = useNavigate();
+  const { data: adminAccounts, refetch } = useLoadData("/api/admin/account");
   const { handleSearch } = useSearchQuery({
     page: 1,
-    perPage: 10,
+    perPage: 6,
     keyword: "",
     role: "",
     dept: "",
@@ -19,25 +26,53 @@ function AccountManage() {
     toDate: "",
   });
 
-  const navigate = useNavigate();
+  // 새로고침
+  const handleRefresh = () => {
+    refetch();
+  }
+
+  const handleClickDetail = (code) => {
+    setDetailCode(code);
+  }
 
   console.log(adminAccounts);
 
   return (
-    <div>
+    <div className={styles.wrap}>
       <PanelHeader
         title="관리자 계정 관리"
-        onRefresh={() => console.log("Refresh")}
+        onRefresh={handleRefresh}
       />
 
+      {/**/}
       <div>
-        {adminAccounts?.content.map((account) => (
-          <MemberCard key={account.code} member={account} type={"admin"} />
-        ))}
+        검색용 필터 영역
+
+        <div>
+          <Button type="button">관리자 계정 생성</Button>
+        </div>
+
       </div>
 
-      {/* 페이지네이션 */}
-      <Pagination pager={adminAccounts?.pager} />
+      <div className={styles.container}>
+        <div className={styles.accounts}>
+          <div className={styles.items}>
+            {adminAccounts?.content.map((account) => (
+              <MemberCard
+                key={account.code}
+                member={account} type={"admin"}
+                onClickDetail={() => handleClickDetail(account.code)}
+              />
+            ))}
+          </div>
+          {/* 페이지네이션 */}
+          <Pagination pager={adminAccounts?.pager} />
+        </div>
+
+        {/* 상세 정보 조회 영역 */}
+        <AccountManageDetail code={detailCode} />
+      </div>
+
     </div>
   );
 }

@@ -1,0 +1,22 @@
+@use "../../../../scss/variables.scss" as v;
+@use "../../../../scss/mixin.scss" as mix;
+
+
+.detail {
+  width: 60%;
+  height: 100%;
+
+  &.notice {
+    @include mix.flex($fd: column, $ai: center);
+    gap: 2rem;
+
+    .icon {
+      font-size: 3rem;
+      color: v.$grayscale-50;
+    }
+
+    > p {
+      color: v.$grayscale-70;
+    }
+  }
+}

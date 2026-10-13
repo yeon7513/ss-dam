@@ -9,6 +9,7 @@ import UserManageFilters from "./UserManageFilters";
 // 이 페이지에서 사용하는 스타일
 import styles from "./UserManage.module.scss";
 import PanelHeader from "../../../layout/admin/panel-header/PanelHeader.jsx";
+import { useNavigate } from "react-router-dom";
 
 // status 탭
 // NORMAL, SUSPENDED, SLEEP, WITHDRAW
@@ -22,6 +23,7 @@ const STATUS_TABS = [
 
 export default function UserManage() {
   // 다른 페이지로 이동할 때 사용하는 함수
+  const navigate = useNavigate();
 
   // 조회한 회원 목록
   const [members, setMembers] = useState([]);
@@ -173,7 +175,8 @@ export default function UserManage() {
       ) : (
         <div className={styles.memberGrid}>
           {members.map((member) => (
-            <MemberCard key={member.code} member={member} />
+            <MemberCard key={member.code} member={member}
+                        onClickDetail={() => navigate(`/admin/user_manage/${member.code}`)} />
           ))}
         </div>
       )}
