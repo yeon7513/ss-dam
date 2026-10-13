@@ -83,7 +83,7 @@ export default function UserManageDetail() {
 
   const statusLabel = member?.deleteYn
     ? '탈퇴'
-    : (STATUS_LABELS[member?.status] ?? member?.status ?? '-');
+    : (STATUS_LABELS[member?.status.code] ?? member?.status.code ?? '-');
 
   const statistics = [
     {

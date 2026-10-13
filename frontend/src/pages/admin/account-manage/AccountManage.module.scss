@@ -1,4 +1,24 @@
 @use "../../../scss/variables.scss" as v;
 @use "../../../scss/mixin.scss" as mix;
 
+.wrap {
+  height: 100%;
 
+  .container {
+    @include mix.flex($ai: flex-start);
+    gap: 2rem;
+    height: 100%;
+
+    .accounts {
+      width: 40%;
+
+      .items {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+      }
+    }
+
+
+  }
+}
