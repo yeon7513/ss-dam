@@ -6,7 +6,7 @@ import { useAuth } from "../../../../context/AuthContext.jsx";
 import LikeButton from "../../../common/button/like/LikeButton.jsx";
 import Button from "../../../common/button/Button.jsx";
 
-const CommentItem = ({ comment }) => {
+const CommentItem = ({ comment, readOnly = false }) => {
   const { user } = useAuth();
 
   return (
@@ -18,7 +18,9 @@ const CommentItem = ({ comment }) => {
           isMinimal={true}
           badge={
             <div className={styles.badge}>
-              <span className={styles.date}>{formatCreatedAt(comment.createdAt)}</span>
+              <span className={styles.date}>
+                {formatCreatedAt(comment.createdAt)}
+              </span>
               {user && user.id === comment.memberProfile.id && (
                 <span className={styles.mine}>내 댓글</span>
               )}
@@ -38,12 +40,19 @@ const CommentItem = ({ comment }) => {
               <Button btnStyle="text">삭제</Button>
             </div>
           )}
-          <LikeButton
-            targetType="comments"
-            targetCode={comment.code}
-            initialIsLiked={comment.likedYn}
-            initialLikeCount={comment.countCommentLike}
-          />
+          <div
+            style={{
+              pointerEvents: readOnly ? "none" : "auto",
+              cursor: readOnly ? "default" : "pointer",
+            }}
+          >
+            <LikeButton
+              targetType="comments"
+              targetCode={comment.code}
+              initialIsLiked={comment.likedYn}
+              initialLikeCount={comment.countCommentLike}
+            />
+          </div>
         </div>
       </div>
     </div>
