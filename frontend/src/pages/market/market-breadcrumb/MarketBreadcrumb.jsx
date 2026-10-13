@@ -44,12 +44,12 @@ const MarketBreadcrumb = ({ detail = {}, categories = [] }) => {
 
   /* 대분류 경로 생성 */
   const parentCategoryPath = parentCategoryCode
-    ? `/market?category=${parentCategoryCode}&categoryCode=${parentCategoryCode}`
+    ? `/market?categoryCode=${parentCategoryCode}`
     : "/market";
 
   /* 소분류 경로 생성 */
   const subCategoryPath = subCategoryCode
-    ? `/market?category=${subCategoryCode}&categoryCode=${subCategoryCode}`
+    ? `/market?categoryCode=${subCategoryCode}`
     : "/market";
 
   return (
