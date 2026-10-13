@@ -80,10 +80,10 @@ const IdSection = ({ form, setForm, isIdChecked, setIsIdChecked }) => {
 
   return (
     <div className={styles.idGroup}>
-      {/* 1. 라벨 영역 분리 */}
+      {/* 라벨 영역 분리 */}
       <label className={styles.label}>아이디</label>
 
-      {/* 2. 인풋 박스 + 버튼 그룹 (AddressSection의 postGroup 구조) */}
+      {/* 인풋 박스 + 버튼 그룹 (AddressSection의 postGroup 구조) */}
       <div className={styles.inputRow}>
         <TextInput
           name="id"
