@@ -1,8 +1,8 @@
-import { HiDotsHorizontal } from 'react-icons/hi';
-import placeholder from '../../../assets/images/placeholder.png';
-import ImageBox from '../../common/image-box/ImageBox.jsx';
-import styles from './ProfileCard.module.scss';
-import cn from 'classnames';
+import { HiDotsHorizontal } from "react-icons/hi";
+import placeholder from "../../../assets/images/placeholder.png";
+import ImageBox from "../../common/image-box/ImageBox.jsx";
+import styles from "./ProfileCard.module.scss";
+import cn from "classnames";
 
 // isMinimal -> 간단하게 표시
 // isVertical -> 세로 버전
@@ -13,6 +13,7 @@ function ProfileCard({
   isVertical = false,
   showMore = true,
   badge,
+  onMoreClick,
 }) {
   if (!memberProfile) return <div>사용자 정보가 없습니다.</div>;
 
@@ -45,7 +46,7 @@ function ProfileCard({
 
       {!isMinimal && !isVertical && showMore && (
         <div className={styles.more}>
-          <button>
+          <button type="button" onClick={onMoreClick}>
             <HiDotsHorizontal />
           </button>
         </div>

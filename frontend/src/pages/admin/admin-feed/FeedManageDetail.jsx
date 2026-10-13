@@ -40,6 +40,15 @@ const FeedManageDetail = () => {
   const authorId =
     detail.memberProfile?.id || detail.memberProfile?.nickname || "-";
 
+  const handleOpenUserDetail = () => {
+    const memberCode = detail.memberProfile?.code;
+    if (!memberCode) {
+      alert("회원 정보를 찾을 수 없습니다");
+      return;
+    }
+    window.open(`/admin/user_manage/${memberCode}`, "_blank");
+  };
+
   const handleDelete = async () => {
     if (!reason.trim()) {
       alert("처리 사유를 입력해주세요");
@@ -151,7 +160,10 @@ const FeedManageDetail = () => {
               </div>
 
               <div className={styles["feed-info"]}>
-                <ProfileCard memberProfile={detail.memberProfile} />
+                <ProfileCard
+                  memberProfile={detail.memberProfile}
+                  onMoreClick={handleOpenUserDetail}
+                />
 
                 <div className={styles["content-box"]}>
                   {detail.content || "등록된 본문 내용이 없습니다."}
