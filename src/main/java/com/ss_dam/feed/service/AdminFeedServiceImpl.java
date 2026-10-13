@@ -15,6 +15,7 @@ import com.ss_dam.common.pager.PageResult;
 import com.ss_dam.common.pager.Pager;
 import com.ss_dam.feed.dao.AdminFeedDao;
 import com.ss_dam.feed.model.filter.AdminFeedSearchFilter;
+import com.ss_dam.feed.model.response.AdminFeedLogView;
 import com.ss_dam.feed.model.response.AdminFeedView;
 import com.ss_dam.feed.model.response.AdminMemberFeedsView;
 import com.ss_dam.feed.model.response.UserFeedView;
@@ -86,4 +87,93 @@ public class AdminFeedServiceImpl implements AdminFeedService {
 		
 		return PageResult.of(feeds, filter, (float) total);
 	}
+
+	@Override
+	public AdminFeedView loadFeed(Long feedCode) {
+		
+		return requireFeed(feedCode);
+	}
+
+	@Transactional
+	@Override
+	public void deleteFeed(Long feedCode, String reason, Long admCode) {
+		requireFeed(feedCode);
+		
+		int updatedCount = adminFeedDao.deleteFeed(feedCode);
+		
+		requireUpdated(
+				updatedCount,
+				"이미 삭제되었거나 삭제할 수 없는 피드입니다");
+		
+		saveActivityLog(feedCode, reason, admCode, "DELETE");
+		
+	}
+	
+	@Transactional
+	@Override
+	public void restoreFeed(Long feedCode, String reason, Long admCode) {
+		requireFeed(feedCode);
+		
+		int updatedCount = adminFeedDao.restoreFeed(feedCode);
+		
+		requireUpdated(
+				updatedCount,
+				"삭제된 피드만 복구할 수 있습니다");
+		
+		saveActivityLog(feedCode, reason, admCode, "RESTORE");
+		
+	}
+
+	@Override
+	public List<AdminFeedLogView> loadFeedLogs(Long feedCode) {
+		requireFeed(feedCode);
+		
+		return adminFeedDao.loadFeedLogs(feedCode);
+	}
+	
+	private AdminFeedView requireFeed(Long feedCode) {
+		AdminFeedView feed = adminFeedDao.loadFeed(feedCode);
+		
+		if(feed == null) {
+			throw new ResponseStatusException(
+					HttpStatus.NOT_FOUND,
+					"피드가 존재하지 않습니다");
+		}
+		
+		return feed;
+	}
+	
+	private void requireUpdated(int updatedCount, String message) {
+		if(updatedCount == 0) {
+			throw new ResponseStatusException(
+					HttpStatus.CONFLICT, message);
+		}
+		
+		if(updatedCount != 1) {
+			throw new IllegalStateException(
+					"피드 변경 건수가 올바르지 않습니다");
+		}
+	}
+	
+	private void saveActivityLog(
+					Long feedCode,
+					String reason,
+					Long admCode,
+					String processType) {
+		
+		Map<String, Object> params = new HashMap<>();
+		
+		params.put("feedCode", feedCode);
+		params.put("reason", reason);
+		params.put("admCode", admCode);
+		params.put("processType", processType);
+		
+		int insertedCount = adminFeedDao.insertActivityLog(params);
+		
+		if(insertedCount != 1) {
+			throw new IllegalStateException(
+					"피드 관리 이력 저장에 실패했습니다");
+		}
+	}
+	
 }

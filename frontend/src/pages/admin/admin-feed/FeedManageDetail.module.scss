@@ -68,17 +68,17 @@
   flex: 1;
   @include mix.flex($fd: column, $ai: flex-start);
   gap: 6px;
+}
 
-  .label {
-    font-size: 12px;
-    color: v.$grayscale-50;
-  }
+.label {
+  font-size: 12px;
+  color: v.$grayscale-50;
+}
 
-  .value {
-    font-size: 15px;
-    font-weight: 600;
-    color: v.$grayscale-100;
-  }
+.value {
+  font-size: 15px;
+  font-weight: 600;
+  color: v.$grayscale-100;
 }
 
 .active-badge {
@@ -104,6 +104,10 @@
   display: grid;
   grid-template-columns: 1fr 340px;
   gap: 24px;
+
+  > div {
+    min-width: 0;
+  }
 }
 
 .card {
@@ -124,78 +128,95 @@
 
 .feed-card {
   @extend .card;
+}
 
-  .feed-header-title {
-    margin-bottom: 1rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid v.$grayscale-20;
+.feed-header-title {
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid v.$grayscale-20;
+}
 
-    .challenge-tag {
-      display: inline-block;
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: v.$point-60;
-      margin-bottom: 0.25rem;
-    }
+.challenge-tag {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: v.$point-60;
+  margin-bottom: 0.25rem;
+}
 
-    .feed-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: v.$grayscale-100;
-    }
+.feed-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: v.$grayscale-100;
+  word-break: break-all;
+  overflow-wrap: anywhere;
+}
+
+.feed-main-layout {
+  @include mix.flex($jc: space-between, $ai: flex-start);
+  gap: 1.5rem;
+}
+
+.feed-images {
+  flex: 1.1;
+  min-width: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid v.$grayscale-20;
+  background-color: v.$grayscale-5;
+}
+
+.feed-info {
+  flex: 1;
+  min-width: 0;
+  @include mix.flex($fd: column, $ai: stretch);
+  gap: 1rem;
+}
+
+.content-box {
+  min-height: 120px;
+  max-height: 240px;
+  overflow-y: auto;
+  word-break: break-all;
+  overflow-wrap: anywhere;
+  padding: 14px;
+  background-color: v.$grayscale-5;
+  border: 1px solid v.$grayscale-20;
+  border-radius: 6px;
+  white-space: pre-wrap;
+  line-height: 1.6;
+  font-size: 14px;
+  color: v.$grayscale-90;
+
+  &::-webkit-scrollbar {
+    width: 6px;
   }
+  &::-webkit-scrollbar-thumb {
+    background-color: v.$grayscale-20;
+    border-radius: 3px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+}
 
-  .feed-main-layout {
-    @include mix.flex($jc: space-between, $ai: flex-start);
-    gap: 1.5rem;
+.hashtags {
+  @include mix.flex($jc: flex-start);
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
 
-    .feed-images {
-      flex: 1.1;
-      min-width: 0;
-      border-radius: 8px;
-      overflow: hidden;
-      border: 1px solid v.$grayscale-20;
-      background-color: v.$grayscale-5;
-    }
+.meta {
+  @include mix.flex($jc: flex-end, $ai: center);
+  gap: 16px;
+  color: v.$grayscale-50;
+  font-size: 14px;
+  padding-top: 12px;
+  border-top: 1px solid v.$grayscale-20;
 
-    .feed-info {
-      flex: 1;
-      min-width: 0;
-      @include mix.flex($fd: column, $ai: stretch);
-      gap: 1rem;
-
-      .content-box {
-        min-height: 120px;
-        padding: 14px;
-        background-color: v.$grayscale-5;
-        border: 1px solid v.$grayscale-20;
-        border-radius: 6px;
-        white-space: pre-wrap;
-        line-height: 1.6;
-        font-size: 14px;
-        color: v.$grayscale-90;
-      }
-
-      .hashtags {
-        @include mix.flex($jc: flex-start);
-        gap: 0.5rem;
-        flex-wrap: wrap;
-      }
-
-      .meta {
-        @include mix.flex($jc: flex-end, $ai: center);
-        gap: 16px;
-        color: v.$grayscale-50;
-        font-size: 14px;
-        padding-top: 12px;
-        border-top: 1px solid v.$grayscale-20;
-
-        span {
-          @include mix.flex($ai: center);
-          gap: 4px;
-        }
-      }
-    }
+  span {
+    @include mix.flex($ai: center);
+    gap: 4px;
   }
 }
 
@@ -275,7 +296,7 @@
     grid-template-columns: 1fr;
   }
 
-  .feed-card .feed-main-layout {
+  .feed-main-layout {
     flex-direction: column;
   }
 }

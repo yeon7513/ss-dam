@@ -20,11 +20,11 @@ const FeedManageDetail = () => {
   const navigate = useNavigate();
   const [reason, setReason] = useState("");
 
-  const { data, loading, error } = useLoadData(`/api/feeds/${code}`);
+  const { data, loading, error } = useLoadData(`/api/admin/feeds/${code}`);
   const detail = data || {};
 
   const { handleSubmit: handleSubmitDeleteFeed } = useSubmitData(
-    `/api/feeds/${code}`,
+    `/api/admin/feeds/${code}`,
     "DELETE",
   );
 
@@ -120,7 +120,7 @@ const FeedManageDetail = () => {
               !isDeleted ? styles.active : styles.inactive
             }`}
           >
-            {!isDeleted ? "활성화" : "비활성화(삭제)"}
+            {!isDeleted ? "활성화" : "비활성화"}
           </span>
         </div>
         <div className={styles["summary-item"]}>
@@ -177,7 +177,7 @@ const FeedManageDetail = () => {
 
           <div className={styles.card}>
             <h3 className={styles["card-title"]}>댓글 관리</h3>
-            <Comments targetCode={code} />
+            <Comments targetCode={code} readOnly={true} />
           </div>
         </div>
 

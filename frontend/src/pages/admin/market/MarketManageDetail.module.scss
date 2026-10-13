@@ -2,40 +2,35 @@
 @use "../../../scss/mixin.scss" as mix;
 
 .admin-detail-loading {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @include mix.flex($jc: center, $ai: center);
   min-height: 300px;
-  font-size: 16px;
-  color: #6b7280;
+  font-size: 1rem;
+  color: v.$grayscale-50;
 }
 
 .admin-detail-wrapper {
   padding: 24px;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
 }
 
 .detail-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  @include mix.flex($jc: space-between, $ai: center);
   margin-bottom: 20px;
 
   h2 {
     font-size: 22px;
     font-weight: 700;
-    color: #111827;
-    display: flex;
-    align-items: center;
+    color: v.$grayscale-100;
+    @include mix.flex($ai: center);
     gap: 12px;
   }
 }
 
 .code-tag {
   font-size: 13px;
-  color: #2563eb;
-  background-color: #eff6ff;
+  color: v.$primary-40;
+  background-color: v.$primary-5;
   padding: 4px 10px;
   border-radius: 4px;
   font-weight: 600;
@@ -43,46 +38,46 @@
 
 .btn-back {
   padding: 8px 16px;
-  background-color: #ffffff;
-  border: 1px solid #d1d5db;
+  background-color: v.$color-white;
+  border: 1px solid v.$grayscale-20;
   border-radius: 6px;
-  color: #374151;
+  color: v.$grayscale-90;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
 
   &:hover {
-    background-color: #f3f4f6;
-    border-color: #9ca3af;
+    background-color: v.$grayscale-5;
+    border-color: v.$grayscale-50;
   }
 }
 
 .summary-bar {
-  display: flex;
+  @include mix.flex($jc: space-around, $ai: center);
   gap: 16px;
-  background-color: #ffffff;
-  border: 1px solid #e5e7eb;
+  background-color: v.$color-white;
+  border: 1px solid v.$grayscale-20;
   border-radius: 8px;
   padding: 16px 24px;
   margin-bottom: 24px;
+  box-shadow: v.$box-shadow;
 }
 
 .summary-item {
   flex: 1;
-  display: flex;
-  flex-direction: column;
+  @include mix.flex($fd: column, $ai: flex-start);
   gap: 6px;
 
   .label {
     font-size: 12px;
-    color: #6b7280;
+    color: v.$grayscale-50;
   }
 
   .value {
     font-size: 15px;
     font-weight: 600;
-    color: #111827;
+    color: v.$grayscale-100;
   }
 }
 
@@ -95,28 +90,24 @@
   font-weight: 600;
 
   &.status-active {
-    background-color: #dcfce7;
-    color: #15803d;
+    background-color: rgba(v.$succ-color, 0.15);
+    color: v.$succ-color;
   }
 
-  &.status-private {
-    background-color: #f3f4f6;
-    color: #4b5563;
+  &.status-private,
+  &.status-deleted {
+    background-color: v.$grayscale-5;
+    color: v.$grayscale-50;
   }
 
   &.status-blinded {
-    background-color: #fef3c7;
-    color: #b45309;
+    background-color: rgba(v.$warn-color, 0.15);
+    color: v.$warn-color;
   }
 
   &.status-reported {
-    background-color: #fee2e2;
-    color: #b91c1c;
-  }
-
-  &.status-deleted {
-    background-color: #f3f4f6;
-    color: #9ca3af;
+    background-color: rgba(v.$dan-color, 0.15);
+    color: v.$dan-color;
   }
 }
 
@@ -129,47 +120,67 @@
   font-weight: 600;
 
   &.active {
-    background-color: #dcfce7;
-    color: #15803d;
+    background-color: rgba(v.$succ-color, 0.15);
+    color: v.$succ-color;
   }
 
   &.inactive {
-    background-color: #fee2e2;
-    color: #b91c1c;
+    background-color: rgba(v.$dan-color, 0.15);
+    color: v.$dan-color;
   }
 }
 
 .detail-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 1fr 340px;
   gap: 24px;
+
+  > div {
+    min-width: 0;
+  }
 }
 
 .card {
-  background-color: #ffffff;
-  border: 1px solid #e5e7eb;
+  background-color: v.$color-white;
+  border: 1px solid v.$grayscale-20;
   border-radius: 8px;
   padding: 20px;
   margin-bottom: 20px;
+  box-shadow: v.$box-shadow;
 }
 
 .card-title {
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 16px;
-  color: #1f2937;
+  color: v.$grayscale-100;
 }
 
 .content-box {
   min-height: 120px;
+  max-height: 240px;
+  overflow-y: auto;
+  word-break: break-all;
+  overflow-wrap: anywhere;
   padding: 14px;
-  background-color: #f9fafb;
-  border: 1px solid #f3f4f6;
+  background-color: v.$grayscale-5;
+  border: 1px solid v.$grayscale-20;
   border-radius: 6px;
   white-space: pre-wrap;
   line-height: 1.6;
   font-size: 14px;
-  color: #374151;
+  color: v.$grayscale-90;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: v.$grayscale-20;
+    border-radius: 3px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
 }
 
 .image-gallery {
@@ -178,7 +189,7 @@
   flex-wrap: wrap;
 
   .no-data {
-    color: #9ca3af;
+    color: v.$grayscale-50;
     font-size: 14px;
   }
 }
@@ -188,7 +199,7 @@
   height: 100px;
   border-radius: 6px;
   overflow: hidden;
-  border: 1px solid #e5e7eb;
+  border: 1px solid v.$grayscale-20;
 }
 
 .action-card {
@@ -198,7 +209,7 @@
 
 .action-desc {
   font-size: 13px;
-  color: #6b7280;
+  color: v.$grayscale-50;
   margin-bottom: 12px;
 }
 
@@ -206,7 +217,7 @@
   width: 100%;
   height: 120px;
   padding: 12px;
-  border: 1px solid #d1d5db;
+  border: 1px solid v.$grayscale-20;
   border-radius: 6px;
   resize: none;
   margin-bottom: 16px;
@@ -216,8 +227,8 @@
 
   &:focus {
     outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+    border-color: v.$primary-40;
+    box-shadow: 0 0 0 2px rgba(57, 158, 109, 0.1);
   }
 }
 
@@ -234,29 +245,42 @@
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition:
+    background-color 0.2s,
+    opacity 0.2s;
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: auto;
+  }
 
   &.btn-delete {
-    background-color: #ef4444;
-    color: #ffffff;
+    background-color: v.$dan-color;
+    color: v.$color-white;
 
-    &:hover {
-      background-color: #dc2626;
+    &:hover:not(:disabled) {
+      opacity: 0.9;
     }
   }
 
   &.btn-restore {
-    background-color: #2563eb;
-    color: #ffffff;
+    background-color: v.$primary-40;
+    color: v.$color-white;
 
-    &:hover {
-      background-color: #1d4ed8;
+    &:hover:not(:disabled) {
+      background-color: v.$primary-50;
     }
   }
 }
 
-/* 공통 강조 텍스트 */
 .danger-text {
-  color: #ef4444;
+  color: v.$dan-color;
   font-weight: 600;
+}
+
+@media (max-width: 1024px) {
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
 }
