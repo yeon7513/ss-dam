@@ -1,13 +1,10 @@
 @use "../../../scss/variables.scss" as v;
 @use "../../../scss/mixin.scss" as mix;
 
-.card {
-  gap: 12px;
-  min-width: 0;
-  padding: 16px 12px;
-
-  color: inherit;
-  text-decoration: none;
+.memberCard {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
   cursor: pointer;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
@@ -15,66 +12,76 @@
     border-color: v.$primary-20;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   }
-}
-
-.info {
-  @include mix.flex;
-  gap: 0.5rem;
 
   // 프로필 사진
   .avatar {
-    width: 4rem;
-    height: 4rem;
+    width: 36%;
+    max-width: 100%;
+    height: 100%;
     border-radius: 0.5rem;
     background: #f2f4f8;
     color: #b8c0cc;
     overflow: hidden;
   }
 
-  // 기본 정보
-  .basic {
+  .info {
     flex: 1;
 
-    .name {
-      margin-bottom: 0.5rem;
-      font-size: 1.125rem;
-
-      .badge {
-        margin-right: 0.5rem;
-        padding: 0.25rem 0.5rem;
-        font-size: 0.875rem;
-        font-weight: 500;
-        color: v.$point-60;
-        border: 1px solid v.$point-50;
-        border-radius: 4px;
-
-        // 휴면
-        &.sleep {
-          color: v.$grayscale-70;
-          border-color: v.$grayscale-50;
-        }
-
-        // 정지
-        &.suspended {
-          color: v.$warn-color;
-          border-color: v.$warn-color;
-        }
-
-        // 탈퇴 or 비활성
-        &.withdraw {
-          color: v.$dan-color;
-          border-color: v.$dan-color;
-        }
-      }
+    .id {
+      font-size: 0.875rem;
+      color: v.$grayscale-70;
     }
-  }
-
-  .id {
-    font-size: 0.875rem;
-    color: v.$grayscale-70;
   }
 }
 
+
+// 기본 정보
+.basic {
+  flex: 1;
+
+  .name {
+    margin-bottom: 0.5rem;
+    font-size: 1.125rem;
+
+    .badge {
+      margin-right: 0.5rem;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: v.$point-60;
+      border: 1px solid v.$point-50;
+      border-radius: 4px;
+
+      // 휴면
+      &.sleep {
+        color: v.$grayscale-70;
+        border-color: v.$grayscale-50;
+      }
+
+      // 정지
+      &.suspended {
+        color: v.$warn-color;
+        border-color: v.$warn-color;
+      }
+
+      // 탈퇴 or 비활성
+      &.withdraw {
+        color: v.$dan-color;
+        border-color: v.$dan-color;
+      }
+    }
+  }
+}
+
+// 메타 데이터
+// -> 회원: 등급, 랭킹 / 관리자: 부서, 권한
+.subInfo {
+  @include mix.flex($jc: flex-start, $ai: center);
+  gap: 0.75rem;
+  padding: 1rem 0;
+  font-size: 0.875rem;
+  color: v.$grayscale-60
+}
 
 .dates {
   p {

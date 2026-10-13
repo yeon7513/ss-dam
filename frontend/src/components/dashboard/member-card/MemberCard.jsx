@@ -25,8 +25,25 @@ function MemberCard({ member, type = 'user' }) {
       ? (member.deleteYn ? "WITHDRAW" : "ACTIVE")
       : member.status.code, // 스타일 매핑용 영문 코드
     subInfo: isAdmin ?
-      `${member.dept ?? "미정"} / ${member.role ?? "미정"}`
-      : `등급 ${member.rating} / 랭킹 ${member.ranking ?? "-"}`,
+      (
+        <>
+          <span className={cn(styles.meta, styles.dept)}>
+            부서 {member.dept ?? "미정"}
+          </span>
+          <span className={cn(styles.meta, styles.role)}>
+            권한 {member.role.label ?? "미정"}
+          </span>
+        </>
+      ) : (
+        <>
+          <span className={cn(styles.meta, styles.rating)}>
+            등급 {member.rating}
+          </span>
+          <span className={cn(styles.meta, styles.ranking)}>
+            랭킹 {member.ranking ?? "-"}
+          </span>
+        </>
+      ),
     createdAt: member.createdAt,
     loggedAt: member.loggedAt,
   }
@@ -45,15 +62,16 @@ function MemberCard({ member, type = 'user' }) {
   console.log(member);
 
   return (
-    <Card className={styles.card} onClick={() => navigate(detailPath)}>
+    <Card className={styles.memberCard} onClick={() => navigate(detailPath)}>
+      {/*프로필 사진 */}
+      {!isAdmin && (
+        <div className={styles.avatar}>
+          <ImageBox src={member.path} />
+        </div>
+      )}
+
       {/* 기본 정보 */}
       <div className={styles.info}>
-        {/*프로필 사진 */}
-        {!isAdmin && (
-          <div className={styles.avatar}>
-            <ImageBox src={member.path} />
-          </div>
-        )}
         {/* 아이디 & 이름 */}
         <div className={styles.basic}>
           <h3 className={styles.name}>
@@ -66,24 +84,25 @@ function MemberCard({ member, type = 'user' }) {
             {cardData.id}
           </p>
         </div>
+
+        {/* 회원: 등급, 랭킹 / 관리자: 부서, 권한 */}
+        <div className={styles.subInfo}>
+          {cardData.subInfo}
+        </div>
+
+        {/* 날짜 정보 (생성 & 마지막로그인) */}
+        <div className={styles.dates}>
+          <p>
+            <span>{isAdmin ? "계정 생성일" : "회원 가입일"}</span>
+            <span>{formatDate(cardData.createdAt)}</span>
+          </p>
+          <p>
+            <span>마지막 로그인</span>
+            <span>{formatDate(cardData.loggedAt)}</span>
+          </p>
+        </div>
       </div>
 
-      {/* 회원: 등급, 랭킹 / 관리자: 부서, 권한 */}
-      <div className={styles.subInfo}>
-        <span>{cardData.subInfo}</span>
-      </div>
-
-      {/* 날짜 정보 (생성 & 마지막로그인) */}
-      <div className={styles.dates}>
-        <p>
-          <span>{isAdmin ? "계정 생성일" : "회원 가입일"}</span>
-          <span>{formatDate(cardData.createdAt)}</span>
-        </p>
-        <p>
-          <span>마지막 로그인</span>
-          <span>{formatDate(cardData.loggedAt)}</span>
-        </p>
-      </div>
     </Card>
   );
 }
