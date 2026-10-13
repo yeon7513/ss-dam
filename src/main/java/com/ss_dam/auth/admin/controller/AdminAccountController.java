@@ -1,6 +1,7 @@
 package com.ss_dam.auth.admin.controller;
 
 import com.ss_dam.auth.admin.model.filter.AdminAccountSearchFilter;
+import com.ss_dam.auth.admin.model.request.AdminAccountCreate;
 import com.ss_dam.auth.admin.model.response.AdminAccountDetail;
 import com.ss_dam.auth.admin.model.response.AdminAccountView;
 import com.ss_dam.auth.admin.service.AdminAccountService;
@@ -8,10 +9,7 @@ import com.ss_dam.common.ApiResponse;
 import com.ss_dam.common.pager.PageResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 // 관리자 계정 관리는 최고 관리자(ROLE_SUPER)만 가능
 // -> 나중에 인터셉터 추가할 것!!
@@ -50,12 +48,20 @@ public class AdminAccountController {
   }
 
   // 관리자 계정 생성
+  @PostMapping
+  ResponseEntity<ApiResponse<AdminAccountDetail>> registerAdminAccount(
+      AdminAccountCreate adminAccountCreate) {
+
+    AdminAccountDetail newAdminAccount = null;
+
+    return ResponseEntity.ok(ApiResponse.success("관리자 계정 생성 성공", newAdminAccount));
+  }
 
 
   // 관리자 정보 수정 (본인용)
   // -> 비밀번호, 이름, 연락처, 부서
 
-  
+
   // 관리자 정보 수정 (상사용)
   // -> 부서, 권한
 
