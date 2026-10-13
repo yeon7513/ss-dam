@@ -1,8 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import AdminRoute from "./components/common/admin/AdminRoute";
-import ProtectedRoute from "./components/common/protected-route/ProtectedRoute.jsx";
-import AdminLayout from "./layout/AdminLayout";
-import Layout from "./layout/Layout";
+import AdminLayout from "./layout/admin/AdminLayout.jsx";
+import Layout from "./layout/default/Layout.jsx";
 import About from "./pages/about/About";
 import ChallengeGuide from "./pages/about/challenge-guide/ChallengeGuide.jsx";
 import MarketGuide from "./pages/about/market-guide/MarketGuide.jsx";
@@ -51,6 +49,8 @@ import Points from "./pages/my-page/points/Points";
 import SupportDetail from "./pages/support/SupportDetail";
 import Supports from "./pages/support/Supports";
 import FeedManageDetail from "./pages/admin/admin-feed/FeedManageDetail.jsx";
+import ProtectedRoute from "./routes/ProtectedRoute.jsx";
+import AdminRoute from "./routes/AdminRoute.jsx";
 
 
 function App() {
@@ -162,7 +162,7 @@ function App() {
 
           {/* 챌린지 종료 데이터 분석 */}
           <Route path="challenge-result" element={<ChallengeResult />} />
-          <Route path="challenge-result/:code" element={<ChallengeResultDetail />}/>
+          <Route path="challenge-result/:code" element={<ChallengeResultDetail />} />
 
           {/* 시스템 관리 */}
           <Route path="system_manage">

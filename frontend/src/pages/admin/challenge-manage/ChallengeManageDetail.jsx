@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
-import DashboardHeader from '../../../components/admin/dashboard-header/DashboardHeader';
 import Pagination from '../../../components/common/pagination/Pagination';
 import { formatImagePath } from '../../../utils/formatImagePath';
 
 import styles from './ChallengeManageDetail.module.scss';
+import PanelHeader from "../../../layout/admin/panel-header/PanelHeader.jsx";
 
 const STATUS_LABELS = {
   WAITING: '대기',
@@ -57,8 +57,8 @@ function useChallengeData(url, refreshKey) {
 
           throw new Error(
             messages[response.status] ||
-              result?.message ||
-              '데이터를 불러오지 못했습니다.',
+            result?.message ||
+            '데이터를 불러오지 못했습니다.',
           );
         }
 
@@ -263,7 +263,7 @@ function ChallengeRanking({ code, refreshKey }) {
 
   const { data, loading, error } = useChallengeData(
     `/api/admin/challenge/${encodeURIComponent(code)}/ranking` +
-      `?page=${page}&perPage=10&perGroup=5`,
+    `?page=${page}&perPage=10&perGroup=5`,
     refreshKey,
   );
 
@@ -387,8 +387,8 @@ export default function ChallengeManageDetail() {
 
         throw new Error(
           result?.message ||
-            messages[response.status] ||
-            '챌린지 조기 완료에 실패했습니다.',
+          messages[response.status] ||
+          '챌린지 조기 완료에 실패했습니다.',
         );
       }
 
@@ -420,7 +420,7 @@ export default function ChallengeManageDetail() {
         ← 챌린지 목록
       </Link>
 
-      <DashboardHeader
+      <PanelHeader
         title={challenge?.title || '챌린지 상세'}
         lastUpdated={stats?.asOf ? `${formatDate(stats.asOf)} 집계 기준` : ''}
         isSpinning={detail.loading || statistics.loading}

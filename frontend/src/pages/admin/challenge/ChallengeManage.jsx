@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import DashboardHeader from '../../../components/admin/dashboard-header/DashboardHeader';
+import PanelHeader from '../../../components/dashboard/panel-header/PanelHeader.jsx';
 import Pagination from '../../../components/common/pagination/Pagination';
 import ChallengeManageFilters from '../challenge-manage/ChallengeManageFilters';
 import styles from './ChallengeManage.module.scss';
@@ -127,7 +127,7 @@ export default function ChallengeManage() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <DashboardHeader
+        <PanelHeader
           title="챌린지 진행 현황"
           lastUpdated={currentTime}
           isSpinning={isSpinning}

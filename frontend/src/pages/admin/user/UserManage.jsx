@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
 
 // 공통 UI 컴포넌트
-import MemberCard from "../../../components/admin/member-card/MemberCard";
+import MemberCard from "../../../components/dashboard/member-card/MemberCard";
 import Pagination from "../../../components/common/pagination/Pagination";
 import TabMenus from "../../../components/common/tab-menus/TabMenus";
-import DashboardHeader from "../../../components/admin/dashboard-header/DashboardHeader";
 import UserManageFilters from "./UserManageFilters";
 
 // 이 페이지에서 사용하는 스타일
 import styles from "./UserManage.module.scss";
+import PanelHeader from "../../../layout/admin/panel-header/PanelHeader.jsx";
 
 // status 탭
 // NORMAL, SUSPENDED, SLEEP, WITHDRAW
@@ -142,7 +142,7 @@ export default function UserManage() {
     <div className={styles.container}>
       {/* 제목 + 새로고침 + 현재 시각 */}
       <div className={styles.header}>
-        <DashboardHeader
+        <PanelHeader
           title="관리자 회원 관리"
           onRefresh={fetchMembers}
         />

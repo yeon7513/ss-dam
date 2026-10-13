@@ -1,10 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FiHome } from "react-icons/fi";
-import Button from "../../common/button/Button";
-import styles from "./AdminHeader.module.scss";
+import Button from "../../../components/common/button/Button.jsx";
+import styles from "./DashboardHeader.module.scss";
 
-const AdminHeader = () => {
+const DashboardHeader = () => {
   /* 관리자 헤더 이동 로직 */
   const navigate = useNavigate();
 
@@ -28,4 +28,4 @@ const AdminHeader = () => {
   );
 };
 
-export default AdminHeader;
+export default DashboardHeader;

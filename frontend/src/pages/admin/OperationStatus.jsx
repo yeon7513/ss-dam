@@ -7,6 +7,7 @@ import RegionParticipation from "./operation-status/region-participation/RegionP
 import SummaryStats from "./operation-status/summary-stats/SummaryStats.jsx";
 import TopSellers from "./operation-status/top-sellers/TopSellers.jsx";
 import styles from "./OperationStatus.module.scss";
+import PanelHeader from "../../layout/admin/panel-header/PanelHeader.jsx";
 
 const OperationStatus = () => {
   /* 운영 현황 대시보드 데이터 관리 */
@@ -101,10 +102,7 @@ const OperationStatus = () => {
   return (
     <div className={styles.dashboardBody}>
       {/* 대시보드 헤더 영역 */}
-      <DashboardHeader
-        title="운영 현황"
-        onRefresh={fetchAdminDashboardData}
-      />
+      <PanelHeader title="운영 현황" onRefresh={fetchAdminDashboardData} />
 
       {/* 상단 레이아웃 영역 */}
       <div className={styles.topGrid}>

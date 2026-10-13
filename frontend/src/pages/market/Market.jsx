@@ -31,6 +31,8 @@ const Market = () => {
       sortTarget: "createdAt",
     });
 
+  console.log("queryString: ", queryString);
+
   const [sort, setSort] = useState(SORT_MENU[0].value);
 
   // 목록 데이터

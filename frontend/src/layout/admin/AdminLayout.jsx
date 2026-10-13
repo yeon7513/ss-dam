@@ -1,19 +1,19 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import AdminHeader from "../components/admin/admin-header/AdminHeader";
-import AdminSidebar from "../components/admin/admin-sidebar/AdminSidebar";
+import DashboardHeader from "./dashboard-header/DashboardHeader.jsx";
+import DashboardSidebar from "./dashboard-sidebar/DashboardSidebar.jsx";
 import styles from "./AdminLayout.module.scss";
 
 const AdminLayout = () => {
   return (
     <div className={styles.adminLayout}>
       {/* 사이드바 영역 */}
-      <AdminSidebar />
+      <DashboardSidebar />
 
       {/* 우측 전체 영역 (헤더 + 메인 대시보드 콘텐츠) */}
       <div className={styles.mainContent}>
         {/* 헤더 영역 */}
-        <AdminHeader />
+        <DashboardHeader />
 
         {/* 콘텐츠 영역 */}
         <div className={styles.dashboardBody}>

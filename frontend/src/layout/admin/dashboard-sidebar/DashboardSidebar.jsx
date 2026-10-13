@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ADMIN_MENU } from "../../../lib/sideMenu";
+import { ADMIN_MENU } from "../../../lib/sideMenu.js";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 
-import styles from "./AdminSidebar.module.scss";
+import styles from "./DashboardSidebar.module.scss";
 
-const AdminSidebar = () => {
+const DashboardSidebar = () => {
   const { pathname } = useLocation();
   const [open, setOpen] = useState({
     "서비스 관리": true,
@@ -76,7 +76,7 @@ const AdminSidebar = () => {
                           onClick={(e) =>
                             !path &&
                             (e.preventDefault(),
-                            alert("준비 중인 페이지입니다."))
+                              alert("준비 중인 페이지입니다."))
                           }
                         >
                           {name}
@@ -94,4 +94,4 @@ const AdminSidebar = () => {
   );
 };
 
-export default AdminSidebar;
+export default DashboardSidebar;
