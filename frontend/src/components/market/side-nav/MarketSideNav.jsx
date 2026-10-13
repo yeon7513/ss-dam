@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Button from "../../common/button/Button.jsx";
 import styles from "./MarketSideNav.module.scss";
 
-function MarketSideNav({ categories, onSearch }) {
+function MarketSideNav({ categories, isLoggedIn, onSearch }) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -22,11 +22,13 @@ function MarketSideNav({ categories, onSearch }) {
 
   /* 물품 등록 처리 */
   const handleRegisterClick = () => {
-    // 저장된 접근 토큰을 확인함.
-    const token = localStorage.getItem("accessToken");
-
-    if (!token) {
-      // 비로그인 상태 시 안내 후 로그인 페이지로 이동함.
+    // 로그인 상태를 확인함.
+    if (!isLoggedIn) {
+      // 비로그인 상태 시 현재 경로를 세션 스토리지에 저장함.
+      sessionStorage.setItem(
+        "returnUrl",
+        `${location.pathname}${location.search}`,
+      );
       alert("로그인이 필요한 서비스입니다.");
       navigate("/login");
       return;
@@ -71,6 +73,7 @@ function MarketSideNav({ categories, onSearch }) {
           const isSubActive = category.depth?.some(
             (sub) => String(sub.code) === String(selectedCategory),
           );
+          /* 메인 메뉴 활성화 상태 확인 */
           const isActive =
             !isAllSelected &&
             (String(category.code) === String(selectedCategory) || isSubActive);

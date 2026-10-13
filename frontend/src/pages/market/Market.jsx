@@ -22,8 +22,8 @@ const DEAL_STATUS = [
 ];
 
 const Market = () => {
-  /* 사용자 정보 조회 */
-  const { isLoggedIn, user } = useAuth();
+  /* 사용자 로그인 상태 조회 */
+  const { isLoggedIn } = useAuth();
 
   /* 검색 쿼리 상태 관리 */
   const { searchFilter, queryString, handleChangePages, handleSearch } =
@@ -58,7 +58,6 @@ const Market = () => {
         <MarketSideNav
           categories={categories}
           isLoggedIn={isLoggedIn}
-          memberProfile={user}
           onSearch={handleSearch}
         />
       </div>
@@ -67,12 +66,14 @@ const Market = () => {
       <div className={styles.container}>
         {/* 필터 바 영역 */}
         <div className={styles.filterBar}>
+          {/* 정렬 탭 영역 */}
           <TabMenus
             tabs={SORT_MENU}
             activeStatus={sort}
             className={styles.sortTab}
             onTabChange={handleClickSort}
           />
+          {/* 검색 상자 영역 */}
           <SearchBox
             initKeyword={searchFilter.keyword}
             initSelectValue={searchFilter.dealStatus}
@@ -91,6 +92,7 @@ const Market = () => {
               <ProductCard key={product.code} product={product} />
             ))
           ) : (
+            /* 검색 결과 없음 영역 */
             <p className={styles.emptyState}>검색된 거래글이 없습니다.</p>
           )}
         </div>
