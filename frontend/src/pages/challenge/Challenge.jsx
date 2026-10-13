@@ -5,7 +5,7 @@ import styles from "./Challenge.module.scss";
 import LikeButton from "../../components/common/button/like/LikeButton.jsx";
 import Card from "../../components/common/card/Card";
 import ImageBox from "../../components/common/image-box/ImageBox";
-import ChallengeSidebar from "./ChallengeSidebar";
+import ChallengeSideNav from "./ChallengeSideNav";
 import TabMenus from "../../components/common/tab-menus/TabMenus";
 import Pagination from "../../components/common/pagination/Pagination";
 import { CHALLENGE_TABS } from "../../lib/challengeTabs";
@@ -18,15 +18,27 @@ const Challenge = () => {
       `/api/challenge?progressStatus=${activeTab}`,
   );
 
+  const { data: popularData } = useLoadData("/api/challenge/popular");
+
   const challenges = data || [];
 
-  const PER_PAGE = 5;
-  const last = Math.max(1, Math.ceil(challenges.length / PER_PAGE));
+    const PER_PAGE = 5;
+    const PER_GROUP = 5;
+    const last = Math.max(1, Math.ceil(challenges.length / PER_PAGE));
 
-  const pager = {
-    page,
-    list: Array.from({ length: last }, (_, i) => i + 1),
-  };
+    const group = Math.floor((page - 1) / PER_GROUP);
+    const startPage = group * PER_GROUP + 1;
+
+    const pager = {
+        page,
+        last,
+        list: Array.from(
+            { length: Math.min(PER_GROUP, last - startPage + 1) },
+            (_, i) => startPage + i,
+        ),
+        prev: page <= PER_GROUP ? 1 : (group - 1) * PER_GROUP + 1,
+        next: Math.min((group + 1) * PER_GROUP + 1, last),
+    };
 
   const pagedChallenges = challenges.slice(
       (page - 1) * PER_PAGE,
@@ -35,9 +47,7 @@ const Challenge = () => {
 
   return (
       <main className={styles.wrap}>
-        <div className={styles.sideNavWrap}>
-          <ChallengeSidebar />
-        </div>
+          <ChallengeSideNav challenges={popularData || []} />
 
         <div className={styles.container}>
           <div className={styles.filterBar}>
