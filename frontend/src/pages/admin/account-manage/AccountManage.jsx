@@ -2,6 +2,7 @@ import React from 'react';
 import { useLoadData } from "../../../hooks/useLoadData.js";
 import { useSearchQuery } from "../../../hooks/useSearchQuery.js";
 import PanelHeader from "../../../layout/admin/panel-header/PanelHeader.jsx";
+import Pagination from "../../../components/common/pagination/Pagination.jsx";
 
 function AccountManage() {
 
@@ -17,6 +18,8 @@ function AccountManage() {
     toDate: "",
   });
 
+  console.log(data);
+
 
   return (
     <div>
@@ -24,6 +27,9 @@ function AccountManage() {
         title="관리자 계정 관리"
         onRefresh={() => console.log("Refresh")}
       />
+
+      {/* 페이지네이션 */}
+      <Pagination pager={data?.pager} />
     </div>
   );
 }
