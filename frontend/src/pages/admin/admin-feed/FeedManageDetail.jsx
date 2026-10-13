@@ -163,6 +163,7 @@ const FeedManageDetail = () => {
                 <ProfileCard
                   memberProfile={detail.memberProfile}
                   onMoreClick={handleOpenUserDetail}
+                  moreText="유저 정보"
                 />
 
                 <div className={styles["content-box"]}>

@@ -14,6 +14,7 @@ function ProfileCard({
   showMore = true,
   badge,
   onMoreClick,
+  moreText,
 }) {
   if (!memberProfile) return <div>사용자 정보가 없습니다.</div>;
 
@@ -47,7 +48,7 @@ function ProfileCard({
       {!isMinimal && !isVertical && showMore && (
         <div className={styles.more}>
           <button type="button" onClick={onMoreClick}>
-            <HiDotsHorizontal />
+            {moreText || <HiDotsHorizontal />}
           </button>
         </div>
       )}
