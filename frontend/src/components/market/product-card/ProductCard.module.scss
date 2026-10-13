@@ -71,15 +71,20 @@
   font-weight: 300;
   color: v.$grayscale-50;
 
-  .icon {
-    display: flex;
-    align-items: center;
-    gap: 2px;
+  .count {
+    @include mix.flex;
+    gap: 0.5rem;
 
-    > span {
-      @include mix.flex;
-      font-size: 1rem;
-      color: v.$point-20;
+    .icon {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+
+      > span {
+        @include mix.flex;
+        font-size: 1rem;
+        color: v.$point-20;
+      }
     }
   }
 }

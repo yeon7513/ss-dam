@@ -1,29 +1,23 @@
-import React, { useState } from "react";
-
+import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-import Button from "../../common/button/Button";
+import Button from "../../common/button/Button.jsx";
 
 import styles from "./MarketSideNav.module.scss";
 
-// 다시쓰담 전용 사이드 메뉴
-// 이 사이드메뉴는 목록, 상세 페이지에서 사용함.
-// 목록에서 카테고리 메뉴 클릭 -> 필터링되어 재렌더링
-// 상세 페이지에서 카테고리 메뉴 클릭 -> 목록으로 이동 후 필터링되어 재렌더링
 function MarketSideNav({ categories, onSearch }) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  /* 카테고리 선택 상태 */
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  /* URL 쿼리 스트링에서 선택된 카테고리 코드 추출 */
+  const searchParams = new URLSearchParams(location.search);
+  const selectedCategory =
+    searchParams.get("category") || searchParams.get("categoryCode");
 
   /* 카테고리 선택 처리 */
   const handleClickCategory = (e, categoryCode) => {
     // 이벤트 버블링을 중단함.
     e.stopPropagation();
-
-    // 선택한 카테고리 코드를 저장함.
-    setSelectedCategory(categoryCode);
 
     onSearch({ categoryCode });
   };
@@ -32,7 +26,6 @@ function MarketSideNav({ categories, onSearch }) {
   const isAllSelected = location.pathname === "/market" && !location.search;
 
   return (
-    /* 사이드 메뉴 영역 */
     <div className={styles.sideNav}>
       {/* 물품 등록 영역 */}
       <div>
@@ -60,10 +53,12 @@ function MarketSideNav({ categories, onSearch }) {
 
         {categories?.map((category) => {
           /* 서브 메뉴 활성화 상태 확인 */
+          const isSubActive = category.depth?.some(
+            (sub) => String(sub.code) === String(selectedCategory),
+          );
           const isActive =
             !isAllSelected &&
-            (selectedCategory === category.code ||
-              category.depth?.some((sub) => sub.code === selectedCategory));
+            (String(category.code) === String(selectedCategory) || isSubActive);
 
           return (
             <li key={category.code}>
@@ -81,7 +76,8 @@ function MarketSideNav({ categories, onSearch }) {
                   <li key={sub.code}>
                     <button
                       className={
-                        !isAllSelected && selectedCategory === sub.code
+                        !isAllSelected &&
+                        String(sub.code) === String(selectedCategory)
                           ? styles.subActive
                           : ""
                       }

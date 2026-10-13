@@ -149,8 +149,7 @@
 	<sql id="AdminProductColumns">
 		MP.code,
 		MP.title,
-		MP.price,
-		MP.hitcount,
+		MP.price,		
 		MP.deal_status,
 		MP.created_at,
 		MP.updated_at,

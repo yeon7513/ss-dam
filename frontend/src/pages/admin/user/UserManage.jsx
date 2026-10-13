@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
 
 // 공통 UI 컴포넌트
-import MemberCard from "../../../components/admin/member-card/MemberCard";
+import MemberCard from "../../../components/dashboard/member-card/MemberCard";
 import Pagination from "../../../components/common/pagination/Pagination";
 import TabMenus from "../../../components/common/tab-menus/TabMenus";
-import DashboardHeader from "../../../components/admin/dashboard-header/DashboardHeader";
 import UserManageFilters from "./UserManageFilters";
 
 // 이 페이지에서 사용하는 스타일
 import styles from "./UserManage.module.scss";
+import PanelHeader from "../../../layout/admin/panel-header/PanelHeader.jsx";
 
 // status 탭
 // NORMAL, SUSPENDED, SLEEP, WITHDRAW
@@ -32,12 +32,6 @@ export default function UserManage() {
   // 데이터 조회 중인지 나타내는 상태
   const [loading, setLoading] = useState(false);
   const [loadError, setLoadError] = useState("");
-  const [isSpinning, setIsSpinning] = useState(false);
-
-  //import DashboardHeader 기능 추가-> 새로고침 + 우측 상단 시간 계산 기능
-  const [currentTime, setCurrentTime] = useState(
-    () => `${new Date().toLocaleString("sv-SE")} 기준`,
-  );
 
   // 서버에 전달할 조회 조건
   const [searchParams, setSearchParams] = useState({
@@ -91,7 +85,6 @@ export default function UserManage() {
 
       setMembers(result.data.content);
       setPager(result.data.pager);
-      setCurrentTime(`${new Date().toLocaleString("sv-SE")} 기준`);
     } catch (error) {
       // 요청 실패나 JSON 처리 중 발생한 오류를 콘솔에 출력
       console.error("Fetch Error", error);
@@ -145,30 +138,13 @@ export default function UserManage() {
     }));
   };
 
-  //import DashboardHeader 기능 추가
-  const handleRefresh = async () => {
-    if (loading || isSpinning) return;
-
-    setIsSpinning(true);
-
-    try {
-      await fetchMembers();
-    } finally {
-      setTimeout(() => {
-        setIsSpinning(false);
-      }, 1000);
-    }
-  };
-
   return (
     <div className={styles.container}>
       {/* 제목 + 새로고침 + 현재 시각 */}
       <div className={styles.header}>
-        <DashboardHeader
+        <PanelHeader
           title="관리자 회원 관리"
-          lastUpdated={currentTime}
-          isSpinning={isSpinning}
-          handleRefresh={handleRefresh}
+          onRefresh={fetchMembers}
         />
       </div>
 

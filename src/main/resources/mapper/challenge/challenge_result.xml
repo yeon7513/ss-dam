@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="challengeResult">
+
+    <!-- 1. 종료 챌린지 행 잠금 -->
+    <select id="lockEndedChallenge"
+            parameterType="map"
+            resultType="java.time.LocalDateTime">
+
+        SELECT c.END_DATE
+        FROM CHALLENGE c
+        WHERE c.CODE = #{code}
+          AND c.DELETE_YN = 0
+          AND c.PROGRESS_STATUS = 'ENDED'
+          AND c.END_DATE &lt;= #{now}
+        FOR UPDATE
+
+    </select>
+
+    <!-- 2. 저장 완료된 결과 존재 여부 -->
+    <select id="existsCompletedResult"
+            parameterType="map"
+            resultType="boolean">
+
+        SELECT EXISTS (
+            SELECT 1
+            FROM CHALLENGE_RESULT
+            WHERE CHAL_CODE = #{code}
+              AND STATUS = 'COMPLETED'
+        )
+
+    </select>
+
+    <!-- 3. 상태와 관계없이 결과 존재 여부 -->
+    <select id="existsResult"
+            parameterType="map"
+            resultType="boolean">
+
+        SELECT EXISTS (
+            SELECT 1
+            FROM CHALLENGE_RESULT
+            WHERE CHAL_CODE = #{code}
+        )
+
+    </select>
+
+    <!--
+        집계 공통 CTE.
+        기존 순위와 동일한 참여 조건 및 인증글 조건을 사용한다.
+    -->
+    <sql id="baseCtes">
+
+        target_challenge AS (
+            SELECT
+                c.CODE,
+                c.START_DATE,
+                c.END_DATE,
+
+                CASE
+                    WHEN c.END_DATE &gt; c.START_DATE
+                    THEN DATEDIFF(
+                        DATE(DATE_SUB(c.END_DATE, INTERVAL 1 SECOND)),
+                        DATE(c.START_DATE)
+                    ) + 1
+                    ELSE NULL
+                END AS GOAL_DAYS
+
+            FROM CHALLENGE c
+            WHERE c.CODE = #{code}
+        ),
+
+        participants AS (
+            SELECT
+                ce.MEM_CODE,
+                MIN(ce.JOINED_AT) AS JOINED_AT,
+
+                MAX(
+                    CASE
+                        WHEN ce.STATUS = 'COMPLETED' THEN 1
+                        ELSE 0
+                    END
+                ) AS COMPLETED
+
+            FROM CHALLENGE_ENTRY ce
+            WHERE ce.CHAL_CODE = #{code}
+              AND ce.STATUS IN ('JOINED', 'COMPLETED')
+              AND ce.CANCELED_AT IS NULL
+            GROUP BY ce.MEM_CODE
+        ),
+
+        eligible_proofs AS (
+            SELECT
+                f.CODE,
+                f.MEM_CODE,
+                f.CREATED_AT,
+                DATE(f.CREATED_AT) AS PROOF_DATE,
+                (
+                    SELECT COUNT(*)
+                    FROM FEED_HIT_LOG hit
+                    WHERE hit.FEED_CODE = f.CODE
+                ) AS VIEW_COUNT
+
+            FROM FEED f
+
+            JOIN target_challenge c
+                ON c.CODE = f.CHAL_CODE
+
+            JOIN participants p
+                ON p.MEM_CODE = f.MEM_CODE
+
+            WHERE f.DELETE_YN = 0
+              AND f.CREATED_AT &gt;= c.START_DATE
+              AND f.CREATED_AT &lt; #{endedAt}
+              AND f.CREATED_AT &gt;= p.JOINED_AT
+        )
+
+    </sql>
+
+    <!-- 좋아요와 회원별 인증 실적 공통 CTE -->
+    <sql id="metricCtes">
+
+        <include refid="baseCtes"/>,
+
+        proof_likes AS (
+            SELECT
+                fl.FEED_CODE,
+                COUNT(*) AS LIKE_COUNT
+
+            FROM FEED_LIKE fl
+
+            JOIN eligible_proofs ep
+                ON ep.CODE = fl.FEED_CODE
+
+            WHERE fl.DELETE_YN = 0
+            GROUP BY fl.FEED_CODE
+        ),
+
+        scored_proofs AS (
+            SELECT
+                ep.CODE,
+                ep.MEM_CODE,
+                ep.PROOF_DATE,
+                ep.VIEW_COUNT,
+                COALESCE(pl.LIKE_COUNT, 0) AS LIKE_COUNT,
+
+                (
+                    CAST(ep.VIEW_COUNT AS SIGNED)
+                    + COALESCE(pl.LIKE_COUNT, 0) * 10
+                ) AS SCORE
+
+            FROM eligible_proofs ep
+
+            LEFT JOIN proof_likes pl
+                ON pl.FEED_CODE = ep.CODE
+        ),
+
+        proof_stats AS (
+            SELECT
+                MEM_CODE,
+                COUNT(*) AS PROOF_COUNT,
+                COUNT(DISTINCT PROOF_DATE) AS PROOF_DAYS
+
+            FROM eligible_proofs
+            GROUP BY MEM_CODE
+        ),
+
+        member_metrics AS (
+            SELECT
+                p.MEM_CODE,
+                p.COMPLETED,
+
+                COALESCE(ps.PROOF_COUNT, 0) AS PROOF_COUNT,
+                COALESCE(ps.PROOF_DAYS, 0) AS PROOF_DAYS,
+
+                COALESCE(
+                    LEAST(
+                        100.0,
+                        100.0 * COALESCE(ps.PROOF_DAYS, 0)
+                            / NULLIF(c.GOAL_DAYS, 0)
+                    ),
+                    0
+                ) AS ACHIEVEMENT_RATE
+
+            FROM participants p
+
+            CROSS JOIN target_challenge c
+
+            LEFT JOIN proof_stats ps
+                ON ps.MEM_CODE = p.MEM_CODE
+        )
+
+    </sql>
+
+    <!-- 순위 응답 매핑 -->
+    <resultMap id="rankingMap"
+               type="com.ss_dam.challenge.model.response.AdminChallengeRankingView">
+
+        <id column="MEMBER_CODE" property="memberCode"/>
+
+        <result column="RANK_NO" property="rank"/>
+        <result column="MEMBER_ID" property="memberId"/>
+        <result column="PROFILE_IMAGE" property="profileImage"/>
+        <result column="PROOF_COUNT" property="proofCount"/>
+        <result column="PROOF_DAYS" property="proofDays"/>
+        <result column="SCORED_VIEW_COUNT" property="scoredViewCount"/>
+        <result column="SCORED_LIKE_COUNT" property="scoredLikeCount"/>
+        <result column="TOTAL_SCORE" property="totalScore"/>
+        <result column="ACHIEVEMENT_RATE" property="achievementRate"/>
+
+    </resultMap>
+
+    <!-- 4. 전체 회원의 최종 성과 및 순위 -->
+    <select id="calculateMemberResults"
+            parameterType="map"
+            resultMap="rankingMap">
+
+        WITH
+        <include refid="metricCtes"/>,
+
+        daily_candidates AS (
+            SELECT
+                sp.*,
+
+                ROW_NUMBER() OVER (
+                    PARTITION BY sp.MEM_CODE, sp.PROOF_DATE
+                    ORDER BY sp.SCORE DESC, sp.CODE ASC
+                ) AS DAILY_ORDER
+
+            FROM scored_proofs sp
+        ),
+
+        member_scores AS (
+            SELECT
+                MEM_CODE,
+                SUM(VIEW_COUNT) AS SCORED_VIEW_COUNT,
+                SUM(LIKE_COUNT) AS SCORED_LIKE_COUNT,
+                SUM(SCORE) AS TOTAL_SCORE
+
+            FROM daily_candidates
+            WHERE DAILY_ORDER = 1
+            GROUP BY MEM_CODE
+        ),
+
+        member_totals AS (
+            SELECT
+                mm.MEM_CODE,
+                mm.PROOF_COUNT,
+                mm.PROOF_DAYS,
+                mm.ACHIEVEMENT_RATE,
+
+                COALESCE(ms.SCORED_VIEW_COUNT, 0)
+                    AS SCORED_VIEW_COUNT,
+
+                COALESCE(ms.SCORED_LIKE_COUNT, 0)
+                    AS SCORED_LIKE_COUNT,
+
+                COALESCE(ms.TOTAL_SCORE, 0)
+                    AS TOTAL_SCORE
+
+            FROM member_metrics mm
+
+            LEFT JOIN member_scores ms
+                ON ms.MEM_CODE = mm.MEM_CODE
+        ),
+
+        ranked AS (
+            SELECT
+                mt.*,
+
+                RANK() OVER (
+                    ORDER BY
+                        mt.TOTAL_SCORE DESC,
+                        mt.PROOF_DAYS DESC
+                ) AS RANK_NO
+
+            FROM member_totals mt
+        )
+
+        SELECT
+            r.RANK_NO,
+            r.MEM_CODE AS MEMBER_CODE,
+            m.ID AS MEMBER_ID,
+
+            (
+                SELECT i.PATH
+                FROM IMAGES i
+                WHERE i.TARGET_CODE = r.MEM_CODE
+                  AND i.TYPE = 'profile'
+                  AND i.DELETE_YN = 0
+                ORDER BY i.ORDER_SEQ ASC, i.PATH ASC
+                LIMIT 1
+            ) AS PROFILE_IMAGE,
+
+            r.PROOF_COUNT,
+            r.PROOF_DAYS,
+            r.SCORED_VIEW_COUNT,
+            r.SCORED_LIKE_COUNT,
+            r.TOTAL_SCORE,
+
+            ROUND(r.ACHIEVEMENT_RATE, 1) AS ACHIEVEMENT_RATE
+
+        FROM ranked r
+
+        LEFT JOIN MEMBER_ACCOUNT m
+            ON m.CODE = r.MEM_CODE
+
+        ORDER BY r.RANK_NO ASC, r.MEM_CODE ASC
+
+        <!-- 전체 순위를 저장하므로 LIMIT을 사용하지 않는다. -->
+
+    </select>
+
+    <!-- 5. 최종 요약 통계 -->
+    <select id="calculateStatistics"
+            parameterType="map"
+            resultType="com.ss_dam.challenge.result.model.response.AdminChallengeResultStatisticsView">
+
+        WITH
+        <include refid="metricCtes"/>
+
+        SELECT
+            (
+                SELECT COUNT(*)
+                FROM eligible_proofs
+            ) AS proofCount,
+
+            (
+                SELECT COUNT(*)
+                FROM participants
+            ) AS participantCount,
+
+            (
+                SELECT COALESCE(
+                    ROUND(AVG(LIKE_COUNT), 1),
+                    0
+                )
+                FROM scored_proofs
+            ) AS averageLikeCount,
+
+            (
+                SELECT COALESCE(
+                    ROUND(AVG(ACHIEVEMENT_RATE), 1),
+                    0
+                )
+                FROM member_metrics
+            ) AS averageAchievementRate,
+
+            (
+                SELECT COALESCE(
+                    ROUND(100.0 * AVG(COMPLETED), 1),
+                    0
+                )
+                FROM participants
+            ) AS successRate
+
+    </select>
+
+    <!-- 6. 시간대별 인증글 수 -->
+    <select id="calculateHourlyProofs"
+            parameterType="map"
+            resultType="com.ss_dam.challenge.result.model.response.AdminChallengeResultStatisticsView$HourlyProof">
+
+        WITH
+        <include refid="baseCtes"/>
+
+        SELECT
+            HOUR(CREATED_AT) AS hour,
+            COUNT(*) AS proofCount
+
+        FROM eligible_proofs
+
+        GROUP BY HOUR(CREATED_AT)
+        ORDER BY hour ASC
+
+    </select>
+
+    <!-- 7. 지역별 참여 인원 -->
+    <select id="calculateRegionParticipants"
+            parameterType="map"
+            resultType="com.ss_dam.challenge.result.model.response.AdminChallengeResultStatisticsView$RegionParticipant">
+
+        WITH
+        <include refid="baseCtes"/>
+
+        SELECT
+            CASE
+                WHEN TRIM(m.ADDRESS) LIKE '서울%' THEN '서울'
+                WHEN TRIM(m.ADDRESS) LIKE '부산%' THEN '부산'
+                WHEN TRIM(m.ADDRESS) LIKE '대구%' THEN '대구'
+                WHEN TRIM(m.ADDRESS) LIKE '인천%' THEN '인천'
+                WHEN TRIM(m.ADDRESS) LIKE '광주%' THEN '광주'
+                WHEN TRIM(m.ADDRESS) LIKE '대전%' THEN '대전'
+                WHEN TRIM(m.ADDRESS) LIKE '울산%' THEN '울산'
+                WHEN TRIM(m.ADDRESS) LIKE '세종%' THEN '세종'
+                WHEN TRIM(m.ADDRESS) LIKE '경기%' THEN '경기'
+                WHEN TRIM(m.ADDRESS) LIKE '강원%' THEN '강원'
+
+                WHEN TRIM(m.ADDRESS) LIKE '충북%'
+                  OR TRIM(m.ADDRESS) LIKE '충청북%'
+                    THEN '충북'
+
+                WHEN TRIM(m.ADDRESS) LIKE '충남%'
+                  OR TRIM(m.ADDRESS) LIKE '충청남%'
+                    THEN '충남'
+
+                WHEN TRIM(m.ADDRESS) LIKE '전북%'
+                  OR TRIM(m.ADDRESS) LIKE '전라북%'
+                    THEN '전북'
+
+                WHEN TRIM(m.ADDRESS) LIKE '전남%'
+                  OR TRIM(m.ADDRESS) LIKE '전라남%'
+                    THEN '전남'
+
+                WHEN TRIM(m.ADDRESS) LIKE '경북%'
+                  OR TRIM(m.ADDRESS) LIKE '경상북%'
+                    THEN '경북'
+
+                WHEN TRIM(m.ADDRESS) LIKE '경남%'
+                  OR TRIM(m.ADDRESS) LIKE '경상남%'
+                    THEN '경남'
+
+                WHEN TRIM(m.ADDRESS) LIKE '제주%' THEN '제주'
+
+                ELSE '미상'
+            END AS regionName,
+
+            COUNT(*) AS participantCount
+
+        FROM participants p
+
+        LEFT JOIN MEMBER_ACCOUNT m
+            ON m.CODE = p.MEM_CODE
+
+        GROUP BY regionName
+        ORDER BY participantCount DESC, regionName ASC
+
+    </select>
+
+    <!-- 8. 요약 통계와 JSON을 한 행에 저장 -->
+    <insert id="insertCompletedResult"
+            parameterType="com.ss_dam.challenge.result.model.internal.ChallengeResultRow">
+
+        INSERT INTO CHALLENGE_RESULT (
+            CHAL_CODE,
+            PROOF_COUNT,
+            PARTICIPANT_COUNT,
+            AVERAGE_LIKE_COUNT,
+            AVERAGE_ACHIEVEMENT_RATE,
+            SUCCESS_RATE,
+            MEMBER_RESULTS_JSON,
+            HOURLY_RESULTS_JSON,
+            REGION_RESULTS_JSON,
+            ENDED_AT,
+            SAVED_AT,
+            STATUS
+        )
+        VALUES (
+            #{challengeCode},
+            #{proofCount},
+            #{participantCount},
+            #{averageLikeCount},
+            #{averageAchievementRate},
+            #{successRate},
+            #{memberResultsJson, jdbcType=LONGVARCHAR},
+            #{hourlyResultsJson, jdbcType=LONGVARCHAR},
+            #{regionResultsJson, jdbcType=LONGVARCHAR},
+            #{endedAt},
+            #{savedAt},
+            #{status}
+        )
+
+    </insert>
+
+    <!-- 9. 종료됐지만 결과가 저장되지 않은 챌린지 조회 -->
+    <select id="findPendingResultCodes"
+            parameterType="map"
+            resultType="java.lang.Long">
+
+        SELECT c.CODE
+        FROM CHALLENGE c
+
+        WHERE c.DELETE_YN = 0
+          AND c.PROGRESS_STATUS = 'ENDED'
+          AND c.END_DATE &lt;= #{now}
+
+          AND NOT EXISTS (
+              SELECT 1
+              FROM CHALLENGE_RESULT r
+              WHERE r.CHAL_CODE = c.CODE
+          )
+
+        ORDER BY c.END_DATE ASC, c.CODE ASC
+
+    </select>
+
+</mapper>

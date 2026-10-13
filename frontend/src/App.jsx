@@ -1,13 +1,17 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import AdminRoute from "./components/common/admin/AdminRoute";
-import ProtectedRoute from "./components/common/protected-route/ProtectedRoute.jsx";
-import AdminLayout from "./layout/AdminLayout";
-import Layout from "./layout/Layout";
+import AdminLayout from "./layout/admin/AdminLayout.jsx";
+import Layout from "./layout/default/Layout.jsx";
 import About from "./pages/about/About";
 import ChallengeGuide from "./pages/about/challenge-guide/ChallengeGuide.jsx";
 import MarketGuide from "./pages/about/market-guide/MarketGuide.jsx";
+import AccountManage from "./pages/admin/account-manage/AccountManage.jsx";
 import FeedManage from "./pages/admin/admin-feed/FeedManage";
-import ChallengeManage from "./pages/admin/ChallengeManage";
+import ChallengeManage from "./pages/admin/challenge-manage/ChallengeManage.jsx";
+import ChallengeManageDetail from "./pages/admin/challenge-manage/ChallengeManageDetail.jsx";
+import ChallengeRegister from "./pages/admin/challenge-manage/register/ChallengeRegister.jsx";
+import ChallengeUpdate from "./pages/admin/challenge-manage/update/ChallengeUpdate.jsx";
+import ChallengeResult from './pages/admin/challenge-result/ChallengeResult';
+import ChallengeResultDetail from './pages/admin/challenge-result/ChallengeResultDetail';
 import MarketManage from "./pages/admin/market/MarketManage";
 import MarketManageDetail from "./pages/admin/market/MarketManageDetail.jsx";
 import OperationStatus from "./pages/admin/OperationStatus";
@@ -44,6 +48,10 @@ import MyPage from "./pages/my-page/MyPage.jsx";
 import Points from "./pages/my-page/points/Points";
 import SupportDetail from "./pages/support/SupportDetail";
 import Supports from "./pages/support/Supports";
+import FeedManageDetail from "./pages/admin/admin-feed/FeedManageDetail.jsx";
+import ProtectedRoute from "./routes/ProtectedRoute.jsx";
+import AdminRoute from "./routes/AdminRoute.jsx";
+
 
 function App() {
   return (
@@ -124,13 +132,43 @@ function App() {
       {/* 관리자 - 대시보드 */}
       <Route element={<AdminRoute />}>
         <Route path="/admin" element={<AdminLayout />}>
+          {/* 운영 현황 */}
           <Route index element={<OperationStatus />} />
+
+          {/* 회원 관리 */}
           <Route path="user_manage" element={<UserManage />} />
           <Route path="user_manage/:code" element={<UserManageDetail />} />
-          <Route path="feed_manage" element={<FeedManage />} />
-          <Route path="market_manage" element={<MarketManage />} />
-          <Route path="market_manage/:code" element={<MarketManageDetail />} />
-          <Route path="challenge_manage" element={<ChallengeManage />} />
+
+          {/* 피드 관리 */}
+          <Route path="feed_manage">
+            <Route index element={<FeedManage />} />
+            <Route path=":code" element={<FeedManageDetail />} />
+          </Route>
+
+          {/* 마켓 관리 */}
+          <Route path="market_manage">
+            <Route index element={<MarketManage />} />
+            <Route path=":code" element={<MarketManageDetail />} />
+          </Route>
+
+          {/* 챌린지 관리 */}
+          <Route path="challenge_manage">
+            <Route index element={<ChallengeManage />} />
+            <Route path="register" element={<ChallengeRegister />} />
+            <Route path="edit/:code" element={<ChallengeUpdate />} />
+            <Route path=":code" element={<ChallengeManageDetail />} />
+
+          </Route>
+
+          {/* 챌린지 종료 데이터 분석 */}
+          <Route path="challenge-result" element={<ChallengeResult />} />
+          <Route path="challenge-result/:code" element={<ChallengeResultDetail />} />
+
+          {/* 시스템 관리 */}
+          <Route path="system_manage">
+            <Route index element={<AccountManage />} />
+          </Route>
+
         </Route>
       </Route>
 

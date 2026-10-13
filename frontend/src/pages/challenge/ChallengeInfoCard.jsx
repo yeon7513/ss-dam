@@ -63,6 +63,8 @@ const ChallengeInfoCard = ({
     );
   }
 
+  const isUserJoined = infoData.isJoined ?? infoData.joined ?? false;
+
   const infoItems = [
     {
       icon: "★",
@@ -92,7 +94,7 @@ const ChallengeInfoCard = ({
   ];
 
   const handleJoin = async () => {
-    if (infoData.isJoined) {
+    if (isUserJoined) {
       alert("이미 참여 중인 챌린지입니다.");
       return;
     }
@@ -142,9 +144,9 @@ const ChallengeInfoCard = ({
             <button
               className={`${styles.joinBtn} ${infoData.isJoined ? styles.joined : ""}`}
               onClick={handleJoin}
-              disabled={joining || infoData.isJoined}
+              disabled={joining || isUserJoined}
             >
-              {infoData.isJoined
+              {isUserJoined
                 ? "참여 완료"
                 : joining
                   ? "처리 중"

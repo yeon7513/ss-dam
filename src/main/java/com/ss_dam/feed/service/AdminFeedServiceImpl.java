@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,17 +14,24 @@ import com.ss_dam.common.pager.PageQuery;
 import com.ss_dam.common.pager.PageResult;
 import com.ss_dam.common.pager.Pager;
 import com.ss_dam.feed.dao.AdminFeedDao;
+import com.ss_dam.feed.model.filter.AdminFeedSearchFilter;
+import com.ss_dam.feed.model.response.AdminFeedView;
 import com.ss_dam.feed.model.response.AdminMemberFeedsView;
 import com.ss_dam.feed.model.response.UserFeedView;
 
 @Service
 public class AdminFeedServiceImpl implements AdminFeedService {
 
-    @Autowired
-    private AdminFeedDao adminFeedDao;
+	private final AdminFeedDao adminFeedDao;
+	private final AdminMemberDao adminMemberDao;
 
-    @Autowired
-    private AdminMemberDao adminMemberDao;
+	public AdminFeedServiceImpl (
+		AdminFeedDao adminFeedDao,
+		AdminMemberDao adminMemberDao
+	) {
+		this.adminFeedDao = adminFeedDao;
+		this.adminMemberDao = adminMemberDao;
+	}
 
     // 관리자 회원 상세 - 작성 피드 탭
     @Override
@@ -71,4 +77,13 @@ public class AdminFeedServiceImpl implements AdminFeedService {
 
         return result;
     }
+
+	@Override
+	public PageResult<AdminFeedView> loadFeeds(AdminFeedSearchFilter filter) {
+		
+		List<AdminFeedView> feeds = adminFeedDao.loadFeeds(filter);
+		int total = adminFeedDao.countFeeds(filter);
+		
+		return PageResult.of(feeds, filter, (float) total);
+	}
 }

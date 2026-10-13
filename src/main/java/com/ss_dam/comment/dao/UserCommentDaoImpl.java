@@ -3,7 +3,6 @@ package com.ss_dam.comment.dao;
 import com.ss_dam.comment.model.request.CommentCreate;
 import com.ss_dam.comment.model.response.UserCommentView;
 import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,8 +11,11 @@ import java.util.Map;
 @Repository
 public class UserCommentDaoImpl implements UserCommentDao {
 
-  @Autowired
-  SqlSession sql;
+  private final SqlSession sql;
+
+  public UserCommentDaoImpl(SqlSession sql) {
+    this.sql = sql;
+  }
 
   //피드별 댓글 조회
   @Override
@@ -45,5 +47,11 @@ public class UserCommentDaoImpl implements UserCommentDao {
   @Override
   public float loadCommentsTotalCount(Long feedCode) {
     return sql.selectOne("userCommentView.loadCommentsTotalCount", feedCode);
+  }
+
+  // 댓글 단일 조회
+  @Override
+  public UserCommentView findCommentByCode(Long code) {
+    return sql.selectOne("userCommentView.findCommentByCode", code);
   }
 }

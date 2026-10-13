@@ -1,0 +1,67 @@
+.filterBox {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid #e2e6eb;
+  background: #fff;
+}
+
+.field {
+  display: flex;
+  min-width: 130px;
+  flex-direction: column;
+  gap: 5px;
+  color: #66707a;
+  font-size: 12px;
+}
+
+.input,
+.select {
+  height: 34px;
+  border: 1px solid #d8dde3;
+  padding: 0 9px;
+  background: #fff;
+  color: #374151;
+  font-size: 12px;
+}
+
+.searchForm {
+  display: flex;
+  gap: 5px;
+
+  input {
+    width: 170px;
+    height: 34px;
+    border: 1px solid #d8dde3;
+    padding: 0 9px;
+  }
+
+  button {
+    height: 34px;
+    border: 0;
+    background: #6b7280;
+    color: #fff;
+    padding: 0 14px;
+    cursor: pointer;
+  }
+}
+
+.deletedCheck {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 34px;
+  color: #66707a;
+  font-size: 12px;
+}
+
+.resetButton {
+  height: 34px;
+  border: 1px solid #d8dde3;
+  background: #fff;
+  color: #66707a;
+  padding: 0 12px;
+  cursor: pointer;
+}

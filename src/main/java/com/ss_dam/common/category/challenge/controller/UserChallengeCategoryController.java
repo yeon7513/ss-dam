@@ -1,22 +1,25 @@
 package com.ss_dam.common.category.challenge.controller;
 
-import com.ss_dam.common.ApiResponse;
-import com.ss_dam.common.category.challenge.model.response.UserChallengeCategoryView;
-import com.ss_dam.common.category.challenge.service.UserChallengeCategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.ss_dam.common.ApiResponse;
+import com.ss_dam.common.category.challenge.model.response.UserChallengeCategoryView;
+import com.ss_dam.common.category.challenge.service.UserChallengeCategoryService;
 
 @RestController
 @RequestMapping("/api/challenge/categories")
 public class UserChallengeCategoryController {
 
-  @Autowired
-  UserChallengeCategoryService userChallengeCategoryService;
+  private final UserChallengeCategoryService userChallengeCategoryService;
+
+  public UserChallengeCategoryController (UserChallengeCategoryService userChallengeCategoryService) {
+    this.userChallengeCategoryService = userChallengeCategoryService;
+  }
 
   @GetMapping
   ResponseEntity<ApiResponse<List<UserChallengeCategoryView>>> loadChallengeCategories() {

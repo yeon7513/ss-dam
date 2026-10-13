@@ -7,6 +7,7 @@ public class ProductEditView {
   private String title;
   private String content;
   private int price;
+  private String dealStatus;
 
   // 상위 & 하위 카테고리명
   // 26.09.03
@@ -74,5 +75,13 @@ public class ProductEditView {
 
   public void setSubCategoryCode(Long subCategoryCode) {
     this.subCategoryCode = subCategoryCode;
+  }
+
+  public String getDealStatus() {
+    return dealStatus;
+  }
+
+  public void setDealStatus(String dealStatus) {
+    this.dealStatus = dealStatus;
   }
 }

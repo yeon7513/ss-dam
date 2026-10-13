@@ -2,14 +2,12 @@
 @use "../../../scss/mixin.scss" as mix;
 
 .selectWrap {
-  display: flex;
   position: relative; // .arrowIcon 위치 조절의 기준점 설정
-  align-items: center;
   width: fit-content;
 
   > select {
-    height: 100%;
-    padding: 0.8rem 2rem 0.8rem 1.2rem; // 우측 패딩을 확보하여 글자와 아이콘 겹침 방지
+    height: 3rem;
+    padding: 0 2rem 0 1.2rem; // 우측 패딩을 확보하여 글자와 아이콘 겹침 방지
 
     font-size: 0.9rem;
 
@@ -18,20 +16,23 @@
     -webkit-appearance: none;
     -moz-appearance: none;
 
+    border: 1px solid v.$grayscale-50;
     cursor: pointer;
 
     // 박스 선택 시
     &:focus {
       border-color: v.$primary-40;
       color: v.$grayscale-90;
-      outline: none; // 브라우저 기본 검정 외곽선 제거
     }
   }
 
   /* 리액트 아이콘 위치 고정 */
   .arrowIcon {
     position: absolute;
+    top: 50%;
     right: 0.75rem;
+
+    transform: translateY(-50%);
 
     font-size: 1.25rem;
     color: v.$grayscale-50;

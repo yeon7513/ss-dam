@@ -4,10 +4,45 @@
 .feedDetail {
   padding: 32px;
 
-  .title {
-    @include mix.wrap($pd: 0);
-    margin-bottom: 24px;
-    outline: 1px dotted red;
+  .header {
+    @include mix.flex($jc: space-between, $ai: flex-start);
+    margin-bottom: 1.5rem;
+
+    // 챌린지명 & 제목
+    .titleBox {
+
+      .challengeName {
+        display: block;
+        margin-bottom: 0.5rem;
+        width: fit-content;
+        color: v.$point-60;
+        font-weight: 700;
+      }
+
+      .title {
+        font-size: 1.5rem;
+      }
+
+    }
+
+    // 닫기 버튼
+    .closeModalButton {
+      opacity: 0.7;
+      background-color: v.$grayscale-90;
+      color: #fff;
+      border-radius: 50%;
+      transition: 0.2s;
+
+      &:hover {
+        opacity: 1;
+        transform: rotate(180deg);
+      }
+
+      > svg {
+        font-size: 2rem;
+      }
+    }
+
   }
 }
 
@@ -20,19 +55,32 @@
   // 등록한 이미지
   .images {
     position: sticky;
+    top: 2rem;
     width: 50%;
     height: 540px;
+    border: 1px solid v.$grayscale-20;
   }
 }
 
 // 실제 본문 내용
 .content.detail {
   flex: 1;
-  background-color: yellow;
+  padding-top: 1rem;
 
   > p {
-    margin-bottom: 1rem;
+    margin: 1rem 0 2rem;
     outline: 1px dotted red;
+  }
+
+  .hashtags {
+    @include mix.flex($jc: flex-start);
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .controlButtonGroup {
+    @include mix.flex($jc: flex-end);
+    gap: 0.5rem;
   }
 }
 

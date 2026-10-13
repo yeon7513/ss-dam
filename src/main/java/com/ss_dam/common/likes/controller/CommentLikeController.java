@@ -5,7 +5,6 @@ import com.ss_dam.common.ApiResponse;
 import com.ss_dam.common.likes.service.LikeService;
 import com.ss_dam.common.likes.util.LikeRateLimiter;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,11 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/comments")
 public class CommentLikeController {
 
-  @Autowired
-  LikeService likeService;
+  private final LikeService likeService;
+  private final LikeRateLimiter rateLimiter;
 
-  @Autowired
-  LikeRateLimiter rateLimiter;
+  public CommentLikeController(LikeService likeService, LikeRateLimiter rateLimiter) {
+    this.likeService = likeService;
+    this.rateLimiter = rateLimiter;
+  }
 
   @PostMapping("/{cmtCode}/like")
   public ResponseEntity<ApiResponse<Boolean>> toggleCommentLike(@PathVariable Long cmtCode,

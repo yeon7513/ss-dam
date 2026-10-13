@@ -20,7 +20,7 @@
     #{feedCode},
     #{memCode},
     #{content},
-    'active',
+    'ACTIVE',
     (
     SELECT id
     FROM MEMBER_ACCOUNT

@@ -3,7 +3,7 @@ import ChatRoom from "./chat-room/ChatRoom.jsx";
 import SearchBox from "../../common/search-box/SearchBox.jsx";
 import { Link } from "react-router-dom";
 import styles from "./ChatSideNav.module.scss";
-import Sidebar from "../../../layout/sidebar/Sidebar.jsx";
+import Sidebar from "../../../layout/default/sidebar/Sidebar.jsx";
 
 function ChatSideNav({ chatRooms, pager, activeRoomId, onClickChatRoom }) {
 

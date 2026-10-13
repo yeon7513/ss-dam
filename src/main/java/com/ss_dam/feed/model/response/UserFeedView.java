@@ -10,6 +10,7 @@ public class UserFeedView {
   private Long code; // 피드 고유 번호
   private String challengeName;
   private String title; // 제목
+  private String content; // 본문
   private int hitcount; // 조회수
   private String createdAt; // 작성일
   private String updatedAt; // 수정일 (옵셔널)
@@ -124,5 +125,13 @@ public class UserFeedView {
 
   public void setHashtags(List<String> hashtags) {
     this.hashtags = hashtags;
+  }
+
+  public String getContent() {
+    return content;
+  }
+
+  public void setContent(String content) {
+    this.content = content;
   }
 }

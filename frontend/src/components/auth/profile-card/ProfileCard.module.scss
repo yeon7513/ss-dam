@@ -1,0 +1,89 @@
+@use '../../../scss/variables' as v;
+@use '../../../scss/mixin' as mix;
+
+// 공통
+.profileImage {
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: v.$grayscale-10;
+}
+
+.info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .memberId {
+    font-weight: 500;
+    color: v.$grayscale-90;
+  }
+
+  .meta {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: v.$point-60;
+  }
+
+}
+
+.more {
+  > button {
+    @include mix.flex;
+    padding: 0.5rem;
+    font-size: 1rem;
+  }
+}
+
+// 기본
+.defaultProfile {
+  @include mix.flex($jc: space-between);
+  gap: 0.75rem;
+  width: 100%;
+  height: fit-content;
+  background-color: v.$color-white;
+
+  .profileImage {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+
+  .info {
+    justify-content: center;
+    gap: 0.5rem;
+
+    .memberId {
+      font-size: 18px;
+    }
+  }
+}
+
+// 세로 버전
+.verticalProfile {
+  @include mix.flex($fd: column, $ai: center);
+  gap: 0.75rem;
+  width: 100%;
+
+  .profileImage {
+    width: 5rem;
+    height: 5rem;
+  }
+}
+
+
+// 미니멀 버전
+.minimalProfile {
+  @include mix.flex;
+  gap: 0.5rem;
+
+  .profileImage {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .name {
+    @include mix.flex;
+  }
+
+}

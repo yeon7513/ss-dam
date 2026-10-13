@@ -16,6 +16,8 @@ public class Challenge {
 	private boolean deleteYn; // 삭제 여부
 	private int participantCount; // 참여자 수
 
+	private String imageUrl; // 이미지
+
 	public int getAdmCode() {
 		return admCode;
 	}
@@ -126,6 +128,14 @@ public class Challenge {
 
 	public void setParticipantCount(int participantCount) {
 		this.participantCount = participantCount;
+	}
+
+	public String getImageUrl() {
+			return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+			this.imageUrl = imageUrl;
 	}
 
 }

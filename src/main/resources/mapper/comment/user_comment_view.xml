@@ -16,7 +16,6 @@
     <!-- UserCommentView의 필드는 리스트가 아닌 단일 객체 => association 수정
     단일 객체: <association javaType="...">
     리스트:    <collection ofType="...">-->
-
   </resultMap>
 
   <select id="loadCommentsTotalCount" resultType="Float">
@@ -62,5 +61,41 @@
     ORDER BY c.created_at DESC, c.code DESC
     <!-- 페이지네이션 -->
     LIMIT #{offset}, #{perPage}
+  </select>
+
+
+  <select id="findCommentByCode" resultMap="UserCommentViewMap">
+    SELECT
+    c.code,
+    c.content,
+    c.created_at,
+    c.updated_at,
+    mp.code AS m_code,
+    mp.id AS m_id,
+    mp.rating AS m_rating,
+    mp.path AS m_profile_image,
+    IFNULL(cnt_like.cnt, 0) AS count_comment_like,
+    IF(my_like.cmt_code IS NOT NULL, 1, 0) AS liked_yn
+    FROM COMMENTS c
+    <!-- 댓글 작성자 정보 -->
+    JOIN (
+    SELECT m.code, m.id, i.path, m.rating
+    FROM MEMBER_ACCOUNT m
+    LEFT JOIN IMAGES i
+    ON m.code = i.target_code AND i.TYPE = 'profile'
+    ) AS mp
+    ON mp.code = c.mem_code
+    <!-- 댓글 좋아요 수 -->
+    LEFT JOIN (
+    SELECT cl.cmt_code, count(*) AS cnt
+    FROM COMMENT_LIKE cl
+    WHERE cl.delete_yn = 0
+    GROUP BY cl.cmt_code
+    ) AS cnt_like
+    ON cnt_like.cmt_code = c.code
+    <!-- 로그인한 사용자의 좋아요 여부 -->
+    LEFT JOIN COMMENT_LIKE my_like
+    ON my_like.cmt_code = c.code AND my_like.mem_code = #{memberCode} AND my_like.delete_yn = 0
+    WHERE c.code = #{code}
   </select>
 </mapper>

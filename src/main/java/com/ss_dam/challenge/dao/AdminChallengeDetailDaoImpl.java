@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.ss_dam.challenge.model.response.AdminChallengeDetailView;
@@ -13,34 +12,36 @@ import com.ss_dam.challenge.model.response.AdminChallengeParticipantView;
 import com.ss_dam.challenge.model.response.AdminChallengeRankingView;
 
 @Repository
-public class AdminChallengeDetailDaoImpl
-        implements AdminChallengeDetailDao {
+public class AdminChallengeDetailDaoImpl implements AdminChallengeDetailDao {
 
-    @Autowired
-    private SqlSession sql;
+	private final SqlSession sql;
 
-    @Override
+	public AdminChallengeDetailDaoImpl (SqlSession sql) {
+		this.sql = sql;
+	}
+
+	@Override
     public AdminChallengeDetailView loadChallenge(Long code) {
         return sql.selectOne(
                 "adminChallengeDetail.loadChallenge",
                 Map.of("code", code));
     }
 
-    @Override
+	@Override
     public boolean existsChallengeIncludingDeleted(Long code) {
         return sql.selectOne(
                 "adminChallengeDetail.existsChallengeIncludingDeleted",
                 Map.of("code", code));
     }
 
-    @Override
+	@Override
     public long countParticipants(Map<String, Object> params) {
         return sql.selectOne(
                 "adminChallengeDetail.countParticipants",
                 params);
     }
 
-    @Override
+	@Override
     public List<AdminChallengeParticipantView> loadParticipants(
             Map<String, Object> params) {
 

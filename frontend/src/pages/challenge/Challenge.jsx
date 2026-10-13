@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useLoadData } from "../../hooks/useLoadData.js";
 import styles from "./Challenge.module.scss";
+import LikeButton from "../../components/common/button/like/LikeButton.jsx";
 import Card from "../../components/common/card/Card";
 import ImageBox from "../../components/common/image-box/ImageBox";
 import ChallengeSideNav from "./ChallengeSideNav";

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.ss_dam.admin.report.model.response.AdminMemberReportsView;
@@ -13,8 +12,11 @@ import com.ss_dam.admin.report.model.response.ReportView;
 @Repository
 public class AdminReportDaoImpl implements AdminReportDao {
 
-    @Autowired
-    private SqlSession sql;
+	private final SqlSession sql;
+
+	public AdminReportDaoImpl(SqlSession sql) {
+		this.sql = sql;
+	}
 
     //관리자 회원 상세 - 회원이 받은 전체 신고 통계
     @Override

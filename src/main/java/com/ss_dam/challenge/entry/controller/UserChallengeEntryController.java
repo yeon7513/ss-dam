@@ -2,7 +2,6 @@ package com.ss_dam.challenge.entry.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,8 +15,11 @@ import com.ss_dam.common.ApiResponse;
 @RequestMapping ("/chal_entry")
 public class UserChallengeEntryController {
 
-	@Autowired
-	UserChallengeEntryService challengeEntryService;
+	private final UserChallengeEntryService challengeEntryService;
+
+	public UserChallengeEntryController (UserChallengeEntryService challengeEntryService) {
+		this.challengeEntryService = challengeEntryService;
+	}
 	
 	@GetMapping
 	public ResponseEntity<ApiResponse<List<ChallengeEntry>>> getAllEntries() {

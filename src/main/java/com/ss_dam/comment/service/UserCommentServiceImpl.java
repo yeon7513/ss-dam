@@ -7,8 +7,8 @@ import com.ss_dam.comment.model.request.CommentUpdate;
 import com.ss_dam.comment.model.response.UserCommentView;
 import com.ss_dam.common.pager.PageQuery;
 import com.ss_dam.common.pager.PageResult;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,8 +17,11 @@ import java.util.Map;
 @Service
 public class UserCommentServiceImpl implements UserCommentService {
 
-  @Autowired
-  UserCommentDao userCommentDao;
+  private final UserCommentDao userCommentDao;
+
+  public UserCommentServiceImpl(UserCommentDao userCommentDao) {
+    this.userCommentDao = userCommentDao;
+  }
 
   // 피드에서 호출하는 댓글리스트
   @Override
@@ -40,8 +43,9 @@ public class UserCommentServiceImpl implements UserCommentService {
   }
 
   //댓글 등록 (임시)
+  @Transactional
   @Override
-  public CommentCreate registerComment(CommentCreate comment) {
+  public UserCommentView registerComment(CommentCreate comment) {
     if (comment == null) {
       throw new IllegalArgumentException("댓글 정보가 필요합니다");
     }
@@ -68,7 +72,7 @@ public class UserCommentServiceImpl implements UserCommentService {
       throw new IllegalStateException("댓글 등록에 실패했습니다.");
     }
 
-    return comment;
+    return userCommentDao.findCommentByCode(comment.getCode());
   }
 
   //댓글 수정
@@ -132,6 +136,7 @@ public class UserCommentServiceImpl implements UserCommentService {
     }
 
   }
+
 }
   
 

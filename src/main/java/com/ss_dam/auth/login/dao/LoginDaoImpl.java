@@ -1,21 +1,24 @@
 package com.ss_dam.auth.login.dao;
 
+import java.util.Map;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.stereotype.Repository;
+
 import com.ss_dam.auth.login.model.request.Login;
 import com.ss_dam.auth.login.model.response.AdminProfile;
 import com.ss_dam.auth.login.model.response.MemberProfile;
 import com.ss_dam.auth.member.Member;
-import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
-import java.util.Map;
 
 @Repository
 public class LoginDaoImpl implements LoginDao {
 
-  @Autowired
-  private SqlSession sql;
+  private final SqlSession sql;
 
+  public LoginDaoImpl (SqlSession sql) {
+    this.sql = sql;
+  }
+  
   @Override
   public Member findById(String memberId) {
 

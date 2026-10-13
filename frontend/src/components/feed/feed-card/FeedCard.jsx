@@ -1,13 +1,17 @@
 import { IoChatbubbleEllipses, IoHeartSharp } from "react-icons/io5";
 import Card from "../../common/card/Card";
-import ProfileCard from "../../profile-card/ProfileCard";
+import ProfileCard from "../../auth/profile-card/ProfileCard";
 import Hashtag from "../hashtag/Hashtag";
 import styles from "./FeedCard.module.scss";
 import ImageBox from "../../common/image-box/ImageBox.jsx";
+import { formatCreatedAt } from "../../../utils/formatDate.js";
+import { FaEye } from "react-icons/fa6";
 
 function FeedCard({ feed, onClickDetail }) {
+  console.log(feed);
+
   return (
-    <Card className={styles.feed} onClick={() => onClickDetail(feed.code)}>
+    <Card className={styles.feed} onClick={() => onClickDetail?.(feed.code)}>
       {/* 프로필 카드 */}
       <ProfileCard memberProfile={feed.memberProfile} />
 
@@ -26,31 +30,44 @@ function FeedCard({ feed, onClickDetail }) {
 
         {/* 콘텐츠 (내용) */}
         <div className={styles.detail}>
+          <p>{feed.content}</p>
           <div className={styles.hashtags}>
-            {feed.hashtags.map((tag, idx) => (
-              <Hashtag key={idx} hashName={tag} />
+            {feed.hashtags?.map((tag, idx) => (
+              <Hashtag key={idx} hashName={tag} className={styles.tagItem} />
             ))}
           </div>
         </div>
 
-        {/* 좋아요 & 댓글 & 작성일(시간) */}
+        {/* 조회수 & 좋아요 & 댓글 / 작성일(시간) */}
         <div className={styles.info}>
+          {/* 상호작용 수 */}
           <div className={styles.count}>
+            {/* 좋아요 수 */}
             <div className={styles.icon}>
               <span className={styles.like}>
                 <IoHeartSharp />
               </span>
               {feed.countFeedLike}
             </div>
+            {/* 댓글 수 */}
             <div className={styles.icon}>
               <span className={styles.comment}>
                 <IoChatbubbleEllipses />
               </span>
               {feed.countFeedComment}
             </div>
+            {/* 조회수 */}
+            <div className={styles.icon}>
+              <span className={styles.hitcount}>
+                <FaEye />
+              </span>
+              {feed.hitcount}
+            </div>
           </div>
+
+          {/* 작성일 */}
           <div>
-            <span>{feed.createdAt}</span>
+            <span>{formatCreatedAt(feed.createdAt)}</span>
           </div>
         </div>
       </div>

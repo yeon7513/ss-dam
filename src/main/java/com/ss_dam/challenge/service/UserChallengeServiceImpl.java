@@ -17,7 +17,9 @@ public class UserChallengeServiceImpl implements UserChallengeService {
     private final UserChallengeDao userChallengeDao;   
     private final UserFeedService userFeedService;
     
-    public  UserChallengeServiceImpl(UserChallengeDao userChallengeDao, UserFeedService userFeedService) {
+    public  UserChallengeServiceImpl(
+			UserChallengeDao userChallengeDao, 
+			UserFeedService userFeedService) {
     	this.userChallengeDao = userChallengeDao;
     	this.userFeedService = userFeedService;
     }

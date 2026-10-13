@@ -1,9 +1,8 @@
 package com.ss_dam.admin.stats.controller;
 
-import com.ss_dam.admin.stats.model.response.*;
-import com.ss_dam.admin.stats.service.StatsService;
-import com.ss_dam.common.ApiResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.time.LocalDate;
+import java.util.List;
+
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,8 +10,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
-import java.util.List;
+import com.ss_dam.admin.stats.model.response.ChallengeRanking;
+import com.ss_dam.admin.stats.model.response.ChallengeStatistics;
+import com.ss_dam.admin.stats.model.response.DashboardSummary;
+import com.ss_dam.admin.stats.model.response.MemberStatistics;
+import com.ss_dam.admin.stats.model.response.RegionStatistics;
+import com.ss_dam.admin.stats.model.response.SellerRanking;
+import com.ss_dam.admin.stats.service.StatsService;
+import com.ss_dam.common.ApiResponse;
 
 //관리자 대시보드
 
@@ -27,8 +32,11 @@ import java.util.List;
 @RequestMapping("/api/admin/stats")
 public class StatsController {
 
-  @Autowired
-  StatsService statsService;
+  private final StatsService statsService;
+
+  public StatsController (StatsService statsService) {
+    this.statsService = statsService;
+  }
 
   @GetMapping("/check")
   public ResponseEntity<ApiResponse<Void>> checkAdmin() {

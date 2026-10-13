@@ -6,6 +6,7 @@ import Button from '../button/Button';
 import styles from './UploadImages.module.scss';
 import ImageBox from "../image-box/ImageBox.jsx";
 import { MdImageNotSupported } from "react-icons/md";
+import CloseButton from "../button/close/CloseButton.jsx";
 
 function UploadImage({ className, selectedImages, setSelectedImages }) {
   const [previews, setPreviews] = useState(selectedImages || []);
@@ -36,7 +37,8 @@ function UploadImage({ className, selectedImages, setSelectedImages }) {
 
   // 등록할 이미지 삭제
   const handleDeleteImage = (e) => {
-    const { target } = e.target.dataset;
+    e.stopPropagation();
+    const { target } = e.currentTarget.dataset;
     const targetIdx = Number(target);
 
     setPreviews(previews.filter((preview, idx) => idx !== targetIdx));
@@ -97,10 +99,10 @@ function UploadImage({ className, selectedImages, setSelectedImages }) {
               {/* 인덱스 0번은 대표 이미지로 표시, 나머지는 설정 버튼 표시 */}
               <div className={styles.badgeContainer}>
                 {idx === 0 ? (
-                  <span className={styles.representativeBadge}>대표 이미지</span>
+                  <span className={cn(styles.badge, styles.representativeBadge)}>대표 이미지</span>
                 ) : (
                   <button
-                    className={styles.changeRepresentativeImageButton}
+                    className={cn(styles.badge, styles.changeRepresentativeImageButton)}
                     type="button"
                     onClick={() => handleSetRepresentativeImage(idx)}
                   >
@@ -109,19 +111,17 @@ function UploadImage({ className, selectedImages, setSelectedImages }) {
                 )}
               </div>
 
-              <button
-                type="button"
+              <CloseButton
+                className={styles.deletePreviewImageButton}
                 data-target={idx}
                 onClick={(e) => handleDeleteImage(e)}
-              >
-                X
-              </button>
+              />
             </div>
           ))
           }
         </div>
       ) : (
-        <div className={styles.noImages}>
+        <div className={cn(styles.preview, styles.noImages)}>
           <MdImageNotSupported className={styles.icon} />
           <span>등록된 이미지가 없습니다.</span>
         </div>

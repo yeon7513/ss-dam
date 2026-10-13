@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.ss_dam.auth.member.model.response.AdminMemberDetailView;
@@ -15,9 +14,11 @@ import com.ss_dam.feed.model.response.UserFeedView;
 @Repository 
 public class AdminMemberDaoImpl implements AdminMemberDao {
 
-  
-    @Autowired
-    private SqlSession sql;
+	private final SqlSession sql;
+
+	public AdminMemberDaoImpl(SqlSession sql) {
+		this.sql = sql;
+	}
 
     //검색 조건에 해당하는 전체 회원 수
     @Override

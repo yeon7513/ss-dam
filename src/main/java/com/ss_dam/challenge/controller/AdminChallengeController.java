@@ -1,6 +1,9 @@
 package com.ss_dam.challenge.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +14,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ss_dam.auth.login.model.response.AuthProfile;
 import com.ss_dam.challenge.model.request.AdminChallengeSearch;
@@ -63,29 +69,35 @@ public class AdminChallengeController {
                 ApiResponse.success("챌린지 진행현황 조회 성공", result));
     }
 
-// 관리자 챌린지 등록
-@PostMapping
+// 관리자 챌린지 등록 + 이미지 업로드
+@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 public ResponseEntity<ApiResponse<Long>> registerChallenge(
-        @RequestBody AdminChallengeWriteRequest request,
-        HttpSession session) {
+        @RequestPart("request") AdminChallengeWriteRequest request,
+        @RequestPart(value = "files", required = false)
+        List<MultipartFile> files,
+        HttpSession session){
 
-    // 세 관리자 권한 모두 등록 허용
-    AuthProfile admin = adminAuthValidator.requireAdmin(session);
+	// 세 관리자 권한 모두 등록 허용
+	AuthProfile admin = adminAuthValidator.requireAdmin(session);
 
-    Long code = adminChallengeService.registerChallenge(
-            request,
-            admin.getCode(),
-            admin.getId());
+	Long code = adminChallengeService.registerChallenge(
+					request,
+					files,
+					admin.getCode(),
+					admin.getId());
 
-    return ResponseEntity.status(HttpStatus.CREATED)
-            .body(ApiResponse.success("챌린지 등록 성공", code));
-}
+	return ResponseEntity.status(HttpStatus.CREATED)
+					.body(ApiResponse.success("챌린지 등록 성공", code));
+	}
 
 // 관리자 챌린지 수정
-@PutMapping("/{code}")
+@PutMapping(value = "/{code}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 public ResponseEntity<ApiResponse<Void>> updateChallenge(
         @PathVariable Long code,
-        @RequestBody AdminChallengeWriteRequest request,
+        @RequestPart("request") AdminChallengeWriteRequest request,
+        @RequestPart(value = "files", required = false)
+        List<MultipartFile> files,
+        @RequestParam(defaultValue = "false") boolean replaceImages,
         HttpSession session) {
 
     AuthProfile admin = adminAuthValidator.requireAdmin(session);
@@ -93,6 +105,8 @@ public ResponseEntity<ApiResponse<Void>> updateChallenge(
     adminChallengeService.updateChallenge(
             code,
             request,
+            files,
+            replaceImages,
             admin.getCode(),
             admin.getId());
 

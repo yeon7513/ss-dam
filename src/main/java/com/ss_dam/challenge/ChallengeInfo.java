@@ -88,7 +88,7 @@ public class ChallengeInfo {
 		return isJoined;
 	}
 
-	public void setJoined(boolean isJoined) {
+	public void setIsJoined(boolean isJoined) {
 		this.isJoined = isJoined;
 	}
 

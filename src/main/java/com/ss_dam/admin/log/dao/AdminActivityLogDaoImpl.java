@@ -4,17 +4,18 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.ss_dam.admin.log.response.AdminActivity;
 
 @Repository
-public class AdminActivityLogDaoImpl
-        implements AdminActivityLogDao {
+public class AdminActivityLogDaoImpl implements AdminActivityLogDao {
+  
+	private final SqlSession sql;
 
-    @Autowired
-    private SqlSession sql;
+	public AdminActivityLogDaoImpl(SqlSession sql) {
+		this.sql = sql;
+	}
 
     // 회원 정지·해제 이력 전체 건수
     @Override

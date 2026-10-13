@@ -13,15 +13,15 @@ public interface UserCommentService {
       Long memberCode);
 
   //댓글 등록 (임시)
-  CommentCreate registerComment(CommentCreate comment);
+  UserCommentView registerComment(CommentCreate comment);
 
   //댓글 수정
   void updateComment(Long commentCode, Long memCode, CommentUpdate request);
 
   //댓글 삭제
   void deleteComment(Long commentCode, Long memCode);
-  
-  /* 
+
+  /*
   //댓글 등록 (세션 확인)
   CommentCreate registerComment(CommentCreate request, Long memberCode);
   */
