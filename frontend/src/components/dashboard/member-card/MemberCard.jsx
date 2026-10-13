@@ -1,18 +1,14 @@
+import React from 'react';
+
 import styles from './MemberCard.module.scss';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import ImageBox from "../../common/image-box/ImageBox.jsx";
+import Card from "../../common/card/Card.jsx";
+import cn from 'classnames';
 
-// 등급별 아이콘
-const RATING_ICONS = {
-  0: '🏷️',
-  1: '🌱',
-  2: '🌿',
-  3: '🌳',
-  4: '🌸',
-  5: '👑',
-};
+function MemberCard({ member, type = 'user' }) {
+  const navigate = useNavigate();
 
-export default function MemberCard({ member, type = 'user' }) {
   const isAdmin = type === "admin";
   const detailPath = isAdmin
     ? `/admin/system_manage/account/${member.code}`
@@ -22,11 +18,24 @@ export default function MemberCard({ member, type = 'user' }) {
     id: member.id || member.empId,
     name: member.name,
     path: member.path,
-    statusBadge: isAdmin ? (member.deleteYn ? "비활성" : "활성") : member.status,
-    subInfo: isAdmin ? `${member.dept ?? "-"} / ${member.role ?? "-"}` : `등급 ${member.rating} / 랭킹 ${member.ranking ?? "-"}`,
+    statusLabel: isAdmin
+      ? (member.deleteYn ? "비활성" : "활성")
+      : member.status.label,
+    statusCode: isAdmin
+      ? (member.deleteYn ? "WITHDRAW" : "ACTIVE")
+      : member.status.code, // 스타일 매핑용 영문 코드
+    subInfo: isAdmin ?
+      `${member.dept ?? "미정"} / ${member.role ?? "미정"}`
+      : `등급 ${member.rating} / 랭킹 ${member.ranking ?? "-"}`,
     createdAt: member.createdAt,
     loggedAt: member.loggedAt,
   }
+
+  const badgeColor = {
+    SLEEP: styles.sleep,
+    SUSPENDED: styles.suspended,
+    WITHDRAW: styles.withdraw,
+  };
 
   const formatDate = (value) =>
     value
@@ -36,23 +45,20 @@ export default function MemberCard({ member, type = 'user' }) {
   console.log(member);
 
   return (
-    <Link
-      to={detailPath}
-      className={styles.card}
-    >
-      {/*프로필 사진 */}
-      {!isAdmin && (
-        <div className={styles.avatar}>
-          <ImageBox src={member.path} />
-        </div>
-      )}
-
+    <Card className={styles.card} onClick={() => navigate(detailPath)}>
+      {/* 기본 정보 */}
       <div className={styles.info}>
+        {/*프로필 사진 */}
+        {!isAdmin && (
+          <div className={styles.avatar}>
+            <ImageBox src={member.path} />
+          </div>
+        )}
         {/* 아이디 & 이름 */}
-        <div className={styles.group}>
+        <div className={styles.basic}>
           <h3 className={styles.name}>
-            <span className={styles.badge}>
-              {cardData.statusBadge}
+            <span className={cn(styles.badge, badgeColor[cardData.statusCode])}>
+              {cardData.statusLabel}
             </span>
             <span>{cardData.name || '-'}</span>
           </h3>
@@ -60,25 +66,26 @@ export default function MemberCard({ member, type = 'user' }) {
             {cardData.id}
           </p>
         </div>
-
-        {/* 회원: 등급, 랭킹 / 관리자: 부서, 권한 */}
-        <div>
-          <p className={styles.subInfo}>{cardData.subInfo}</p>
-        </div>
-
-        {/* 날짜 정보 (생성 & 마지막로그인) */}
-        <div className={styles.dates}>
-          <p>
-            <span>{isAdmin ? "계정 생성일" : "회원 가입일"}</span>
-            <span>{formatDate(cardData.createdAt)}</span>
-          </p>
-          <p>
-            <span>마지막 로그인</span>
-            <span>{formatDate(cardData.loggedAt)}</span>
-          </p>
-        </div>
-
       </div>
-    </Link>
+
+      {/* 회원: 등급, 랭킹 / 관리자: 부서, 권한 */}
+      <div className={styles.subInfo}>
+        <span>{cardData.subInfo}</span>
+      </div>
+
+      {/* 날짜 정보 (생성 & 마지막로그인) */}
+      <div className={styles.dates}>
+        <p>
+          <span>{isAdmin ? "계정 생성일" : "회원 가입일"}</span>
+          <span>{formatDate(cardData.createdAt)}</span>
+        </p>
+        <p>
+          <span>마지막 로그인</span>
+          <span>{formatDate(cardData.loggedAt)}</span>
+        </p>
+      </div>
+    </Card>
   );
 }
+
+export default MemberCard;
