@@ -1,14 +1,31 @@
 @use "/src/scss/variables.scss" as *;
 
 .idGroup {
-  width: 100%;
   display: flex;
-  align-items: flex-end;
-  gap: 0.5rem;
+  flex-direction: column;
+  width: 100%;
+  gap: 8px;
   margin-bottom: 1.5rem;
 
-  > div {
-    flex: 1;
+  .label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: $color-black; // 프로젝트 공통 라벨 스타일 설정
+  }
+
+  /* AddressSection의 postGroup과 동일한 레이아웃 */
+  .inputRow {
+    display: flex;
     width: 100%;
+    gap: 8px;
+
+    > div {
+      flex: 1;
+    }
+
+    button {
+      width: 8rem; // 가로 너비 8rem 고정
+      flex-shrink: 0;
+    }
   }
 }
