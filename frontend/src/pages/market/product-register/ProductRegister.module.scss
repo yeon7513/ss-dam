@@ -1,11 +1,10 @@
 @use "../../../scss/variables.scss" as v;
 @use "../../../scss/mixin.scss" as mix;
 
-.mainTitle {
+/* 가격 입력 영역 */
+.priceWrap {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: v.$grayscale-10;
+  flex-direction: column;
+
+  gap: 0.5rem; // 상단 라벨과 하단 인풋 사이의 수직 간격
 }

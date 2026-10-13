@@ -2,9 +2,8 @@ import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Button from "../../common/button/Button.jsx";
 import styles from "./MarketSideNav.module.scss";
-import { useAuth } from "../../../context/AuthContext.jsx";
 
-function MarketSideNav({ categories, onSearch }) {
+function MarketSideNav({ categories, isLoggedIn, onSearch }) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -21,13 +20,8 @@ function MarketSideNav({ categories, onSearch }) {
     onSearch({ categoryCode });
   };
 
-
-  // Context API로 관리 중인 로그인 상태
-  const { isLoggedIn } = useAuth();
-
   /* 전체 선택 상태 확인 */
   const isAllSelected = location.pathname === "/market" && !location.search;
-
 
   return (
     /* 사이드 메뉴 영역 */
@@ -68,6 +62,7 @@ function MarketSideNav({ categories, onSearch }) {
           const isSubActive = category.depth?.some(
             (sub) => String(sub.code) === String(selectedCategory),
           );
+          /* 메인 메뉴 활성화 상태 확인 */
           const isActive =
             !isAllSelected &&
             (String(category.code) === String(selectedCategory) || isSubActive);

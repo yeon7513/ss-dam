@@ -1,27 +1,29 @@
-import cn from "classnames";
 import { useState } from "react";
-import { handleSetField } from "../../../utils/changeHandler";
-import TextInput from "../../forms/text-input/TextInput";
+import cn from "classnames";
+import Button from "../button/Button";
 import CancelButton from "../button/cancel/CancelButton.jsx";
-import Button from "./../button/Button";
-import UploadImage from "./../upload-images/UploadImages";
+import UploadImage from "../upload-images/UploadImages";
+import TextInput from "../../forms/text-input/TextInput";
+import { handleSetField } from "../../../utils/changeHandler";
 import styles from "./Editor.module.scss";
 
 function Editor({
-  selectCategoryBox, // 카테고리 선택
+  selectCategoryBox,
   title,
-  children, // 해시태그용 (피드)
-  onSubmit, // AJAX 전송 핸들러
+  children,
+  onSubmit,
   post = {},
   setPost,
   cancelUrl = "/feed",
   submitText = "등록",
-  extraOptions = null, // 관리자 전용 등록 옵션
+  extraOptions = null,
 }) {
+  /* 업로드 이미지 상태 관리 */
   const [selectedImages, setSelectedImages] = useState(post?.imagePaths || []);
 
-  // 입력된 데이터 전송
+  /* 폼 제출 처리 */
   const handleSubmit = (e) => {
+    // 폼 기본 제출 동작을 방지함.
     e.preventDefault();
 
     const resultData = {
@@ -29,52 +31,51 @@ function Editor({
       images: selectedImages,
     };
 
-    console.log("resultData: ", resultData);
-
     setPost(resultData);
     onSubmit(resultData);
   };
 
   return (
+    /* 에디터 영역 */
     <div className={cn(styles.editor)}>
       <h3>{title}</h3>
+      {/* 에디터 컨테이너 영역 */}
       <div className={styles.container}>
+        {/* 제목 입력 영역 */}
         <div className={styles.title}>
-          {/* 카테고리 선택용 컴포넌트 영역 */}
           {selectCategoryBox && selectCategoryBox}
-          {/* 제목 */}
           <TextInput
-            name="title"
             placeholder="제목을 입력하세요."
             value={post?.title || ""}
+            name="title"
             onChange={(e) => handleSetField(e, setPost)}
           />
         </div>
+
+        {/* 옵션 그룹 영역 */}
         <div className={styles.optionGroup}>
           <UploadImage
             selectedImages={selectedImages}
             setSelectedImages={setSelectedImages}
           />
-          {
-            // 관리자 전용 옵션 영역
-            extraOptions && (
-              <div className={styles.extra}>
-                {extraOptions}
-              </div>
-            )
-          }
+          {extraOptions && <div className={styles.extra}>{extraOptions}</div>}
         </div>
+
+        {/* 본문 입력 영역 */}
         <div className={styles.content}>
           <textarea
-            name="content"
-            value={post?.content || ""}
             placeholder="본문을 입력하세요."
+            value={post?.content || ""}
+            name="content"
             onChange={(e) => handleSetField(e, setPost)}
           />
         </div>
+
+        {/* 폼 하단 영역 */}
         <div className={styles.formFooter}>
           {/* children 부분에 해시태그 및 가격 등록 섹션이 들어옴 */}
           {children}
+          {/* 제출 버튼 그룹 영역 */}
           <div className={styles.submitGroup}>
             <Button btnStyle="submit" onClick={handleSubmit}>
               {submitText}
