@@ -44,8 +44,8 @@
         padding: 0.25rem 0.5rem;
         font-size: 0.875rem;
         font-weight: 500;
-        color: v.$point-50;
-        border: 1px solid v.$point-20;
+        color: v.$point-60;
+        border: 1px solid v.$point-50;
         border-radius: 4px;
 
         // 휴면
@@ -78,7 +78,15 @@
 
 .dates {
   p {
+    @include mix.flex($jc: space-between, $ai: center);
     font-size: 0.875rem;
     color: v.$grayscale-70;
+
+    > span {
+      &:first-child {
+        color: v.$grayscale-60;
+
+      }
+    }
   }
 }
