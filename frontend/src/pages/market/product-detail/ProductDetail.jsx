@@ -124,7 +124,11 @@ const ProductDetail = () => {
 
               {/* 거래 신청 버튼 영역 */}
               <div className={styles.chatButton}>
-                <Button btnStyle="submit" onClick={handleTradeRequest}>
+                <Button
+                  btnStyle="fill"
+                  action="submit"
+                  onClick={handleTradeRequest}
+                >
                   채팅으로 거래 신청
                 </Button>
               </div>
