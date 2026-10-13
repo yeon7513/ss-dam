@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { FaArrowsRotate } from "react-icons/fa6";
-import styles from "./DashboardHeader.module.scss";
+import styles from "./PanelHeader.module.scss";
 import cn from "classnames";
 
-const DashboardHeader = ({
+const PanelHeader = ({
   title = "대시보드",
   onRefresh,
   className,
@@ -60,4 +60,4 @@ const DashboardHeader = ({
   );
 };
 
-export default DashboardHeader;
+export default PanelHeader;

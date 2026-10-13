@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import styles from "./Header.module.scss";
-import { useAuth } from "../../context/AuthContext.jsx";
+import { useAuth } from "../../../context/AuthContext.jsx";
 
 const Header = () => {
   const { isLoggedIn, logout } = useAuth();

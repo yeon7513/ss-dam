@@ -1,6 +1,6 @@
 import cn from "classnames";
 import { Link, useNavigate } from "react-router-dom";
-import Sidebar from "../../../layout/sidebar/SideBar";
+import Sidebar from "../../../layout/default/sidebar/SideBar";
 import { FEED_MENU } from "../../../lib/sideMenu";
 import ProfileCard from "../../auth/profile-card/ProfileCard";
 import styles from "./FeedSideNav.module.scss";

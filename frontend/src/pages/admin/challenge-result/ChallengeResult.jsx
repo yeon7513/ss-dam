@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import DashboardHeader from '../../../components/admin/dashboard-header/DashboardHeader';
 import Pagination from '../../../components/common/pagination/Pagination';
 import { formatImagePath } from '../../../utils/formatImagePath';
 
 import styles from './ChallengeResult.module.scss';
 import ChallengeResultFilters from './ChallengeResultFilters';
+import PanelHeader from "../../../layout/admin/panel-header/PanelHeader.jsx";
 
 const INITIAL_FILTERS = {
   fromDate: '',
@@ -180,7 +180,7 @@ export default function ChallengeResult({ categories = [] }) {
 
   return (
     <div className={styles.container}>
-      <DashboardHeader
+      <PanelHeader
         title="종료 데이터 분석"
         lastUpdated={lastUpdated}
         isSpinning={loading}

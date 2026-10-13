@@ -1,6 +1,5 @@
 import React, { useCallback, useMemo } from "react";
 
-import DashboardHeader from "../../../components/admin/dashboard-header/DashboardHeader.jsx";
 import Pagination from "../../../components/common/pagination/Pagination";
 import FeedCard from "../../../components/feed/feed-card/FeedCard";
 import TabMenus from "../../../components/common/tab-menus/TabMenus";
@@ -11,11 +10,9 @@ import { useLoadData } from "../../../hooks/useLoadData";
 
 import styles from "./FeedManage.module.scss";
 
-import {
-  INITIAL_FILTERS,
-  TAB_LIST,
-} from "../../../constants/FeedManage.constants.jsx";
+import { INITIAL_FILTERS, TAB_LIST } from "../../../constants/FeedManage.constants.jsx";
 import { useNavigate } from "react-router-dom";
+import PanelHeader from "../../../layout/admin/panel-header/PanelHeader.jsx";
 
 export default function FeedManage() {
   const navigate = useNavigate();
@@ -63,7 +60,7 @@ export default function FeedManage() {
 
   return (
     <div className={styles.dashboardBody}>
-      <DashboardHeader title="피드 목록" onRefresh={handleRefresh} />
+      <PanelHeader title="피드 목록" onRefresh={handleRefresh} />
 
       <div className={styles.mainContainer}>
         <TabMenus

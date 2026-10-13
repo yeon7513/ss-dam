@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import DashboardHeader from "../../components/admin/dashboard-header/DashboardHeader.jsx";
 import AdminLogCard from "./OperationStatus/AdminLogCard/AdminLogCard.jsx";
 import DashboardCharts from "./OperationStatus/DashboardCharts/DashboardCharts.jsx";
 import PendingReports from "./OperationStatus/PendingReports/PendingReports.jsx";
@@ -7,6 +6,7 @@ import RegionParticipation from "./OperationStatus/RegionParticipation/RegionPar
 import SummaryStats from "./OperationStatus/SummaryStats/SummaryStats.jsx";
 import TopSellers from "./OperationStatus/TopSellers/TopSellers.jsx";
 import styles from "./OperationStatus.module.scss";
+import PanelHeader from "../../layout/admin/panel-header/PanelHeader.jsx";
 
 const OperationStatus = () => {
   /* 운영 현황 대시보드 데이터 관리 */
@@ -101,7 +101,7 @@ const OperationStatus = () => {
   return (
     <div className={styles.dashboardBody}>
       {/* 대시보드 헤더 영역 */}
-      <DashboardHeader
+      <PanelHeader
         title="운영 현황"
         onRefresh={fetchAdminDashboardData}
       />

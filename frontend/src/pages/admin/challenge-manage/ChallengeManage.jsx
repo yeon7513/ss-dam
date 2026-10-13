@@ -2,10 +2,10 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { formatImagePath } from '../../../utils/formatImagePath';
 
-import DashboardHeader from '../../../components/admin/dashboard-header/DashboardHeader';
 import Pagination from '../../../components/common/pagination/Pagination';
 import styles from './ChallengeManage.module.scss';
 import ChallengeManageFilters from './ChallengeManageFilters';
+import PanelHeader from "../../../layout/admin/panel-header/PanelHeader.jsx";
 
 const INITIAL_FILTERS = {
   page: 1,
@@ -109,7 +109,7 @@ export default function ChallengeManage() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <DashboardHeader
+        <PanelHeader
           title="챌린지 진행 현황"
           onRefresh={fetchChallenges}
         />
