@@ -24,7 +24,6 @@ import styles from "./IdSection.module.scss";
  *   setIsIdChecked={setIsIdChecked}
  * />
  */
-
 const IdSection = ({ form, setForm, isIdChecked, setIsIdChecked }) => {
   // 아이디 정규식 검증 함수
   const validateId = (id) => {
@@ -81,16 +80,21 @@ const IdSection = ({ form, setForm, isIdChecked, setIsIdChecked }) => {
 
   return (
     <div className={styles.idGroup}>
-      <TextInput
-        name="id"
-        label="아이디"
-        placeholder="영문 소문자, 숫자, 언더바(_) 조합 (8~20자)"
-        value={form.id}
-        onChange={handleIdChange}
-      />
-      <Button type="button" size="md" onClick={handleCheckIdDuplicate}>
-        중복확인
-      </Button>
+      {/* 라벨 영역 분리 */}
+      <label className={styles.label}>아이디</label>
+
+      {/* 인풋 박스 + 버튼 그룹 (AddressSection의 postGroup 구조) */}
+      <div className={styles.inputRow}>
+        <TextInput
+          name="id"
+          placeholder="영문 소문자, 숫자, 언더바(_) 조합 (8~20자)"
+          value={form.id}
+          onChange={handleIdChange}
+        />
+        <Button type="button" onClick={handleCheckIdDuplicate}>
+          중복확인
+        </Button>
+      </div>
     </div>
   );
 };

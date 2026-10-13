@@ -89,7 +89,7 @@ const AddressSection = ({ setForm }) => {
             onClick={togglePostcode}
           />
 
-          <Button type="button" size="md" onClick={togglePostcode}>
+          <Button type="button" onClick={togglePostcode}>
             주소검색
           </Button>
         </div>

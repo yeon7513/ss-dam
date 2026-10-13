@@ -116,6 +116,8 @@ const LogIn = () => {
             fullWidth
             className={styles.signupButton}
             type="button"
+            //btnbtnStyle="fill"
+            //action="danger"
             onClick={() => navigate("/signup")}
           >
             회원가입
