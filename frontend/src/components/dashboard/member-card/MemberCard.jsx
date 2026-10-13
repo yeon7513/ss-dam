@@ -31,7 +31,7 @@ function MemberCard({ member, type = 'user' }) {
             부서 {member.dept ?? "미정"}
           </span>
           <span className={cn(styles.meta, styles.role)}>
-            권한 {member.role ?? "미정"}
+            권한 {member.role.label ?? "미정"}
           </span>
         </>
       ) : (

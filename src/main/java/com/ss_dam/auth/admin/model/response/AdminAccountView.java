@@ -1,13 +1,14 @@
 package com.ss_dam.auth.admin.model.response;
 
 import com.ss_dam.auth.admin.enums.AdminDept;
+import com.ss_dam.auth.admin.enums.AdminRoles;
 
 public class AdminAccountView {
   private Long code; // 관리자 고유 번호
   private String empId; // 관리자 아이디
   private String name; // 이름
   private AdminDept dept; // 소속 부서
-  private String role; // 권한
+  private AdminRoles role; // 권한
   private String createdAt; // 계정 생성일
   private String loggedAt; // 마지막 로그인
   private boolean deleteYn; // 삭제 여부
@@ -45,11 +46,11 @@ public class AdminAccountView {
     this.dept = dept;
   }
 
-  public String getRole() {
+  public AdminRoles getRole() {
     return role;
   }
 
-  public void setRole(String role) {
+  public void setRole(AdminRoles role) {
     this.role = role;
   }
 
