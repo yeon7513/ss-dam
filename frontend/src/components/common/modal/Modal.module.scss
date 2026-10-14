@@ -1,29 +1,68 @@
 @use "../../../scss/variables.scss" as v;
 @use "../../../scss/mixin.scss" as mix;
 
+/* 모달 배경 및 화면 중앙 정렬 */
 .modalOverlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
+  inset: 0;
+  z-index: 9999;
+
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
+
+  box-sizing: border-box;
+  padding: 20px;
+  background: rgba(48, 61, 82, 0.2);
 }
 
+/* 모달 내부 박스 */
 .modalContent {
+  box-sizing: border-box;
   width: 80%;
-  min-width: 30%;
+  min-width: 0;
   max-width: 90%;
-  height: fit-content;
-  max-height: 90vh;
-  background-color: #fff;
-  border: 8px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  max-height: calc(100dvh - 40px);
   overflow-y: auto;
 
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 12px 40px rgba(30, 40, 60, 0.12);
 }
 
+/* 제목과 닫기 버튼 */
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+
+  > div {
+    font-size: 14px;
+    font-weight: 600;
+  }
+}
+
+.closeButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  padding: 0;
+
+  border: 0;
+  border-radius: 50%;
+  background: #f0f2f5;
+  color: #7c8795;
+  font-size: 20px;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}

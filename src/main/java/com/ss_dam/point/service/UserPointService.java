@@ -10,4 +10,6 @@ public interface UserPointService {
 	boolean chargePoint(Point point);
 
 	boolean paymentPoint(PaymentPoint point);
+
+	boolean exchangePoint(Point point);
 }
