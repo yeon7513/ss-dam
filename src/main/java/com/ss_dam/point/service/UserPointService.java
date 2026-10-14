@@ -12,4 +12,6 @@ public interface UserPointService {
 	boolean paymentPoint(PaymentPoint point);
 
 	boolean exchangePoint(Point point);
+	
+	boolean rewardPoint(Long memCode, int amount, String reason);
 }
