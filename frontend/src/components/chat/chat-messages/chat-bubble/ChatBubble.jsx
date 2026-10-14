@@ -1,10 +1,12 @@
 import React from 'react';
 import styles from "./ChatBubble.module.scss";
 import cn from "classnames";
+import { useAuth } from "../../../../context/AuthContext.jsx";
 
 function ChatBubble({ message }) {
+  const { user } = useAuth();
 
-  const isMine = message.senderCode === Number(sessionStorage.getItem('userCode'));
+  const isMine = message.senderCode === user.code;
 
   return (
     <div className={styles.wrap}>

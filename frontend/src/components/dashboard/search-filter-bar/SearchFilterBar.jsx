@@ -29,12 +29,22 @@ function SearchFilterBar({
   // 검색어 입력 핸들러
   const handleSearchKeyword = (e) => {
     if (e.key === "Enter") {
-      handleSetField(e, setDraftFilters);
-      onSearch(draftFilters);
+      const newKeyword = e.target.value.trim();
+
+      const nextFilters = {
+        ...draftFilters,
+        keyword: newKeyword,
+      };
+
+      // 상태 업데이트
+      setDraftFilters(nextFilters);
+
+      // 검색 함수 전달
+      onSearch(nextFilters);
 
       e.target.value = '';
     }
-  }
+  };
 
 
   // 특정 필터 개별 삭제 핸들러
@@ -103,6 +113,8 @@ function SearchFilterBar({
 
   const activeFilters = getActiveFilters();
 
+  console.log(activeFilters);
+
   return (
     <div>
       {/* 검색 필터 섹션 */}
@@ -116,7 +128,7 @@ function SearchFilterBar({
             name="startDate"
             type="date"
             value={draftFilters.startDate || ""}
-            onChange={(e) => handleSearchKeyword(e)}
+            onChange={e => handleSetField(e, setDraftFilters)}
             aria-label="조회 시작일"
           />
           <span aria-hidden="true">
@@ -156,7 +168,7 @@ function SearchFilterBar({
         <div className={styles.textGroup}>
           <TextInput
             name="keyword"
-            onChange={(e) => handleSetField(e, setDraftFilters)}
+            onKeyUp={(e) => handleSearchKeyword(e)}
             icon={<LuSearch className={styles.searchIcon} />}
             placeholder="검색어를 입력하세요."
           />

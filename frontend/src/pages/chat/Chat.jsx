@@ -6,6 +6,7 @@ import { useLoadData } from "../../hooks/useLoadData.js";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { connectWebSocket, subscribeToUsers } from "../../utils/webSocketService.js";
 import { BsChatSquareDotsFill } from "react-icons/bs";
+import { useAuth } from "../../context/AuthContext.jsx";
 
 // 채팅방 최초 랜딩 페이지
 function Chat() {
@@ -13,8 +14,10 @@ function Chat() {
   const roomId = searchParams.get("roomId");
   const navigate = useNavigate();
 
+  const { user } = useAuth();
+
   // 현재 로그인한 회원의 PK를 세션에서 꺼내오기 (개인 구독에 사용하기 위해)
-  const userCode = Number(sessionStorage.getItem("userCode"));
+  const userCode = user.code;
 
   // 기존 채팅방 불러옴 -> 즉 DB에 저장된 채팅방
   const { data } = useLoadData("/api/chat/rooms");
