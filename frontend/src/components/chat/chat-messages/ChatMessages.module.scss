@@ -1,24 +1,36 @@
 @use "../../../scss/variables.scss" as v;
 @use "../../../scss/mixin.scss" as mix;
 
+/* 대화 메시지 영역 */
 .content {
+  @include mix.flex(column);
   position: relative;
+
   height: 100%;
-  overflow: hidden;
   padding: 80px 0;
+
+  overflow: hidden;
   scroll-behavior: smooth;
 
+  /* 메시지 목록 영역 */
   .messageItems {
     height: 100%;
-    overflow-y: scroll;
+    padding: 0 20px;
+
+    overflow-y: auto;
   }
 
+  /* 입력 상자 영역 */
   .textInput {
-    position: fixed;
+    position: absolute;
     bottom: 0;
+    left: 0;
     z-index: 50;
+
     width: 100%;
-    background-color: #fff;
-    border-bottom: 1px solid #ccc;
+    padding: 16px 20px;
+    border-top: 1px solid v.$grayscale-20;
+
+    background-color: v.$color-white;
   }
 }

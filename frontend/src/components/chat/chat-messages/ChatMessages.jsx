@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from "react";
 import ChatBubble from "./chat-bubble/ChatBubble.jsx";
 import TextInput from "../../forms/text-input/TextInput.jsx";
 import styles from "./ChatMessages.module.scss";
@@ -14,7 +14,7 @@ function ChatMessages({ messages, onSend }) {
   const scrollToBottom = (behavior = "smooth") => {
     messagesRef.current?.scrollIntoView({
       behavior,
-      block: 'end',
+      block: "end",
     });
   };
 
@@ -23,7 +23,6 @@ function ChatMessages({ messages, onSend }) {
     // 메시지가 없으면 스크롤 실행 X
     if (!messages || messages.length === 0) {
       prevFirstMsgCodeRef.current = null;
-
     }
 
     const currentMessageCode = messages[0]?.code;
@@ -38,22 +37,22 @@ function ChatMessages({ messages, onSend }) {
         // 새로운 메시지가 추가될 경우 smooth 스크롤링
         scrollToBottom("smooth");
       }
-    })
+    });
   }, [messages]);
 
   const handleSendChat = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
 
       const newMessage = e.target.value;
 
-      if (newMessage.trim() !== '') {
+      if (newMessage.trim() !== "") {
         onSend(newMessage);
         // 입력창 초기화
-        e.target.value = '';
+        e.target.value = "";
       }
     }
-  }
+  };
 
   return (
     <div className={styles.content}>
@@ -65,11 +64,7 @@ function ChatMessages({ messages, onSend }) {
         <div ref={messagesRef} />
       </div>
       <div className={styles.textInput}>
-        <TextInput
-          type="text"
-          name="message"
-          onKeyDown={handleSendChat}
-        />
+        <TextInput type="text" name="message" onKeyDown={handleSendChat} />
       </div>
     </div>
   );

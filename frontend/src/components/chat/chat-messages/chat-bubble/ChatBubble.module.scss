@@ -1,28 +1,61 @@
 @use "../../../../scss/variables.scss" as v;
 @use "../../../../scss/mixin.scss" as mix;
 
-.bubble {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1rem;
-  outline: 1px dotted red;
+/* 말풍선 감싸기 영역 */
+.wrap {
+  @include mix.flex;
 
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+/* 말풍선 항목 영역 */
+.bubble {
+  @include mix.flex(column);
+
+  max-width: 70%;
+
+  /* 내 말풍선 영역 */
   &.mine {
     align-items: flex-end;
 
+    margin-left: auto;
+
     .text {
-      background-color: yellow;
+      border-radius: 1rem 0 1rem 1rem;
+
+      background-color: v.$primary-5;
     }
   }
 
+  /* 상대방 말풍선 영역 */
   &.other {
+    align-items: flex-start;
+
+    margin-right: auto;
+
     .text {
-      background-color: lightgray;
+      border-radius: 0 1rem 1rem 1rem;
+
+      background-color: v.$grayscale-5;
     }
   }
 
+  /* 말풍선 내용 영역 */
   .text {
-    padding: 1rem;
     width: fit-content;
+    padding: 16px 20px;
+
+    font-size: 1rem;
+    line-height: 1.5;
+    color: v.$grayscale-90;
+  }
+
+  /* 작성 시각 영역 */
+  .date {
+    margin-top: 0.5rem;
+
+    font-size: 0.9rem;
+    color: v.$grayscale-60;
   }
 }
