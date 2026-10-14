@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.ss_dam.admin.log.response.AdminActivity;
+import com.ss_dam.admin.log.model.response.AdminActivity;
 import com.ss_dam.auth.member.dao.AdminMemberDao;
 import com.ss_dam.common.pager.PageQuery;
 import com.ss_dam.common.pager.PageResult;

@@ -2,7 +2,7 @@ package com.ss_dam.market.service;
 
 import java.util.List;
 
-import com.ss_dam.admin.log.response.AdminActivity;
+import com.ss_dam.admin.log.model.response.AdminActivity;
 import com.ss_dam.common.pager.PageQuery;
 import com.ss_dam.common.pager.PageResult;
 import com.ss_dam.market.model.filter.AdminProductSearchFilter;

@@ -21,15 +21,19 @@ const OperationStatus = () => {
     { title: "일일 참여 건수", value: "0건", rate: "+0%" },
   ]);
 
-  const [adminLogsData] = useState([]);
+  const [logRefreshKey, setLogRefreshKey] = useState(0);
+
   // 대시보드 새로고침 시 신고 목록도 다시 조회
   const [reportRefreshKey, setReportRefreshKey] = useState(0);
   const [participationData, setParticipationData] = useState([]);
   const [topSellersData, setTopSellersData] = useState([]);
 
-  const fetchAdminDashboardData = async () => {
-      // 미처리 신고 카드도 새로고침
-    setReportRefreshKey((value) => value + 1);
+ const fetchAdminDashboardData = async () => {
+  // 관리자 활동 로그 새로고침
+  setLogRefreshKey((value) => value + 1);
+
+  // 미처리 신고 카드 새로고침
+  setReportRefreshKey((value) => value + 1);
 
     const queryParam = `?from=${fromDate}&to=${toDate}`;
 
@@ -115,7 +119,7 @@ const OperationStatus = () => {
           <SummaryStats summaryData={summaryData} />
 
           {/* 관리자 로그 카드 영역 */}
-          <AdminLogCard adminLogsData={adminLogsData} />
+          <AdminLogCard refreshKey={logRefreshKey} />
         </div>
 
           {/* 미처리 신고 영역 */}

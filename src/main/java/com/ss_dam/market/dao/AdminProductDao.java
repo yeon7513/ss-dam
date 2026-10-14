@@ -3,7 +3,7 @@ package com.ss_dam.market.dao;
 import java.util.List;
 import java.util.Map;
 
-import com.ss_dam.admin.log.response.AdminActivity;
+import com.ss_dam.admin.log.model.response.AdminActivity;
 import com.ss_dam.market.model.filter.AdminProductSearchFilter;
 import com.ss_dam.market.model.response.AdminMemberTradeView;
 import com.ss_dam.market.model.response.AdminMemberTradesView;
