@@ -1,18 +1,15 @@
 package com.ss_dam.admin.log.controller;
 
-import java.time.LocalDate;
-
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ss_dam.admin.log.response.AdminActivity;
+import com.ss_dam.admin.log.model.request.AdminActivityLogFilter;
+import com.ss_dam.admin.log.model.response.AdminActivity;
 import com.ss_dam.admin.log.service.AdminActivityLogService;
 import com.ss_dam.common.ApiResponse;
 import com.ss_dam.common.pager.PageQuery;
@@ -36,26 +33,21 @@ public class AdminActivityLogController {
         this.adminAuthValidator = adminAuthValidator;
     }
 
-    // 전체 관리자 활동 이력 조회 - 미구현
+		// 전체 관리자 활동 이력 조회
     @GetMapping
-    public ResponseEntity<ApiResponse<Void>> loadActivityLogs(
-            @RequestParam(required = false) Long admCode,
-            @RequestParam(required = false) String targetType,
-            @RequestParam(required = false) Long targetCode,
-            @RequestParam(required = false) String processType,
-            @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            LocalDate from,
-            @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            LocalDate to,
-            HttpSession session) {
+    public ResponseEntity<ApiResponse<PageResult<AdminActivity>>>
+            loadActivityLogs(
+                    @ModelAttribute AdminActivityLogFilter filter,
+                    HttpSession session) {
 
         adminAuthValidator.requireAdmin(session);
 
-        // TODO: 검색 조건·기간 검증·페이지네이션 연결
-        // TODO: 전체 이력 조회에 필요한 추가 권한 정책 적용
-        return notImplemented();
+        PageResult<AdminActivity> result =
+                adminActivityLogService.loadActivityLogs(filter);
+
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        "관리자 활동 이력 조회 성공", result));
     }
 
     // 관리자 활동 이력 상세 조회 - 미구현

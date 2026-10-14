@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.ss_dam.admin.log.service.AdminActivityLogService;
 import com.ss_dam.admin.report.dao.AdminReportDao;
 import com.ss_dam.admin.report.model.request.AdminReportQuery;
 import com.ss_dam.admin.report.model.request.ReportActionMemoRequest;
@@ -44,15 +45,18 @@ public class AdminReportServiceImpl implements AdminReportService {
     private static final ZoneId REPORT_ZONE =
             ZoneId.of("Asia/Seoul");
 
-    private final AdminReportDao adminReportDao;
+		private final AdminReportDao adminReportDao;
     private final AdminMemberDao adminMemberDao;
+    private final AdminActivityLogService adminActivityLogService;
 
     public AdminReportServiceImpl(
             AdminReportDao adminReportDao,
-            AdminMemberDao adminMemberDao) {
+            AdminMemberDao adminMemberDao,
+            AdminActivityLogService adminActivityLogService) {
 
         this.adminReportDao = adminReportDao;
         this.adminMemberDao = adminMemberDao;
+        this.adminActivityLogService = adminActivityLogService;
     }
 
     // 관리자 신고 목록 조회
@@ -654,14 +658,89 @@ public class AdminReportServiceImpl implements AdminReportService {
         insertReportLog(params);
     }
 
-    // 이력 저장 실패 시 트랜잭션 전체 롤백
+		// 신고 상세 이력 + 신고 활동 로그 + 회원 조치 로그 저장
     private void insertReportLog(Map<String, Object> params) {
-        if (adminReportDao.insertReportLog(params) != 1) {
-            throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR,
-                    "신고 처리 이력을 저장하지 못했습니다.");
-        }
-    }
+
+		// 1. 기존 신고 상세 이력 저장
+		if (adminReportDao.insertReportLog(params) != 1) {
+				throw new ResponseStatusException(
+								HttpStatus.INTERNAL_SERVER_ERROR,
+								"신고 처리 이력을 저장하지 못했습니다.");
+		}
+
+		Long reportCode = (Long) params.get("reportCode");
+		Long adminCode = (Long) params.get("admCode");
+		Long targetMemberCode =
+						(Long) params.get("targetMemberCode");
+
+		String eventType = (String) params.get("eventType");
+		String actionType = (String) params.get("actionType");
+		String resultStatus =
+						(String) params.get("resultStatus");
+
+		LocalDateTime createdAt =
+						(LocalDateTime) params.get("createdAt");
+
+		String memo = trimToNull(
+						(String) params.get("processMemo"));
+
+		// 검토 시작은 원래 메모가 없으므로 기본 문구 사용
+		if (memo == null) {
+				memo = "REVIEW".equals(eventType)
+								? "신고 검토를 시작했습니다."
+								: "신고 처리 이력이 기록되었습니다.";
+		}
+
+		// 2. 신고 처리 탭에 표시할 로그
+		// 기존 REPORT_LOG에서는 완료와 기각 모두 PROCESS이므로
+		// 활동 로그에서는 구분해서 저장
+		String reportProcessType = eventType;
+
+		if ("PROCESS".equals(eventType)) {
+				reportProcessType = "REJECTED".equals(resultStatus)
+								? "REJECT"
+								: "RESOLVE";
+		}
+
+		adminActivityLogService.recordActivity(
+						adminCode,
+						"report",
+						reportCode,
+						reportProcessType,
+						memo,
+						createdAt,
+						reportCode);
+
+		// 3. 검토 시작·기각에는 회원 조치 로그를 남기지 않음
+		if (targetMemberCode == null
+						|| actionType == null
+						|| !ACTION_TYPES.contains(actionType)) {
+				return;
+		}
+
+		// 4. 실제 회원 제재 등록·취소·재적용 구분
+		String memberProcessType = switch (eventType) {
+				case "PROCESS" -> actionType;
+				case "CANCEL" -> actionType + "_CANCEL";
+				case "RESTORE" -> actionType + "_RESTORE";
+				default -> null;
+		};
+
+		if (memberProcessType == null) {
+				return;
+		}
+
+		// 5. 회원 탭에 표시할 로그
+		// 신고 로그와 같은 reportCode로 연결
+		adminActivityLogService.recordActivity(
+						adminCode,
+						"member",
+						targetMemberCode,
+						memberProcessType,
+						memo,
+						createdAt,
+						reportCode);
+}
 
     // 검색 조건의 앞뒤 공백 제거
     // null 또는 공백만 있는 문자열은 null 반환

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ss_dam.admin.log.response.AdminActivity;
+import com.ss_dam.admin.log.model.response.AdminActivity;
 import com.ss_dam.common.ApiResponse;
 import com.ss_dam.common.pager.PageQuery;
 import com.ss_dam.common.pager.PageResult;

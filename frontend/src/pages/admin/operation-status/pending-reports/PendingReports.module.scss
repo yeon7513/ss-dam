@@ -2,7 +2,9 @@
 .reportCard.reportCard {
   box-sizing: border-box;
   min-width: 0;
-  height: 400px;
+  min-height: 0;
+  height: auto;
+  align-self: stretch;
   padding: 20px;
 
   display: flex;
@@ -25,11 +27,29 @@
   }
 
   a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     color: inherit;
     text-decoration: none;
 
     &:hover {
+      color: #374151;
       text-decoration: underline;
+
+      svg {
+        color: #374151;
+      }
+    }
+
+    &:focus-visible {
+      outline: 2px solid #374151;
+      outline-offset: 4px;
+    }
+
+    svg {
+      color: #8a93a1;
+      font-size: 14px;
     }
   }
 }

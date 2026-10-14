@@ -6,7 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
-import com.ss_dam.admin.log.response.AdminActivity;
+import com.ss_dam.admin.log.model.response.AdminActivity;
 
 @Repository
 public class AdminActivityLogDaoImpl implements AdminActivityLogDao {
@@ -15,6 +15,22 @@ public class AdminActivityLogDaoImpl implements AdminActivityLogDao {
 
 	public AdminActivityLogDaoImpl(SqlSession sql) {
 		this.sql = sql;
+	}
+
+	@Override
+	public long countActivityLogs(Map<String, Object> params) {
+			return sql.selectOne(
+							"adminActivityLog.countActivityLogs",
+							params);
+	}
+
+	@Override
+	public List<AdminActivity> loadActivityLogs(
+					Map<String, Object> params) {
+
+			return sql.selectList(
+							"adminActivityLog.loadActivityLogs",
+							params);
 	}
 
     // 회원 정지·해제 이력 전체 건수

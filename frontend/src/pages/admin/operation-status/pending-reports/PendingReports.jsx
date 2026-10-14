@@ -1,6 +1,7 @@
 // frontend/src/pages/admin/operation-status/pending-reports/PendingReports.jsx
 
 import { useEffect, useState } from "react";
+import { FiExternalLink } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
 import Button from "../../../../components/common/button/Button";
@@ -151,7 +152,8 @@ export default function PendingReports({ refreshKey = 0 }) {
       <div className={styles.cardHeader}>
         <h3>
           <Link to="/admin/reports">
-            미처리 신고 ↗
+            미처리 신고
+            <FiExternalLink aria-hidden="true" />
           </Link>
         </h3>
 

@@ -1,4 +1,4 @@
-package com.ss_dam.admin.log.response;
+package com.ss_dam.admin.log.model.response;
 
 // 최고관리자가 확인하기 위한 전체 관리자의 활동 내역 DTO
 public class AdminActivity {
@@ -9,6 +9,10 @@ public class AdminActivity {
   private String processType; // 처리 유형
   private String memo; // 처리 사유 (상세 메모)
   private String createdAt; // 활동일
+
+  private String adminName; // 처리 관리자 이름
+  private String adminDept; // 처리 관리자 부서
+  private Long reportCode;  // 관련 신고 번호, 일반 작업은 null
 
   // getter, setter
   public Long getCode() {
@@ -65,5 +69,29 @@ public class AdminActivity {
 
   public void setCreatedAt(String createdAt) {
     this.createdAt = createdAt;
+  }
+
+  public String getAdminName() {
+    return adminName;
+  }
+
+  public void setAdminName(String adminName) {
+      this.adminName = adminName;
+  }
+
+  public String getAdminDept() {
+      return adminDept;
+  }
+
+  public void setAdminDept(String adminDept) {
+      this.adminDept = adminDept;
+  }
+
+  public Long getReportCode() {
+      return reportCode;
+  }
+
+  public void setReportCode(Long reportCode) {
+      this.reportCode = reportCode;
   }
 }
