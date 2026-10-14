@@ -179,8 +179,10 @@
 
             reporter.ID AS REPORTER_ID,
 
-            COALESCE(f.MEM_CODE, c.MEM_CODE, p.MEM_CODE)
-                AS TARGET_MEMBER_CODE,
+            CASE
+                WHEN r.TARGET_TYPE = 'user' THEN r.TARGET_CODE
+                ELSE COALESCE(f.MEM_CODE, c.MEM_CODE, p.MEM_CODE)
+            END AS TARGET_MEMBER_CODE,
 
             targetMember.ID AS TARGET_MEMBER_ID,
 
@@ -233,8 +235,10 @@
 
         <!-- 신고 대상 콘텐츠 작성자 정보 -->
         LEFT JOIN MEMBER_ACCOUNT targetMember
-            ON targetMember.CODE =
-                COALESCE(f.MEM_CODE, c.MEM_CODE, p.MEM_CODE)
+        ON targetMember.CODE = CASE
+            WHEN r.TARGET_TYPE = 'user' THEN r.TARGET_CODE
+            ELSE COALESCE(f.MEM_CODE, c.MEM_CODE, p.MEM_CODE)
+        END
 
         <!-- 가장 최근에 수행한 원본 처리 이력 한 건 -->
         <!-- 검토 시작·취소·복구 이력은 원본 처리에서 제외 -->
@@ -261,7 +265,7 @@
                 WHERE changes.REPORT_CODE = r.CODE
                   AND changes.RELATED_LOG_CODE = processLog.CODE
                   AND changes.EVENT_TYPE IN ('CANCEL', 'RESTORE')
-                ORDER BY changes.CREATED_AT DESC, changes.CODE DESC
+                ORDER BY changes.CODE DESC
                 LIMIT 1
             )
 
@@ -299,6 +303,11 @@
                     WHERE p.CODE = r.TARGET_CODE
                       AND p.MEM_CODE = #{memberCode}
                 )
+            )
+            OR
+            (
+                r.TARGET_TYPE = 'user'
+                AND r.TARGET_CODE = #{memberCode}
             )
         )
     </sql>
@@ -352,5 +361,233 @@
         ORDER BY r.CREATED_AT DESC, r.CODE DESC
         LIMIT #{perPage} OFFSET #{offset}
     </select>
+
+    <!-- 원본 처리 이력 -->
+<!-- Map의 키 이름과 날짜 타입을 명시적으로 지정 -->
+<resultMap id="originalProcessLogMap"
+           type="java.util.HashMap"
+           autoMapping="false">
+
+    <id column="CODE"
+        property="code"
+        javaType="java.lang.Long"/>
+
+    <result column="TARGET_MEMBER_CODE"
+            property="targetMemberCode"
+            javaType="java.lang.Long"/>
+
+    <result column="ACTION_TYPE"
+            property="actionType"
+            javaType="java.lang.String"/>
+
+    <result column="SUSPENSION_PERIOD"
+            property="suspensionPeriod"
+            javaType="java.lang.String"/>
+
+    <result column="SUSPENDED_UNTIL"
+            property="suspendedUntil"
+            javaType="java.time.LocalDateTime"/>
+</resultMap>
+
+<!-- 신고 현재 상태 확인 및 행 잠금 -->
+<select id="lockReportStatus"
+        parameterType="map"
+        resultType="string">
+
+    SELECT STATUS
+    FROM REPORT
+    WHERE CODE = #{reportCode}
+    FOR UPDATE
+</select>
+
+<!-- 신고 대상 회원 확인 -->
+<!-- 삭제 표시된 콘텐츠라도 작성자 정보가 남아 있으면 조회 -->
+<select id="findReportTargetMemberCode"
+        parameterType="map"
+        resultType="java.lang.Long">
+
+    SELECT
+        CASE
+            WHEN r.TARGET_TYPE = 'user' THEN r.TARGET_CODE
+            ELSE COALESCE(f.MEM_CODE, c.MEM_CODE, p.MEM_CODE)
+        END
+    FROM REPORT r
+
+    LEFT JOIN FEED f
+        ON r.TARGET_TYPE = 'feed'
+        AND f.CODE = r.TARGET_CODE
+
+    LEFT JOIN COMMENTS c
+        ON r.TARGET_TYPE = 'comment'
+        AND c.CODE = r.TARGET_CODE
+
+    LEFT JOIN MARKET_PRODUCT p
+        ON r.TARGET_TYPE = 'market'
+        AND p.CODE = r.TARGET_CODE
+
+    WHERE r.CODE = #{reportCode}
+</select>
+
+<!-- 제재 대상 회원 행 잠금 -->
+<!-- 탈퇴 상태여도 조치 취소를 위해 조회 가능 -->
+<select id="lockReportTargetMember"
+        parameterType="map"
+        resultType="java.lang.Long">
+
+    SELECT CODE
+    FROM MEMBER_ACCOUNT
+    WHERE CODE = #{memberCode}
+    FOR UPDATE
+</select>
+
+<!-- 현재 상태가 일치하는 경우에만 변경 -->
+<update id="updateReportStatus"
+        parameterType="map">
+
+    UPDATE REPORT
+    SET STATUS = #{resultStatus}
+    WHERE CODE = #{reportCode}
+      AND STATUS = #{previousStatus}
+</update>
+
+<!-- 신고 처리 이력 저장 -->
+<!-- 기존 이력은 수정하지 않고 새 행 추가 -->
+<insert id="insertReportLog"
+        parameterType="map">
+
+    INSERT INTO REPORT_LOG (
+        REPORT_CODE,
+        ADM_CODE,
+        TARGET_MEMBER_CODE,
+        EVENT_TYPE,
+        ACTION_TYPE,
+        PREVIOUS_STATUS,
+        RESULT_STATUS,
+        PROCESS_MEMO,
+        SUSPENSION_PERIOD,
+        SUSPENDED_UNTIL,
+        RELATED_LOG_CODE,
+        CREATED_AT
+    )
+    VALUES (
+        #{reportCode},
+        #{admCode},
+        #{targetMemberCode, jdbcType=INTEGER},
+        #{eventType},
+        #{actionType, jdbcType=VARCHAR},
+        #{previousStatus},
+        #{resultStatus},
+        #{processMemo, jdbcType=VARCHAR},
+        #{suspensionPeriod, jdbcType=VARCHAR},
+        #{suspendedUntil, jdbcType=TIMESTAMP},
+        #{relatedLogCode, jdbcType=BIGINT},
+        #{createdAt}
+    )
+</insert>
+
+<!-- 요청한 이력이 해당 신고의 최신 원본 처리인지 확인 -->
+<select id="loadOriginalProcessLog"
+        parameterType="map"
+        resultMap="originalProcessLogMap">
+
+    SELECT
+        original.CODE,
+        original.TARGET_MEMBER_CODE,
+        original.ACTION_TYPE,
+        original.SUSPENSION_PERIOD,
+        original.SUSPENDED_UNTIL
+
+    FROM REPORT_LOG original
+
+    WHERE original.CODE = #{processLogCode}
+      AND original.REPORT_CODE = #{reportCode}
+      AND original.EVENT_TYPE = 'PROCESS'
+
+      AND original.CODE = (
+          SELECT MAX(history.CODE)
+          FROM REPORT_LOG history
+          WHERE history.REPORT_CODE = #{reportCode}
+            AND history.EVENT_TYPE = 'PROCESS'
+      )
+
+    FOR UPDATE
+</select>
+
+<!-- 원본 처리에 대한 최신 취소·복구 이벤트 -->
+<!-- 이력이 없으면 null: 최초 조치 적용 상태 -->
+<select id="findLatestActionEvent"
+        parameterType="map"
+        resultType="string">
+
+    SELECT EVENT_TYPE
+    FROM REPORT_LOG
+    WHERE REPORT_CODE = #{reportCode}
+      AND RELATED_LOG_CODE = #{processLogCode}
+      AND EVENT_TYPE IN ('CANCEL', 'RESTORE')
+    ORDER BY CODE DESC
+    LIMIT 1
+    FOR UPDATE
+</select>
+
+<!-- 적용 중인 신고 제재 조회 -->
+<!-- 강제 탈퇴 우선, 정지는 종료 시각이 남은 경우에만 적용 -->
+<!-- 하나의 조치를 취소해도 다른 유효한 조치는 유지 -->
+<select id="findEffectiveReportRestriction"
+        parameterType="map"
+        resultType="string">
+
+    SELECT original.ACTION_TYPE
+
+    FROM REPORT_LOG original
+
+    WHERE original.TARGET_MEMBER_CODE = #{memberCode}
+      AND original.EVENT_TYPE = 'PROCESS'
+
+      AND (
+          original.ACTION_TYPE = 'WITHDRAW'
+          OR (
+              original.ACTION_TYPE = 'SUSPEND'
+              AND original.SUSPENDED_UNTIL &gt; #{now}
+          )
+      )
+
+      AND COALESCE(
+          (
+              SELECT changes.EVENT_TYPE
+              FROM REPORT_LOG changes
+              WHERE changes.REPORT_CODE = original.REPORT_CODE
+                AND changes.RELATED_LOG_CODE = original.CODE
+                AND changes.EVENT_TYPE IN ('CANCEL', 'RESTORE')
+              ORDER BY changes.CODE DESC
+              LIMIT 1
+          ),
+          'RESTORE'
+      ) = 'RESTORE'
+
+    ORDER BY
+        CASE
+            WHEN original.ACTION_TYPE = 'WITHDRAW' THEN 0
+            ELSE 1
+        END,
+        original.CODE DESC
+
+    LIMIT 1
+</select>
+
+<!-- 회원 기본 상태 확인 -->
+<!-- 삭제 여부가 설정된 회원은 탈퇴 상태로 판단 -->
+<select id="findMemberAccessStatus"
+        parameterType="map"
+        resultType="string">
+
+    SELECT
+        CASE
+            WHEN DELETE_YN = TRUE THEN 'WITHDRAW'
+            ELSE STATUS
+        END
+    FROM MEMBER_ACCOUNT
+    WHERE CODE = #{memberCode}
+</select>
+
 
 </mapper>
