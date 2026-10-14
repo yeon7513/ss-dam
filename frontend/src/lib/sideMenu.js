@@ -19,7 +19,7 @@ export const ADMIN_MENU = [
   {
     category: "서비스 관리",
     subMenus: [
-      { name: "미처리 신고", path: "" },
+      { name: "미처리 신고", path: "/admin/reports" },
       { name: "회원 정보", path: "/admin/user_manage" },
       { name: "피드 목록", path: "/admin/feed_manage" },
       { name: "마켓 거래", path: "/admin/market_manage" },

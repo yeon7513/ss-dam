@@ -4,8 +4,10 @@ import Layout from "./layout/default/Layout.jsx";
 import About from "./pages/about/About";
 import ChallengeGuide from "./pages/about/challenge-guide/ChallengeGuide.jsx";
 import MarketGuide from "./pages/about/market-guide/MarketGuide.jsx";
+import AccountRegister from "./pages/admin/account-manage/account-register/AccountRegister.jsx";
 import AccountManage from "./pages/admin/account-manage/AccountManage.jsx";
 import FeedManage from "./pages/admin/admin-feed/FeedManage";
+import FeedManageDetail from "./pages/admin/admin-feed/FeedManageDetail.jsx";
 import ChallengeManage from "./pages/admin/challenge-manage/ChallengeManage.jsx";
 import ChallengeManageDetail from "./pages/admin/challenge-manage/ChallengeManageDetail.jsx";
 import ChallengeRegister from "./pages/admin/challenge-manage/register/ChallengeRegister.jsx";
@@ -15,6 +17,7 @@ import ChallengeResultDetail from './pages/admin/challenge-result/ChallengeResul
 import MarketManage from "./pages/admin/market/MarketManage";
 import MarketManageDetail from "./pages/admin/market/MarketManageDetail.jsx";
 import OperationStatus from "./pages/admin/OperationStatus";
+import AdminReports from "./pages/admin/reports/AdminReports";
 import UserManageDetail from "./pages/admin/user/user-manage-detail/UserManageDetail.jsx";
 import UserManage from "./pages/admin/user/UserManage.jsx";
 import FindId from "./pages/auth/find-account/find-id/FindId.jsx";
@@ -48,10 +51,8 @@ import MyPage from "./pages/my-page/MyPage.jsx";
 import Points from "./pages/my-page/points/Points";
 import SupportDetail from "./pages/support/SupportDetail";
 import Supports from "./pages/support/Supports";
-import FeedManageDetail from "./pages/admin/admin-feed/FeedManageDetail.jsx";
-import ProtectedRoute from "./routes/ProtectedRoute.jsx";
 import AdminRoute from "./routes/AdminRoute.jsx";
-import AccountRegister from "./pages/admin/account-manage/account-register/AccountRegister.jsx";
+import ProtectedRoute from "./routes/ProtectedRoute.jsx";
 
 
 function App() {
@@ -135,6 +136,9 @@ function App() {
         <Route path="/admin" element={<AdminLayout />}>
           {/* 운영 현황 */}
           <Route index element={<OperationStatus />} />
+
+          {/* 미처리 신고 */}
+          <Route path="reports" element={<AdminReports />} />
 
           {/* 회원 관리 */}
           <Route path="user_manage" element={<UserManage />} />

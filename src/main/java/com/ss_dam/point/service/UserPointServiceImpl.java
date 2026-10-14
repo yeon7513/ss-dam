@@ -101,4 +101,31 @@ public class UserPointServiceImpl implements UserPointService {
 
     return true;
   }
+
+  @Transactional
+  @Override
+  public boolean exchangePoint(Point point) {
+    int beforePoint = pointDao.getPointBalance(point.getCode());
+
+    PointLog pointLog = new PointLog();
+    pointLog.setMemCode(point.getCode());
+    pointLog.setType("USED");
+    pointLog.setAmount(point.getPoint());
+    pointLog.setReason("EXCHANGE");
+
+    if(beforePoint >= point.getPoint()){
+      int afterPoint = beforePoint - point.getPoint();
+      point.setPoint(afterPoint);
+      int result = pointDao.exchangePoint(point);
+      if(result == 1) {
+        pointDao.chargePointLog(pointLog);
+
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
 }

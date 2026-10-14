@@ -1,2 +1,142 @@
 @use "../../../../scss/variables.scss" as v;
 @use "../../../../scss/mixin.scss" as mix;
+
+/* 채팅방 목록 영역 */
+.roomList {
+  @include mix.flex(column, flex-start, stretch);
+
+  width: 100%;
+
+  /* 개별 채팅방 항목 영역 */
+  .roomItem {
+    width: 100%;
+    padding: 16px;
+    border-bottom: 1px solid v.$grayscale-20;
+
+    cursor: pointer;
+
+    /* 활성화 항목 영역 */
+    &.active {
+      background-color: v.$point-5;
+    }
+
+    /* 채팅방 컨테이너 영역 */
+    .chatRoomContainer {
+      @include mix.flex(column, flex-start, stretch);
+
+      width: 100%;
+      gap: 1rem;
+
+      /* 상단 정보 영역 */
+      .topBox {
+        @include mix.flex(row, flex-start, center);
+
+        width: 100%;
+        gap: 1rem;
+
+        /* 프로필 영역 */
+        .profileBox {
+          flex-shrink: 0;
+
+          width: 3.5rem;
+          height: 3.5rem;
+          border-radius: 50%;
+
+          overflow: hidden;
+
+          /* 프로필 이미지 영역 */
+          img {
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+          }
+        }
+
+        /* 사용자 정보 영역 */
+        .infoBox {
+          @include mix.flex(column, center, stretch);
+          flex: 1;
+
+          min-width: 0;
+          gap: 0.25rem;
+
+          /* 사용자 명칭 영역 */
+          .userBox {
+            @include mix.flex(row, flex-start, center);
+
+            gap: 0.5rem;
+
+            font-size: 1rem;
+            font-weight: 700;
+            color: v.$grayscale-90;
+
+            /* 사용자 유형 태그 영역 */
+            .userTpye {
+              @include mix.flex(row, center, center);
+              flex-shrink: 0;
+
+              padding: 1.5px 3px;
+              border-radius: 0.3rem;
+
+              background-color: v.$primary-40;
+
+              font-size: 0.7rem;
+              font-weight: 500;
+              color: v.$color-white;
+            }
+          }
+
+          /* 작성 시각 영역 */
+          .timeBox {
+            font-size: 0.9rem;
+            color: v.$grayscale-70;
+          }
+        }
+      }
+
+      /* 하단 내용 영역 */
+      .bottomBox {
+        @include mix.flex(row, flex-start, flex-end);
+
+        width: 100%;
+        gap: 1.5rem;
+
+        /* 최근 메시지 내용 영역 */
+        .messageBox {
+          @include mix.textLine(2);
+          flex: 1;
+
+          width: 100%;
+          min-width: 0;
+
+          font-size: 1rem;
+          line-height: 1.5;
+          color: v.$grayscale-90;
+          word-break: break-all;
+          white-space: normal;
+        }
+
+        /* 미읽음 알림 배지 영역 */
+        .countBadge {
+          @include mix.flex(row, center, center);
+          flex-shrink: 0;
+
+          padding: 4px 6px;
+          border-radius: 50%;
+
+          background-color: v.$grayscale-50;
+
+          line-height: 1;
+
+          /* 미읽음 수량 텍스트 영역 */
+          .unreadBox {
+            font-size: 0.65rem;
+            font-weight: 500;
+            color: v.$color-white;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../../../context/AuthContext";
 
 export function useMarketManageDetail() {
   const { code: prodCode } = useParams();
@@ -9,8 +10,11 @@ export function useMarketManageDetail() {
   const [loading, setLoading] = useState(true);
   const [reason, setReason] = useState("");
 
-  const sessionUser = JSON.parse(sessionStorage.getItem("user") || "{}");
-  const admCode = sessionUser?.admCode;
+  const { user } = useAuth();
+  const admCode = user?.code;
+
+  console.log("현재 로그인 정보: ", user);
+  console.log("추출된 admCode ", admCode);
 
   useEffect(() => {
     fetchProduct();

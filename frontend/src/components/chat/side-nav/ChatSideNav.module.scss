@@ -1,12 +1,131 @@
 @use "../../../scss/variables.scss" as v;
 @use "../../../scss/mixin.scss" as mix;
 
+/* 사이드 메뉴 영역 */
 .sideNav {
-  width: 23%;
-  min-width: fit-content;
+  @include mix.flex(column, flex-start, stretch);
 
-  // 프로필 이미지 크기 임시 코딩
-  img {
-    width: 50px;
+  width: 23%;
+  min-width: 20rem;
+  height: 100%;
+  min-height: 0;
+  gap: 1rem;
+  padding: 16px;
+  border-right: 1px solid v.$grayscale-20;
+
+  background-color: v.$color-white;
+
+  overflow: hidden;
+
+  /* 사이드바 항목 영역 */
+  > li {
+    @include mix.flex(column, flex-start, stretch);
+
+    width: 100%;
+
+    /* 상단 메뉴 링크 영역 */
+    &:first-child {
+      @include mix.flex(row, space-between, center);
+
+      width: 100%;
+
+      /* 로고 영역 */
+      .logoText {
+        font-size: 1.75rem;
+        font-weight: 800;
+        font-family: v.$font-logo;
+
+        a {
+          font-family: inherit;
+          color: v.$point-60;
+        }
+      }
+
+      /* 마이페이지 링크 영역 */
+      .mypageLink {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: v.$grayscale-70;
+      }
+    }
+
+    /* 검색 상자 영역 */
+    &:nth-child(2) {
+      @include mix.flex;
+
+      width: 100%;
+
+      /* 검색 상자 구성 요소 영역 */
+      :global {
+        div,
+        form {
+          width: 100%;
+        }
+
+        /* 입력 상자 감싸기 영역 */
+        form > div {
+          position: relative;
+        }
+
+        /* 텍스트 입력창 영역 */
+        input[type="text"] {
+          width: 100%;
+          padding-right: 40px;
+
+          &:focus ~ svg {
+            color: v.$grayscale-90;
+          }
+        }
+
+        /* 돋보기 아이콘 영역 */
+        svg {
+          position: absolute;
+          top: 50%;
+          right: 0.75rem;
+          z-index: 1;
+
+          font-size: 1.2rem;
+          color: v.$grayscale-50;
+
+          cursor: pointer;
+          transform: translateY(-50%);
+
+          &:hover {
+            color: v.$grayscale-90;
+          }
+        }
+      }
+    }
+
+    /* 채팅방 목록 영역 */
+    &:last-child {
+      flex: 1;
+
+      min-height: 0;
+
+      /* 채팅방 감싸기 영역 */
+      > div {
+        @include mix.flex(column, flex-start, stretch);
+        flex: 1;
+
+        min-height: 0;
+
+        overflow: hidden;
+
+        /* 채팅방 목록 스크롤 영역 */
+        > ul {
+          flex: 1;
+
+          min-height: 0;
+
+          overflow-y: auto;
+        }
+
+        /* 페이지네이션 고정 영역 */
+        > nav {
+          flex-shrink: 0;
+        }
+      }
+    }
   }
 }

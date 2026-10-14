@@ -4,10 +4,10 @@
 /* 로그인 페이지 영역 */
 .loginPage {
   display: flex;
-  align-items: flex-start; // 상단 간격을 고정함.
-  justify-content: center; // 화면 중앙에 배치함.
+  align-items: flex-start;
+  justify-content: center;
 
-  padding: 96px 32px; // 내부 여백을 설정함.
+  padding: 96px 32px;
 }
 
 /* 로그인 컨테이너 영역 */
@@ -47,7 +47,7 @@
   margin-bottom: 1.5rem;
 
   label {
-    display: block; // 라벨 요소를 한 줄 전체 영역으로 설정함.
+    display: block;
     margin-bottom: 0.5rem;
   }
 }
@@ -74,13 +74,8 @@
   transform: translateY(-50%);
 
   padding: 0;
-  border: none;
-
-  background: transparent;
 
   color: v.$grayscale-50;
-
-  cursor: pointer;
 
   &:hover {
     color: v.$grayscale-90;
@@ -89,7 +84,7 @@
 
 /* 로그인 버튼 영역 */
 .loginButton {
-  margin-bottom: 0.8rem; // 회원가입 버튼과의 간격을 설정함.
+  margin-bottom: 0.8rem;
 }
 
 /* 계정 정보 링크 영역 */
@@ -102,7 +97,7 @@
   margin-top: 1rem;
 
   p {
-    opacity: 0.6; // 투명도를 조절함.
+    opacity: 0.6;
     color: v.$grayscale-90;
   }
 }

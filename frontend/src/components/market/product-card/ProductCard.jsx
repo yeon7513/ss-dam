@@ -31,7 +31,9 @@ function ProductCard({ product }) {
       <div className={styles.contents}>
         {/* 제목 */}
         <div className={styles.title}>
-          <span>{product.mainCategoryName} - {product.subCategoryName}</span>
+          <span>
+            {product.mainCategoryName} - {product.subCategoryName}
+          </span>
           <h3>
             <span>{product.dealStatus}</span>
             {product.title}
@@ -40,12 +42,13 @@ function ProductCard({ product }) {
 
         {/* 콘텐츠 (내용) */}
         <div className={styles.detail}>
-          <div className={styles.price}>{product.price.toLocaleString()}원</div>
+          <div className={styles.price}>
+            {product.price.toLocaleString()} <span>그루</span>
+          </div>
         </div>
 
         {/* Pick, 채팅 수, 조회수 & 작성일(시간) */}
         <div className={styles.info}>
-          
           {/* 상호작용 수 */}
           <div className={styles.count}>
             {/* 좋아요 수 */}
