@@ -1,3 +1,37 @@
 @use "../../../scss/variables.scss" as v;
 @use "../../../scss/mixin.scss" as mix;
 
+.searchFilterBar {
+  flex-direction: column;
+  margin: 1rem 0;
+
+  > form {
+    @include mix.flex($jc: flex-start);
+    flex-wrap: wrap;
+    column-gap: 3rem;
+    row-gap: 1rem;
+
+    label {
+      flex: none;
+      font-weight: 600;
+    }
+
+  }
+
+  .selectGroups {
+    @include mix.flex($jc: flex-start);
+    flex-wrap: wrap;
+    gap: 2rem;
+  }
+
+  .radioGroup {
+    label {
+      font-weight: 400;
+    }
+  }
+
+  .footer {
+    @include mix.flex;
+    gap: 0.5rem;
+  }
+}

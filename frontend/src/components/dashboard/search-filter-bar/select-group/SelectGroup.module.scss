@@ -1,0 +1,11 @@
+@use "../../../../scss/variables.scss" as v;
+@use "../../../../scss/mixin.scss" as mix;
+
+
+.select {
+  select {
+    width: fit-content;
+    min-width: 10rem;
+    margin-top: 0.5rem;
+  }
+}

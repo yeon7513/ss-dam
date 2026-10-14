@@ -7,8 +7,8 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import MemberCard from "../../../components/dashboard/member-card/MemberCard.jsx";
 import styles from "./AccountManage.module.scss";
 import AccountManageDetail from "./account-manage-detail/AccountManageDetail.jsx";
-import Button from "../../../components/common/button/Button.jsx";
 import SearchFilterBar from "../../../components/dashboard/search-filter-bar/SearchFilterBar.jsx";
+import { ADMIN_ACCOUNT_INITIAL_FILTERS, ADMIN_ACCOUNT_ROLE_OPTIONS, ADMIN_ACCOUNT_STATUS } from "../../../constants/admin-account/AccountManage.constants.js";
 
 function AccountManage() {
   const [detailCode, setDetailCode] = useState(null);
@@ -17,14 +17,7 @@ function AccountManage() {
   const navigate = useNavigate();
 
   const { handleSearch, searchFilter, queryString, handleChangePages } = useSearchQuery({
-    page: 1,
-    perPage: 6,
-    keyword: "",
-    role: "",
-    dept: "",
-    deleted: null,
-    fromDate: "",
-    toDate: "",
+    ...ADMIN_ACCOUNT_INITIAL_FILTERS,
     selectedCode,
   });
   const { data: adminAccounts, refetch } = useLoadData(`/api/admin/account${queryString}`);
@@ -54,18 +47,17 @@ function AccountManage() {
 
       {/* 검색 필터 & 관리자 등록 */}
       <div>
-        <SearchFilterBar onSearch={handleSearch} searchFilter={searchFilter} />
-
-        <div>
-          <Button
-            type="button"
-            action="submit"
-            onClick={() => navigate("account_register")}
-          >
-            관리자 계정 생성
-          </Button>
-        </div>
-
+        <SearchFilterBar
+          ctaButton={{
+            onClick: () => navigate("account_register"),
+            label: "관리자 계정 생성",
+          }}
+          initFilter={ADMIN_ACCOUNT_INITIAL_FILTERS}
+          selectGroups={ADMIN_ACCOUNT_ROLE_OPTIONS}
+          radioGroups={ADMIN_ACCOUNT_STATUS}
+          searchFilter={searchFilter}
+          onSearch={handleSearch}
+        />
       </div>
 
       <div className={styles.container}>

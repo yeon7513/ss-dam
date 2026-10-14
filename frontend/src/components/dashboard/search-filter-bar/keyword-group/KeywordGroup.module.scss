@@ -1,0 +1,15 @@
+@use "../../../../scss/variables.scss" as v;
+@use "../../../../scss/mixin.scss" as mix;
+
+.keywordGroup {
+  width: 30%;
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  > button {
+    flex: none;
+  }
+}

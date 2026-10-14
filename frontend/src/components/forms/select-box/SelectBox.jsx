@@ -15,6 +15,7 @@ function SelectBox({
   return (
     <div className={cn(styles.selectWrap, className)}>
       <select
+        id={name}
         name={name}
         onChange={onChange}
         value={selectedValue || ""} // 수정 시 사용할 선택된 옵션으로 미리 선택되게
