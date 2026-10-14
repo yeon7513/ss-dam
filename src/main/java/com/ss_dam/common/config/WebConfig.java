@@ -20,10 +20,13 @@ public class WebConfig implements WebMvcConfigurer {
   @Value("${kopo.upload.url}")
   private String uploadUrl;
 
+  @Value("${kopo.frontend.url}")
+  private String frontendUrl;
+
   // 리액트와의 통신을 허용함 (CORS 설정)
   @Override
   public void addCorsMappings(CorsRegistry registry) {
-    registry.addMapping("/**").allowedOrigins("http://localhost:5173") // 리액트 서버 주소
+    registry.addMapping("/**").allowedOrigins(frontendUrl) // 리액트 서버 주소
         .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS") // 허용된 HTTP Method
         .allowCredentials(true); // 쿠키 연동 허용
   }

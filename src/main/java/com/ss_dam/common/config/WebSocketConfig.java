@@ -1,5 +1,6 @@
 package com.ss_dam.common.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -11,12 +12,15 @@ import org.springframework.web.socket.server.support.HttpSessionHandshakeInterce
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
+  @Value("${kopo.frontend.url}")
+  private String frontendUrl;
+
   // WebSocket 연결을 위한 엔드포인트를 등록하는 메소드
   @Override
   public void registerStompEndpoints(StompEndpointRegistry registry) {
     registry.addEndpoint("/ws") // 엔드포인트를 등록 -> 채팅방 접속 및 최초 연결 시 사용
         // 즉, http://서버주소/ws로 웹소켓 연결을 요청함
-        .setAllowedOrigins("http://localhost:5173") // React Vite 기본 포트 설정 (CORS 설정)
+        .setAllowedOrigins(frontendUrl) // React Vite 기본 포트 설정 (CORS 설정)
         .addInterceptors(new HttpSessionHandshakeInterceptor())
         // HttpSession에 접근하기 위해 WebSocket이 기본으로 제공하는 인터셉터 추가
         .withSockJS(); // WebSocket을 지원하지 않는 브라우저를 위한 폴백 옵션
