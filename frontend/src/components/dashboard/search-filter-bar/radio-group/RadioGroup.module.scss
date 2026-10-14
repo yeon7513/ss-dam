@@ -1,0 +1,20 @@
+@use "../../../../scss/variables.scss" as v;
+@use "../../../../scss/mixin.scss" as mix;
+
+.radioRabel {
+  flex: none;
+  font-weight: 600;
+}
+
+
+.radioContents {
+  @include mix.flex();
+  gap: 1rem;
+  margin-top: 0.5rem;
+  height: 48px;
+}
+
+.radioItem {
+  @include mix.flex();
+  gap: 0.3rem;
+}

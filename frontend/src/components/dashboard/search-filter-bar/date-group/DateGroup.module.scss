@@ -1,0 +1,13 @@
+@use "../../../../scss/variables.scss" as v;
+@use "../../../../scss/mixin.scss" as mix;
+
+.dateGroup {
+  @include mix.flex;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+  width: 100%;
+
+  input[type="date"] {
+    width: 10rem;
+  }
+}
