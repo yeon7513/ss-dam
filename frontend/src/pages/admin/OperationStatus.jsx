@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import PanelHeader from "../../layout/admin/panel-header/PanelHeader.jsx";
 import AdminLogCard from "./operation-status/admin-log-card/AdminLogCard.jsx";
@@ -22,11 +22,15 @@ const OperationStatus = () => {
   ]);
 
   const [adminLogsData] = useState([]);
-  const [pendingReportsData] = useState([]);
+  // 대시보드 새로고침 시 신고 목록도 다시 조회
+  const [reportRefreshKey, setReportRefreshKey] = useState(0);
   const [participationData, setParticipationData] = useState([]);
   const [topSellersData, setTopSellersData] = useState([]);
 
   const fetchAdminDashboardData = async () => {
+      // 미처리 신고 카드도 새로고침
+    setReportRefreshKey((value) => value + 1);
+
     const queryParam = `?from=${fromDate}&to=${toDate}`;
 
     try {
@@ -114,8 +118,8 @@ const OperationStatus = () => {
           <AdminLogCard adminLogsData={adminLogsData} />
         </div>
 
-        {/* 미처리 신고 영역 */}
-        <PendingReports pendingReportsData={pendingReportsData} />
+          {/* 미처리 신고 영역 */}
+          <PendingReports refreshKey={reportRefreshKey} />
       </div>
 
       {/* 중단 차트 영역 */}

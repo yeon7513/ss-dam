@@ -1,156 +1,144 @@
-@use "../../../../scss/variables.scss" as v;
-@use "../../../../scss/mixin.scss" as mix;
-
-// 미처리 신고 카드
-.reportCard {
+/* 미처리 신고 요약 카드 */
+.reportCard.reportCard {
+  box-sizing: border-box;
+  min-width: 0;
   height: 400px;
+  padding: 20px;
+
   display: flex;
   flex-direction: column;
+  gap: 14px;
+}
+
+/* 제목과 전체 건수 */
+.cardHeader {
+  display: flex;
+  align-items: center;
   justify-content: space-between;
+  gap: 12px;
+  flex-shrink: 0;
 
-  .cardHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-    flex-shrink: 0;
-
-    h3 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: v.$grayscale-90;
-    }
+  h3 {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 700;
   }
 
-  // 테이블 오버플로우 방지를 위한 스크롤 래퍼 영역 추가
-  .tableWrapper {
-    flex: 1; // 헤더와 페이지네이션 사이 남은 공간 채우기
-    overflow-y: auto; // 데이터가 자라나도 스크롤 처리
-    margin-bottom: 12px; // 하단 페이지네이션과의 간격
-  }
+  a {
+    color: inherit;
+    text-decoration: none;
 
-  .reportTable {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed; // 열 너비를 비율대로 고정
-
-    th,
-    td {
-      padding: 0.6rem 0;
-      vertical-align: middle;
-
-      // 컬럼 비율 설정 (1 : 1 : 1 : 3 = 총 6개 파트)
-      &:nth-child(1) {
-        width: 16.66%;
-      }
-
-      // 날짜 (1)
-      &:nth-child(2) {
-        width: 16.66%;
-      }
-
-      // 대상 회원 (1)
-      &:nth-child(3) {
-        width: 16.66%;
-      }
-
-      // 사유 (1)
-      &:nth-child(4) {
-        width: 50%;
-      }
-
-      // 설명 (3)
-    }
-
-    th {
-      // 표 제목
-      font-size: 1rem;
-      text-align: left;
-      color: v.$grayscale-90;
-      border-bottom: 1px solid v.$grayscale-20;
-    }
-
-    td {
-      // 내용
-      font-size: 1rem;
-      border-bottom: 1px solid v.$grayscale-5;
-
-      &.dateTd {
-        color: v.$grayscale-50;
-        font-size: 1rem;
-      }
-
-      .userInfo {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-
-        // 프로필 기본이미지
-        .avatar {
-          width: 24px;
-          height: 24px;
-          background-color: v.$grayscale-5;
-          border-radius: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 1rem;
-        }
-
-        // 프로필 기본이미지 옆 이름 정보
-        .userText {
-          display: flex;
-          flex-direction: column;
-
-          // 이름
-          strong {
-            font-size: 0.8rem;
-            color: v.$grayscale-90;
-          }
-
-          // 회원구분
-          small {
-            font-size: 0.7rem;
-            color: v.$grayscale-50;
-          }
-        }
-      }
-
-      // 사유 태그
-      .badge {
-        background-color: v.$grayscale-5;
-        color: v.$grayscale-90;
-        padding: 2px 6px;
-        border-radius: 4px;
-        font-size: 0.9rem;
-      }
-
-      &.descTd {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        color: v.$grayscale-90;
-      }
+    &:hover {
+      text-decoration: underline;
     }
   }
+}
 
-  // 페이지네이션 컴포넌트로 변경 예정
-  .pagination {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
+.total {
+  flex-shrink: 0;
+  color: #7d8795;
+  font-size: 12px;
+}
+
+/* 표가 커지면 카드 내부에서 스크롤 */
+.tableWrapper {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  overflow: auto;
+}
+
+/* 공통 DataTable을 대시보드 크기에 맞게 조정 */
+.reportCard .reportTable {
+  width: 100%;
+  min-width: 540px;
+  table-layout: fixed;
+  border-collapse: collapse;
+
+  th,
+  td {
+    box-sizing: border-box;
+    padding: 12px 8px;
+    text-align: left;
+    vertical-align: middle;
     font-size: 12px;
-    color: v.$grayscale-50;
-    flex-shrink: 0;
 
-    span {
-      cursor: pointer;
-
-      &.activePage {
-        font-weight: 700;
-        color: v.$grayscale-90;
-        text-decoration: underline;
-      }
+    &:nth-child(1) {
+      width: 17%;
     }
+
+    &:nth-child(2) {
+      width: 17%;
+    }
+
+    &:nth-child(3) {
+      width: 20%;
+    }
+
+    &:nth-child(4) {
+      width: 32%;
+    }
+
+    &:nth-child(5) {
+      width: 14%;
+    }
+  }
+
+  th {
+    color: #374151;
+    font-weight: 600;
+    white-space: nowrap;
+    border-bottom: 1px solid #e2e6ec;
+    background: #fff;
+  }
+
+  td {
+    color: #626d7c;
+    border-bottom: 1px solid #f0f2f5;
+  }
+
+  time {
+    white-space: nowrap;
+  }
+}
+
+/* 긴 신고 사유와 설명은 한 줄 생략 */
+.ellipsis {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 6px;
+  border-radius: 10px;
+  background: #edf0f5;
+  color: #505b6a;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.paginationArea {
+  flex-shrink: 0;
+  padding-top: 4px;
+}
+
+.message {
+  padding: 40px 12px;
+  text-align: center;
+  color: #7d8795;
+  font-size: 13px;
+}
+
+.error {
+  color: #b42318;
+}
+
+@media (max-width: 640px) {
+  .reportCard.reportCard {
+    padding: 16px;
   }
 }
