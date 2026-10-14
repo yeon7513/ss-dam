@@ -1,11 +1,11 @@
 import { useState } from "react";
 import cn from "classnames";
-import Button from "../button/Button";
 import CancelButton from "../button/cancel/CancelButton.jsx";
-import UploadImage from "../upload-images/UploadImages";
-import TextInput from "../../forms/text-input/TextInput";
-import { handleSetField } from "../../../utils/changeHandler";
 import styles from "./Editor.module.scss";
+import TextInput from "../../forms/text-input/TextInput.jsx";
+import { handleSetField } from "../../../utils/changeHandler.js";
+import UploadImage from "../upload-images/UploadImages.jsx";
+import Button from "../button/Button.jsx";
 
 function Editor({
   selectCategoryBox,

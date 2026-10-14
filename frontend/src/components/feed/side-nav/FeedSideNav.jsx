@@ -1,10 +1,10 @@
 import cn from "classnames";
 import { Link, useNavigate } from "react-router-dom";
-import Sidebar from "../../../layout/default/sidebar/SideBar";
-import { FEED_MENU } from "../../../lib/sideMenu";
-import ProfileCard from "../../auth/profile-card/ProfileCard";
 import styles from "./FeedSideNav.module.scss";
 import Button from "../../common/button/Button.jsx";
+import Sidebar from "../../../layout/default/sidebar/Sidebar.jsx";
+import ProfileCard from "../../auth/profile-card/ProfileCard.jsx";
+import { FEED_MENU } from "../../../lib/sideMenu.js";
 
 function FeedSideNav({ className, isLoggedIn, memberProfile }) {
   const navigate = useNavigate();
