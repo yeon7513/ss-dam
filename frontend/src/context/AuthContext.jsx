@@ -1,4 +1,11 @@
-import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useNavigate } from "react-router-dom";
 
 // 로그인 상태를 전역으로 관리하기 위해 context api로 설정함.
@@ -23,20 +30,20 @@ export function AuthProvider({ children }) {
     const loggedInUser =
       responseData.role === "MEMBER"
         ? {
-          ...baseData,
-          rating: responseData.rating,
-          profileImage: responseData.profileImage,
-        }
+            ...baseData,
+            rating: responseData.rating,
+            profileImage: responseData.profileImage,
+          }
         : { ...baseData, dept: responseData.dept };
 
-    sessionStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
+    localStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
 
     return loggedInUser;
   };
 
   const handleSessionExpired = useCallback(() => {
     setUser(null);
-    sessionStorage.removeItem("loggedInUser");
+    localStorage.removeItem("loggedInUser");
 
     if (!isAlertShown.current) {
       isAlertShown.current = true;
@@ -47,11 +54,11 @@ export function AuthProvider({ children }) {
   }, [navigate]);
 
   const checkAuthStauts = useCallback(async () => {
-    if (!sessionStorage.getItem("loggedInUser")) {
-      setUser(null);
-      setLoading(false);
-      return;
-    }
+    // if (!sessionStorage.getItem("loggedInUser")) {
+    //   setUser(null);
+    //   setLoading(false);
+    //   return;
+    // }
 
     try {
       const response = await fetch("/api/auth/check", {
@@ -64,23 +71,25 @@ export function AuthProvider({ children }) {
         const loggedInUser = processUserData(result.data);
         setUser(loggedInUser);
       } else {
-        handleSessionExpired();
+        setUser(null);
+        localStorage.removeItem("loggedInUser");
       }
     } catch (err) {
       console.error("세션 검증 통신 에러", err);
+      setUser(null);
     } finally {
       setLoading(false);
     }
-  }, [handleSessionExpired]);
+  }, []);
 
   // 앱 마운트 시 세션 검증
   useEffect(() => {
     checkAuthStauts();
 
     const handleFocus = () => {
-      if (sessionStorage.getItem("loggedInUser")) {
-        checkAuthStauts();
-      }
+      // if (sessionStorage.getItem("loggedInUser")) {
+      checkAuthStauts();
+      // }
     };
 
     window.addEventListener("focus", handleFocus);
@@ -134,7 +143,7 @@ export function AuthProvider({ children }) {
       });
 
       if (response.ok) {
-        sessionStorage.removeItem("loggedInUser");
+        localStorage.removeItem("loggedInUser");
 
         alert("로그아웃 되었습니다.");
         setUser(null);
