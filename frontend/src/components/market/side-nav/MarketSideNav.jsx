@@ -1,11 +1,16 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Button from "../../common/button/Button.jsx";
+import { useAuth } from "../../../context/AuthContext.jsx";
 import styles from "./MarketSideNav.module.scss";
 
 function MarketSideNav({ categories, isLoggedIn, onSearch }) {
   const navigate = useNavigate();
   const location = useLocation();
+
+  /* 인증 상태 조회 */
+  const auth = useAuth();
+  const checkLoggedIn = isLoggedIn ?? auth?.isLoggedIn ?? !!auth?.user;
 
   /* URL 선택 카테고리 코드 추출 */
   const searchParams = new URLSearchParams(location.search);
@@ -28,7 +33,7 @@ function MarketSideNav({ categories, isLoggedIn, onSearch }) {
     <div className={styles.sideNav}>
       {/* 물품 등록 영역 */}
       <div>
-        {isLoggedIn ? (
+        {checkLoggedIn ? (
           <Button
             btnStyle="fill"
             size="lg"
@@ -39,11 +44,14 @@ function MarketSideNav({ categories, isLoggedIn, onSearch }) {
           </Button>
         ) : (
           <div className={styles.loginNotice}>
-            {/* <p>
-              로그인하고 따뜻한 친환경 <br />
-              거래를 시작해보세요!
-            </p> */}
-            <Button fullWidth={true} onClick={() => navigate("/login")}>
+            <Button
+              fullWidth
+              onClick={() =>
+                navigate("/login", {
+                  state: { from: location.pathname + location.search },
+                })
+              }
+            >
               로그인
             </Button>
           </div>
