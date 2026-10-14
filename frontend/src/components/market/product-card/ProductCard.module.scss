@@ -1,7 +1,6 @@
 @use "../../../scss/variables.scss" as v;
 @use "../../../scss/mixin.scss" as mix;
 
-
 .productItem {
   position: relative;
   top: 0;
@@ -44,7 +43,7 @@
 
   h3 {
     margin-top: 0.3rem;
-    font-size: 1.125rem;
+    font-size: 1.2rem;
   }
 }
 
@@ -58,9 +57,13 @@
 
   .price {
     text-align: right;
-    font-size: 20px;
+    font-size: 1.2rem;
     font-weight: 600;
     color: v.$point-60;
+
+    span {
+      font-size: 1rem;
+    }
   }
 }
 

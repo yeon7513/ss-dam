@@ -43,7 +43,7 @@ function ProductCard({ product }) {
         {/* 콘텐츠 (내용) */}
         <div className={styles.detail}>
           <div className={styles.price}>
-            {product.price.toLocaleString()} 그루
+            {product.price.toLocaleString()} <span>그루</span>
           </div>
         </div>
 
