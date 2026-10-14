@@ -26,7 +26,8 @@
 
 /* 상품 이미지 영역 */
 .productImages {
-  width: 31.25rem;
+  width: 30rem;
+  height: 25rem;
   overflow: hidden;
   border-radius: 0.3rem; // 이미지 모서리를 둥글게 처리함.
 }
@@ -111,18 +112,20 @@
     }
 
     /* 가격 정보 영역 */
-    .priceInfo h3 {
-      display: flex;
-      align-items: baseline;
-      gap: 0.3rem; // 가격과 단위 간격을 지정함.
-      color: v.$grayscale-90;
-      font-size: 1.5rem;
-      font-weight: 700;
-
-      span {
+    .priceInfo {
+      h3 {
+        display: flex;
+        align-items: baseline;
+        gap: 0.3rem; // 가격과 단위 간격을 지정함.
         color: v.$grayscale-90;
-        font-size: 1rem;
-        font-weight: 500;
+        font-size: 1.5rem;
+        font-weight: 700;
+
+        span {
+          color: v.$grayscale-90;
+          font-size: 1rem;
+          font-weight: 500;
+        }
       }
     }
   }
