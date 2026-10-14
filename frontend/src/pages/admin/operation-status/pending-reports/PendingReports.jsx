@@ -1,4 +1,4 @@
-import React from "react";
+import { Link } from "react-router-dom";
 import Card from "../../../../components/common/card/Card.jsx";
 import styles from "./PendingReports.module.scss";
 
@@ -8,7 +8,9 @@ const PendingReports = ({ pendingReportsData = [] }) => {
     <Card className={styles.reportCard}>
       {/* 카드 헤더 영역 */}
       <div className={styles.cardHeader}>
-        <h3>미처리 신고 ↗</h3>
+        <h3>
+          <Link to="/admin/reports">미처리 신고 ↗</Link>
+        </h3>
       </div>
 
       {/* 신고 테이블 영역 */}

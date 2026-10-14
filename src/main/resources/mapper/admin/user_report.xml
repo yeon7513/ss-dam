@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="userReport">
+
+    <!-- 신고자 회원 확인 및 행 잠금 -->
+    <!-- 같은 회원의 신고 등록 요청은 트랜잭션 내에서 순서대로 처리 -->
+    <select id="lockReporter"
+            parameterType="map"
+            resultType="java.lang.Long">
+
+        SELECT CODE
+        FROM MEMBER_ACCOUNT
+        WHERE CODE = #{reporterCode}
+          AND DELETE_YN = FALSE
+        FOR UPDATE
+    </select>
+
+    <!-- 신고 대상 회원 번호 또는 콘텐츠 작성자 번호 조회 -->
+    <!-- 삭제된 대상은 신고 불가 -->
+    <select id="findTargetMemberCode"
+            parameterType="map"
+            resultType="java.lang.Long">
+
+        <choose>
+            <!-- 피드 신고 -->
+            <when test='targetType == "feed"'>
+                SELECT MEM_CODE
+                FROM FEED
+                WHERE CODE = #{targetCode}
+                  AND DELETE_YN = FALSE
+            </when>
+
+            <!-- 상품 신고 -->
+            <when test='targetType == "market"'>
+                SELECT MEM_CODE
+                FROM MARKET_PRODUCT
+                WHERE CODE = #{targetCode}
+                  AND DELETE_YN = FALSE
+            </when>
+
+            <!-- 댓글 신고 -->
+            <when test='targetType == "comment"'>
+                SELECT MEM_CODE
+                FROM COMMENTS
+                WHERE CODE = #{targetCode}
+                  AND DELETE_YN = FALSE
+            </when>
+
+            <!-- 회원 신고 -->
+            <when test='targetType == "user"'>
+                SELECT CODE
+                FROM MEMBER_ACCOUNT
+                WHERE CODE = #{targetCode}
+                  AND DELETE_YN = FALSE
+            </when>
+
+            <!-- 허용되지 않은 유형은 결과 없음 -->
+            <otherwise>
+                SELECT CODE
+                FROM MEMBER_ACCOUNT
+                WHERE 1 = 0
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 동일 회원의 동일 대상 미처리 신고 조회 -->
+    <!-- 사유와 관계없이 PENDING, IN_REVIEW이면 중복 신고 차단 -->
+    <!-- FOR UPDATE로 이전 트랜잭션이 커밋한 최신 상태를 확인 -->
+    <select id="findPendingReportCode"
+            parameterType="map"
+            resultType="java.lang.Long">
+
+        SELECT CODE
+        FROM REPORT
+        WHERE MEM_CODE = #{reporterCode}
+          AND TARGET_TYPE = #{targetType}
+          AND TARGET_CODE = #{targetCode}
+          AND STATUS IN ('PENDING', 'IN_REVIEW')
+        ORDER BY CODE DESC
+        LIMIT 1
+        FOR UPDATE
+    </select>
+
+    <!-- 사용자 신고 등록 -->
+    <!-- 신고 상태와 접수 시각은 서버에서 지정 -->
+    <!-- 생성된 CODE를 params의 reportCode에 저장 -->
+    <insert id="insertReport"
+            parameterType="map"
+            useGeneratedKeys="true"
+            keyProperty="reportCode"
+            keyColumn="CODE">
+
+        INSERT INTO REPORT (
+            MEM_CODE,
+            TARGET_TYPE,
+            TARGET_CODE,
+            REASON_TYPE,
+            CONTENT,
+            STATUS,
+            CREATED_AT
+        )
+        VALUES (
+            #{reporterCode},
+            #{targetType},
+            #{targetCode},
+            #{reasonType},
+            #{content, jdbcType=VARCHAR},
+            'PENDING',
+            CURRENT_TIMESTAMP
+        )
+    </insert>
+
+</mapper>
