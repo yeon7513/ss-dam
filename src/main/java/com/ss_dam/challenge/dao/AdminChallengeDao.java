@@ -42,4 +42,8 @@ public interface AdminChallengeDao {
 
     // 복구
     int restoreChallenge(Map<String, Object> params);
+
+	void updateStatusToEnded(Long code);
+
+	List<Long> getCompleteMemberCodes(Long code);
 }
