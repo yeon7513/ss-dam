@@ -21,7 +21,13 @@
     INSERT INTO POINT_LOG
     (MEM_CODE, TYPE, AMOUNT, REASON, CREATED_AT)
     VALUES
-    (#{mem_code}, #{type}, #{amount}, #{reason}, NOW())
+    (#{memCode}, #{type}, #{amount}, #{reason}, NOW())
   </insert>
+
+  <update id="exchangePoint">
+    UPDATE MEMBER_ACCOUNT
+    SET POINT = #{point}
+    WHERE CODE = #{code}
+  </update>
 
 </mapper>

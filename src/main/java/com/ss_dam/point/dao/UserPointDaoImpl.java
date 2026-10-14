@@ -28,4 +28,9 @@ public class UserPointDaoImpl implements UserPointDao{
     public void chargePointLog(PointLog pointLog) {
         sql.insert("userPoint.chargePointLog", pointLog);
     }
+
+    @Override
+    public int exchangePoint(Point point) {
+        return sql.update("userPoint.exchangePoint", point);
+    }
 }

@@ -61,4 +61,17 @@ public class UserPointController {
 
     return ResponseEntity.ok(ApiResponse.success("거래에 성공했습니다", null));
   }
+
+  @PostMapping("/exchange")
+  public ResponseEntity<ApiResponse<Boolean>> pointExchange(HttpSession session, @RequestBody Point point) {
+    AuthProfile loginUser = authValidator.requireLogin(session);
+    point.setCode(loginUser.getCode());
+
+    boolean resultExchange = pointService.exchangePoint(point);
+    if (!resultExchange) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.fail("환전에 실패했습니다"));
+    }
+
+    return ResponseEntity.ok(ApiResponse.success("환전에 성공했습니다", null));
+  }
 }

@@ -9,4 +9,6 @@ public interface UserPointDao {
     int chargePoint(Point point);
 
     void chargePointLog(PointLog pointLog);
+
+    int exchangePoint(Point point);
 }
