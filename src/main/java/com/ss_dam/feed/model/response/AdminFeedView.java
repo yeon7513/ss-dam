@@ -1,6 +1,6 @@
 package com.ss_dam.feed.model.response;
 
-import com.ss_dam.admin.log.response.AdminActivitySummary;
+import com.ss_dam.admin.log.model.response.AdminActivitySummary;
 import com.ss_dam.common.enums.PostStatus;
 
 // 일반 사용자용 조회 DTO 상속

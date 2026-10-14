@@ -26,7 +26,7 @@
 			property="countAuthorReport" />
 
 		<association property="adminActivitySummary"
-			javaType="com.ss_dam.admin.log.response.AdminActivitySummary"
+			javaType="AdminActivitySummary"
 			columnPrefix="a_" autoMapping="true">
 
 			<id column="target_code" property="targetCode" />
@@ -50,7 +50,7 @@
 
 	<!-- 관리자 처리 이력 DTO 매핑 -->
 	<resultMap id="AdminProductActivityMap"
-		type="com.ss_dam.admin.log.response.AdminActivity">
+		type="AdminActivity">
 
 		<id column="code" property="code" />
 		<result column="emp_id" property="empId" />

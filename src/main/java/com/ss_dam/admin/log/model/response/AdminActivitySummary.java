@@ -1,4 +1,4 @@
-package com.ss_dam.admin.log.response;
+package com.ss_dam.admin.log.model.response;
 
 // 관리자 대시보드에서
 // 피드, 마켓, 회원 정보 목록 조회 시

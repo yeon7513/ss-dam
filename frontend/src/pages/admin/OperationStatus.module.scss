@@ -20,13 +20,19 @@
 /* 상단 레이아웃 영역 */
 .topGrid {
   display: grid;
-  grid-template-columns: 1fr 1.5fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+  align-items: stretch;
   gap: 1.25rem;
 
   .leftColumn {
     display: flex;
     flex-direction: column;
     gap: 0.625rem;
+    min-width: 0;
+
+    > :last-child {
+      flex: 1;
+    }
   }
 }
 

@@ -6,6 +6,7 @@ import ChallengeGuide from "./pages/about/challenge-guide/ChallengeGuide.jsx";
 import MarketGuide from "./pages/about/market-guide/MarketGuide.jsx";
 import AccountRegister from "./pages/admin/account-manage/account-register/AccountRegister.jsx";
 import AccountManage from "./pages/admin/account-manage/AccountManage.jsx";
+import AdminActivityLogs from "./pages/admin/activity-log/AdminActivityLogs";
 import FeedManage from "./pages/admin/admin-feed/FeedManage";
 import FeedManageDetail from "./pages/admin/admin-feed/FeedManageDetail.jsx";
 import ChallengeManage from "./pages/admin/challenge-manage/ChallengeManage.jsx";
@@ -170,6 +171,7 @@ function App() {
           <Route path="challenge-result/:code" element={<ChallengeResultDetail />} />
 
           {/* 시스템 관리 */}
+          <Route path="activity-logs" element={<AdminActivityLogs />} />
           <Route path="system_manage">
             <Route index element={<AccountManage />} />
             <Route path="account_register" element={<AccountRegister />} />

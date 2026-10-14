@@ -7,17 +7,99 @@
 
     <!-- 관리자 처리 이력 응답 매핑 -->
     <resultMap id="adminActivityMap"
-               type="com.ss_dam.admin.log.response.AdminActivity">
+           type="AdminActivity">
 
         <id column="CODE" property="code"/>
         <result column="ADMIN_ID" property="empId"/>
+        <result column="ADMIN_NAME" property="adminName"/>
+        <result column="ADMIN_DEPT" property="adminDept"/>
         <result column="TARGET_TYPE" property="targetType"/>
         <result column="TARGET_CODE" property="targetCode"/>
         <result column="PROCESS_TYPE" property="processType"/>
         <result column="MEMO" property="memo"/>
         <result column="CREATED_AT" property="createdAt"/>
+        <result column="REPORT_CODE" property="reportCode"/>
 
     </resultMap>
+
+        <!-- 전체 관리자 활동 이력 검색 조건 -->
+    <sql id="activityLogConditions">
+        <where>
+            <if test="targetType != null">
+                AND l.TARGET_TYPE = #{targetType}
+            </if>
+
+            <if test="processType != null">
+                AND l.PROCESS_TYPE = #{processType}
+            </if>
+
+            <if test="admCode != null">
+                AND l.ADM_CODE = #{admCode}
+            </if>
+
+            <if test="targetCode != null">
+                AND l.TARGET_CODE = #{targetCode}
+            </if>
+
+            <if test="reportCode != null">
+                AND l.REPORT_CODE = #{reportCode}
+            </if>
+
+            <if test="fromAt != null">
+                AND l.CREATED_AT &gt;= #{fromAt}
+            </if>
+
+            <if test="toExclusive != null">
+                AND l.CREATED_AT &lt; #{toExclusive}
+            </if>
+
+            <if test="keywordPattern != null">
+                AND (
+                    a.EMP_ID LIKE #{keywordPattern} ESCAPE '!'
+                    OR l.MEMO LIKE #{keywordPattern} ESCAPE '!'
+                )
+            </if>
+        </where>
+    </sql>
+
+    <!-- 전체 관리자 활동 이력 건수 -->
+    <select id="countActivityLogs"
+            parameterType="map"
+            resultType="long">
+
+        SELECT COUNT(*)
+        FROM ADMIN_ACTIVITY_LOG l
+        LEFT JOIN ADMIN_ACCOUNT a
+            ON a.CODE = l.ADM_CODE
+
+        <include refid="activityLogConditions"/>
+    </select>
+
+    <!-- 전체 관리자 활동 이력 목록 -->
+    <select id="loadActivityLogs"
+            parameterType="map"
+            resultMap="adminActivityMap">
+
+          SELECT
+            l.CODE,
+            a.EMP_ID AS ADMIN_ID,
+            a.NAME AS ADMIN_NAME,
+            a.DEPT AS ADMIN_DEPT,
+            l.TARGET_TYPE,
+            l.TARGET_CODE,
+            l.PROCESS_TYPE,
+            l.MEMO,
+            l.CREATED_AT,
+            l.REPORT_CODE
+        FROM ADMIN_ACTIVITY_LOG l
+        LEFT JOIN ADMIN_ACCOUNT a
+            ON a.CODE = l.ADM_CODE
+
+        <include refid="activityLogConditions"/>
+
+        ORDER BY l.CREATED_AT DESC, l.CODE DESC
+        LIMIT #{perPage} OFFSET #{offset}
+    </select>
 
     <!-- 회원 정지·해제 이력 공통 조건 -->
     <sql id="memberLogConditions">
@@ -53,6 +135,9 @@
             l.PROCESS_TYPE,
             l.MEMO,
             l.CREATED_AT
+            a.NAME AS ADMIN_NAME,
+            a.DEPT AS ADMIN_DEPT,
+            l.REPORT_CODE
 
         FROM ADMIN_ACTIVITY_LOG l
 
@@ -99,6 +184,9 @@
             l.PROCESS_TYPE,
             l.MEMO,
             l.CREATED_AT
+            a.NAME AS ADMIN_NAME,
+            a.DEPT AS ADMIN_DEPT,
+            l.REPORT_CODE
 
         FROM ADMIN_ACTIVITY_LOG l
 
@@ -112,7 +200,7 @@
 
     </select>
 
-    <!-- 관리자 처리 이력 저장 -->
+       <!-- 관리자 처리 이력 저장 -->
     <insert id="insertActivityLog" parameterType="map">
 
         INSERT INTO ADMIN_ACTIVITY_LOG (
@@ -121,7 +209,8 @@
             TARGET_CODE,
             PROCESS_TYPE,
             MEMO,
-            CREATED_AT
+            CREATED_AT,
+            REPORT_CODE
         )
         VALUES (
             #{adminCode},
@@ -129,7 +218,8 @@
             #{targetCode},
             #{processType},
             #{memo},
-            #{createdAt}
+            #{createdAt},
+            #{reportCode, jdbcType=INTEGER}
         )
 
     </insert>

@@ -1,26 +1,117 @@
-@use "../../../../scss/variables.scss" as v;
-@use "../../../../scss/mixin.scss" as mix;
-
-// 관리자 활동 로그 카드
 .logCard {
-  height: 180px; // 관리자활동로그 높이
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  align-items: stretch;
+}
 
-  .logList {
-    list-style: none;
-    padding: 0;
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+
+  h3 {
     margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem; // 관리자활동로그 리스트 상하간격
-    max-height: 130px;
-    overflow-y: auto;
+    font-size: 16px;
+    font-weight: 700;
+  }
 
-    li {
-      font-size: 1rem; // 관리자활동로그 리스트 폰트 사이즈
-      color: v.$grayscale-90;
-      line-height: 1.4;
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      color: #374151;
+      text-decoration: underline;
+
+      svg {
+        color: #374151;
+      }
+    }
+
+    &:focus-visible {
+      outline: 2px solid #374151;
+      outline-offset: 4px;
+    }
+
+    svg {
+      color: #8a93a1;
+      font-size: 14px;
     }
   }
+
+  > span {
+    flex-shrink: 0;
+    color: #8a93a1;
+    font-size: 11px;
+  }
+}
+
+.logList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    line-height: 1.6;
+  }
+}
+
+.date {
+  flex-shrink: 0;
+  padding: 3px 8px;
+  border-radius: 12px;
+  background: #f1f3f7;
+  color: #596373;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.logText {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #414955;
+  font-size: 14px;
+}
+
+.processLabel {
+  flex-shrink: 0;
+  margin-left: auto;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.processWarning {
+  color: #a65353;
+}
+
+.processRecovery {
+  color: #35745b;
+}
+
+.message {
+  padding: 20px 0;
+  color: #7d8795;
+  font-size: 13px;
+  text-align: center;
 }

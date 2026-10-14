@@ -1,6 +1,6 @@
 package com.ss_dam.market.model.response;
 
-import com.ss_dam.admin.log.response.AdminActivitySummary;
+import com.ss_dam.admin.log.model.response.AdminActivitySummary;
 import com.ss_dam.common.enums.PostStatus;
 
 // 관리자용 상품 목록 조회 DTO
