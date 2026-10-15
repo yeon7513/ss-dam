@@ -1,13 +1,18 @@
-import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import DataTable from '../../../components/common/data-table/DataTable';
-import Pagination from '../../../components/common/pagination/Pagination';
-import SearchBox from '../../../components/common/search-box/SearchBox';
-import TabMenus from '../../../components/common/tab-menus/TabMenus';
-import styles from "./MarketManage.module.scss"
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import DataTable from "../../../components/common/data-table/DataTable";
+import Pagination from "../../../components/common/pagination/Pagination";
+import SearchBox from "../../../components/common/search-box/SearchBox";
+import TabMenus from "../../../components/common/tab-menus/TabMenus";
+import styles from "./MarketManage.module.scss";
 
 // 코드가 너무 길어져서 MarketManage.constants.jsx로 뺐음
-import { DELETE_YN_OPTIONS, getProductColumns, SEARCH_OPTIONS, STATUS_TABS } from '../../../constants/MarketManage.constants';
+import {
+  DELETE_YN_OPTIONS,
+  getProductColumns,
+  SEARCH_OPTIONS,
+  STATUS_TABS,
+} from "../../../constants/MarketManage.constants";
 
 export default function MarketManage() {
   const navigate = useNavigate();
@@ -17,14 +22,15 @@ export default function MarketManage() {
   const [products, setProducts] = useState([]);
   const [pager, setPager] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [totalCount, setTotalCount] = useState(0);
 
   const [searchParams, setSearchParams] = useState({
     page: 1,
     perPage: 10,
-    status: '',
-    deleteYn: '',
-    search: '',
-    keyword: '',
+    status: "",
+    deleteYn: "",
+    search: "",
+    keyword: "",
   });
 
   const fetchProducts = useCallback(async () => {
@@ -38,16 +44,17 @@ export default function MarketManage() {
     try {
       const response = await fetch(`/api/admin/products?${query.toString()}`);
 
-      if (!response.ok) throw new Error('데이터 로딩 실패');
+      if (!response.ok) throw new Error("데이터 로딩 실패");
 
       const result = await response.json();
 
       if (result.data) {
         setProducts(result.data.content);
         setPager(result.data.pager);
+        setTotalCount(result.data.pager?.total ?? 0);
       }
     } catch (error) {
-      console.error('Fetch Error', error);
+      console.error("Fetch Error", error);
     } finally {
       setLoading(false);
     }
@@ -124,7 +131,12 @@ export default function MarketManage() {
         </div>
       </div>
 
-      <DataTable columns={columns} data={products} loading={loading} />
+      <DataTable
+        columns={columns}
+        data={products}
+        loading={loading}
+        totalCount={totalCount}
+      />
       <Pagination pager={pager} onChangePage={handlePageChange} />
     </div>
   );
