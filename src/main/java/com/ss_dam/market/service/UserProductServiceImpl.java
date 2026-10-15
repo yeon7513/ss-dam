@@ -1,5 +1,6 @@
 package com.ss_dam.market.service;
 
+import com.ss_dam.auth.login.enums.AuthRole;
 import com.ss_dam.auth.login.model.response.AuthProfile;
 import com.ss_dam.common.image.service.ImageService;
 import com.ss_dam.common.pager.PageResult;
@@ -59,7 +60,7 @@ public class UserProductServiceImpl implements UserProductService {
   @Override
   public ProductDetail findProductDetailByProdCode(Long prodCode, AuthProfile loginUser) {
 
-    boolean isMember = loginUser != null && "MEMBER".equalsIgnoreCase(loginUser.getRole());
+    boolean isMember = loginUser != null && loginUser.getRole() == AuthRole.ROLE_MEMBER;
     Long memberCode = (isMember) ? loginUser.getCode() : null;
 
     Map<String, Object> params = new HashMap<>();

@@ -1,11 +1,12 @@
 package com.ss_dam.auth.login.model.response;
 
 import com.ss_dam.auth.admin.enums.AdminDept;
+import com.ss_dam.auth.login.enums.AuthRole;
 
 public class AdminProfile implements AuthProfile {
   private Long code;
   private String id;
-  private String role;
+  private AuthRole role;
   private String name;
   private AdminDept dept;
 
@@ -21,7 +22,7 @@ public class AdminProfile implements AuthProfile {
   }
 
   @Override
-  public String getRole() {
+  public AuthRole getRole() {
     return role;
   }
 
