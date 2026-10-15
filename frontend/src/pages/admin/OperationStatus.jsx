@@ -11,16 +11,6 @@ import SummaryStats from "./operation-status/summary-stats/SummaryStats.jsx";
 import TopSellers from "./operation-status/top-sellers/TopSellers.jsx";
 import styles from "./OperationStatus.module.scss";
 
-// 지역별 참여도 샘플 데이터
-const sampleParticipationData = [
-  { regionName: "서울", participationRate: 27.5, participationCount: 275 },
-  { regionName: "경기", participationRate: 24.5, participationCount: 245 },
-  { regionName: "부산", participationRate: 15, participationCount: 150 },
-  { regionName: "인천", participationRate: 12, participationCount: 120 },
-  { regionName: "대구", participationRate: 9, participationCount: 90 },
-  { regionName: "대전", participationRate: 7, participationCount: 70 },
-  { regionName: "미상", participationRate: 5, participationCount: 50 },
-];
 
 // 우수 판매자 샘플 데이터
 // 이번 달 / 지난달 같은 기간의 판매 금액
@@ -158,13 +148,20 @@ const OperationStatus = () => {
   const [logRefreshKey, setLogRefreshKey] = useState(0);
   const [reportRefreshKey, setReportRefreshKey] = useState(0);
 
+  // 지역별 참여도 실제 조회 데이터
+  const [participationData, setParticipationData] = useState([]);
+  const [regionLoading, setRegionLoading] = useState(true);
+  const [regionError, setRegionError] = useState("");
+
+  // 새로고침 버튼을 누르면 지역별 참여도도 다시 조회
+  const [regionRefreshKey, setRegionRefreshKey] = useState(0);
+
   // 하단 카드 데이터 — API 연결 전에는 샘플 사용
   // 아직 데이터를 변경하지 않으므로 setter는 생략
-  const [participationData] = useState(sampleParticipationData);
   const [topSellersData] = useState(sampleTopSellers);
 
   // 전체 회원 수 조회 오류
-const [summaryError, setSummaryError] = useState("");
+  const [summaryError, setSummaryError] = useState("");
 
 // 화면 진입 시 전체 회원 수 조회
 useEffect(() => {
@@ -199,6 +196,9 @@ useEffect(() => {
     // 미처리 신고 카드 새로고침
     setReportRefreshKey((value) => value + 1);
 
+    // 지역별 참여도 새로고침
+    setRegionRefreshKey((value) => value + 1);
+
     try {
       const data = await fetchTotalMemberSummary();
 
@@ -212,6 +212,52 @@ useEffect(() => {
       console.error("전체 회원 수 조회 실패", error);
     }
   };
+
+  // 화면 진입 및 새로고침 시 지역별 참여도 조회
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadRegions() {
+      setRegionLoading(true);
+      setRegionError("");
+
+      try {
+        const response = await fetch("/api/admin/stats/regions", {
+          signal: controller.signal,
+        });
+
+        if (!response.ok) {
+          throw new Error(
+            `지역별 참여도 조회 실패 (${response.status})`,
+          );
+        }
+
+        const result = await response.json();
+
+        if (!result.success || !Array.isArray(result.data)) {
+          throw new Error(
+            result.message || "지역별 참여도 응답을 확인해주세요.",
+          );
+        }
+
+        if (controller.signal.aborted) return;
+
+        setParticipationData(result.data);
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          setRegionError(error.message);
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setRegionLoading(false);
+        }
+      }
+    }
+
+    loadRegions();
+
+    return () => controller.abort();
+  }, [regionRefreshKey]);
 
   return (
     <div className={styles.dashboardBody}>
@@ -247,7 +293,11 @@ useEffect(() => {
       {/* 하단 레이아웃 영역 */}
       <div className={styles.bottomGrid}>
         {/* 지역별 참여도 영역 */}
-        <RegionParticipation participationData={participationData} />
+        <RegionParticipation
+          participationData={participationData}
+          loading={regionLoading}
+          error={regionError}
+        />
 
         {/* 우수 판매자 영역 */}
         <TopSellers topSellersData={topSellersData} />

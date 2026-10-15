@@ -6,6 +6,7 @@ import java.util.List;
 import com.ss_dam.admin.stats.model.response.ChallengeRanking;
 import com.ss_dam.admin.stats.model.response.ChallengeStatistics;
 import com.ss_dam.admin.stats.model.response.MemberStatistics;
+import com.ss_dam.admin.stats.model.response.PopularChallenge;
 import com.ss_dam.admin.stats.model.response.RegionStatistics;
 import com.ss_dam.admin.stats.model.response.SellerRanking;
 
@@ -19,6 +20,9 @@ public interface StatsDao {
 
   // 조회 기간에 발생한 챌린지 참여 신청 건수
   long countNewParticipations(LocalDateTime start, LocalDateTime end);
+
+  // 현재 진행 중인 챌린지 인기 TOP 5
+  List<PopularChallenge> findPopularChallenges(LocalDateTime now);
 
   //조회 기간에 등록된 신규 피드 수
   long countNewFeeds(LocalDateTime start, LocalDateTime end);
@@ -44,10 +48,8 @@ public interface StatsDao {
     LocalDateTime start, LocalDateTime end
   );
 
-  //조회 기간의 지역별 챌린지 참여 건수와 비율 조회
-  List<RegionStatistics> findRegionStatistics(
-    LocalDateTime start, LocalDateTime end
-  );
+  // 전체 챌린지의 지역별 참여 인원 조회 — 회원 중복 제외
+  List<RegionStatistics> findRegionStatistics();
 
   //기간 내 판매자별 거래 건수와 거래 금액 조회
   List<SellerRanking> findSellerRanking(

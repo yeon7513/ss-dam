@@ -57,6 +57,102 @@
     AND JOINED_AT &lt; #{end}
 </select>
 
+<!-- 진행 중인 챌린지의 참여 인원 기준 TOP 5 -->
+<select id="findPopularChallenges"
+        parameterType="map"
+        resultType="com.ss_dam.admin.stats.model.response.PopularChallenge">
+
+  WITH ongoing AS (
+    SELECT
+      c.CODE,
+      c.TITLE,
+      c.START_DATE,
+      c.END_DATE,
+
+      DATEDIFF(
+        DATE(DATE_SUB(c.END_DATE, INTERVAL 1 SECOND)),
+        DATE(c.START_DATE)
+      ) + 1 AS GOAL_DAYS
+
+    FROM CHALLENGE c
+    WHERE c.DELETE_YN = 0
+      AND c.PROGRESS_STATUS IN ('WAITING', 'IN_PROGRESS')
+      AND c.START_DATE &lt;= #{now}
+      AND c.END_DATE &gt; #{now}
+  ),
+
+  participants AS (
+    SELECT
+      ce.CHAL_CODE,
+      ce.MEM_CODE,
+      MIN(ce.JOINED_AT) AS JOINED_AT
+
+    FROM CHALLENGE_ENTRY ce
+    JOIN ongoing c ON c.CODE = ce.CHAL_CODE
+
+    WHERE ce.STATUS IN ('JOINED', 'COMPLETED')
+      AND ce.CANCELED_AT IS NULL
+      AND ce.JOINED_AT &lt;= #{now}
+
+    GROUP BY ce.CHAL_CODE, ce.MEM_CODE
+  ),
+
+  member_metrics AS (
+    SELECT
+      p.CHAL_CODE,
+      p.MEM_CODE,
+      COUNT(f.CODE) AS PROOF_COUNT,
+      COUNT(DISTINCT DATE(f.CREATED_AT)) AS PROOF_DAYS
+
+    FROM participants p
+    JOIN ongoing c ON c.CODE = p.CHAL_CODE
+
+    LEFT JOIN FEED f
+      ON f.CHAL_CODE = p.CHAL_CODE
+      AND f.MEM_CODE = p.MEM_CODE
+      AND f.DELETE_YN = 0
+      AND f.CREATED_AT &gt;= c.START_DATE
+      AND f.CREATED_AT &gt;= p.JOINED_AT
+      AND f.CREATED_AT &lt; c.END_DATE
+      AND f.CREATED_AT &lt;= #{now}
+
+    GROUP BY p.CHAL_CODE, p.MEM_CODE
+  )
+
+  SELECT
+    c.CODE AS challengeCode,
+    c.TITLE AS title,
+    COUNT(m.MEM_CODE) AS participantCount,
+
+    COALESCE(
+      ROUND(
+        AVG(
+          LEAST(
+            100.0,
+            100.0 * m.PROOF_DAYS / NULLIF(c.GOAL_DAYS, 0)
+          )
+        ),
+        1
+      ),
+      0
+    ) AS averageProgressRate,
+
+    COALESCE(SUM(m.PROOF_COUNT), 0) AS proofCount
+
+  FROM ongoing c
+  LEFT JOIN member_metrics m ON m.CHAL_CODE = c.CODE
+
+  GROUP BY c.CODE, c.TITLE, c.GOAL_DAYS
+
+  ORDER BY
+    participantCount DESC,
+    proofCount DESC,
+    c.CODE ASC
+
+  LIMIT 5
+</select>
+
+
   <!-- 기간 내 신규 피드 수 -->
   <select id="countNewFeeds"
           parameterType="map"
@@ -151,64 +247,62 @@
 
   </select>
 
-  <!-- 지역별 챌린지 참여 건수 -->
-  <select id="findRegionStatistics"
-          parameterType="map"
-          resultType="RegionStatistics">
+  <!-- 전체 챌린지의 지역별 참여 인원: 회원 중복 제외 -->
+<select id="findRegionStatistics"
+        resultType="RegionStatistics">
 
-    SELECT
+  SELECT
     CASE
-    WHEN TRIM(m.ADDRESS) LIKE '서울%' THEN '서울'
-    WHEN TRIM(m.ADDRESS) LIKE '부산%' THEN '부산'
-    WHEN TRIM(m.ADDRESS) LIKE '대구%' THEN '대구'
-    WHEN TRIM(m.ADDRESS) LIKE '인천%' THEN '인천'
-    WHEN TRIM(m.ADDRESS) LIKE '광주%' THEN '광주'
-    WHEN TRIM(m.ADDRESS) LIKE '대전%' THEN '대전'
-    WHEN TRIM(m.ADDRESS) LIKE '울산%' THEN '울산'
-    WHEN TRIM(m.ADDRESS) LIKE '세종%' THEN '세종'
-    WHEN TRIM(m.ADDRESS) LIKE '경기%' THEN '경기'
-    WHEN TRIM(m.ADDRESS) LIKE '강원%' THEN '강원'
+      WHEN TRIM(m.ADDRESS) LIKE '서울%' THEN '서울'
+      WHEN TRIM(m.ADDRESS) LIKE '부산%' THEN '부산'
+      WHEN TRIM(m.ADDRESS) LIKE '대구%' THEN '대구'
+      WHEN TRIM(m.ADDRESS) LIKE '인천%' THEN '인천'
+      WHEN TRIM(m.ADDRESS) LIKE '광주%' THEN '광주'
+      WHEN TRIM(m.ADDRESS) LIKE '대전%' THEN '대전'
+      WHEN TRIM(m.ADDRESS) LIKE '울산%' THEN '울산'
+      WHEN TRIM(m.ADDRESS) LIKE '세종%' THEN '세종'
+      WHEN TRIM(m.ADDRESS) LIKE '경기%' THEN '경기'
+      WHEN TRIM(m.ADDRESS) LIKE '강원%' THEN '강원'
 
-    WHEN TRIM(m.ADDRESS) LIKE '충북%'
-    OR TRIM(m.ADDRESS) LIKE '충청북%' THEN '충북'
+      WHEN TRIM(m.ADDRESS) LIKE '충북%'
+        OR TRIM(m.ADDRESS) LIKE '충청북%' THEN '충북'
 
-    WHEN TRIM(m.ADDRESS) LIKE '충남%'
-    OR TRIM(m.ADDRESS) LIKE '충청남%' THEN '충남'
+      WHEN TRIM(m.ADDRESS) LIKE '충남%'
+        OR TRIM(m.ADDRESS) LIKE '충청남%' THEN '충남'
 
-    WHEN TRIM(m.ADDRESS) LIKE '전북%'
-    OR TRIM(m.ADDRESS) LIKE '전라북%' THEN '전북'
+      WHEN TRIM(m.ADDRESS) LIKE '전북%'
+        OR TRIM(m.ADDRESS) LIKE '전라북%' THEN '전북'
 
-    WHEN TRIM(m.ADDRESS) LIKE '전남%'
-    OR TRIM(m.ADDRESS) LIKE '전라남%' THEN '전남'
+      WHEN TRIM(m.ADDRESS) LIKE '전남%'
+        OR TRIM(m.ADDRESS) LIKE '전라남%' THEN '전남'
 
-    WHEN TRIM(m.ADDRESS) LIKE '경북%'
-    OR TRIM(m.ADDRESS) LIKE '경상북%' THEN '경북'
+      WHEN TRIM(m.ADDRESS) LIKE '경북%'
+        OR TRIM(m.ADDRESS) LIKE '경상북%' THEN '경북'
 
-    WHEN TRIM(m.ADDRESS) LIKE '경남%'
-    OR TRIM(m.ADDRESS) LIKE '경상남%' THEN '경남'
+      WHEN TRIM(m.ADDRESS) LIKE '경남%'
+        OR TRIM(m.ADDRESS) LIKE '경상남%' THEN '경남'
 
-    WHEN TRIM(m.ADDRESS) LIKE '제주%' THEN '제주'
-
-    ELSE '미상'
+      WHEN TRIM(m.ADDRESS) LIKE '제주%' THEN '제주'
+      ELSE '미상'
     END AS regionName,
 
-    COUNT(*) AS participationCount
+    COUNT(DISTINCT ce.MEM_CODE) AS participationCount
 
-    FROM CHALLENGE_ENTRY ce
-    INNER JOIN CHALLENGE c
+  FROM CHALLENGE_ENTRY ce
+
+  INNER JOIN CHALLENGE c
     ON c.CODE = ce.CHAL_CODE
-    LEFT JOIN MEMBER_ACCOUNT m
+
+  LEFT JOIN MEMBER_ACCOUNT m
     ON m.CODE = ce.MEM_CODE
 
-    WHERE ce.JOINED_AT &gt;= #{start}
-    AND ce.JOINED_AT &lt; #{end}
-    AND c.DELETE_YN = FALSE
-    AND ce.STATUS != 'CANCELED'
+  WHERE c.DELETE_YN = 0
+    AND ce.STATUS IN ('JOINED', 'COMPLETED')
     AND ce.CANCELED_AT IS NULL
 
-    GROUP BY regionName
-    ORDER BY participationCount DESC, regionName ASC
-
+  GROUP BY regionName
+  ORDER BY participationCount DESC, regionName ASC
+</select>
 
     <!-- 주소 처리 부분의 의미
     - TRIM() : 주소 앞뒤 공백 제거
@@ -218,7 +312,6 @@
     - COALESCE(..., '미상') : NULL이면 "미상" 사용
     - 회원 정보가 없는 참여 기록도 "미상"에 포함하도록 LEFT JOIN을 사용-->
 
-  </select>
 
   <!-- 판매자 순위와 내부 프로필 객체 매핑 -->
   <resultMap id="sellerRankingMap" type="SellerRanking">

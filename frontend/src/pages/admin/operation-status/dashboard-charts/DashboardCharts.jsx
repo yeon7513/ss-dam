@@ -6,15 +6,6 @@ import ChallengeCompletionChart from '../../../../components/common/chart/dashbo
 import ChallengePopularityChart from '../../../../components/common/chart/dashboard/ChallengePopularityChart.jsx';
 import MonthlyMemberChart from '../../../../components/common/chart/dashboard/MonthlyMemberChart.jsx';
 
-// 예시 데이터 - 삭제 예정
-const sampleChallenges = [
-  { challengeCode: 1, title: '매일 걷기', participantCount: 120, averageProgressRate: 75, proofCount: 340 },
-  { challengeCode: 2, title: '텀블러 사용', participantCount: 95, averageProgressRate: 90, proofCount: 280 },
-  { challengeCode: 3, title: '분리배출 실천', participantCount: 80, averageProgressRate: 45, proofCount: 190 },
-  { challengeCode: 4, title: '잔반 줄이기', participantCount: 60, averageProgressRate: 60, proofCount: 150 },
-  { challengeCode: 5, title: '대중교통 이용', participantCount: 40, averageProgressRate: 25, proofCount: 70 },
-];
-
 
 async function fetchMonthlyMembers(year, signal) {
   const response = await fetch(
@@ -68,6 +59,28 @@ async function fetchChallengeStatistics(year, signal) {
   return result.data;
 }
 
+// 진행 중인 챌린지 인기 TOP 5 조회
+async function fetchPopularChallenges(signal) {
+  const response = await fetch(
+    "/api/admin/stats/challenges/popular",
+    { signal },
+  );
+
+  if (!response.ok) {
+    throw new Error(`챌린지 인기 순위 조회 실패 (${response.status})`);
+  }
+
+  const result = await response.json();
+
+  if (!result.success || !Array.isArray(result.data)) {
+    throw new Error(
+      result.message || "챌린지 인기 순위 응답을 확인해주세요.",
+    );
+  }
+
+  return result.data;
+}
+
 const DashboardCharts = () => {
 
   // 회원 통계 저장
@@ -77,6 +90,33 @@ const DashboardCharts = () => {
   // 챌린지 통계 저장
   const [challengeStats, setChallengeStats] = useState(null);
   const [challengeError, setChallengeError] = useState('');
+
+  // 인기 순위: null은 로딩 중, []는 조회 결과 없음
+  const [popularChallenges, setPopularChallenges] = useState(null);
+  const [popularError, setPopularError] = useState("");
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadPopularChallenges() {
+      try {
+        const data = await fetchPopularChallenges(controller.signal);
+
+        if (controller.signal.aborted) return;
+
+        setPopularChallenges(data);
+        setPopularError("");
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          setPopularError(error.message);
+        }
+      }
+    }
+
+    loadPopularChallenges();
+
+    return () => controller.abort();
+  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -201,7 +241,17 @@ useEffect(() => {
           </div>
         }
       >
-        <ChallengePopularityChart challenges={sampleChallenges} />
+        {popularError ? (
+          <p role="alert">{popularError}</p>
+        ) : popularChallenges === null ? (
+          <p>챌린지 인기 순위를 불러오는 중입니다.</p>
+        ) : popularChallenges.length === 0 ? (
+          <p>진행 중인 챌린지가 없습니다.</p>
+        ) : popularChallenges.every((item) => item.participantCount === 0) ? (
+          <p>진행 중인 챌린지에 아직 참여자가 없습니다.</p>
+        ) : (
+          <ChallengePopularityChart challenges={popularChallenges} />
+        )}
       </ChartCard>
           </div>
         );

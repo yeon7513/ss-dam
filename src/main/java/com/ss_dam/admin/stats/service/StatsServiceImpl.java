@@ -2,6 +2,7 @@ package com.ss_dam.admin.stats.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,7 @@ import com.ss_dam.admin.stats.model.response.ChallengeRanking;
 import com.ss_dam.admin.stats.model.response.ChallengeStatistics;
 import com.ss_dam.admin.stats.model.response.DashboardSummary;
 import com.ss_dam.admin.stats.model.response.MemberStatistics;
+import com.ss_dam.admin.stats.model.response.PopularChallenge;
 import com.ss_dam.admin.stats.model.response.RegionStatistics;
 import com.ss_dam.admin.stats.model.response.SellerRanking;
 
@@ -141,6 +143,17 @@ public class StatsServiceImpl implements StatsService {
         return statsDao.findMemberStatistics(start, end);
     }
 
+    // 진행 중인 챌린지 인기 TOP 5 조회
+    @Override
+    public List<PopularChallenge> getPopularChallenges() {
+        // DB의 날짜가 한국 현지 시각으로 저장된다는 기준
+        LocalDateTime now = LocalDateTime.now(
+            ZoneId.of("Asia/Seoul")
+        );
+
+        return statsDao.findPopularChallenges(now);
+    }
+
     // 종료된 챌린지의 참여 건수와 달성률 조회
     @Override
     public ChallengeStatistics getChallengeStatistics(
@@ -214,48 +227,36 @@ public class StatsServiceImpl implements StatsService {
     
         }
 
-    //조회 기간의 지역별 챌린지 참여 건수와 비율 조회
+    // 전체 챌린지의 지역별 참여 인원과 비율 조회
     @Override
-    public List<RegionStatistics> getRegionStatistics(
-        LocalDate from, LocalDate to) {
+    public List<RegionStatistics> getRegionStatistics() {
 
-        //1. 공통 날짜 검증
-        validateDateRange(from, to);
+        //1. 회원 중복을 제외한 지역별 참여 인원 조회
+        List<RegionStatistics> regions =
+            statsDao.findRegionStatistics();
 
-        //2. 조회 기간 설정
-        LocalDateTime start = from.atStartOfDay();
-        LocalDateTime end = to.plusDays(1).atStartOfDay();
-
-        //3. 지역별 참여 건수 조회
-        List<RegionStatistics> regions = 
-            statsDao.findRegionStatistics(start, end);
-        
-        //4. 전체 참여 건수 계산
+        //2. 전체 참여 인원 계산 — 미상 지역도 포함
         long totalCount = 0;
 
         for (RegionStatistics region : regions) {
             totalCount += region.getParticipationCount();
         }
 
-        //5. 지역별 참여 비율 계산
+        //3. 지역별 참여 비율 계산
         for (RegionStatistics region : regions) {
-            
             if (totalCount == 0) {
                 region.setParticipationRate(null);
-                //setParticipationRate()는 계산해서 넣을 비율
             } else {
-                double rate = 
+                double rate =
                     region.getParticipationCount() * 100.0 / totalCount;
-                    //getParticipationCount()는 DB에서 조회한 참여 건수
-                    //지역 참여 건수 ÷ 전체 참여 건수 × 100으로 계산
-                
-                //소수점 첫째 자리까지 반올림
+
+                // 소수점 첫째 자리까지 반올림
                 region.setParticipationRate(
                     Math.round(rate * 10.0) / 10.0
                 );
             }
         }
-        
+
         return regions;
     }
 
