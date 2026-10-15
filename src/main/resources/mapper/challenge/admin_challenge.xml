@@ -355,5 +355,23 @@
           AND DELETE_YN = 1
 
     </update>
+    
+    <!-- 챌린지 조기 종료 -->
+    <update id="updateStatusToEnded">
+    	UPDATE CHALLENGE
+    	SET PROGRESS_STATUS = 'ENDED',
+    		UPDATED_AT = NOW()
+    	WHERE CODE = #{code}
+    		AND DELETE_YN = 0
+    </update>
+    
+    <!-- 챌린지를 완료한 일반 사용자 목록 조회 -->
+    <select id="getCompleteMemberCodes" parameterType="long" resultType="long">
+    	SELECT MEM_CODE
+    	FROM CHALLENGE_ENTRY
+    	WHERE CHAL_CODE = #{code}
+    		AND STATUS = 'COMPLETED'
+    		AND CANCELED_AT IS NULL
+    </select>
 
 </mapper>
