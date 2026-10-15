@@ -11,19 +11,21 @@
 <mapper namespace="stats">
 
 
-  <!-- 종료 시점 이전까지 가입한 누적 회원 수 -->
-  <select id="countTotalMembers"
-          parameterType="map"
-          resultType="long">
-    SELECT COUNT(*)
-    FROM MEMBER_ACCOUNT
-    WHERE CREATED_AT &lt; #{end}
+  <!-- 종료 시점 이전 가입 회원 중 현재 탈퇴·삭제되지 않은 회원 수 -->
+	<select id="countTotalMembers"
+					parameterType="map"
+					resultType="long">
+	SELECT COUNT(*)
+	FROM MEMBER_ACCOUNT
+	WHERE CREATED_AT &lt; #{end}
+	AND DELETE_YN = 0
+	AND STATUS != 'WITHDRAW'
+	</select>
 
 
-  </select>
+
   <!-- &lt;는 <, &gt;=는 >= -->
   <!-- 서비스에서 계산한 시작일 이상, 종료일 다음 날 미만 조건으로 조회 가능 -->
-
   <!-- 기간 내 신규 회원 수 -->
   <select id="countNewMembers"
           parameterType="map"
@@ -35,6 +37,25 @@
     <!-- 종료 조건은 &lt; 뒤에 =을 붙이지 않아야,
      다음 날 00:00 데이터가 포함되지 않음-->
   </select>
+
+	<!-- 현재 진행 중이며 삭제되지 않은 챌린지 수 -->
+<select id="countActiveChallenges" resultType="long">
+  SELECT COUNT(*)
+  FROM CHALLENGE
+  WHERE DELETE_YN = 0
+    AND PROGRESS_STATUS = 'IN_PROGRESS'
+</select>
+
+<!-- 조회 기간에 발생한 챌린지 참여 신청 건수 -->
+<!-- 이후 취소 여부와 관계없이 신청 기록 기준으로 집계 -->
+<select id="countNewParticipations"
+        parameterType="map"
+        resultType="long">
+  SELECT COUNT(*)
+  FROM CHALLENGE_ENTRY
+  WHERE JOINED_AT &gt;= #{start}
+    AND JOINED_AT &lt; #{end}
+</select>
 
   <!-- 기간 내 신규 피드 수 -->
   <select id="countNewFeeds"

@@ -1,89 +1,149 @@
-@use "../../../../scss/variables.scss" as v;
-@use "../../../../scss/mixin.scss" as mix;
-
 .bottomCard {
+  box-sizing: border-box;
   height: 300px;
+  border-radius: 0;
+  min-width: 0;
+  padding: 16px;
   display: flex;
   flex-direction: column;
+  container-type: inline-size;
 
   .cardHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 8px;
     margin-bottom: 12px;
     flex-shrink: 0;
 
     h3 {
-      font-size: 1.1rem;
+      margin: 0;
+      font-size: 14px;
       font-weight: 700;
-      color: v.$grayscale-90;
+      color: #343a40;
+    }
+
+    > span {
+      font-size: 10px;
+      color: #7b838d;
+      text-align: right;
     }
   }
 
   .sellerFlex {
-    display: flex;
-    gap: 16px;
+    display: grid;
+    grid-template-columns: 180px minmax(0, 1fr);
     align-items: center;
+    gap: 12px;
     flex: 1;
-    overflow: hidden;
+    min-height: 0;
+  }
 
-    .donutPlaceholder {
-      width: 280px;
-      height: 100%;
-      border: 1px dashed v.$grayscale-20;
-      border-radius: 6px;
-      display: flex;
+  .donutWrap {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    min-width: 0;
+  }
+
+  .listWrap {
+    min-width: 0;
+  }
+
+  .comparisonLabel {
+    margin: 8px 0 0;
+    flex-shrink: 0;
+    text-align: right;
+    font-size: 10px;
+    color: #7b838d;
+  }
+
+  .sellerList {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
+    li {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 82px 76px;
       align-items: center;
-      justify-content: center;
-      color: v.$grayscale-50;
-      font-size: 1rem;
-      background-color: v.$background-5;
-      flex-shrink: 0;
+      gap: 6px;
+      font-size: 11px;
     }
+  }
 
-    .sellerList {
-      flex: 1;
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      max-height: 136px;
-      overflow-y: auto;
+  .sellerName {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    min-width: 0;
+    color: #343a40;
 
-      li {
-        display: flex;
-        justify-content: space-between;
-        font-size: 1rem;
-        color: v.$grayscale-90;
-
-        .sellerName {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-
-          .dot {
-            width: 6px;
-            height: 6px;
-            background-color: v.$grayscale-50;
-            border-radius: 50%;
-          }
-        }
-
-        .sellerVal {
-          display: flex;
-          gap: 10px;
-
-          .plus {
-            color: v.$primary-50;
-          }
-
-          .minus {
-            color: v.$dan-color;
-          }
-        }
-      }
+    > span {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .amount {
+    text-align: right;
+    font-weight: 500;
+    color: #6b7280;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .badge {
+    padding: 4px 3px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 10px;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .plus {
+    background: #f1f3f6;
+    color: #343a40;
+  }
+
+  .minus {
+    background: #676f77;
+    color: #ffffff;
+  }
+
+  .neutral {
+    background: #f1f3f5;
+    color: #6b7280;
+  }
+
+  .empty {
+    margin: auto;
+    font-size: 12px;
+    color: #7b838d;
+  }
+}
+
+// 카드가 넓으면 도넛도 확대
+@container (min-width: 580px) {
+  .bottomCard .sellerFlex {
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  .bottomCard .donutWrap {
+    width: 200px;
+    height: 200px;
   }
 }

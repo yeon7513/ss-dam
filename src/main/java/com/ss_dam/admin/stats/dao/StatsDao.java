@@ -14,6 +14,12 @@ public interface StatsDao {
   //종료 시점 이전까지 가입한 누적 회원 수
   long countTotalMembers(LocalDateTime end);
 
+  // 현재 진행 중인 챌린지 수
+  long countActiveChallenges();
+
+  // 조회 기간에 발생한 챌린지 참여 신청 건수
+  long countNewParticipations(LocalDateTime start, LocalDateTime end);
+
   //조회 기간에 등록된 신규 피드 수
   long countNewFeeds(LocalDateTime start, LocalDateTime end);
 

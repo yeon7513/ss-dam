@@ -69,6 +69,25 @@ public class StatsServiceImpl implements StatsService {
         long newTradeCount = statsDao.countNewTrades(start, end);
         long previousNewTradeCount = statsDao.countNewTrades(previousStart, previousEnd);
 
+        // 이번 기간과 이전 기간의 챌린지 참여 신청 건수
+        // 오늘 날짜로 요청하면 오늘 / 어제 기준
+        long newParticipationCount =
+            statsDao.countNewParticipations(start, end);
+
+        long previousParticipationCount =
+            statsDao.countNewParticipations(previousStart, previousEnd);
+
+        // 양쪽 모두 0건이면 화면 표시용으로 변화 없음(0%) 처리
+        // 어제 0건이고 오늘 신청이 있으면 기존 함수에서 null 반환
+        Double newParticipationChangeRate;
+        if (newParticipationCount == 0 && previousParticipationCount == 0) {
+            newParticipationChangeRate = 0.0;
+        } else {
+            // null을 기본형 double로 자동 변환하지 않도록 분기
+            newParticipationChangeRate = calculateChangeRate(
+                newParticipationCount, previousParticipationCount);
+        }
+
         //7. 조회한 건수를 DTO에 설정
         DashboardSummary summary = new DashboardSummary();
 
@@ -76,7 +95,12 @@ public class StatsServiceImpl implements StatsService {
         summary.setNewMemberCount(newMemberCount);
         summary.setNewFeedCount(newFeedCount);
         summary.setNewTradeCount(newTradeCount);
+        // 참여 신청 건수와 증감률 응답에 추가
+        summary.setNewParticipationCount(newParticipationCount);
 
+        // 현재 진행 중인 챌린지 수 추가
+        summary.setActiveChallengeCount(statsDao.countActiveChallenges());
+        
         //8. 이전 기간 대비 증감률을 계산하여 DTO에 설정
         summary.setTotalMemberChangeRate(
             calculateChangeRate(
@@ -93,6 +117,9 @@ public class StatsServiceImpl implements StatsService {
         summary.setNewTradeChageRate(
             calculateChangeRate(
                 newTradeCount, previousNewTradeCount));
+
+        // 참여 신청 건수와 증감률 응답에 추가
+        summary.setNewParticipationChangeRate(newParticipationChangeRate);
 
         return summary;
 

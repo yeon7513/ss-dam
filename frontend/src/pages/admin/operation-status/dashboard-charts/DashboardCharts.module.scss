@@ -4,7 +4,7 @@
 /* 중단 차트 영역 */
 .middleGrid {
   display: grid;
-  grid-template-columns: minmax(578px, 2.78fr) repeat(2, minmax(208px, 1fr));
+  grid-template-columns: minmax(578px, 2.78fr) minmax(208px, 1fr) minmax(330px, 1fr);
   gap: 18px;
   width: 100%;
   min-width: 0;

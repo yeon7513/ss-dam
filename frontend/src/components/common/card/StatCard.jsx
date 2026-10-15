@@ -8,13 +8,13 @@ const StatCard = ({ title, value, rate = "" }) => (
     <span className={styles.statTitle}>{title}</span>
     <div className={styles.statValRow}>
       <span className={styles.statVal}>{value}</span>
-      <span
+      {rate != null && rate !== "" && <span
         className={`${styles.statRate} ${
           rate?.startsWith("-") ? styles.minus : styles.plus
         }`}
       >
         {rate}
-      </span>
+      </span>}
     </div>
   </Card>
 );

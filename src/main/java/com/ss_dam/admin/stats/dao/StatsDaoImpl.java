@@ -32,6 +32,24 @@ public class StatsDaoImpl implements StatsDao {
    
     }
 
+	// 현재 진행 중인 챌린지 수 조회
+	@Override
+	public long countActiveChallenges() {
+			return sql.selectOne("stats.countActiveChallenges");
+	}
+
+	// 조회 기간에 발생한 챌린지 참여 신청 건수 조회
+	@Override
+	public long countNewParticipations(
+					LocalDateTime start,
+					LocalDateTime end) {
+
+			return sql.selectOne(
+					"stats.countNewParticipations",
+					createPeriodParams(start, end)
+			);
+	}
+
    @Override 
    public long countNewMembers(LocalDateTime start, LocalDateTime end) {
     

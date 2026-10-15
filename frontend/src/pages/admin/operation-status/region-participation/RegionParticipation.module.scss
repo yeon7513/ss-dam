@@ -1,46 +1,83 @@
 @use "../../../../scss/variables.scss" as v;
-@use "../../../../scss/mixin.scss" as mix;
 
-/* 지역별 참여도 영역 */
 .bottomCard {
-  height: 17.5rem;
+  box-sizing: border-box;
+  height: 300px;
+  border-radius: 0;
+  min-width: 0;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
 
-  /* 카드 헤더 영역 */
   .cardHeader {
-    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 14px;
+    flex-shrink: 0;
 
     h3 {
-      font-size: 1rem;
+      margin: 0;
+      font-size: 14px;
       font-weight: 700;
       color: v.$grayscale-90;
     }
+
+    > span {
+      font-size: 11px;
+      color: v.$grayscale-50;
+    }
   }
 
-  /* 지역 목록 영역 */
   .regionList {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .regionRow {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 64px 80px;
+    align-items: center;
+    gap: 12px;
+    padding: 7px 0;
+    font-size: 12px;
+  }
+
+  .regionName {
     display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+    align-items: center;
+    gap: 8px;
+    color: v.$grayscale-90;
+  }
 
-    li {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.9rem;
+  .regionIcon {
+    font-size: 14px;
+  }
 
-      .regionVal {
-        display: flex;
-        align-items: center;
-        gap: 0.375rem;
+  .rate,
+  .count {
+    text-align: right;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
 
-        strong {
-          font-weight: 600;
-        }
+  .rate {
+    font-weight: 500;
+    color: v.$grayscale-90;
+  }
 
-        small {
-          color: v.$grayscale-50;
-        }
-      }
-    }
+  .count,
+  .empty {
+    color: v.$grayscale-50;
+  }
+
+  .empty {
+    font-size: 12px;
   }
 }

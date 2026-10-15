@@ -15,6 +15,15 @@ public class DashboardSummary {
   private Double newFeedChangeRate;     //신규 피드 수 증감률
   private Double newTradeChangeRate; // 이전 기간 대비 신규 거래 수
 
+  // 현재 진행 중인 챌린지 수 — 조회 기간과 관계없이 현재 상태 기준
+  private long activeChallengeCount;
+
+  // 조회 기간에 발생한 참여 신청 건수
+  private long newParticipationCount;
+
+  // 이전 동일 길이 기간 대비 참여 신청 건수 증감률
+  private Double newParticipationChangeRate;
+
   //증감률(%) = (이번 기간 값 - 이전 기간 값) / 이전 기간 값 × 100
   //20.0 -> 20% 증가, 음수면 감소, 0이면 null
 
@@ -68,8 +77,29 @@ public class DashboardSummary {
   public void setNewTradeChageRate(Double newTradeChangeRate) {
     this.newTradeChangeRate = newTradeChangeRate;
   }
+  public long getActiveChallengeCount() {
+      return activeChallengeCount;
+  }
 
-  
+  public void setActiveChallengeCount(long activeChallengeCount) {
+      this.activeChallengeCount = activeChallengeCount;
+  }
 
+  public long getNewParticipationCount() {
+      return newParticipationCount;
+  }
+
+  public void setNewParticipationCount(long newParticipationCount) {
+      this.newParticipationCount = newParticipationCount;
+  }
+
+  public Double getNewParticipationChangeRate() {
+      return newParticipationChangeRate;
+  }
+
+  public void setNewParticipationChangeRate(
+          Double newParticipationChangeRate) {
+      this.newParticipationChangeRate = newParticipationChangeRate;
+  }
 
 }

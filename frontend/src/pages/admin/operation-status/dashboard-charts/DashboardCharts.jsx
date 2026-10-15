@@ -3,7 +3,18 @@ import ChartCard from "../../../../components/common/card/ChartCard.jsx";
 import styles from "./DashboardCharts.module.scss";
 
 import ChallengeCompletionChart from '../../../../components/common/chart/dashboard/ChallengeCompletionChart.jsx';
+import ChallengePopularityChart from '../../../../components/common/chart/dashboard/ChallengePopularityChart.jsx';
 import MonthlyMemberChart from '../../../../components/common/chart/dashboard/MonthlyMemberChart.jsx';
+
+// 예시 데이터 - 삭제 예정
+const sampleChallenges = [
+  { challengeCode: 1, title: '매일 걷기', participantCount: 120, averageProgressRate: 75, proofCount: 340 },
+  { challengeCode: 2, title: '텀블러 사용', participantCount: 95, averageProgressRate: 90, proofCount: 280 },
+  { challengeCode: 3, title: '분리배출 실천', participantCount: 80, averageProgressRate: 45, proofCount: 190 },
+  { challengeCode: 4, title: '잔반 줄이기', participantCount: 60, averageProgressRate: 60, proofCount: 150 },
+  { challengeCode: 5, title: '대중교통 이용', participantCount: 40, averageProgressRate: 25, proofCount: 70 },
+];
+
 
 async function fetchMonthlyMembers(year, signal) {
   const response = await fetch(
@@ -163,18 +174,38 @@ useEffect(() => {
       {/* 챌린지 인기 순위 차트 카드 */}
       <ChartCard
         title="챌린지 인기 순위"
-        legends={[
-          { label: "높음", isDark: true },
-          { label: "낮음", isDark: false },
-        ]}
+        headerRight="진행 중 · 참여 인원 기준 TOP 5"
+        legendContent={
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              fontSize: 11,
+              color: '#6b7280',
+            }}
+          >
+            <span>평균 진행률</span>
+            <span>0%</span>
+            <span
+              aria-hidden="true"
+              style={{
+                width: 60,
+                height: 8,
+                borderRadius: 4,
+                background:
+                  'linear-gradient(to right, hsl(215, 10%, 90%), hsl(215, 10%, 40%))',
+              }}
+            />
+            <span>100%</span>
+          </div>
+        }
       >
-        <div className={styles.chartPlaceholder}>
-          <span>[ 원형/방사형 차트 영역 ]</span>
-        </div>
+        <ChallengePopularityChart challenges={sampleChallenges} />
       </ChartCard>
-    </div>
-  );
-};
+          </div>
+        );
+      };
 
 export default DashboardCharts;
 

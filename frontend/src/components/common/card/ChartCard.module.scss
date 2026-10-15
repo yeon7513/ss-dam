@@ -59,4 +59,25 @@
     align-items: center;
     justify-content: center;
   }
+
+  .titleRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+    min-width: 0;
+
+    h3 {
+      flex-shrink: 0;
+    }
+  }
+
+  .headerRight {
+    margin-left: auto;
+    font-size: 10px;
+    color: v.$grayscale-50;
+    text-align: right;
+    white-space: nowrap;
+  }
 }
