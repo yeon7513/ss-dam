@@ -1,12 +1,14 @@
 package com.ss_dam.auth.admin.model.request;
 
+import com.ss_dam.auth.admin.enums.AdminDept;
+import com.ss_dam.auth.login.enums.AuthRole;
+
 public class AdminAccountUpdate {
   private Long code;
   private String password;
-  private String name;
   private String phone;
-  private String dept;
-  private String role;
+  private AdminDept dept;
+  private AuthRole role;
   private boolean deleteYn;
 
   // GETTER, SETTER
@@ -26,14 +28,6 @@ public class AdminAccountUpdate {
     this.password = password;
   }
 
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
   public String getPhone() {
     return phone;
   }
@@ -42,19 +36,19 @@ public class AdminAccountUpdate {
     this.phone = phone;
   }
 
-  public String getDept() {
+  public AdminDept getDept() {
     return dept;
   }
 
-  public void setDept(String dept) {
+  public void setDept(AdminDept dept) {
     this.dept = dept;
   }
 
-  public String getRole() {
+  public AuthRole getRole() {
     return role;
   }
 
-  public void setRole(String role) {
+  public void setRole(AuthRole role) {
     this.role = role;
   }
 

@@ -15,7 +15,6 @@ export const ADMIN_ACCOUNT_STATUS_OPTIONS = [
   { code: true, name: "비활성" },
 ]
 
-
 export const ADMIN_ACCOUNT_DEPT_OPTIONS = [
   { code: "OPERATION", name: "운영·관리" },
   { code: "PLANNING", name: "기획" },

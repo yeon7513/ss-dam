@@ -8,7 +8,7 @@ export const useLoadData = (url) => {
   // 실제 데이터가 담기는 state
   // 초기값은 null, 배열이거나 단일 상세 조회일 수도 있으니까.
   const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(false); // 로딩용
+  const [loading, setLoading] = useState(true); // 로딩용
   const [error, setError] = useState(null); // 에러용
   const [message, setMessage] = useState(null);
 

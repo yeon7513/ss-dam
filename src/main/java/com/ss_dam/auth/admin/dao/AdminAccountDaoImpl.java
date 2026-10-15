@@ -44,4 +44,9 @@ public class AdminAccountDaoImpl implements AdminAccountDao {
   public void updateMyAccount(AdminAccountUpdate adminAccountUpdate) {
     sql.update("adminAccount.updateMyAccount", adminAccountUpdate);
   }
+
+  @Override
+  public void updateAdminAccountBySupervisor(AdminAccountUpdate adminAccountUpdate) {
+    sql.update("adminAccount.updateAdminAccountBySupervisor", adminAccountUpdate);
+  }
 }

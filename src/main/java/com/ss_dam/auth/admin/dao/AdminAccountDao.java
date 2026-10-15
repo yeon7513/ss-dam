@@ -19,4 +19,6 @@ public interface AdminAccountDao {
   void registerAdminAccount(AdminAccountCreate adminAccountCreate);
 
   void updateMyAccount(AdminAccountUpdate adminAccountUpdate);
+
+  void updateAdminAccountBySupervisor(AdminAccountUpdate adminAccountUpdate);
 }
