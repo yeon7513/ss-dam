@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.ss_dam.admin.stats.model.response.ChallengeRanking;
 import com.ss_dam.admin.stats.model.response.ChallengeStatistics;
 import com.ss_dam.admin.stats.model.response.MemberStatistics;
+import com.ss_dam.admin.stats.model.response.PopularChallenge;
 import com.ss_dam.admin.stats.model.response.RegionStatistics;
 import com.ss_dam.admin.stats.model.response.SellerRanking;
 
@@ -50,6 +51,15 @@ public class StatsDaoImpl implements StatsDao {
 			);
 	}
 
+	// 현재 진행 중인 챌린지 인기 TOP 5
+	@Override
+	public List<PopularChallenge> findPopularChallenges(LocalDateTime now) {
+			Map<String, Object> params = new HashMap<>();
+			params.put("now", now);
+
+			return sql.selectList("stats.findPopularChallenges", params);
+	}
+
    @Override 
    public long countNewMembers(LocalDateTime start, LocalDateTime end) {
     
@@ -84,11 +94,9 @@ public class StatsDaoImpl implements StatsDao {
         }
 
     @Override
-    public List<RegionStatistics> findRegionStatistics(
-        LocalDateTime start, LocalDateTime end) {
-
-        return sql.selectList("stats.findRegionStatistics", createPeriodParams(start, end));
-        }
+		public List<RegionStatistics> findRegionStatistics() {
+				return sql.selectList("stats.findRegionStatistics");
+		}
 
     @Override
     public List<SellerRanking> findSellerRanking(

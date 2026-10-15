@@ -14,6 +14,7 @@ import com.ss_dam.admin.stats.model.response.ChallengeRanking;
 import com.ss_dam.admin.stats.model.response.ChallengeStatistics;
 import com.ss_dam.admin.stats.model.response.DashboardSummary;
 import com.ss_dam.admin.stats.model.response.MemberStatistics;
+import com.ss_dam.admin.stats.model.response.PopularChallenge;
 import com.ss_dam.admin.stats.model.response.RegionStatistics;
 import com.ss_dam.admin.stats.model.response.SellerRanking;
 import com.ss_dam.admin.stats.service.StatsService;
@@ -136,14 +137,18 @@ public class StatsController {
    * 같은 회원이 챌린지 3개에 참여하면 3건
    * 취소된 참여와 삭제된 챌린지는 제외
   */
+ // GET /api/admin/stats/regions
+  // 전체 기간·전체 챌린지 기준 지역별 참여 인원과 비율
   @GetMapping("/regions")
-  public ResponseEntity<ApiResponse<List<RegionStatistics>>> getRegionStatistics(
-      @RequestParam("from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
-      @RequestParam("to") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
+  public ResponseEntity<ApiResponse<List<RegionStatistics>>>
+          getRegionStatistics() {
 
-    List<RegionStatistics> result = statsService.getRegionStatistics(from, to);
+      List<RegionStatistics> result =
+          statsService.getRegionStatistics();
 
-    return ResponseEntity.ok(ApiResponse.success("지역별 참여 통계 조회 성공", result));
+      return ResponseEntity.ok(
+          ApiResponse.success("지역별 참여도 조회 성공", result)
+      );
   }
 
   // GET /api/admin/dashboard/statistics/sellers/ranking
@@ -182,5 +187,20 @@ public class StatsController {
     List<SellerRanking> result = statsService.getSellerRanking(from, to);
 
     return ResponseEntity.ok(ApiResponse.success("우수 판매자 순위 조회 성공", result));
+  }
+
+  // 관리자 - 대시보드 운영현황
+  // GET /api/admin/stats/challenges/popular
+  // 진행 중인 챌린지 참여 인원 기준 TOP 5
+  @GetMapping("/challenges/popular")
+  public ResponseEntity<ApiResponse<List<PopularChallenge>>>
+          getPopularChallenges() {
+
+      List<PopularChallenge> result =
+          statsService.getPopularChallenges();
+
+      return ResponseEntity.ok(
+          ApiResponse.success("챌린지 인기 순위 조회 성공", result)
+      );
   }
 }
