@@ -172,7 +172,7 @@ function Modal({
         )}
 
         {/* 모달 본문 */}
-        <div>{children}</div>
+        {children}
       </div>
     </div>,
     document.body,

@@ -33,3 +33,26 @@ export const formatCreatedAt = (createdAt) => {
 // 예: '2026-10-13T14:30:00' → '2026-10-13 14:30'
 export const formatDate = (value) =>
   value ? String(value).replace('T', ' ').slice(0, 16) : '-';
+
+// 분 단위까지만 (YYYY-MM-DD HH:mm)
+export const formatDateTime = (dateString) => {
+  if (!dateString) {
+    return '-';
+  }
+
+  const date = new Date(dateString);
+
+  // 변환 실패 시 원본 반환
+  if (isNaN(date)) {
+    return dateString;
+  }
+
+  return date.toLocaleString('ko-KR', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  });
+};

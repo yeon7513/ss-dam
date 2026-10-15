@@ -2,6 +2,7 @@ import { useState } from "react";
 import { handleSetField } from "../../../utils/changeHandler";
 import TextInput from "../../forms/text-input/TextInput";
 import styles from "./UserInfoSection.module.scss";
+import { formatPhoneNumber } from "../../../utils/formatNumber.js";
 
 const UserInfoSection = ({ form, setForm }) => {
   const [nameError, setNameError] = useState("");
@@ -28,25 +29,9 @@ const UserInfoSection = ({ form, setForm }) => {
   };
 
   const handlePhoneChange = (e) => {
-    const rawValue = e.target.value.replace(/[^0-9]/g, "");
-    let formattedPhone = rawValue;
-    if (rawValue.length > 3 && rawValue.length <= 7) {
-      formattedPhone = `${rawValue.slice(0, 3)}-${rawValue.slice(3)}`;
-    } else if (rawValue.length > 7) {
-      formattedPhone = `${rawValue.slice(0, 3)}-${rawValue.slice(3, 7)}-${rawValue.slice(7, 11)}`;
-    }
+    const formattedPhone = formatPhoneNumber(e, setPhoneError);
 
     setForm((prev) => ({ ...prev, phone: formattedPhone }));
-
-    if (rawValue.length === 0) {
-      setPhoneError("");
-    } else if (rawValue.length < 11) {
-      setPhoneError("휴대폰 번호 11자리를 모두 입력해 주세요.");
-    } else if (!rawValue.startsWith("010")) {
-      setPhoneError("010으로 시작하는 올바른 번호를 입력해 주세요.");
-    } else {
-      setPhoneError("");
-    }
   };
 
   return (

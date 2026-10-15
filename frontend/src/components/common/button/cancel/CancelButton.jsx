@@ -6,6 +6,7 @@ function CancelButton({
   message = '작성을 취소하시겠습니까?\n취소하면 작성한 내용은 저장되지 않습니다.',
   className,
   children = '취소',
+  ...props
 }) {
   const navigate = useNavigate();
 
@@ -16,7 +17,13 @@ function CancelButton({
   };
 
   return (
-    <Button type="button" className={className} action="danger" onClick={handleCancel}>
+    <Button
+      type="button"
+      className={className}
+      action="danger"
+      onClick={handleCancel}
+      {...props}
+    >
       {children}
     </Button>
   );

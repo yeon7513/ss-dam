@@ -1,17 +1,17 @@
 import React from 'react';
-import { useLoadData } from "../../../../hooks/useLoadData.js";
 import styles from "./AccountManageDetail.module.scss";
 import Card from "../../../../components/common/card/Card.jsx";
 import cn from "classnames";
 import { BiError } from "react-icons/bi";
 import { TbHandClick } from "react-icons/tb";
+import ControlSection from "../../../../components/dashboard/account/control-section/ControlSection.jsx";
+import RecentActivitySection from "../../../../components/dashboard/account/recent-activity-section/RecentActivitySection.jsx";
+import SupervisorSection from "../../../../components/dashboard/account/supervisor-section/SupervisorSection.jsx";
+import BasicInfoSection from "../../../../components/dashboard/account/basic-info-section/BasicInfoSection.jsx";
+import SubInfoSection from "../../../../components/dashboard/account/sub-info-section/SubInfoSection.jsx";
 
-function AccountManageDetail({ code }) {
-  // props로 받아오는 code의 값이 유효할 때만 fetch로 데이터를 불러옴
-  const { data: detail } = useLoadData(code ? `/api/admin/account/${code}` : null);
-  const supervisor = detail?.supervisor;
-
-  if (code === null) {
+function AccountManageDetail({ detail, updateData, setUpdateData }) {
+  if (!detail) {
     return (
       <Card className={cn(styles.detail, styles.notice)}>
         <TbHandClick className={styles.icon} />
@@ -20,7 +20,7 @@ function AccountManageDetail({ code }) {
     );
   }
 
-  if (!detail) {
+  if (detail.code === null) {
     return (
       <Card className={cn(styles.detail, styles.notice)}>
         <BiError className={styles.icon} />
@@ -33,79 +33,27 @@ function AccountManageDetail({ code }) {
 
   return (
     <Card className={styles.detail}>
-      <div className={styles.container}>
-        {/* 기본 정보 */}
-        <div className={styles.basicInfo}>
-          <div>
-            <span className={styles.number}>CODE #{detail.code}</span>
-
-            {/* 아이디 & 이름 */}
-            <div className={styles.id}>
-              <span>
-                {detail.name}
-              </span>
-              <span>
-                {detail.empId}
-              </span>
-            </div>
-          </div>
-
-          {/* 메타 정보 - 부서, 권한 */}
-          <div>
-            <div>
-              <div>
-                <span>부서</span>
-                <span>{detail.dept}</span>
-              </div>
-              <div>
-                <span>권한</span>
-                <span>{detail.role.label}</span>
-              </div>
-            </div>
-            <div>
-              <span>계정 생성일</span>
-              <span>{detail.createdAt}</span>
-            </div>
-            <div>
-              <span>마지막 로그인</span>
-              <span>{detail.loggedAt ?? "-"}</span>
-            </div>
-          </div>
+      <div>
+        {/* 정보 */}
+        <div className={styles.information}>
+          <BasicInfoSection basicInfo={detail} />
+          <SubInfoSection role={detail.role} dept={detail.dept} />
         </div>
 
-        {/* 상태 조치 */}
-        <div className={styles.control}>
-          상태 조치 영역
-        </div>
+        {/* 계정 설정 */}
+        <ControlSection
+          initValue={updateData}
+          onUpdateData={setUpdateData}
+        />
       </div>
 
-      <div className={styles.subInfo}>
-        {/* 상관 정보 */}
-        <div className={styles.supervisor}>
-          {supervisor.code}
-          {supervisor.name}
-          {supervisor.empId}
-          {supervisor.dept}
-          {supervisor.role.label}
-        </div>
+      {/* 담당 관리자 정보 */}
+      {detail.supervisor && (
+        <SupervisorSection supervisor={detail.supervisor} />
+      )}
 
-        {/* 최근 활동 */}
-        <div className={styles.recentActivity}>
-          {detail.recentActivity ? (
-            <ul>
-              {detail.recentActivity.map((activity, idx) => (
-                <li key={idx}>
-                  <span>{activity.type}</span>
-                  <span>{activity.createdAt}</span>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className={styles.noActivity}>활동 내역이 없습니다.</p>
-          )}
-        </div>
-      </div>
-
+      {/* 최근 활동 */}
+      <RecentActivitySection targetCode={detail.code} />
     </Card>
   );
 }

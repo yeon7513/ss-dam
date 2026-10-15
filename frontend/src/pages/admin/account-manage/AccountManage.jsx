@@ -8,7 +8,7 @@ import MemberCard from "../../../components/dashboard/member-card/MemberCard.jsx
 import styles from "./AccountManage.module.scss";
 import AccountManageDetail from "./account-manage-detail/AccountManageDetail.jsx";
 import SearchFilterBar from "../../../components/dashboard/search-filter-bar/SearchFilterBar.jsx";
-import { ADMIN_ACCOUNT_INITIAL_FILTERS, ADMIN_ACCOUNT_ROLE_OPTIONS, ADMIN_ACCOUNT_STATUS } from "../../../constants/admin-account/AccountManage.constants.js";
+import { ADMIN_ACCOUNT_INITIAL_FILTERS, ADMIN_ACCOUNT_SELECT_OPTIONS, ADMIN_ACCOUNT_STATUS } from "../../../constants/admin-account/AccountManage.constants.js";
 
 function AccountManage() {
   const [detailCode, setDetailCode] = useState(null);
@@ -53,7 +53,7 @@ function AccountManage() {
             label: "관리자 계정 생성",
           }}
           initFilter={ADMIN_ACCOUNT_INITIAL_FILTERS}
-          selectGroups={ADMIN_ACCOUNT_ROLE_OPTIONS}
+          selectGroups={ADMIN_ACCOUNT_SELECT_OPTIONS}
           radioGroups={ADMIN_ACCOUNT_STATUS}
           searchFilter={searchFilter}
           onSearch={handleSearch}

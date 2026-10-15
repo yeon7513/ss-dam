@@ -11,14 +11,12 @@
   justify-content: center;
   align-items: center;
 
-  box-sizing: border-box;
   padding: 20px;
   background: rgba(48, 61, 82, 0.2);
 }
 
 /* 모달 내부 박스 */
 .modalContent {
-  box-sizing: border-box;
   width: 80%;
   min-width: 0;
   max-width: 90%;
@@ -54,12 +52,10 @@
   flex-shrink: 0;
   padding: 0;
 
-  border: 0;
   border-radius: 50%;
   background: #f0f2f5;
   color: #7c8795;
   font-size: 20px;
-  cursor: pointer;
 
   &:disabled {
     opacity: 0.5;

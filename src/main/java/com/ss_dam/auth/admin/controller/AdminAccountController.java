@@ -2,6 +2,7 @@ package com.ss_dam.auth.admin.controller;
 
 import com.ss_dam.auth.admin.model.filter.AdminAccountSearchFilter;
 import com.ss_dam.auth.admin.model.request.AdminAccountCreate;
+import com.ss_dam.auth.admin.model.request.AdminAccountUpdate;
 import com.ss_dam.auth.admin.model.response.AdminAccountDetail;
 import com.ss_dam.auth.admin.model.response.AdminAccountView;
 import com.ss_dam.auth.admin.service.AdminAccountService;
@@ -69,6 +70,16 @@ public class AdminAccountController {
 
   // 관리자 정보 수정 (본인용)
   // -> 비밀번호, 이름, 연락처, 부서
+  @PutMapping
+  ResponseEntity<ApiResponse<Void>> updateMyAccount(
+      @RequestBody AdminAccountUpdate adminAccountUpdate, HttpSession session) {
+
+    AuthProfile loginAdmin = authValidator.requireLogin(session);
+
+    adminAccountService.updateMyAccount(adminAccountUpdate, loginAdmin);
+
+    return ResponseEntity.ok(ApiResponse.success("정보 수정 성공", null));
+  }
 
 
   // 관리자 정보 수정 (상사용)
