@@ -97,4 +97,16 @@ public class AdminChallengeDaoImpl implements AdminChallengeDao {
 
 		return sql.selectList("adminChallenge.getCompleteMemberCodes", Map.of("code", code));
 	}
+	
+	@Override
+	public int getChallengeRewardPoint(Long code) {
+		return sql.selectOne("adminChallenge.getChallengeRewardPoint", code);
+	}
+
+	@Override
+	public void updateParticipantsToCompleted(Long code) {
+		sql.update("adminChallenge.updateParticipantsToCompleted", Map.of("code", code));
+		
+	}	
+	
 }

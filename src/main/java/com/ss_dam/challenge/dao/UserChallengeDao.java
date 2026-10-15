@@ -47,4 +47,6 @@ public interface UserChallengeDao {
 	int joinChallenge(int code, int memCode);
 
 	List<Map<String, Object>> searchTopRankings();
+
+	int getChallengeRewardPoint(int challengeCode);
 }
