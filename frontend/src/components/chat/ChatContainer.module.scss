@@ -22,7 +22,7 @@
     z-index: 50;
 
     width: 100%;
-    gap: 1rem;
+    gap: 1.5rem;
     padding: 1rem 2rem;
     border-bottom: 1px solid v.$grayscale-20;
 
@@ -32,38 +32,60 @@
     .productImage {
       flex-shrink: 0;
 
-      width: 3.75rem;
-      height: 3.75rem;
+      width: 4rem;
+      height: 4rem;
+      border: 1px solid v.$grayscale-20;
       border-radius: 0.5rem;
 
+      background-color: v.$grayscale-20;
       object-fit: cover;
     }
 
-    /* 상단 정보 내용 영역 */
-    .infoContent {
+    /* 게시글 정보 영역 */
+    .productWrap {
       @include mix.flex(column, center, flex-start);
-      gap: 0.25rem;
+      flex: 1;
 
-      /* 사용자 아이디 영역 */
-      .userId {
-        font-size: 0.875rem;
-        font-weight: 700;
-        color: v.$grayscale-90;
-      }
+      gap: 0.3rem;
 
       /* 게시글 제목 영역 */
       .productTitle {
-        font-size: 0.8125rem;
-        font-weight: 500;
-        color: v.$grayscale-70;
-      }
-
-      /* 제품 가격 영역 */
-      .productPrice {
-        font-size: 0.875rem;
+        font-size: 1.3rem;
         font-weight: 700;
         color: v.$grayscale-90;
+        text-align: center;
       }
+
+      /* 사용자 아이디 영역 */
+      .userWrap {
+        @include mix.flex(row, flex-end, center);
+        flex-shrink: 0;
+
+        /* 사용자 아이디 */
+        .userId {
+          font-size: 1rem;
+          font-weight: 400;
+          color: v.$grayscale-60;
+        }
+      }
+    }
+
+    /* 제품 가격 영역 */
+    .productPrice {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: v.$point-70;
+
+      /* 단위 영역 */
+      .point {
+        font-size: 1.2rem;
+      }
+    }
+
+    /* @@@ 송금 버튼 영역 */
+    .remitButton {
+      flex-shrink: 0;
+      width: 6rem;
     }
   }
 
@@ -86,7 +108,6 @@
       width: 100%;
       height: 100%;
       min-height: 0;
-      // 헤더 높이에 맞춰 메시지가 가려지지 않도록 상단 여백을 지정함.
       padding: 5.5rem 2rem 2rem 2rem;
       overflow-y: auto;
     }
