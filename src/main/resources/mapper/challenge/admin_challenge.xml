@@ -373,5 +373,19 @@
     		AND STATUS = 'COMPLETED'
     		AND CANCELED_AT IS NULL
     </select>
+    
+    <select id="getChallengeRewardPoint" parameterType="long" resultType="int">
+    	SELECT POINT_EARNED
+    	FROM CHALLENGE
+    	WHERE CODE = #{code}
+    </select>
+    
+    <update id="updateParticipantsToCompleted" parameterType="long">
+    	UPDATE CHALLENGE_ENTRY
+    	SET STATUS = 'COMPLETED'
+    	WHERE CHAL_CODE = #{code}
+    		AND STATUS = 'JOINED'
+    		AND CANCELED_AT IS NULL
+    </update>
 
 </mapper>

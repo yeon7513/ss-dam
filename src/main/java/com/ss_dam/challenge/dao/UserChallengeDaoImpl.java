@@ -114,4 +114,10 @@ public class UserChallengeDaoImpl implements UserChallengeDao {
 
 		return sql.selectList("challenge.searchTopRankings");
 	}
+
+	@Override
+	public int getChallengeRewardPoint(int challengeCode) {
+		
+		return sql.selectOne("challenge.getChallengeRewardPoint", challengeCode);
+	}
 }

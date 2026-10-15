@@ -95,7 +95,7 @@ public class UserChallengeServiceImpl implements UserChallengeService {
 	public void completeUserChallenge(int challengeCode, Long memCode) {
 
 		// 테스트로 인해 하드코딩
-		int rewardAmount = 1000;
+		int rewardAmount = userChallengeDao.getChallengeRewardPoint(challengeCode);
 
 		userPointService.rewardPoint(memCode, rewardAmount, "CHALLENGE_REWARD");
 	}

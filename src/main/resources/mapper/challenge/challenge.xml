@@ -32,7 +32,7 @@
 
   <!-- 상세 조회 -->
   <select id="searchChallengeByCode"
-          parameterType="int"
+          parameterType="long"
           resultType="Challenge">
       SELECT
           c.*,
@@ -94,7 +94,7 @@
   </update>
 
   <!-- 삭제 -->
-  <update id="deleteChallenge" parameterType="int">
+  <update id="deleteChallenge" parameterType="long">
 
     UPDATE CHALLENGE
     SET DELETE_YN = true
@@ -326,6 +326,12 @@
     AND CANCELED_AT IS NULL
     <!--    AND DELETE_YN = 0-->
     )
+  </select>
+  
+  <select id="getChallengeRewardPoint" parameterType="long" resultType="int">
+  	SELECT POINT_EARNED
+  	FROM CHALLENGE
+  	WHERE CODE = #{code}
   </select>
 
 </mapper>
