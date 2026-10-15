@@ -139,17 +139,14 @@
   </update>
 
   <!-- 관리자 정보 수정 (상사) -->
-  <update id="updateAccountBySupervisor">
+  <update id="updateAdminAccountBySupervisor">
     UPDATE ADMIN_ACCOUNT
     SET
-    <!-- 이름은 빈 값이 아닐 때만 -->
-    <if test="name != null and name != ''">
-      name = #{name},
-    </if>
     role = #{role},
     dept = #{dept},
+    delete_yn = #{deleteYn},
     updated_at = now()
-    WHERE code = #{targetCode}
+    WHERE code = #{code}
   </update>
 
   <!-- ================================================== -->

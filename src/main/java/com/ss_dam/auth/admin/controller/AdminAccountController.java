@@ -83,7 +83,7 @@ public class AdminAccountController {
 
 
   // 관리자 정보 수정 (상위 관리자용)
-  // -> 이름, 부서, 권한, 활성 여부 (논리 삭제 적용)
+  // -> 부서, 권한, 활성 여부 (논리 삭제 적용)
   @PatchMapping("/{code}")
   ResponseEntity<ApiResponse<Void>> updateAdminAccountBySupervisor(@PathVariable Long code,
       @RequestBody AdminAccountUpdate adminAccountUpdate, HttpSession session) {

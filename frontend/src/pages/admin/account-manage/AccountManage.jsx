@@ -32,7 +32,7 @@ function AccountManage() {
   } = useLoadData(detailCode ? `/api/admin/account/${detailCode}` : null);
 
 
-  const { handleSubmit } = useSubmitData(`/api/account`, "PUT");
+  const { handleSubmit } = useSubmitData(`/api/admin/account/${detailCode}`, "PATCH");
 
   // 목록 새로고침 -> PanelHeader용
   const handleRefresh = () => {
@@ -55,11 +55,16 @@ function AccountManage() {
     });
   }
 
-  const handleUpdateAccount = (updatedAccount) => {
+  const handleUpdateAccount = async (updatedAccount) => {
+    const { success } = await handleSubmit(updatedAccount);
 
-
-    listRefetch();
-    detailRefetch();
+    if (!success) {
+      alert("정보 수정에 실패했습니다.");
+    } else {
+      alert("수정 성공");
+      listRefetch();
+      detailRefetch();
+    }
   }
 
   return (
@@ -100,7 +105,7 @@ function AccountManage() {
         </div>
 
         {/* 상세 정보 조회 영역 */}
-        <AccountManageDetail detail={adminAccountDetail} />
+        <AccountManageDetail detail={adminAccountDetail} onUpdateAccount={handleUpdateAccount} />
       </div>
 
     </div>

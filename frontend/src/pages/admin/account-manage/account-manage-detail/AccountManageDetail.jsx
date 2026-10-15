@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from "./AccountManageDetail.module.scss";
 import Card from "../../../../components/common/card/Card.jsx";
 import cn from "classnames";
@@ -10,7 +10,19 @@ import SupervisorSection from "../../../../components/dashboard/account/supervis
 import BasicInfoSection from "../../../../components/dashboard/account/basic-info-section/BasicInfoSection.jsx";
 import SubInfoSection from "../../../../components/dashboard/account/sub-info-section/SubInfoSection.jsx";
 
-function AccountManageDetail({ detail, updateData, setUpdateData }) {
+function AccountManageDetail({ detail, onUpdateAccount }) {
+  const [updateData, setUpdateData] = useState(null);
+
+  useEffect(() => {
+    if (detail !== null) {
+      setUpdateData({
+        ...detail,
+        dept: detail?.dept.code ?? "",
+        role: detail?.role.code ?? "",
+      });
+    }
+  }, [detail]);
+
   if (!detail) {
     return (
       <Card className={cn(styles.detail, styles.notice)}>
@@ -42,8 +54,9 @@ function AccountManageDetail({ detail, updateData, setUpdateData }) {
 
         {/* 계정 설정 */}
         <ControlSection
-          initValue={updateData}
+          updateData={updateData}
           onUpdateData={setUpdateData}
+          onUpdateAccount={onUpdateAccount}
         />
       </div>
 

@@ -3,17 +3,28 @@ import { ADMIN_ACCOUNT_DEPT_OPTIONS, ADMIN_ACCOUNT_ROLE_OPTIONS, ADMIN_ACCOUNT_S
 import styles from "./ControlSection.module.scss";
 import SelectBox from "../../../forms/select-box/SelectBox.jsx";
 import Button from "../../../common/button/Button.jsx";
+import { handleSetField } from "../../../../utils/changeHandler.js";
 
-function ControlSection() {
+function ControlSection({ updateData, onUpdateData, onUpdateAccount }) {
+  console.log("updateData: ", updateData);
+
+  const handleChangeSelect = (e) => {
+    e.preventDefault();
+
+    onUpdateAccount(updateData);
+  }
+
   return (
-    <form className={styles.control}>
+    <form className={styles.control} onSubmit={handleChangeSelect}>
       <h4>계정 설정</h4>
       <div>
         <span>부서 변경</span>
         <SelectBox
           name="dept"
           placeholder="미정"
+          selectedValue={updateData?.dept ?? ""}
           options={ADMIN_ACCOUNT_DEPT_OPTIONS}
+          onChange={e => handleSetField(e, onUpdateData)}
         />
       </div>
 
@@ -22,7 +33,9 @@ function ControlSection() {
         <SelectBox
           name="role"
           placeholder="미정"
+          selectedValue={updateData?.role ?? ""}
           options={ADMIN_ACCOUNT_ROLE_OPTIONS}
+          onChange={e => handleSetField(e, onUpdateData)}
         />
       </div>
 
@@ -33,8 +46,10 @@ function ControlSection() {
             <input
               type="radio"
               id={`status_${status.code}`}
-              name="deletedYn"
-              value={status.code}
+              name="deleteYn"
+              value={String(status.code)}
+              checked={String(status.code) === String(updateData?.deleteYn)}
+              onChange={e => handleSetField(e, onUpdateData)}
             />
             <label htmlFor={`status_${status.code}`}>{status.name}</label>
           </div>
