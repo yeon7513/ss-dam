@@ -10,17 +10,6 @@ import cn from "classnames";
 import { CgAsterisk } from "react-icons/cg";
 import { useSubmitData } from "../../../../hooks/useSubmitData.js";
 
-const ADMIN_ROLES = {
-  ROLE_SUPER: "최고관리자",
-  ROLE_MANAGER: "매니저",
-  ROLE_STAFF: "스태프",
-}
-
-const ADMIN_DEPT = {
-  OPERATION: "운영·관리",
-  PLANNING: "기획",
-}
-
 function AdminProfileCard() {
   const { user, isLoggedIn, logout } = useAuth();
   const [updateInfo, setUpdateInfo] = useState({
@@ -105,7 +94,7 @@ function AdminProfileCard() {
           <span className={styles.name}>{user.name}</span>
           <span className={styles.id}>({user.id})</span>
         </li>
-        <li className={styles.badge}>{ADMIN_DEPT[user.dept.label]} / {ADMIN_ROLES[user.role.label]}</li>
+        <li className={styles.badge}>{user.dept.label} / {user.role.label}</li>
         <li className={styles.control}>
           <Button
             btnStyle="word"
