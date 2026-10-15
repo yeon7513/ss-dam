@@ -13,13 +13,18 @@ import ImageBox from "../image-box/ImageBox.jsx";
 // import { SwiperSlide } from 'swiper/react';
 // <SwiperSlide>가 하나의 슬라이드 콘텐츠 입니다.
 
-function Slide({ children, images, className, isLoop = false, isAutoplay = false }) {
-
+function Slide({
+  children,
+  images,
+  className,
+  isLoop = false,
+  isAutoplay = false,
+}) {
   // children이 있을 경우 -> 이미지만 단독으로 들어가는 경우가 아닐 경우
   if (children) {
     return (
       <Swiper
-        pagination={true}
+        pagination={{ clickable: true }}
         loop={isLoop}
         autoplay={
           isAutoplay && {
@@ -32,29 +37,25 @@ function Slide({ children, images, className, isLoop = false, isAutoplay = false
       >
         {children}
       </Swiper>
-    )
+    );
   }
 
   // 이미지가 없을 경우,
   // 슬라이드 X, placeholder 이미지로 대체
   if (!images || images.length === 0) {
-    return (
-      <ImageBox src={null} />
-    );
+    return <ImageBox src={null} />;
   }
 
   // 이미지 1장만 단독으로 있을 경우
   if (images.length === 1) {
-    return (
-      <ImageBox src={images[0]} />
-    );
+    return <ImageBox src={images[0]} />;
   }
 
   // 이미지 전용 슬라이드 -> 이미지만 있는 슬라이드인 경우
   if (!children && images.length > 0) {
     return (
       <Swiper
-        pagination={true}
+        pagination={{ clickable: true }}
         loop={isLoop}
         autoplay={
           isAutoplay && {
