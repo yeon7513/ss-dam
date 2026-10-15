@@ -38,7 +38,7 @@ const LogIn = () => {
         password: password,
       });
 
-      if (loggedInUser.role === "MEMBER") {
+      if (loggedInUser.role.code === "ROLE_MEMBER") {
         alert(`${loggedInUser.name}님 환영합니다!`);
 
         // 이전 복귀 경로를 조회하여 이동함.

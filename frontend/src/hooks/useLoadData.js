@@ -18,6 +18,7 @@ export const useLoadData = (url) => {
   const handleFetchData = useCallback(() => {
     // url이 비어있으면 바로 종료
     if (!url) {
+      setData(null);
       return;
     }
 

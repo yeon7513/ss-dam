@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum AuthRole {
-  ROLE_MEMBER("MEMBER", "일반회원"),
+  ROLE_MEMBER("ROLE_MEMBER", "일반회원"),
   ROLE_STAFF("ROLE_STAFF", "스태프"),
   ROLE_MANAGER("ROLE_MANAGER", "매니저"),
   ROLE_SUPER("ROLE_SUPER", "최고관리자");

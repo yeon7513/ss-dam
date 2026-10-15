@@ -16,4 +16,7 @@ public interface AdminAccountService {
   Long registerAdminAccount(AdminAccountCreate adminAccountCreate, AuthProfile loginAdmin);
 
   void updateMyAccount(AdminAccountUpdate adminAccountUpdate, AuthProfile loginAdmin);
+
+  void updateAdminAccountBySupervisor(Long code, AdminAccountUpdate adminAccountUpdate,
+      AuthProfile loginAdmin);
 }

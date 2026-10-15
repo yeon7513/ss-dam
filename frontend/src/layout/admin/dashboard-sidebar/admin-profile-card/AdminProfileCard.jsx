@@ -15,12 +15,12 @@ function AdminProfileCard() {
   const [updateInfo, setUpdateInfo] = useState({
     password: null,
     phone: user?.phone || "",
-  })
+  });
   const [inputError, setInputError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
-  const { handleSubmit } = useSubmitData("/api/admin/account", "PUT");
+  const { handleSubmit } = useSubmitData("/api/admin/account", "PATCH");
 
   // 로그아웃
   const handleLogout = () => {

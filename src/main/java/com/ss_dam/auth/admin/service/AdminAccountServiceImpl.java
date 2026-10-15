@@ -65,4 +65,16 @@ public class AdminAccountServiceImpl implements AdminAccountService {
 
     adminAccountDao.updateMyAccount(adminAccountUpdate);
   }
+
+  @Override
+  public void updateAdminAccountBySupervisor(Long code, AdminAccountUpdate adminAccountUpdate,
+      AuthProfile loginAdmin) {
+
+    
+
+    adminAccountUpdate.setCode(code);
+
+
+  }
+
 }

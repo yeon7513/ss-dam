@@ -1,11 +1,4 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 // 로그인 상태를 전역으로 관리하기 위해 context api로 설정함.
@@ -28,12 +21,12 @@ export function AuthProvider({ children }) {
     };
 
     const loggedInUser =
-      responseData.role === "MEMBER"
+      responseData.role === "ROLE_MEMBER"
         ? {
-            ...baseData,
-            rating: responseData.rating,
-            profileImage: responseData.profileImage,
-          }
+          ...baseData,
+          rating: responseData.rating,
+          profileImage: responseData.profileImage,
+        }
         : { ...baseData, dept: responseData.dept };
 
     localStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
