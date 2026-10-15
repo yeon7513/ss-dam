@@ -1,11 +1,13 @@
 package com.ss_dam.auth.login.model.response;
 
+import com.ss_dam.auth.login.enums.AuthRole;
+
 public interface AuthProfile {
   Long getCode();
 
   String getId();
 
-  String getRole();
+  AuthRole getRole();
 
   String getName();
 }

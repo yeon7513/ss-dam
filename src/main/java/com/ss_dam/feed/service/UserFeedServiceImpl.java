@@ -1,5 +1,6 @@
 package com.ss_dam.feed.service;
 
+import com.ss_dam.auth.login.enums.AuthRole;
 import com.ss_dam.auth.login.model.response.AuthProfile;
 import com.ss_dam.challenge.dao.UserChallengeDao;
 import com.ss_dam.challenge.service.ChallengeWriteGuard;
@@ -66,7 +67,7 @@ public class UserFeedServiceImpl implements UserFeedService {
   @Override
   public FeedDetail findFeedDetailByFeedCode(Long feedCode, AuthProfile loginUser) {
 
-    boolean isMember = loginUser != null && "MEMBER".equalsIgnoreCase(loginUser.getRole());
+    boolean isMember = loginUser != null && loginUser.getRole() == AuthRole.ROLE_MEMBER;
     Long memberCode = (isMember) ? loginUser.getCode() : null;
 
     Map<String, Object> params = new HashMap<>();

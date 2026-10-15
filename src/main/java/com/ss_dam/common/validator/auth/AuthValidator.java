@@ -1,5 +1,6 @@
 package com.ss_dam.common.validator.auth;
 
+import com.ss_dam.auth.login.enums.AuthRole;
 import com.ss_dam.auth.login.model.response.AuthProfile;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
@@ -43,9 +44,9 @@ public class AuthValidator {
   public AuthProfile requireMember(HttpSession session) {
     AuthProfile loginUser = requireLogin(session);
 
-    String role = loginUser.getRole();
+    AuthRole role = loginUser.getRole();
 
-    if (!"MEMBER".equalsIgnoreCase(role)) {
+    if (role != AuthRole.ROLE_MEMBER) {
       throw new ResponseStatusException(HttpStatus.FORBIDDEN,
           "관리자 계정으로는 일반 회원 서비스를 이용할 수 없습니다. 사용자 모드로 전환해주세요.");
     }
@@ -60,10 +61,9 @@ public class AuthValidator {
 
     AuthProfile loginUser = requireLogin(session);
 
-    String role = loginUser.getRole();
+    AuthRole role = loginUser.getRole();
 
-    if (!"ROLE_SUPER".equalsIgnoreCase(role) && !"ROLE_MANAGER".equalsIgnoreCase(
-        role) && !"ROLE_STAFF".equalsIgnoreCase(role)) {
+    if (role != AuthRole.ROLE_SUPER && role != AuthRole.ROLE_MANAGER && role != AuthRole.ROLE_STAFF) {
       throw new ResponseStatusException(HttpStatus.FORBIDDEN, "관리자만 사용할 수 있습니다.");
     }
     return loginUser;
@@ -74,9 +74,9 @@ public class AuthValidator {
 
     AuthProfile admin = requireAdmin(session);
 
-    String role = admin.getRole();
+    AuthRole role = admin.getRole();
 
-    if (!"ROLE_SUPER".equalsIgnoreCase(role) && !"ROLE_MANAGER".equalsIgnoreCase(role)) {
+    if (role != AuthRole.ROLE_SUPER && role != AuthRole.ROLE_MANAGER) {
       throw new ResponseStatusException(HttpStatus.FORBIDDEN, "회원 관리 권한이 없습니다.");
     }
 

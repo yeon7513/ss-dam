@@ -105,7 +105,7 @@ function AdminProfileCard() {
           <span className={styles.name}>{user.name}</span>
           <span className={styles.id}>({user.id})</span>
         </li>
-        <li className={styles.badge}>{ADMIN_DEPT[user.dept]} / {ADMIN_ROLES[user.role]}</li>
+        <li className={styles.badge}>{ADMIN_DEPT[user.dept.label]} / {ADMIN_ROLES[user.role.label]}</li>
         <li className={styles.control}>
           <Button
             btnStyle="word"
