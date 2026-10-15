@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import ChatMessages from "./chat-messages/ChatMessages.jsx";
+import Button from "../common/button/Button.jsx";
 
 import { useLoadData } from "../../hooks/useLoadData.js";
 import {
@@ -105,31 +106,36 @@ function ChatContainer({ roomId }) {
       {/* 상단 정보 헤더 영역 */}
       <div className={styles.header}>
         {/* 제품 대표 이미지 영역 */}
-        <img
-          src={productInfo?.thumbnail || "/assets/sample-product.png"}
-          alt={productInfo?.title || "제품 대표 이미지"}
-          className={styles.productImage}
-        />
+        <img className={styles.productImage} />
 
-        {/* 상단 정보 내용 영역 */}
-        <div className={styles.infoContent}>
-          {/* 사용자 아이디 영역 */}
-          <span className={styles.userId}>
-            {roomInfo?.opponentNickname ||
-              roomInfo?.userNickname ||
-              "사용자 아이디"}
-          </span>
+        {/* 게시글 정보 영역 (클릭 시 상세 이동되면 좋을 듯) */}
+        <div className={styles.productWrap}>
           {/* 게시글 제목 영역 */}
           <span className={styles.productTitle}>
-            {productInfo?.title || "게시글 제목"}
+            이사를 가게 되어서 가구 반값처분합니다 (!!!다시없을 기회!!!)
           </span>
-          {/* 제품 가격 영역 */}
-          <span className={styles.productPrice}>
-            {productInfo?.price != null
-              ? `${productInfo.price.toLocaleString()}원`
-              : "150,000원"}
-          </span>
+
+          {/* 사용자 아이디 영역 (우측 배치) */}
+          <div className={styles.userWrap}>
+            <span className={styles.userId}>ubunddu123</span>
+          </div>
         </div>
+
+        {/* 제품 가격 영역 */}
+        <span className={styles.productPrice}>
+          1,500,000
+          <span className={styles.point}> 그루</span>
+        </span>
+
+        {/* 송금 버튼 영역 */}
+        <Button
+          btnStyle="fill"
+          // action="danger"
+          size="lg"
+          className={styles.remitButton}
+        >
+          송금하기
+        </Button>
       </div>
 
       {/* 대화 메시지 영역 */}
