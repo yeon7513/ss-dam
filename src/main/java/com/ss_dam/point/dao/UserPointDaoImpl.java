@@ -33,4 +33,5 @@ public class UserPointDaoImpl implements UserPointDao{
     public int exchangePoint(Point point) {
         return sql.update("userPoint.exchangePoint", point);
     }
+	
 }

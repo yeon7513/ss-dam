@@ -4,8 +4,11 @@ import com.ss_dam.point.dao.UserPointDao;
 import com.ss_dam.point.model.PaymentPoint;
 import com.ss_dam.point.model.Point;
 import com.ss_dam.point.model.PointLog;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class UserPointServiceImpl implements UserPointService {
@@ -156,6 +159,39 @@ public class UserPointServiceImpl implements UserPointService {
 			return true;
 		}
 
+		return false;
+	}
+
+	@Transactional
+	@Override
+	public boolean deductPoint(Long memCode, int amount, String reason) {
+		int beforePoint = pointDao.getPointBalance(memCode);
+
+		if (beforePoint < amount) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "INSUFFICIENT_POINT");
+		}
+
+		int afterPoint = beforePoint - amount;
+
+		Point pointObj = new Point();
+
+		pointObj.setCode(memCode);
+		pointObj.setPoint(afterPoint);
+
+		int result = pointDao.chargePoint(pointObj);
+
+		if (result == 1) {
+			PointLog pointLog = new PointLog();
+
+			pointLog.setMemCode(memCode);
+			pointLog.setType("USED");
+			pointLog.setAmount(amount);
+			pointLog.setReason(reason);
+
+			pointDao.chargePointLog(pointLog);
+
+			return true;
+		}
 		return false;
 	}
 }
