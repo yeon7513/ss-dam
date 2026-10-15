@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./DataTable.module.scss";
 import cn from "classnames";
+import Pagination from "../pagination/Pagination";
 
 /*
   =================================================================
@@ -22,13 +23,21 @@ import cn from "classnames";
   =================================================================
 */
 
-export default function DataTable({ columns, data, className }) {
+export default function DataTable({
+  columns,
+  data,
+  className,
+  totalCount = 0,
+}) {
   if (!data || data.length === 0) {
     return <div className={styles.stateMassage}>조회된 데이터가 없습니다</div>;
   }
 
   return (
     <div className={styles.tableContainer}>
+      <p className={styles.count}>
+        총 {Number(totalCount ?? 0).toLocaleString()}건
+      </p>
       <table className={cn(styles.table, className)}>
         <thead>
           <tr>
