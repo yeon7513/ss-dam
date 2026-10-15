@@ -283,12 +283,14 @@ public class AdminChallengeServiceImpl implements AdminChallengeService {
 		adminActivityLogService.recordActivity(adminCode, "challenge", code, "EARLY_END",
 				"챌린지 조기 완료" + " / 기존 종료일시: " + existing.getEndDate() + " / 처리 일시: " + now, now);
 
-		adminChallengeDao.updateStatusToEnded(code);
+		adminChallengeDao.updateStatusToEnded(code);		
 
+		adminChallengeDao.updateParticipantsToCompleted(code);
+
+		int rewardAmount = adminChallengeDao.getChallengeRewardPoint(code);
+		
 		List<Long> targetMemCodes = adminChallengeDao.getCompleteMemberCodes(code);
-
-		// 테스트로 인해 하드코딩
-		int rewardAmount = 1000;
+		
 		for (Long memCode : targetMemCodes) {
 			userPointService.rewardPoint(memCode, rewardAmount, "CHALLENGE_REWARD");
 		}

@@ -46,4 +46,8 @@ public interface AdminChallengeDao {
 	void updateStatusToEnded(Long code);
 
 	List<Long> getCompleteMemberCodes(Long code);
+	
+	int getChallengeRewardPoint(Long code);
+
+	void updateParticipantsToCompleted(Long code);
 }
