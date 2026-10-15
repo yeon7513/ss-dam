@@ -3,6 +3,7 @@ package com.ss_dam.auth.admin.service;
 import com.ss_dam.auth.admin.dao.AdminAccountDao;
 import com.ss_dam.auth.admin.model.filter.AdminAccountSearchFilter;
 import com.ss_dam.auth.admin.model.request.AdminAccountCreate;
+import com.ss_dam.auth.admin.model.request.AdminAccountUpdate;
 import com.ss_dam.auth.admin.model.response.AdminAccountDetail;
 import com.ss_dam.auth.admin.model.response.AdminAccountView;
 import com.ss_dam.auth.login.model.response.AuthProfile;
@@ -57,4 +58,20 @@ public class AdminAccountServiceImpl implements AdminAccountService {
 
     return adminAccountCreate.getCode();
   }
+
+  @Override
+  public void updateMyAccount(AdminAccountUpdate adminAccountUpdate, AuthProfile loginAdmin) {
+    adminAccountUpdate.setCode(loginAdmin.getCode());
+
+    adminAccountDao.updateMyAccount(adminAccountUpdate);
+  }
+
+  @Override
+  public void updateAdminAccountBySupervisor(Long code, AdminAccountUpdate adminAccountUpdate,
+      AuthProfile loginAdmin) {
+    adminAccountUpdate.setCode(code);
+
+    adminAccountDao.updateAdminAccountBySupervisor(adminAccountUpdate);
+  }
+
 }

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import ChatMessages from "./chat-messages/ChatMessages.jsx";
+import Button from "../common/button/Button.jsx";
 
 import { useLoadData } from "../../hooks/useLoadData.js";
 import {
@@ -16,12 +17,12 @@ import styles from "./ChatContainer.module.scss";
  * 채팅 컨테이너 컴포넌트
  */
 function ChatContainer({ roomId }) {
-  /* 채팅 메시지 및 정보 상태 */
+  /* 채팅 메시지 및 정보 상태 관리 */
   const [messages, setMessages] = useState([]);
   const [roomInfo, setRoomInfo] = useState(null);
   const [productInfo, setProductInfo] = useState(null);
 
-  /* 채팅 구독 참조 */
+  /* 웹소켓 구독 참조 설정 */
   const subscriptionRef = useRef(null);
 
   /* 채팅방 메시지 목록 조회 */
@@ -58,15 +59,13 @@ function ChatContainer({ roomId }) {
       }
 
       const subscription = subscribeToChatRoom(roomId, (newMessage) => {
-        console.log("수신된 새 메시지: ", newMessage);
+        // 수신된 새 메시지를 목록에 추가함.
         setMessages((prevMessages) => [...prevMessages, newMessage]);
       });
 
       if (subscription) {
-        console.log("subscription 객체 생성");
+        // 웹소켓 구독 객체를 저장함.
         subscriptionRef.current = subscription;
-      } else {
-        console.warn("stompClient가 연결되지 않았습니다.");
       }
     });
 
@@ -102,25 +101,41 @@ function ChatContainer({ roomId }) {
   }
 
   return (
+    /* 채팅 컨테이너 영역 */
     <div className={styles.container}>
       {/* 상단 정보 헤더 영역 */}
       <div className={styles.header}>
-        {/* 사용자 정보 영역 */}
-        {roomInfo && (
-          <div>
-            <img src={roomInfo.profileImage} alt="" width={50} height={50} />
-            <span>{roomInfo.id}</span>
-          </div>
-        )}
+        {/* 제품 대표 이미지 영역 */}
+        <img className={styles.productImage} />
 
-        {/* 상품 정보 영역 */}
-        {productInfo && (
-          <div>
-            <img src={productInfo.thumbnail} alt="" width={50} height={50} />
-            <span>{productInfo.title}</span>
-            <span>{productInfo.price.toLocaleString()}</span>
+        {/* 게시글 정보 영역 (클릭 시 상세 이동되면 좋을 듯) */}
+        <div className={styles.productWrap}>
+          {/* 게시글 제목 영역 */}
+          <span className={styles.productTitle}>
+            이사를 가게 되어서 가구 반값처분합니다 (!!!다시없을 기회!!!)
+          </span>
+
+          {/* 사용자 아이디 영역 (우측 배치) */}
+          <div className={styles.userWrap}>
+            <span className={styles.userId}>ubunddu123</span>
           </div>
-        )}
+        </div>
+
+        {/* 제품 가격 영역 */}
+        <span className={styles.productPrice}>
+          1,500,000
+          <span className={styles.point}> 그루</span>
+        </span>
+
+        {/* 송금 버튼 영역 */}
+        <Button
+          btnStyle="fill"
+          // action="danger"
+          size="lg"
+          className={styles.remitButton}
+        >
+          송금하기
+        </Button>
       </div>
 
       {/* 대화 메시지 영역 */}

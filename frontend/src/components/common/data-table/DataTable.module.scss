@@ -1,11 +1,11 @@
 @use "../../../scss/variables.scss" as v;
 @use "../../../scss/mixin.scss" as mix;
 
-.stateMessage {
-  padding: 20px;
-  text-align: center;
-  color: #666;
-  font-size: 14px;
+/* 조회 건수 */
+.count {
+  margin: 0 0 12px;
+  color: #687180;
+  font-size: 12px;
 }
 
 .tableContainer {
@@ -15,31 +15,94 @@
 
 .table {
   width: 100%;
+  min-width: 850px;
   border-collapse: collapse;
-  margin-top: 10px;
-  font-size: 14px;
+  text-align: left;
+  background-color: #ffffff; /* 테이블 전체 기본 배경 흰색 고정 */
 
-  th,
+  thead tr,
+  th {
+    padding: 13px 12px;
+    background-color: #f1f3f7; /* AdminActivityLogs 헤더 배경색 */
+    color: #596373;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    border: none;
+  }
+
+  tbody tr {
+    background-color: #ffffff; /* 행 배경 흰색 고정 */
+
+    &:hover {
+      background-color: #fafbfe; /* AdminActivityLogs 호버 배경색 */
+    }
+  }
+
   td {
-    border: 1px solid #e2e8f0;
-    padding: 10px 12px;
+    padding: 15px 12px;
+    border: none;
+    border-bottom: 1px solid #edf0f4;
+    font-size: 13px;
+    color: #252b33;
+    vertical-align: middle;
   }
 
-  thead {
-    tr {
-      background-color: #f8f9fa;
-      color: #333;
-      font-weight: 600;
+  /* 테이블 내부 커스텀 요소 스타일 */
+  .badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: #f0f2f7;
+    color: #505b6a;
+    font-size: 12px;
+  }
+
+  .memo {
+    min-width: 240px;
+    max-width: 480px;
+
+    p {
+      margin: 0 0 5px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      line-height: 1.6;
+    }
+
+    small {
+      color: #8a93a1;
+      font-size: 11px;
     }
   }
 
-  tbody {
-    tr {
-      text-align: center;
+  .admin {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 90px;
+    overflow-wrap: anywhere;
 
-      &:hover {
-        background-color: #f1f5f9;
-      }
+    strong {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    small {
+      color: #8a93a1;
+      font-size: 11px;
     }
   }
+
+  .date {
+    white-space: nowrap;
+    color: #687180;
+    font-size: 12px;
+  }
+}
+
+.stateMessage {
+  padding: 60px 12px;
+  text-align: center;
+  color: #7d8795;
+  font-size: 14px;
 }

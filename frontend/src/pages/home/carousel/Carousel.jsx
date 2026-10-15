@@ -10,44 +10,37 @@ function Carousel() {
     <section className={styles.carousel}>
       <Slide isAutoplay={true} isLoop={true}>
         <SwiperSlide className={cn(styles.item, styles.introduce)}>
-          <ImageBox src="https://plus.unsplash.com/premium_photo-1780500270657-d4fa79d19b39?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
+          <ImageBox src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=1200&auto=format&fit=crop" />
           <div className={styles.content}>
-            <h2>쓰담쓰담 소개</h2>
+            <h2>쓰담쓰담으로 시작하는 초록빛 일상</h2>
             <p>
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ab
-              voluptatibus, quod sit dolor quaerat similique?
+              지구도 구하고 내 멘탈도 케어하는 진짜 가치소비 모먼트예요. <br />
+              작고 소소한 그린 리추얼 하나로 매일 더 스페셜한 일상을 완성해요.
             </p>
           </div>
         </SwiperSlide>
+
         <SwiperSlide className={cn(styles.item, styles.market)}>
-          <ImageBox src="https://plus.unsplash.com/premium_photo-1780605742275-e5cb1d5b340e?q=80&w=1193&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
+          <ImageBox src="https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?q=80&w=1200&auto=format&fit=crop" />
           <div className={styles.content}>
-            <h2>다시쓰담 소개</h2>
+            <h2>버리지 말고 다시 쓰담!</h2>
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Adipisci, quam.
+              나에겐 살짝 멀어진 취향이 누군가에겐 취향 저격 보물이 돼요. <br />
+              버려짐 없이 온기까지 연결되는 세상에서 가장 힙하고 알뜰한
+              나눔이에요.
             </p>
           </div>
         </SwiperSlide>
-        <SwiperSlide className={cn(styles.item, styles.feed)}>
-          <ImageBox src="https://images.unsplash.com/photo-1780547300423-c6a539738adb?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
-          <div className={styles.content}>
-            <h2>챌린지 및 피드 소개</h2>
-            <p>
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. A
-              excepturi ipsum tenetur dignissimos voluptatum rem ipsa fugiat
-              maxime, veritatis quae quibusdam sapiente est suscipit,
-              voluptatibus porro? Temporibus saepe nulla perspiciatis!
-            </p>
-          </div>
-        </SwiperSlide>
+
         <SwiperSlide className={cn(styles.item, styles.notice)}>
-          <ImageBox src="https://plus.unsplash.com/premium_photo-1780666389668-7c723130218e?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
+          <ImageBox src="https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?q=80&w=1200&auto=format&fit=crop" />
           <div className={styles.content}>
-            <h2>공지사항 및 유의사항</h2>
+            <h2>요즘 제일 핫한 갓생, 그린 라이프</h2>
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rerum,
-              expedita?
+              감성 텀블러부터 마이 에코백까지, 요즘 갓생러들의 똑똑한 일상
+              루틴이에요. <br />
+              무심한 듯 센스 있는 실천으로 나만의 차별화된 친환경 라이프를
+              즐겨요.
             </p>
           </div>
         </SwiperSlide>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useLoadData } from "../../../hooks/useLoadData.js";
 import { useSearchQuery } from "../../../hooks/useSearchQuery.js";
 import PanelHeader from "../../../layout/admin/panel-header/PanelHeader.jsx";
@@ -8,35 +8,64 @@ import MemberCard from "../../../components/dashboard/member-card/MemberCard.jsx
 import styles from "./AccountManage.module.scss";
 import AccountManageDetail from "./account-manage-detail/AccountManageDetail.jsx";
 import SearchFilterBar from "../../../components/dashboard/search-filter-bar/SearchFilterBar.jsx";
-import { ADMIN_ACCOUNT_INITIAL_FILTERS, ADMIN_ACCOUNT_ROLE_OPTIONS, ADMIN_ACCOUNT_STATUS } from "../../../constants/admin-account/AccountManage.constants.js";
+import { ADMIN_ACCOUNT_INITIAL_FILTERS, ADMIN_ACCOUNT_SELECT_OPTIONS, ADMIN_ACCOUNT_STATUS } from "../../../constants/admin-account/AccountManage.constants.js";
+import { useSubmitData } from "../../../hooks/useSubmitData.js";
 
 function AccountManage() {
-  const [detailCode, setDetailCode] = useState(null);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const selectedCode = searchParams.get("selectedCode") || null;
+  const [searchParams] = useSearchParams();
+  const detailCode = searchParams.get("selectedCode") || null;
   const navigate = useNavigate();
 
-  const { handleSearch, searchFilter, queryString, handleChangePages } = useSearchQuery({
+  // 검색 수행
+  const { handleSearch: onSearch, searchFilter, queryString, handleChangePages } = useSearchQuery({
     ...ADMIN_ACCOUNT_INITIAL_FILTERS,
-    selectedCode,
+    selectedCode: detailCode,
   });
-  const { data: adminAccounts, refetch } = useLoadData(`/api/admin/account${queryString}`);
 
-  // 새로고침
+  // 목록 정보 조회
+  const { data: adminAccounts, refetch: listRefetch } = useLoadData(`/api/admin/account${queryString}`);
+
+  // 상세 정보 조회
+  const {
+    data: adminAccountDetail,
+    refetch: detailRefetch,
+  } = useLoadData(detailCode ? `/api/admin/account/${detailCode}` : null);
+
+
+  const { handleSubmit } = useSubmitData(`/api/admin/account/${detailCode}`, "PATCH");
+
+  // 목록 새로고침 -> PanelHeader용
   const handleRefresh = () => {
-    refetch();
+    listRefetch();
   }
 
-  // 주소줄의 쿼리스트링 동기화
+  // 목록 카드 클릭시 주소줄의 쿼리스트링 동기화
   const handleClickDetail = (code) => {
-    const newParams = new URLSearchParams(searchParams);
-    newParams.set("selectedCode", code);
-
-    setSearchParams(newParams);
-    setDetailCode(code);
+    onSearch({
+      ...searchFilter,
+      selectedCode: code,
+    });
   }
 
-  console.log(adminAccounts);
+  // 전체 검색
+  const handleSearch = (newFilters) => {
+    onSearch({
+      ...newFilters,
+      selectedCode: null, // 선택된 상세 화면은 초기화
+    });
+  }
+
+  const handleUpdateAccount = async (updatedAccount) => {
+    const { success } = await handleSubmit(updatedAccount);
+
+    if (!success) {
+      alert("정보 수정에 실패했습니다.");
+    } else {
+      alert("수정 성공");
+      listRefetch();
+      detailRefetch();
+    }
+  }
 
   return (
     <div className={styles.wrap}>
@@ -53,7 +82,7 @@ function AccountManage() {
             label: "관리자 계정 생성",
           }}
           initFilter={ADMIN_ACCOUNT_INITIAL_FILTERS}
-          selectGroups={ADMIN_ACCOUNT_ROLE_OPTIONS}
+          selectGroups={ADMIN_ACCOUNT_SELECT_OPTIONS}
           radioGroups={ADMIN_ACCOUNT_STATUS}
           searchFilter={searchFilter}
           onSearch={handleSearch}
@@ -76,7 +105,7 @@ function AccountManage() {
         </div>
 
         {/* 상세 정보 조회 영역 */}
-        <AccountManageDetail code={selectedCode || detailCode} />
+        <AccountManageDetail detail={adminAccountDetail} onUpdateAccount={handleUpdateAccount} />
       </div>
 
     </div>

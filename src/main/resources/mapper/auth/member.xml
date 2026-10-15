@@ -41,7 +41,7 @@
     MA.ID AS id,
     MA.PASSWORD AS password,
     MA.NAME AS name,
-    'MEMBER' AS role,
+    'ROLE_MEMBER' AS role,
     MA.RATING AS rating,
     i.path AS profile_image
     FROM MEMBER_ACCOUNT AS MA

@@ -4,6 +4,7 @@ import { ADMIN_MENU } from "../../../lib/sideMenu.js";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 
 import styles from "./DashboardSidebar.module.scss";
+import AdminProfileCard from "./admin-profile-card/AdminProfileCard.jsx";
 
 const DashboardSidebar = () => {
   const { pathname } = useLocation();
@@ -27,6 +28,9 @@ const DashboardSidebar = () => {
             <Link to="/">쓰담쓰담</Link>
           </h1>
         </div>
+
+        {/* 로그인 한 관리자 정보 */}
+        <AdminProfileCard />
 
         <nav className={styles.sidebarMenu}>
           {ADMIN_MENU.map((item) => {

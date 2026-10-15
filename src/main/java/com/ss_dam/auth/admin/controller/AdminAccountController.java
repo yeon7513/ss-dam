@@ -2,6 +2,7 @@ package com.ss_dam.auth.admin.controller;
 
 import com.ss_dam.auth.admin.model.filter.AdminAccountSearchFilter;
 import com.ss_dam.auth.admin.model.request.AdminAccountCreate;
+import com.ss_dam.auth.admin.model.request.AdminAccountUpdate;
 import com.ss_dam.auth.admin.model.response.AdminAccountDetail;
 import com.ss_dam.auth.admin.model.response.AdminAccountView;
 import com.ss_dam.auth.admin.service.AdminAccountService;
@@ -68,14 +69,31 @@ public class AdminAccountController {
 
 
   // 관리자 정보 수정 (본인용)
-  // -> 비밀번호, 이름, 연락처, 부서
+  // -> 비밀번호, 연락처
+  @PatchMapping
+  ResponseEntity<ApiResponse<Void>> updateMyAccount(
+      @RequestBody AdminAccountUpdate adminAccountUpdate, HttpSession session) {
+
+    AuthProfile loginAdmin = authValidator.requireLogin(session);
+
+    adminAccountService.updateMyAccount(adminAccountUpdate, loginAdmin);
+
+    return ResponseEntity.ok(ApiResponse.success("정보 수정 성공", null));
+  }
 
 
-  // 관리자 정보 수정 (상사용)
-  // -> 부서, 권한
+  // 관리자 정보 수정 (상위 관리자용)
+  // -> 부서, 권한, 활성 여부 (논리 삭제 적용)
+  @PatchMapping("/{code}")
+  ResponseEntity<ApiResponse<Void>> updateAdminAccountBySupervisor(@PathVariable Long code,
+      @RequestBody AdminAccountUpdate adminAccountUpdate, HttpSession session) {
+    AuthProfile loginAdmin = authValidator.requireLogin(session);
+
+    adminAccountService.updateAdminAccountBySupervisor(code, adminAccountUpdate, loginAdmin);
+
+    return ResponseEntity.ok(ApiResponse.success("[상위 관리자 -> 하위 관리자] 정보 수정 성공", null));
+  }
 
 
-  // 관리자 계정 삭제 (상사용)
-  // -> 논리 삭제 적용
 
 }

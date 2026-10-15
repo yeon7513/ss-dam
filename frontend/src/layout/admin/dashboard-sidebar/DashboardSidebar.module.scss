@@ -70,20 +70,14 @@
   }
 
   ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-
     a {
       width: 100%;
       height: 50px;
-      box-sizing: border-box;
       display: flex;
       align-items: center;
       padding: 0 20px 0 32px;
       color: v.$grayscale-90;
       font-size: 0.95rem;
-      text-decoration: none;
 
       &:hover {
         background-color: v.$grayscale-5;

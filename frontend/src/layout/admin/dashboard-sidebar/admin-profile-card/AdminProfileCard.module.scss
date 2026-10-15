@@ -1,0 +1,101 @@
+@use "../../../../scss/variables.scss" as v;
+@use "../../../../scss/mixin.scss" as mix;
+
+// 프로필 영역
+.profile {
+  padding: 1.25rem;
+
+  .info {
+    text-align: center;
+
+    .name {
+      font-size: 18px;
+      font-weight: 700;
+      vertical-align: middle;
+    }
+
+    .id {
+      margin-left: 4px;
+      color: v.$grayscale-70;
+    }
+  }
+
+  .badge {
+    display: inline-block;
+    margin: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: v.$point-60;
+    border: 1px solid v.$point-20;
+    border-radius: 0.25rem;
+  }
+
+
+  .control {
+    > button {
+      margin: 0 0.5rem;
+      padding: 0.5rem;
+    }
+  }
+}
+
+.infoUpdateModal {
+  padding: 1.25rem;
+  width: 30%;
+
+  .modalContents {
+    padding: 1rem 0;
+    border-top: 1px solid v.$grayscale-20;
+
+    .disabled {
+      @include mix.flex($ai: flex-start);
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+
+      > .item {
+        flex: 1;
+      }
+    }
+
+    .item {
+      label {
+        display: inline-block;
+        margin-bottom: 4px;
+        font-size: 0.875rem;
+        font-weight: 600;
+      }
+
+      &.phone {
+        margin-top: 1rem;
+        height: 100px;
+      }
+    }
+
+
+  }
+}
+
+.notice {
+  font-size: 14px;
+
+  &.help {
+    @include mix.flex($jc: flex--start);
+    color: v.$grayscale-60;
+  }
+
+  &.error {
+    display: inline-block;
+    margin-top: 0.4rem;
+    color: v.$dan-color;
+  }
+}
+
+.footer {
+  text-align: center;
+
+  > .actionButton {
+    padding: 0.7rem 1.5rem;
+    margin-left: 0.5rem;
+  }
+}

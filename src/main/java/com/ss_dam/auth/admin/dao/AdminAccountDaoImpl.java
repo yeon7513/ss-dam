@@ -2,6 +2,7 @@ package com.ss_dam.auth.admin.dao;
 
 import com.ss_dam.auth.admin.model.filter.AdminAccountSearchFilter;
 import com.ss_dam.auth.admin.model.request.AdminAccountCreate;
+import com.ss_dam.auth.admin.model.request.AdminAccountUpdate;
 import com.ss_dam.auth.admin.model.response.AdminAccountDetail;
 import com.ss_dam.auth.admin.model.response.AdminAccountView;
 import org.apache.ibatis.session.SqlSession;
@@ -37,5 +38,15 @@ public class AdminAccountDaoImpl implements AdminAccountDao {
   @Override
   public void registerAdminAccount(AdminAccountCreate adminAccountCreate) {
     sql.insert("adminAccount.registerAdminAccount", adminAccountCreate);
+  }
+
+  @Override
+  public void updateMyAccount(AdminAccountUpdate adminAccountUpdate) {
+    sql.update("adminAccount.updateMyAccount", adminAccountUpdate);
+  }
+
+  @Override
+  public void updateAdminAccountBySupervisor(AdminAccountUpdate adminAccountUpdate) {
+    sql.update("adminAccount.updateAdminAccountBySupervisor", adminAccountUpdate);
   }
 }

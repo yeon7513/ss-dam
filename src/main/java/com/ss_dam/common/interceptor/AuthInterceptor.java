@@ -1,5 +1,6 @@
 package com.ss_dam.common.interceptor;
 
+import com.ss_dam.auth.login.enums.AuthRole;
 import com.ss_dam.auth.login.model.response.AuthProfile;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -42,11 +43,13 @@ public class AuthInterceptor implements HandlerInterceptor {
       return true;
     }
 
+    AuthRole userRole = user.getRole();
+
     System.out.println(">>> 접속 유저 Role: " + user.getRole());
 
     // 일반 회원이 관리자 전용 URL에 접근 시
     if (requestURI.startsWith("/admin") || requestURI.startsWith("/api/admin")) {
-      if ("MEMBER".equalsIgnoreCase(user.getRole())) {
+      if (userRole == AuthRole.ROLE_MANAGER) {
         System.out.println(">>> 권한 없음! 403 리턴");
         response.sendError(HttpServletResponse.SC_FORBIDDEN); // 403 (권한 없음)
 
@@ -56,10 +59,10 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     // 관리자가 일반 회원 전용 URL에 접근 시
     if (isMemberOnlyRequest(requestURI, request.getMethod())) {
-      if (!"MEMBER".equalsIgnoreCase(user.getRole())) {
+      if (userRole != AuthRole.ROLE_MEMBER) {
         response.sendError(HttpServletResponse.SC_FORBIDDEN);
         System.out.println(">>> 관리자는 회원 전용 서비스 이용 불가");
-        
+
         return false;
       }
     }

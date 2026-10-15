@@ -1,10 +1,12 @@
 package com.ss_dam.auth.login.model.response;
 
+import com.ss_dam.auth.login.enums.AuthRole;
+
 // 프론트엔드에서 전역으로 관리할 회원 프로필 정보
 public class MemberProfile implements AuthProfile {
   private Long code;
   private String id;
-  private String role;
+  private AuthRole role;
   private String name;
   private int rating;
 
@@ -21,7 +23,7 @@ public class MemberProfile implements AuthProfile {
   }
 
   @Override
-  public String getRole() {
+  public AuthRole getRole() {
     return role;
   }
 

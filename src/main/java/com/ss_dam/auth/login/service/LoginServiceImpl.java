@@ -1,32 +1,30 @@
 package com.ss_dam.auth.login.service;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.ss_dam.auth.login.dao.LoginDao;
+import com.ss_dam.auth.login.enums.AuthRole;
 import com.ss_dam.auth.login.model.request.Login;
 import com.ss_dam.auth.login.model.response.AdminProfile;
 import com.ss_dam.auth.login.model.response.AuthProfile;
 import com.ss_dam.auth.login.model.response.MemberProfile;
 import com.ss_dam.auth.member.enums.MemberActivityType;
 import com.ss_dam.auth.member.service.MemberAccessService;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class LoginServiceImpl implements LoginService {
 
-    private final LoginDao loginDao;
-    private final MemberAccessService memberAccessService;
+  private final LoginDao loginDao;
+  private final MemberAccessService memberAccessService;
 
-    public LoginServiceImpl(
-            LoginDao loginDao,
-            MemberAccessService memberAccessService) {
+  public LoginServiceImpl(LoginDao loginDao, MemberAccessService memberAccessService) {
 
-        this.loginDao = loginDao;
-        this.memberAccessService = memberAccessService;
-    }
+    this.loginDao = loginDao;
+    this.memberAccessService = memberAccessService;
+  }
 
 
   @Override
@@ -35,7 +33,7 @@ public class LoginServiceImpl implements LoginService {
 
     MemberProfile memberProfile = loginDao.findMemberForLogin(loginForm);
 
-    if (memberProfile != null && "MEMBER".equals(memberProfile.getRole())) {
+    if (memberProfile != null && memberProfile.getRole() == AuthRole.ROLE_MEMBER) {
 
       // 로그인 성공 이력을 저장하기 전에 이용 가능 여부 검사
       // 회원 기본 상태 및 신고 제재 확인

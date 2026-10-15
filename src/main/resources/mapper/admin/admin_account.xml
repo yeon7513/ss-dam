@@ -108,7 +108,6 @@
     WHERE AA.code = #{code}
   </select>
 
-
   <!-- ================================================== -->
 
   <!-- 관리자 계정 생성 -->
@@ -128,14 +127,11 @@
   <!-- 관리자 정보 수정 (본인) -->
   <update id="updateMyAccount">
     UPDATE ADMIN_ACCOUNT
-    SET
     <set>
       <!-- 비밀번호는 빈 값이 아닐 경우에만 수정 대상에 포함시킴 -->
       <if test="password != null and password != ''">
-        password = #{password}
+        password = #{password},
       </if>
-      name = #{name},
-      dept = #{dept},
       phone = #{phone},
       updated_at = now()
     </set>
@@ -143,13 +139,14 @@
   </update>
 
   <!-- 관리자 정보 수정 (상사) -->
-  <update id="updateAccountBySupervisor">
+  <update id="updateAdminAccountBySupervisor">
     UPDATE ADMIN_ACCOUNT
     SET
     role = #{role},
     dept = #{dept},
+    delete_yn = #{deleteYn},
     updated_at = now()
-    WHERE code = #{targetCode}
+    WHERE code = #{code}
   </update>
 
   <!-- ================================================== -->
