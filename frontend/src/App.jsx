@@ -47,11 +47,13 @@ import ProductUpdate from "./pages/market/product-update/ProductUpdate.jsx";
 import Deal from "./pages/my-page/deal/Deal";
 import EditProfile from "./pages/my-page/edit_profile/EditProfile";
 import MyPage from "./pages/my-page/MyPage.jsx";
-import Points from "./pages/my-page/points/Points";
+import PointCharge from "./pages/my-page/points/PointCharge.jsx";
 import SupportDetail from "./pages/support/SupportDetail";
 import Supports from "./pages/support/Supports";
 import AdminRoute from "./routes/AdminRoute.jsx";
 import ProtectedRoute from "./routes/ProtectedRoute.jsx";
+import PointHistory from "./pages/my-page/points/PointHistory.jsx";
+import PointTransfer from "./pages/my-page/points/point-transfer/PointTransfer.jsx";
 
 
 function App() {
@@ -122,7 +124,9 @@ function App() {
           <Route path="/mypage" element={<MyPage />}>
             <Route path="edit_profile" element={<EditProfile />} />
             <Route path="deal" element={<Deal />} />
-            <Route path="points" element={<Points />} />
+            <Route path="point/charge" element={<PointCharge />} />
+            <Route path="point/history" element={<PointHistory />} />
+            <Route path="point/transfer" element={<PointTransfer />} />
           </Route>
         </Route>
       </Route>

@@ -16,7 +16,7 @@
   min-width: 15rem;
 }
 
-.content {
+.container {
   flex: 1;
   min-width: 0;
 }
@@ -48,13 +48,16 @@
   a,
   button {
     display: inline-flex;
-    color: inherit;
 
-    &:hover { color: v.$primary-50; }
+    &:hover {
+      color: v.$primary-50;
+    }
   }
 }
 
-.bell { position: relative; }
+.bell {
+  position: relative;
+}
 
 .dot {
   position: absolute;
@@ -76,7 +79,9 @@
 .group {
   border-bottom: 1px solid v.$grayscale-20;
 
-  &:last-child { border-bottom: none; }
+  &:last-child {
+    border-bottom: none;
+  }
 }
 
 .header {
@@ -88,19 +93,27 @@
   font-size: 0.9375rem;
   font-weight: 700;
 
-  &:hover { background-color: v.$grayscale-5; }
-  &.active { background-color: v.$grayscale-5; }
+  &:hover {
+    background-color: v.$grayscale-5;
+  }
+
+  &.active {
+    background-color: v.$grayscale-5;
+  }
 }
 
 .subMenu {
   a {
     @include mix.flex($jc: flex-start);
     height: 2.75rem;
-    padding: 0 1.25rem 0 2rem;        /* 상위보다 들여쓰기 */
+    padding: 0 1.25rem 0 2rem; /* 상위보다 들여쓰기 */
     color: v.$grayscale-90;
     font-size: 0.9375rem;
 
-    &:hover { background-color: v.$grayscale-5; }
+    &:hover {
+      background-color: v.$grayscale-5;
+    }
+
     &.subActive {
       background-color: v.$grayscale-5;
       color: v.$primary-50;
@@ -110,7 +123,9 @@
 }
 
 @media screen and (max-width: 767px) {
-  .wrap { flex-direction: column; }
+  .wrap {
+    flex-direction: column;
+  }
 
   .sideNavWrap {
     position: static;
@@ -119,13 +134,15 @@
     min-width: 0;
   }
 }
+
 /* ===== 프로필 화면 (관리자 UserManageDetail.module.scss에서 이동) ===== */
 .container {
   padding: 28px;
   min-width: 0;
 }
 
-.pageHeader {                          // 관리자 scss의 .header (사이드바 .header와 이름 충돌 방지)
+.pageHeader { // 관리자 scss의 .header (사이드바 .header와 이름 충돌 방지)
+  // 참고 -> 모듈로 써서 이름 중복 안됩니다! 편하게 쓰면 됩니다.
   display: flex;
   align-items: center;
   gap: 10px;
@@ -320,6 +337,7 @@
     font-size: 14px;
   }
 }
+
 /* ===== 참여 현황: 추가 영역 ===== */
 
 /* 정보 수정 / 로그아웃 */
@@ -412,7 +430,9 @@
   display: inline-flex;
   color: v.$grayscale-60;
 
-  &:hover { color: v.$primary-50; }
+  &:hover {
+    color: v.$primary-50;
+  }
 }
 
 .noticeList {
@@ -428,7 +448,9 @@
   border: 1px solid v.$grayscale-20;
   background: v.$color-white;
 
-  &:hover { background: v.$grayscale-5; }
+  &:hover {
+    background: v.$grayscale-5;
+  }
 }
 
 .noticeIcon {
@@ -478,7 +500,9 @@
   border-radius: 8px;
   background: v.$color-white;
 
-  &:hover { background: v.$grayscale-5; }
+  &:hover {
+    background: v.$grayscale-5;
+  }
 }
 
 .chatTitle {
@@ -572,7 +596,9 @@
   border-radius: 1.5rem;
   background: v.$color-white;
 
-  &:hover { box-shadow: v.$box-shadow; }
+  &:hover {
+    box-shadow: v.$box-shadow;
+  }
 }
 
 .challengeThumb {
@@ -598,12 +624,18 @@
 }
 
 @media (max-width: 1100px) {
-  .challengeList { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .challengeList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 767px) {
   .statRow,
-  .challengeList { grid-template-columns: 1fr; }
+  .challengeList {
+    grid-template-columns: 1fr;
+  }
 
-  .chatCard { flex-basis: 100%; }
+  .chatCard {
+    flex-basis: 100%;
+  }
 }

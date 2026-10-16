@@ -36,18 +36,19 @@ export const ADMIN_MENU = [
     category: "시스템 관리",
     subMenus: [
       { name: "관리자 계정 관리", path: "/admin/system_manage" },
-      {name: "관리자 활동 로그", path: "/admin/activity-logs" },
+      { name: "관리자 활동 로그", path: "/admin/activity-logs" },
     ],
   },
 ];
 // 마이페이지 사이드바 (path가 ""이면 "준비 중" 알림. 라우트 분리 결정 전까지 임시 매핑)
 export const MYPAGE_MENU = [
-  { category: "참여 현황", path: "/mypage/dashboard" },
+  { category: "참여 현황", path: "/mypage" },
   {
-    category: "내 정보",
+    category: "그루",
     subMenus: [
-      { name: "정보 변경", path: "/mypage/edit_profile" },
-      { name: "회원 탈퇴", path: "" },
+      { name: "충전", path: "/mypage/point/charge" },
+      { name: "적립 및 사용 내역", path: "/mypage/point/history" },
+      { name: "송금 및 출금", path: "/mypage/point/transfer" },
     ],
   },
   {
@@ -73,11 +74,10 @@ export const MYPAGE_MENU = [
     ],
   },
   {
-    category: "포인트",
+    category: "내 정보",
     subMenus: [
-      { name: "충전", path: "" },
-      { name: "적립 및 사용 내역", path: "/mypage/points" },
-      { name: "송금 및 출금", path: "" },
+      { name: "정보 변경", path: "/mypage/edit_profile" },
+      { name: "회원 탈퇴", path: "" },
     ],
   },
 ];

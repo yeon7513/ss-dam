@@ -8,6 +8,7 @@ import { connectWebSocket, disconnectWebSocket, sendMessage, subscribeToChatRoom
 
 import styles from "./ChatContainer.module.scss";
 import ImageBox from "../common/image-box/ImageBox.jsx";
+import { useNavigate } from "react-router-dom";
 
 /**
  * 채팅 컨테이너 컴포넌트
@@ -17,6 +18,10 @@ function ChatContainer({ roomId }) {
   const [messages, setMessages] = useState([]);
   const [roomInfo, setRoomInfo] = useState(null);
   const [productInfo, setProductInfo] = useState(null);
+
+  console.log(productInfo);
+
+  const navigate = useNavigate();
 
   /* 웹소켓 구독 참조 설정 */
   const subscriptionRef = useRef(null);
@@ -131,7 +136,14 @@ function ChatContainer({ roomId }) {
           btnStyle="fill"
           size="lg"
           className={styles.remitButton}
-          onClick={null}
+          onClick={() => navigate("/mypage/point/transfer", {
+            state: {
+              receiverCode: productInfo?.memberProfile.code,
+              receiverId: productInfo?.memberProfile.id,
+              targetProductCode: productInfo?.code,
+              amount: productInfo?.price,
+            },
+          })}
         >
           송금하기
         </Button>
