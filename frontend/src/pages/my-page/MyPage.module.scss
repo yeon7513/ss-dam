@@ -21,6 +21,17 @@
   min-width: 0;
 }
 
+/* 정보 변경·회원 탈퇴 패널을 사이드바 옆 영역의 가로·세로 중앙에 배치 */
+.editLayout {
+  align-items: stretch;
+
+  > .content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
 /* Sidebar 기본값(250px, 100vh) 해제 후 패널 모양 */
 .nav {
   width: auto;
@@ -127,6 +138,10 @@
     flex-direction: column;
   }
 
+  .editLayout > .content {
+    width: 100%;
+  }
+
   .sideNavWrap {
     position: static;
     flex: none;
@@ -141,7 +156,8 @@
   min-width: 0;
 }
 
-.pageHeader { // 관리자 scss의 .header (사이드바 .header와 이름 충돌 방지)
+.pageHeader {
+  // 관리자 scss의 .header (사이드바 .header와 이름 충돌 방지)
   // 참고 -> 모듈로 써서 이름 중복 안됩니다! 편하게 쓰면 됩니다.
   display: flex;
   align-items: center;

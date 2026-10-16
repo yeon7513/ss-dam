@@ -1,13 +1,26 @@
-import { useState } from "react";
-import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import cn from "classnames";
-import { FiBell, FiBookmark, FiCheckCircle, FiChevronDown, FiChevronUp, FiExternalLink, FiHeart, FiMessageCircle, FiPlusCircle, FiSend, FiSettings, FiUser } from "react-icons/fi";
-import { useAuth } from "../../context/AuthContext.jsx";
-import Sidebar from "../../layout/default/sidebar/Sidebar.jsx";
+import { useState } from "react";
+import {
+  FiBell,
+  FiBookmark,
+  FiCheckCircle,
+  FiChevronDown,
+  FiChevronUp,
+  FiExternalLink,
+  FiHeart,
+  FiMessageCircle,
+  FiPlusCircle,
+  FiSend,
+  FiSettings,
+  FiUser,
+} from "react-icons/fi";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import ProfileCard from "../../components/auth/profile-card/ProfileCard.jsx";
 import Button from "../../components/common/button/Button.jsx";
 import StatCard from "../../components/common/card/StatCard.jsx";
 import ImageBox from "../../components/common/image-box/ImageBox.jsx";
+import { useAuth } from "../../context/AuthContext.jsx";
+import Sidebar from "../../layout/default/sidebar/Sidebar.jsx";
 import { MYPAGE_MENU } from "../../lib/sideMenu.js";
 import styles from "./MyPage.module.scss";
 
@@ -47,10 +60,30 @@ const SHORTCUTS = [
 ];
 
 const NOTICES = [
-  { id: 1, type: "like", title: "배달 시 일회용품 안받기 8일차!", desc: "USER_USER님이 해당 피드에 '좋아요'를 표시했습니다." },
-  { id: 2, type: "like", title: "배달 시 일회용품 안받기 8일차!", desc: "USER_USER님이 해당 피드에 '좋아요'를 표시했습니다." },
-  { id: 3, type: "comment", title: "배달 시 일회용품 안받기 8일차!", desc: "USER_USER님이 해당 피드에 댓글을 남겼습니다." },
-  { id: 4, type: "comment", title: "배달 시 일회용품 안받기 8일차!", desc: "USER_USER님이 해당 피드에 댓글을 남겼습니다." },
+  {
+    id: 1,
+    type: "like",
+    title: "배달 시 일회용품 안받기 8일차!",
+    desc: "USER_USER님이 해당 피드에 '좋아요'를 표시했습니다.",
+  },
+  {
+    id: 2,
+    type: "like",
+    title: "배달 시 일회용품 안받기 8일차!",
+    desc: "USER_USER님이 해당 피드에 '좋아요'를 표시했습니다.",
+  },
+  {
+    id: 3,
+    type: "comment",
+    title: "배달 시 일회용품 안받기 8일차!",
+    desc: "USER_USER님이 해당 피드에 댓글을 남겼습니다.",
+  },
+  {
+    id: 4,
+    type: "comment",
+    title: "배달 시 일회용품 안받기 8일차!",
+    desc: "USER_USER님이 해당 피드에 댓글을 남겼습니다.",
+  },
 ];
 
 const CHATS = [
@@ -93,7 +126,6 @@ function MyProfile({ user }) {
 
   return (
     <div className={styles.container}>
-
       <div className={styles.topGrid}>
         {/* ===== 왼쪽: 프로필 카드 ===== */}
         <section className={styles.profilePanel} aria-label="회원 기본 정보">
@@ -104,8 +136,19 @@ function MyProfile({ user }) {
                 <img src={member.path} alt={`${member.name} 프로필`} />
               ) : (
                 <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
-                  <rect x="10" y="10" width="44" height="44" stroke="currentColor" strokeWidth="4" />
-                  <path d="M12 12L52 52M52 12L12 52" stroke="currentColor" strokeWidth="4" />
+                  <rect
+                    x="10"
+                    y="10"
+                    width="44"
+                    height="44"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    d="M12 12L52 52M52 12L12 52"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
                 </svg>
               )}
             </div>
@@ -135,12 +178,16 @@ function MyProfile({ user }) {
               <dl className={styles.details}>
                 <div>
                   <dt>회원 등급</dt>
-                  <dd>{member.rating == null ? "-" : `${member.rating}등급`}</dd>
+                  <dd>
+                    {member.rating == null ? "-" : `${member.rating}등급`}
+                  </dd>
                 </div>
                 <div>
                   <dt>회원 랭킹</dt>
                   <dd>
-                    {member.ranking == null ? "-" : `${formatNumber(member.ranking)}위`}
+                    {member.ranking == null
+                      ? "-"
+                      : `${formatNumber(member.ranking)}위`}
                   </dd>
                 </div>
                 <div>
@@ -194,11 +241,18 @@ function MyProfile({ user }) {
         </section>
 
         {/* ===== 오른쪽: 피드 알림 + 새로운 채팅 ===== */}
-        <section className={styles.sidePanel} aria-label="피드 알림과 새로운 채팅">
+        <section
+          className={styles.sidePanel}
+          aria-label="피드 알림과 새로운 채팅"
+        >
           <div>
             <div className={styles.sideHead}>
               <h2>피드 알림</h2>
-              <Link to={HOME} className={styles.moreLink} aria-label="피드 알림 더 보기">
+              <Link
+                to={HOME}
+                className={styles.moreLink}
+                aria-label="피드 알림 더 보기"
+              >
                 <FiExternalLink />
               </Link>
             </div>
@@ -220,7 +274,11 @@ function MyProfile({ user }) {
           <div>
             <div className={styles.sideHead}>
               <h2>새로운 채팅</h2>
-              <Link to={HOME} className={styles.moreLink} aria-label="채팅 더 보기">
+              <Link
+                to={HOME}
+                className={styles.moreLink}
+                aria-label="채팅 더 보기"
+              >
                 <FiExternalLink />
               </Link>
             </div>
@@ -312,9 +370,15 @@ function MyPage() {
                   <Link to="/mypage/edit_profile" aria-label="정보 변경">
                     <FiSettings />
                   </Link>
-                  <button type="button" aria-label="알림" className={styles.bell}>
+                  <button
+                    type="button"
+                    aria-label="알림"
+                    className={styles.bell}
+                  >
                     <FiBell />
-                    {alertCount > 0 && <i className={styles.dot}>{alertCount}</i>}
+                    {alertCount > 0 && (
+                      <i className={styles.dot}>{alertCount}</i>
+                    )}
                   </button>
                 </span>
               }
@@ -330,14 +394,20 @@ function MyPage() {
                 {single ? (
                   <Link
                     to={item.path}
-                    className={cn(styles.header, isActive(item) && styles.active)}
+                    className={cn(
+                      styles.header,
+                      isActive(item) && styles.active,
+                    )}
                   >
                     <span>{item.category}</span>
                   </Link>
                 ) : (
                   <button
                     type="button"
-                    className={cn(styles.header, isActive(item) && styles.active)}
+                    className={cn(
+                      styles.header,
+                      isActive(item) && styles.active,
+                    )}
                     onClick={() => toggle(item.category)}
                   >
                     <span>{item.category}</span>
@@ -351,10 +421,13 @@ function MyPage() {
                       <li key={name}>
                         <Link
                           to={path || "#"}
-                          className={cn(path && pathname === path && styles.subActive)}
+                          className={cn(
+                            path && pathname === path && styles.subActive,
+                          )}
                           onClick={(e) =>
                             !path &&
-                            (e.preventDefault(), alert("준비 중인 페이지입니다."))
+                            (e.preventDefault(),
+                            alert("준비 중인 페이지입니다."))
                           }
                         >
                           {name}
