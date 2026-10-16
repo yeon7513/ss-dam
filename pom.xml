@@ -12,6 +12,7 @@
   <groupId>com.ss-dam</groupId>
   <artifactId>ss-dam</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  <packaging>war</packaging>
   <name>ss-dam</name>
   <description>2nd grade team project</description>
   <url />
