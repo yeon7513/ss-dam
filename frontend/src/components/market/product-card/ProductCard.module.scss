@@ -14,7 +14,6 @@
 
   &:hover {
     top: -5px;
-
     box-shadow: 0 0 6px rgba(v.$background-80, 0.5);
   }
 
@@ -27,6 +26,7 @@
   .thumbnail {
     width: 100%;
     height: 12.5rem;
+
     border-top: 1px solid v.$grayscale-20;
     border-bottom: 1px solid v.$grayscale-20;
   }
