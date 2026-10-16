@@ -1,0 +1,609 @@
+@use "../../scss/variables.scss" as v;
+@use "../../scss/mixin.scss" as mix;
+
+/* 좌측 메뉴 | 중앙 콘텐츠 (명세서 비율 약 17 : 83) */
+.wrap {
+  @include mix.wrap;
+  align-items: flex-start;
+}
+
+/* sticky는 바깥 박스에 (부모가 flex-start라서 안쪽에 걸면 안 먹음) */
+.sideNavWrap {
+  position: sticky;
+  top: 2rem;
+  align-self: flex-start;
+  flex: 0 0 17%;
+  min-width: 15rem;
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Sidebar 기본값(250px, 100vh) 해제 후 패널 모양 */
+.nav {
+  width: auto;
+  height: fit-content;
+  min-height: fit-content;
+  overflow: hidden;
+  border: 1px solid v.$grayscale-20;
+  border-radius: 8px;
+}
+
+/* 프로필 영역 */
+.profile {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid v.$grayscale-20;
+}
+
+.utils {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: 0.5rem;
+  color: v.$grayscale-60;
+  font-size: 1rem;
+
+  a,
+  button {
+    display: inline-flex;
+    color: inherit;
+
+    &:hover { color: v.$primary-50; }
+  }
+}
+
+.bell { position: relative; }
+
+.dot {
+  position: absolute;
+  top: -0.5rem;
+  right: -0.5rem;
+  min-width: 1rem;
+  height: 1rem;
+  padding: 0 0.25rem;
+  border-radius: 0.5rem;
+  background-color: v.$dan-color;
+  color: v.$color-white;
+  font-size: 0.625rem;
+  font-style: normal;
+  line-height: 1rem;
+  text-align: center;
+}
+
+/* 메뉴 */
+.group {
+  border-bottom: 1px solid v.$grayscale-20;
+
+  &:last-child { border-bottom: none; }
+}
+
+.header {
+  @include mix.flex($jc: space-between);
+  width: 100%;
+  height: 3rem;
+  padding: 0 1.25rem;
+  color: v.$grayscale-90;
+  font-size: 0.9375rem;
+  font-weight: 700;
+
+  &:hover { background-color: v.$grayscale-5; }
+  &.active { background-color: v.$grayscale-5; }
+}
+
+.subMenu {
+  a {
+    @include mix.flex($jc: flex-start);
+    height: 2.75rem;
+    padding: 0 1.25rem 0 2rem;        /* 상위보다 들여쓰기 */
+    color: v.$grayscale-90;
+    font-size: 0.9375rem;
+
+    &:hover { background-color: v.$grayscale-5; }
+    &.subActive {
+      background-color: v.$grayscale-5;
+      color: v.$primary-50;
+      font-weight: 600;
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .wrap { flex-direction: column; }
+
+  .sideNavWrap {
+    position: static;
+    flex: none;
+    width: 100%;
+    min-width: 0;
+  }
+}
+/* ===== 프로필 화면 (관리자 UserManageDetail.module.scss에서 이동) ===== */
+.container {
+  padding: 28px;
+  min-width: 0;
+}
+
+.pageHeader {                          // 관리자 scss의 .header (사이드바 .header와 이름 충돌 방지)
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+
+  h1 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+    color: #252b33;
+  }
+}
+
+// 오른쪽 패널이 추가될 공간 확보
+.topGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: 20px;
+  align-items: stretch;
+}
+
+.profilePanel {
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid #e2e6ec;
+  background: #fff;
+}
+
+.profileTop {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.profileImage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: #f0f2f5;
+  color: #929aa6;
+  font-size: 13px;
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.profileInfo {
+  min-width: 0;
+  align-self: center;
+}
+
+.identity {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  position: relative;
+  top: -30px;
+
+  strong {
+    font-size: 17px;
+    font-weight: 700;
+    color: #252b33;
+  }
+}
+
+.memberName {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px; // 이모티콘과 이름 사이 간격
+}
+
+.ratingIcon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.memberId {
+  font-size: 15px;
+  color: #687180;
+}
+
+.dates {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin-top: 8px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #87909d;
+  text-align: right;
+  position: relative;
+  top: -8px;
+}
+
+.details {
+  display: grid;
+  gap: 12px;
+  margin: 25px 0 0;
+  font-size: 16px;
+
+  > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  dt {
+    font-weight: 600;
+    color: #414955;
+  }
+
+  dd {
+    margin: 0;
+    text-align: right;
+    color: #252b33;
+  }
+}
+
+.statistics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e9ecf0;
+}
+
+.statCircle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  aspect-ratio: 1;
+  min-width: 0;
+  border-radius: 50%;
+  background: #eef1f5;
+  text-align: center;
+
+  span {
+    font-size: 10px;
+    color: #687180;
+  }
+
+  strong {
+    font-size: 22px;
+    color: #252b33;
+    overflow-wrap: anywhere;
+    max-width: 90%;
+  }
+}
+
+@media (max-width: 1100px) {
+  .topGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 16px;
+  }
+
+  .profilePanel {
+    padding: 14px;
+  }
+
+  .profileTop {
+    grid-template-columns: 1fr;
+  }
+
+  .profileImage {
+    width: 140px;
+    justify-self: center;
+  }
+
+  .statistics {
+    gap: 6px;
+  }
+
+  .statCircle strong {
+    font-size: 14px;
+  }
+}
+/* ===== 참여 현황: 추가 영역 ===== */
+
+/* 정보 수정 / 로그아웃 */
+.profileActions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+}
+
+/* 등급 진행도 */
+.progress {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #e9ecf0;
+  text-align: center;
+
+  > strong {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: v.$grayscale-100;
+  }
+
+  p {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: v.$grayscale-60;
+  }
+}
+
+.progressRow {
+  @include mix.flex;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: v.$grayscale-90;
+}
+
+.bar {
+  flex: 1;
+  height: 0.75rem;
+  overflow: hidden;
+  border-radius: 0.375rem;
+  background-color: v.$grayscale-10;
+
+  i {
+    display: block;
+    height: 100%;
+    background-color: v.$grayscale-70;
+  }
+}
+
+/* 바로가기: 기존 .statCircle(원형)에 아이콘 크기만 추가 */
+.shortcut {
+  svg {
+    font-size: 1.25rem;
+    color: #687180;
+  }
+
+  span {
+    font-size: 0.75rem;
+  }
+}
+
+/* 오른쪽 카드 */
+.sidePanel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid #e2e6ec;
+  background: #fff;
+}
+
+.sideHead {
+  @include mix.flex($jc: flex-start);
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+
+  h2 {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: v.$grayscale-100;
+  }
+}
+
+.moreLink {
+  display: inline-flex;
+  color: v.$grayscale-60;
+
+  &:hover { color: v.$primary-50; }
+}
+
+.noticeList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.notice {
+  @include mix.flex($jc: flex-start);
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border: 1px solid v.$grayscale-20;
+  background: v.$color-white;
+
+  &:hover { background: v.$grayscale-5; }
+}
+
+.noticeIcon {
+  @include mix.flex;
+  flex: 0 0 2.25rem;
+  height: 2.25rem;
+  background: v.$grayscale-5;
+  color: v.$grayscale-60;
+  font-size: 1.125rem;
+}
+
+.noticeText {
+  min-width: 0;
+
+  strong {
+    display: block;
+    color: v.$grayscale-100;
+    font-size: 0.875rem;
+    @include mix.textLine(1);
+  }
+
+  span {
+    display: block;
+    margin-top: 0.25rem;
+    color: v.$grayscale-60;
+    font-size: 0.75rem;
+    @include mix.textLine(2);
+  }
+}
+
+/* 새로운 채팅 (가로로 넘기는 카드) */
+.chatList {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+}
+
+.chatCard {
+  display: flex;
+  flex: 0 0 85%;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+  padding: 0.875rem;
+  border: 1px solid v.$grayscale-20;
+  border-radius: 8px;
+  background: v.$color-white;
+
+  &:hover { background: v.$grayscale-5; }
+}
+
+.chatTitle {
+  @include mix.flex($jc: flex-start);
+  gap: 0.5rem;
+  color: v.$grayscale-100;
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+.chatUser {
+  @include mix.flex($jc: flex-start);
+  gap: 0.5rem;
+}
+
+.avatar {
+  @include mix.flex;
+  flex: 0 0 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: v.$grayscale-5;
+  color: v.$grayscale-60;
+}
+
+.chatName {
+  flex: 1;
+  min-width: 0;
+
+  strong {
+    display: block;
+    color: v.$grayscale-100;
+    font-size: 0.8125rem;
+  }
+
+  span {
+    color: v.$grayscale-60;
+    font-size: 0.6875rem;
+  }
+}
+
+.chatTime {
+  flex-shrink: 0;
+  padding: 0.125rem 0.5rem;
+  border-radius: 1rem;
+  background: v.$grayscale-5;
+  color: v.$grayscale-60;
+  font-size: 0.6875rem;
+}
+
+.chatMsg {
+  color: v.$grayscale-90;
+  font-size: 0.75rem;
+  @include mix.textLine(1);
+}
+
+/* 통계 카드 3개 */
+.statRow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+/* 진행 중인 챌린지 */
+.challenges {
+  margin-top: 1.25rem;
+  padding: 1.5rem;
+  border: 1px solid #e2e6ec;
+  background: #fff;
+
+  h2 {
+    margin-bottom: 1.25rem;
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: v.$grayscale-100;
+  }
+}
+
+.challengeList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.challengeCard {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid v.$grayscale-20;
+  border-radius: 1.5rem;
+  background: v.$color-white;
+
+  &:hover { box-shadow: v.$box-shadow; }
+}
+
+.challengeThumb {
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+
+.challengeBody {
+  padding: 1rem;
+
+  strong {
+    display: block;
+    color: v.$grayscale-100;
+    font-size: 1rem;
+  }
+
+  span {
+    display: block;
+    margin-top: 0.25rem;
+    color: v.$grayscale-60;
+    font-size: 0.8125rem;
+  }
+}
+
+@media (max-width: 1100px) {
+  .challengeList { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 767px) {
+  .statRow,
+  .challengeList { grid-template-columns: 1fr; }
+
+  .chatCard { flex-basis: 100%; }
+}

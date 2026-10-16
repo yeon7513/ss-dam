@@ -7,10 +7,7 @@ import ChatContainer from "../../components/chat/ChatContainer.jsx";
 
 import { useAuth } from "../../context/AuthContext.jsx";
 import { useLoadData } from "../../hooks/useLoadData.js";
-import {
-  connectWebSocket,
-  subscribeToUsers,
-} from "../../utils/webSocketService.js";
+import { connectWebSocket, subscribeToUsers } from "../../utils/webSocketService.js";
 
 import styles from "./Chat.module.scss";
 
@@ -31,8 +28,6 @@ function Chat() {
   /* 채팅방 목록 조회 */
   const { data } = useLoadData("/api/chat/rooms");
   const [chatRooms, setChatRooms] = useState([]);
-
-  console.log(data);
 
   /* 채팅방 데이터 동기화 */
   useEffect(() => {

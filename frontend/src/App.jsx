@@ -44,8 +44,6 @@ import MarketPayment from "./pages/market/market-payment/MarketPayment";
 import ProductDetail from "./pages/market/product-detail/ProductDetail.jsx";
 import ProductRegister from "./pages/market/product-register/ProductRegister";
 import ProductUpdate from "./pages/market/product-update/ProductUpdate.jsx";
-import Activities from "./pages/my-page/activities/Activities";
-import Dashboard from "./pages/my-page/dashboard/Dashboard";
 import Deal from "./pages/my-page/deal/Deal";
 import EditProfile from "./pages/my-page/edit_profile/EditProfile";
 import MyPage from "./pages/my-page/MyPage.jsx";
@@ -120,11 +118,8 @@ function App() {
 
         {/* 일반회원 - 마이페이지 */}
         <Route element={<ProtectedRoute />}>
-          <Route path="/mypage">
-            <Route index element={<MyPage />} />
-            <Route path="dashboard" element={<Dashboard />} />
+          <Route path="/mypage" element={<MyPage />}>
             <Route path="edit_profile" element={<EditProfile />} />
-            <Route path="activities" element={<Activities />} />
             <Route path="deal" element={<Deal />} />
             <Route path="points" element={<Points />} />
           </Route>

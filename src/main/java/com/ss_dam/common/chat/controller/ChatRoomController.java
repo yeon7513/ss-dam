@@ -98,6 +98,11 @@ public class ChatRoomController {
 
     ChatDetailView chatDetailView = chatService.loadChatMessages(roomId, memberCode);
 
+    System.out.println("chatDetailView : " + chatDetailView);
+    System.out.println("chatDetailView.getInfo() : " + chatDetailView.getInfo());
+    System.out.println(
+        "chatDetailView.getInfo().getProductInfo() : " + chatDetailView.getInfo().getProductInfo());
+
     return ResponseEntity.ok(ApiResponse.success("채팅 내역 조회 성공", chatDetailView));
   }
 }
