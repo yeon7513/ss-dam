@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="memberRating">
+
+  <!-- 챌린지 보상 100% + 누적 판매 대금 10% -->
+  <select id="getRatingScore"
+          parameterType="map"
+          resultType="long">
+    SELECT
+      COALESCE(
+        SUM(
+          CASE
+            WHEN REASON = 'CHALLENGE_REWARD' THEN AMOUNT
+            ELSE 0
+          END
+        ),
+        0
+      )
+      +
+      FLOOR(
+        COALESCE(
+          SUM(
+            CASE
+              WHEN REASON = 'MARKET_SALES' THEN AMOUNT
+              ELSE 0
+            END
+          ),
+          0
+        ) / 10
+      )
+    FROM POINT_LOG
+    WHERE MEM_CODE = #{memberCode}
+      AND TYPE = 'SAVED'
+      AND REASON IN ('CHALLENGE_REWARD', 'MARKET_SALES')
+  </select>
+
+
+</mapper>

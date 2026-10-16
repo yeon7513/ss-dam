@@ -45,10 +45,11 @@
     MA.RATING AS rating,
     i.path AS profile_image
     FROM MEMBER_ACCOUNT AS MA
-    LEFT JOIN IMAGES i ON MA.code = i.target_code AND i.type = 'profile'
-    WHERE MA.ID = #{id}
-    AND MA.PASSWORD = #{password}
-    AND MA.DELETE_YN = 0
+    <!-- 교체 전 이미지가 함께 조회되는 것을 막음-->
+    LEFT JOIN IMAGES i
+    ON MA.code = i.target_code
+    AND i.type = 'profile'
+    AND i.delete_yn = 0
   </select>
 
   <select id="findAdminForLogin" resultType="AdminProfile">
@@ -110,6 +111,50 @@
     UPDATE MEMBER_ACCOUNT
     SET password = #{password}
     WHERE code = #{code}
+  </update>
+
+  <!-- 수정·탈퇴 대상 확인 -->
+  <select id="findMemberCodeForUpdate" resultType="long">
+      SELECT CODE
+      FROM MEMBER_ACCOUNT
+      WHERE CODE = #{value}
+        AND DELETE_YN = 0
+      FOR UPDATE
+  </select>
+
+  <!-- 회원 정보 수정 -->
+  <update id="updateMember">
+      UPDATE MEMBER_ACCOUNT
+      <set>
+          <!-- 관리자 수정과 동일하게 입력한 경우만 변경 -->
+          <if test="password != null and password != ''">
+              PASSWORD = #{password},
+          </if>
+          PHONE = #{phone},
+          ADDRESS = #{address},
+          UPDATED_AT = NOW()
+      </set>
+      WHERE CODE = #{code}
+        AND DELETE_YN = 0
+  </update>
+
+  <!-- 회원 탈퇴: 논리 삭제 -->
+  <update id="deleteMember">
+      UPDATE MEMBER_ACCOUNT
+      SET DELETE_YN = 1,
+          STATUS = 'WITHDRAW',
+          UPDATED_AT = NOW()
+      WHERE CODE = #{value}
+        AND DELETE_YN = 0
+  </update>
+
+  <!-- 기존 프로필 이미지 논리 삭제 -->
+  <update id="deleteProfileImages">
+      UPDATE IMAGES
+      SET DELETE_YN = 1
+      WHERE TARGET_CODE = #{value}
+        AND TYPE = 'profile'
+        AND DELETE_YN = 0
   </update>
 
 </mapper>

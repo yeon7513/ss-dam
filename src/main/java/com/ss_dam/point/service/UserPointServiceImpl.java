@@ -1,22 +1,28 @@
 package com.ss_dam.point.service;
 
-import com.ss_dam.point.dao.UserPointDao;
-import com.ss_dam.point.model.PaymentPoint;
-import com.ss_dam.point.model.Point;
-import com.ss_dam.point.model.PointLog;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.ss_dam.auth.member.rating.service.MemberRatingService;
+import com.ss_dam.point.dao.UserPointDao;
+import com.ss_dam.point.model.PaymentPoint;
+import com.ss_dam.point.model.Point;
+import com.ss_dam.point.model.PointLog;
+
 @Service
 public class UserPointServiceImpl implements UserPointService {
 
 	private final UserPointDao pointDao;
+	private final MemberRatingService memberRatingService;
 
-	public UserPointServiceImpl(UserPointDao pointDao) {
+	public UserPointServiceImpl(
+			UserPointDao pointDao,
+			MemberRatingService memberRatingService
+	) {
 		this.pointDao = pointDao;
+		this.memberRatingService = memberRatingService;
 	}
 
 	// 보유하고 있는 포인트 조회
@@ -133,6 +139,7 @@ public class UserPointServiceImpl implements UserPointService {
 	}
 
 	@Override
+	@Transactional 
 	public boolean rewardPoint(Long memCode, int amount, String reason) {
 
 		int beforePoint = pointDao.getPointBalance(memCode);
@@ -155,6 +162,7 @@ public class UserPointServiceImpl implements UserPointService {
 			pointLog.setReason(reason);
 
 			pointDao.chargePointLog(pointLog);
+
 
 			return true;
 		}
