@@ -6,6 +6,7 @@ import LatestMarketProducts from "./lastest-market-products/LatestMarketProducts
 function Home() {
   return (
     <main className={styles.wrap}>
+      {/* 홍보 캐러셀 영역 */}
       <Carousel />
       <div className={styles.container}>
         <ChallengeQuickMenu />

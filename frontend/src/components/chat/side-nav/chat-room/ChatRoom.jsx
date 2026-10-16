@@ -52,7 +52,9 @@ function ChatRoom({ rooms, pager, activeRoomId, onClickChatRoom }) {
               {/* 하단 내용 영역 */}
               <div className={styles.bottomBox}>
                 {/* 최근 메시지 내용 영역 */}
-                <div className={styles.messageBox}>{room.lastMessage}</div>
+                <div className={styles.messageBox}>
+                  {room.lastMessage ? room.lastMessage : "대화를 시작해 보세요."}
+                </div>
 
                 {/* 미읽음 알림 배지 영역 */}
                 <div className={styles.countBadge}>

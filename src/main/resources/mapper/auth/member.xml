@@ -5,7 +5,7 @@
 
 <mapper namespace="member">
   <select id="searchProfileByMemberCode" resultType="MemberProfile">
-    SELECT m.code, m.id, i.path, m.rating, m.ranking
+    SELECT m.code, m.id, i.path, m.rating
     FROM MEMBER_ACCOUNT m
     LEFT JOIN IMAGES i
     ON i.target_code = m.code
