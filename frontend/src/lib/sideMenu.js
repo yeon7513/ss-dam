@@ -40,3 +40,44 @@ export const ADMIN_MENU = [
     ],
   },
 ];
+// 마이페이지 사이드바 (path가 ""이면 "준비 중" 알림. 라우트 분리 결정 전까지 임시 매핑)
+export const MYPAGE_MENU = [
+  { category: "참여 현황", path: "/mypage/dashboard" },
+  {
+    category: "내 정보",
+    subMenus: [
+      { name: "정보 변경", path: "/mypage/edit_profile" },
+      { name: "회원 탈퇴", path: "" },
+    ],
+  },
+  {
+    category: "챌린지",
+    subMenus: [
+      { name: "참여한 챌린지", path: "" },
+      { name: "내 랭킹 조회", path: "" },
+    ],
+  },
+  {
+    category: "피드",
+    subMenus: [
+      { name: "내가 쓴 피드", path: "/mypage/activities" },
+      { name: "좋아요 피드", path: "" },
+      { name: "댓글 모아보기", path: "" },
+    ],
+  },
+  {
+    category: "거래",
+    subMenus: [
+      { name: "판매 관리", path: "/mypage/deal" },
+      { name: "구매 내역", path: "" },
+    ],
+  },
+  {
+    category: "포인트",
+    subMenus: [
+      { name: "충전", path: "" },
+      { name: "적립 및 사용 내역", path: "/mypage/points" },
+      { name: "송금 및 출금", path: "" },
+    ],
+  },
+];

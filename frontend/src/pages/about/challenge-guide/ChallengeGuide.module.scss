@@ -1,275 +1,295 @@
 @use "../../../scss/variables.scss" as v;
 @use "../../../scss/mixin.scss" as mix;
 
+/* 폭과 여백은 About.jsx의 .wrap(mix.wrap)이 이미 잡아주므로 여기서는 지정하지 않음 */
 .page {
-  width: 100%;
-  min-height: 100vh;
-  padding: clamp(18px, 2vw, 22px) 0 clamp(32px, 4vw, 40px);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
-.breadcrumb,
-.stepSection {
-  width: min(92%, 1180px);
-  margin: 0 auto 18px;
-}
-
-.breadcrumb {
-  font-size: clamp(12px, 1vw, 13px);
-  color: #999;
-}
-
+/* ---------- 상단 소개 ---------- */
 .titleBox {
+  padding: 3rem 2rem;
+  border: 1px solid v.$point-20;
+  border-radius: 12px;
+  background-color: v.$point-5;
   text-align: center;
-  margin-bottom: clamp(26px, 3vw, 34px);
-  padding: 0 20px;
 
   h1 {
-    margin: 0 0 14px;
-    font-size: clamp(26px, 3vw, 34px);
-    font-weight: 800;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    font-weight: 700;
   }
 
   p {
-    margin: 6px 0;
-    font-size: clamp(14px, 1.4vw, 16px);
-    color: #222;
+    color: v.$grayscale-90;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  p + p {
+    margin-top: 0.25rem;
   }
 }
 
+/* ---------- 참여 방법 (단계) ---------- */
 .stepSection {
-  margin-bottom: clamp(24px, 3vw, 28px);
+  padding: 2rem 2.5rem;
+  border: 1px solid v.$grayscale-20;
+  border-radius: 12px;
+  background-color: v.$color-white;
+  box-shadow: v.$box-shadow;
 
   h2 {
-    margin-bottom: 14px;
-    font-size: clamp(18px, 2vw, 22px);
-    font-weight: 800;
+    margin-bottom: 1.5rem;
+    padding-left: 0.75rem;
+    border-left: 4px solid v.$primary-40;
+    font-size: 1.25rem;
+    font-weight: 700;
   }
 }
 
 .steps {
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
   justify-content: space-between;
-  gap: clamp(10px, 2vw, 24px);
+  gap: 0.75rem;
 }
 
 .stepItem {
   position: relative;
   flex: 1;
-  min-width: 120px;
+  min-width: 0;
+  padding: 2rem 1rem 1.5rem;
+  border: 1px solid v.$grayscale-20;
+  border-radius: 12px;
+  background-color: v.$background-5;
   text-align: center;
 
   h3 {
-    margin: 12px 0 8px;
-    font-size: clamp(14px, 1.3vw, 17px);
-    font-weight: 800;
+    margin: 1rem 0 0.5rem;
+    font-size: 1rem;
+    font-weight: 700;
   }
 
   p {
-    margin: 0;
+    color: v.$grayscale-90;
+    font-size: 0.875rem;
+    line-height: 1.6;
     white-space: pre-line;
-    font-size: clamp(11px, 1vw, 13px);
-    line-height: 1.7;
-    color: #333;
   }
 }
 
 .stepNum {
+  @include mix.flex;
   position: absolute;
-  top: -5px;
-  left: calc(50% - 46px);
-  width: clamp(24px, 2.2vw, 28px);
-  height: clamp(24px, 2.2vw, 28px);
+  top: 0.75rem;
+  left: 0.75rem;
+  width: 1.75rem;
+  height: 1.75rem;
   border-radius: 50%;
-  background: #2f742f;
-  color: #fff;
-  font-size: clamp(13px, 1.2vw, 15px);
-  font-weight: 800;
-  line-height: clamp(24px, 2.2vw, 28px);
+  background-color: v.$primary-40;
+  color: v.$color-white;
+  font-size: 0.875rem;
+  font-weight: 700;
 }
 
 .stepIcon {
-  width: clamp(70px, 8vw, 92px);
-  height: clamp(70px, 8vw, 92px);
+  @include mix.flex;
+  width: 4.5rem;
+  height: 4.5rem;
   margin: 0 auto;
   border-radius: 50%;
-  background: #eef3ee;
-  color: #2f742f;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: clamp(28px, 3.5vw, 38px);
+  background-color: v.$point-5;
+  color: v.$primary-50;
+  font-size: 2rem;
 }
 
 .arrow {
-  margin-top: clamp(28px, 3.5vw, 37px);
-  font-size: clamp(30px, 4vw, 44px);
-  font-weight: 200;
-  color: #222;
+  align-self: center;
+  color: v.$primary-20;
+  font-size: 2rem;
+  font-weight: 300;
 }
 
-.infoList,
-.notice {
-  width: min(88%, 1060px);
-  margin-left: auto;
-  margin-right: auto;
+/* ---------- 안내 카드 3개 ---------- */
+.infoList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .infoCard {
-  display: grid;
-  grid-template-columns: minmax(190px, 24%) 1fr;
-  min-height: 128px;
-  margin-bottom: 12px;
-  border: 1px solid #e1e5e1;
-  border-radius: 8px;
-  background: #fff;
   overflow: hidden;
+  border: 1px solid v.$grayscale-20;
+  border-radius: 12px;
+  background-color: v.$color-white;
+  box-shadow: v.$box-shadow;
 }
 
 .cardTitle {
-  display: flex;
-  align-items: center;
-  gap: clamp(14px, 2vw, 22px);
-  padding: clamp(22px, 3vw, 28px) clamp(24px, 3vw, 36px);
-  border-right: 1px solid #e1e5e1;
+  @include mix.flex($jc: flex-start);
+  gap: 1rem;
+  padding: 1.25rem 1.75rem;
+  border-bottom: 1px solid v.$point-20;
+  background-color: v.$point-5;
 
   h2 {
-    margin: 0;
-    font-size: clamp(18px, 2vw, 22px);
-    font-weight: 800;
-    white-space: nowrap;
+    color: v.$primary-50;
+    font-size: 1.25rem;
+    font-weight: 700;
   }
 }
 
 .bigIcon {
-  width: clamp(48px, 5vw, 58px);
-  height: clamp(48px, 5vw, 58px);
-  border-radius: 50%;
-  background: #edf4ed;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: clamp(24px, 3vw, 30px);
+  @include mix.flex;
   flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background-color: v.$color-white;
+  font-size: 1.5rem;
 }
 
 .cardContent {
-  padding: clamp(18px, 2.5vw, 22px) clamp(24px, 3vw, 36px);
+  padding: 1.5rem 1.75rem;
 }
 
+/* 인증 방법 */
 .row {
   display: grid;
-  grid-template-columns: 34px minmax(80px, 110px) 1fr;
+  grid-template-columns: 2rem 6.5rem 1fr;
   align-items: start;
-  margin-bottom: 14px;
-  gap: 0 10px;
+  gap: 0 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid v.$grayscale-20;
+
+  &:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
 
   span {
-    width: 26px;
-    height: 26px;
+    @include mix.flex;
+    width: 2rem;
+    height: 2rem;
     border-radius: 50%;
-    background: #edf4ed;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #2f742f;
+    background-color: v.$point-5;
+    color: v.$primary-50;
   }
 
   strong {
-    font-size: clamp(14px, 1.2vw, 15px);
+    padding-top: 0.25rem;
+    color: v.$grayscale-100;
+    font-size: 1rem;
   }
 
   p {
-    margin: 0;
-    font-size: clamp(13px, 1.2vw, 14px);
+    color: v.$grayscale-90;
+    font-size: 0.9375rem;
     line-height: 1.6;
   }
 }
 
+/* 인정 기준 */
 .checkList {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 
   li {
     position: relative;
-    margin-bottom: 9px;
-    padding-left: 28px;
-    font-size: clamp(13px, 1.2vw, 14px);
+    padding-left: 2rem;
+    color: v.$grayscale-90;
+    font-size: 0.9375rem;
+    line-height: 1.5;
 
     &::before {
+      @include mix.flex;
       content: "✓";
       position: absolute;
+      top: 0;
       left: 0;
-      top: -2px;
-      width: 18px;
-      height: 18px;
+      width: 1.25rem;
+      height: 1.25rem;
       border-radius: 50%;
-      background: #2f742f;
-      color: #fff;
-      font-size: 12px;
-      text-align: center;
-      line-height: 18px;
+      background-color: v.$primary-40;
+      color: v.$color-white;
+      font-size: 0.75rem;
     }
   }
 }
 
 .tipBox {
-  width: min(100%, 560px);
-  margin-top: 16px;
-  padding: 12px 18px;
-  border-radius: 6px;
-  background: #eef5ee;
-  font-size: clamp(12px, 1.1vw, 13px);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin-top: 1.25rem;
+  padding: 1rem 1.25rem;
+  border-left: 4px solid v.$secondary-60;
+  border-radius: 8px;
+  background-color: v.$secondary-20;
+  font-size: 0.875rem;
+  line-height: 1.5;
 
   strong {
-    margin-right: 14px;
+    color: v.$primary-50;
   }
 }
 
+/* 챌린지 예시 */
 .exampleContent {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(20px, 3vw, 34px);
-  padding: clamp(20px, 3vw, 24px) clamp(24px, 3vw, 36px);
+  gap: 1.5rem;
+  padding: 1.5rem 1.75rem;
 }
 
 .exampleBox {
-  padding: clamp(18px, 2.5vw, 20px) clamp(20px, 3vw, 24px);
-  border-radius: 8px;
-  background: #f1f6f1;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid v.$grayscale-20;
+  border-radius: 12px;
+  background-color: v.$background-5;
 
   h3 {
-    margin: 0 0 16px;
-    font-size: clamp(15px, 1.3vw, 16px);
+    margin-bottom: 1rem;
+    font-size: 1.0625rem;
+    font-weight: 700;
   }
 
   p {
-    margin: 8px 0;
-    font-size: clamp(13px, 1.2vw, 14px);
+    margin: 0.5rem 0;
+    font-size: 0.9375rem;
+    line-height: 1.5;
   }
 
   strong {
     display: inline-block;
-    width: clamp(70px, 7vw, 82px);
+    width: 5.5rem;
+    color: v.$primary-50;
   }
 }
 
 .photoBox {
   display: grid;
-  grid-template-columns: clamp(110px, 12vw, 130px) 1fr;
-  column-gap: clamp(16px, 2vw, 24px);
+  grid-template-columns: 8rem 1fr;
+  column-gap: 1.25rem;
   align-items: center;
 
   h3 {
     grid-column: 1 / -1;
-    margin: 0 0 12px;
-    font-size: clamp(16px, 1.5vw, 18px);
+    margin-bottom: 0.75rem;
+    font-size: 1.0625rem;
+    font-weight: 700;
   }
 
   p {
-    margin: 0;
-    font-size: clamp(13px, 1.2vw, 14px);
+    color: v.$grayscale-90;
+    font-size: 0.9375rem;
     line-height: 1.7;
   }
 }
@@ -277,76 +297,95 @@
 .photoArea {
   width: 100%;
   aspect-ratio: 13 / 9;
-  border-radius: 6px;
-  background: linear-gradient(135deg, #d9d9d9, #f0f0f0);
+  border-radius: 8px;
+  background: linear-gradient(135deg, v.$grayscale-10, v.$grayscale-5);
 }
 
+/* ---------- 유의사항 ---------- */
 .notice {
-  min-height: 54px;
-  margin-top: 14px;
-  padding: 12px clamp(18px, 2vw, 24px);
-  border: 1px solid #e1e5e1;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  font-size: clamp(13px, 1.2vw, 14px);
+  @include mix.flex($jc: flex-start);
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border: 1px solid v.$grayscale-20;
+  border-radius: 12px;
+  background-color: v.$background-40;
+  font-size: 0.9375rem;
 
   strong {
-    width: 30px;
-    height: 30px;
+    @include mix.flex;
     flex-shrink: 0;
+    width: 1.75rem;
+    height: 1.75rem;
     border-radius: 50%;
-    background: #2f742f;
-    color: #fff;
-    text-align: center;
-    line-height: 30px;
-    font-size: 20px;
+    background-color: v.$warn-color;
+    color: v.$color-white;
+    font-size: 1.125rem;
   }
 
   b {
-    font-size: clamp(15px, 1.4vw, 17px);
-    white-space: nowrap;
+    flex-shrink: 0;
+    color: v.$grayscale-100;
+    font-size: 1.0625rem;
   }
 
   span {
-    color: #333;
+    color: v.$grayscale-90;
+    line-height: 1.5;
   }
 }
 
-@media (max-width: 900px) {
+/* ---------- tablet: 단계는 3열 격자, 화살표 숨김 ---------- */
+@media screen and (max-width: 1023px) {
   .steps {
-    flex-direction: column;
-    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .arrow {
-    transform: rotate(90deg);
-    margin: 0;
-  }
-
-  .stepItem {
-    width: 100%;
-  }
-
-  .stepNum {
-    left: calc(50% - 42px);
-  }
-
-  .infoCard {
-    grid-template-columns: 1fr;
-  }
-
-  .cardTitle {
-    border-right: none;
-    border-bottom: 1px solid #e1e5e1;
+    display: none;
   }
 
   .exampleContent {
     grid-template-columns: 1fr;
   }
+}
+
+/* ---------- mobile ---------- */
+@media screen and (max-width: 767px) {
+  .titleBox {
+    padding: 2rem 1rem;
+  }
+
+  .stepSection {
+    padding: 1.5rem 1rem;
+  }
+
+  .steps {
+    grid-template-columns: 1fr;
+  }
+
+  .cardTitle,
+  .cardContent,
+  .exampleContent {
+    padding-right: 1rem;
+    padding-left: 1rem;
+  }
+
+  .row {
+    grid-template-columns: 2rem 1fr;
+
+    p {
+      grid-column: 2;
+    }
+  }
+
+  .photoBox {
+    grid-template-columns: 1fr;
+    row-gap: 0.75rem;
+  }
 
   .notice {
+    flex-direction: column;
     align-items: flex-start;
   }
 }
