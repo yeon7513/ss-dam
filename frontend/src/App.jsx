@@ -13,8 +13,8 @@ import ChallengeManage from "./pages/admin/challenge-manage/ChallengeManage.jsx"
 import ChallengeManageDetail from "./pages/admin/challenge-manage/ChallengeManageDetail.jsx";
 import ChallengeRegister from "./pages/admin/challenge-manage/register/ChallengeRegister.jsx";
 import ChallengeUpdate from "./pages/admin/challenge-manage/update/ChallengeUpdate.jsx";
-import ChallengeResult from './pages/admin/challenge-result/ChallengeResult';
-import ChallengeResultDetail from './pages/admin/challenge-result/ChallengeResultDetail';
+import ChallengeResult from "./pages/admin/challenge-result/ChallengeResult";
+import ChallengeResultDetail from "./pages/admin/challenge-result/ChallengeResultDetail";
 import MarketManage from "./pages/admin/market/MarketManage";
 import MarketManageDetail from "./pages/admin/market/MarketManageDetail.jsx";
 import OperationStatus from "./pages/admin/OperationStatus";
@@ -30,8 +30,8 @@ import Info from "./pages/auth/sign-up/Info";
 import SignUp from "./pages/auth/sign-up/SignUp";
 import Terms from "./pages/auth/sign-up/Terms";
 import Verify from "./pages/auth/sign-up/Verify";
-import Challenge from "./pages/challenge/Challenge";
-import ChallengeDetail from "./pages/challenge/ChallengeDetail";
+import Challenge from "./pages/challenge/challenge/Challenge.jsx";
+import ChallengeDetail from "./pages/challenge/challenge-detail/ChallengeDetail.jsx";
 import ChallengeRanking from "./pages/challenge/ChallengeRanking";
 import Chat from "./pages/chat/Chat.jsx";
 import Error from "./pages/error/Error.jsx";
@@ -54,7 +54,6 @@ import SupportDetail from "./pages/support/SupportDetail";
 import Supports from "./pages/support/Supports";
 import AdminRoute from "./routes/AdminRoute.jsx";
 import ProtectedRoute from "./routes/ProtectedRoute.jsx";
-
 
 function App() {
   return (
@@ -163,12 +162,14 @@ function App() {
             <Route path="register" element={<ChallengeRegister />} />
             <Route path="edit/:code" element={<ChallengeUpdate />} />
             <Route path=":code" element={<ChallengeManageDetail />} />
-
           </Route>
 
           {/* 챌린지 종료 데이터 분석 */}
           <Route path="challenge-result" element={<ChallengeResult />} />
-          <Route path="challenge-result/:code" element={<ChallengeResultDetail />} />
+          <Route
+            path="challenge-result/:code"
+            element={<ChallengeResultDetail />}
+          />
 
           {/* 시스템 관리 */}
           <Route path="activity-logs" element={<AdminActivityLogs />} />
@@ -176,7 +177,6 @@ function App() {
             <Route index element={<AccountManage />} />
             <Route path="account_register" element={<AccountRegister />} />
           </Route>
-
         </Route>
       </Route>
 

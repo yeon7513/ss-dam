@@ -1,0 +1,265 @@
+@use "../../../scss/variables.scss" as v;
+@use "../../../scss/mixin.scss" as mix;
+
+/* 전체 영역 */
+.wrap {
+  @include mix.wrap;
+}
+
+/* 사이드바 영역 */
+.sideNavWrap {
+  position: sticky;
+  top: 1.25rem;
+  align-self: flex-start;
+  flex: 0 0 18.75rem;
+
+  width: 18.75rem;
+}
+
+/* 메인 컨테이너 영역 */
+.container {
+  flex: 1;
+  min-width: 0;
+}
+
+/* 브레드크럼 영역 */
+.breadcrumb {
+  margin-bottom: 2rem;
+}
+
+/* 챌린지 콘텐츠 영역 */
+.contents {
+  display: flex;
+  align-items: flex-start;
+
+  width: 100%;
+  margin-bottom: 2rem;
+  gap: 2rem;
+}
+
+/* 메인 상세 정보 영역 */
+.mainContent {
+  flex: 1;
+  min-width: 0;
+}
+
+/* 상단 헤더 영역 */
+.headerArea {
+  margin-bottom: 1.5rem;
+  padding-bottom: 19px;
+  border-bottom: 1px solid v.$grayscale-20;
+}
+
+/* 헤더 상단 영역 */
+.headerTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 0.625rem;
+}
+
+/* 상태 배지 영역 */
+.statusBadge {
+  display: inline-block;
+
+  padding: 4px 12px;
+  border-radius: 14px;
+
+  background-color: v.$primary-40;
+
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: v.$color-white;
+}
+
+/* 제목 영역 */
+.title {
+  margin: 0 0 0.5rem;
+
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: v.$grayscale-90;
+
+  word-break: keep-all;
+}
+
+/* 부제목 영역 */
+.subTitle {
+  margin: 0 0 1rem;
+
+  font-size: 0.9375rem;
+  color: v.$grayscale-50;
+}
+
+/* 카테고리 태그 영역 */
+.categoryTags {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* 태그 항목 */
+.tag {
+  padding: 5px 12px;
+  border-radius: 6px;
+
+  background-color: v.$grayscale-5;
+
+  font-size: 0.8125rem;
+  color: v.$grayscale-90;
+}
+
+/* 메인 배너 영역 */
+.bannerContainer {
+  width: 100%;
+  height: 15.9375rem;
+  margin-bottom: 2rem;
+  border-radius: 10px;
+
+  overflow: hidden;
+}
+
+/* 배너 이미지 */
+.bannerImg {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+/* 그래픽 히어로 영역 */
+.hero {
+  position: relative;
+
+  width: 100%;
+  height: 15.9375rem;
+  border-radius: 10px;
+
+  background: linear-gradient(
+    180deg,
+    v.$primary-5 0%,
+    v.$secondary-50 56%,
+    v.$secondary-60 100%
+  );
+  overflow: hidden;
+}
+
+/* 태양 아이콘 */
+.sun {
+  position: absolute;
+  top: 5.25rem;
+  left: 48%;
+  z-index: 3;
+
+  width: 4.25rem;
+  height: 4.25rem;
+  border-radius: 50%;
+
+  background: v.$secondary-5;
+}
+
+/* 산 그래픽 1 */
+.mountain1 {
+  position: absolute;
+  left: -3.125rem;
+  bottom: 1.5625rem;
+
+  width: 0;
+  height: 0;
+  border-left: 15.625rem solid transparent;
+  border-right: 15.625rem solid transparent;
+  border-bottom: 7.5rem solid v.$primary-20;
+}
+
+/* 산 그래픽 2 */
+.mountain2 {
+  position: absolute;
+  left: 13.75rem;
+  bottom: 1.25rem;
+
+  width: 0;
+  height: 0;
+  border-left: 18.125rem solid transparent;
+  border-right: 18.125rem solid transparent;
+  border-bottom: 8.4375rem solid v.$primary-20;
+}
+
+/* 산 그래픽 3 */
+.mountain3 {
+  position: absolute;
+  right: -1.875rem;
+  bottom: 1.375rem;
+
+  width: 0;
+  height: 0;
+  border-left: 17.5rem solid transparent;
+  border-right: 17.5rem solid transparent;
+  border-bottom: 7.8125rem solid v.$primary-20;
+}
+
+/* 소개 섹션 영역 */
+.introSection {
+  margin-top: 0.625rem;
+
+  .sectionTitle {
+    margin: 0 0 1rem;
+
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: v.$primary-40;
+  }
+
+  .sectionBody {
+    p {
+      margin: 0.5rem 0;
+
+      font-size: 1rem;
+      line-height: 1.6;
+      color: v.$grayscale-90;
+
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+  }
+}
+
+/* 우측 카드 컬럼 영역 */
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: 1.25rem;
+
+  width: 20rem;
+}
+
+/* 모바일 반응형 */
+@media screen and (max-width: 767px) {
+  .wrap {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+  }
+
+  .sideNavWrap {
+    position: static;
+
+    width: 100%;
+  }
+
+  .container {
+    width: 100%;
+    margin: 0;
+  }
+
+  .contents {
+    flex-direction: column;
+
+    width: 100%;
+  }
+
+  .rightColumn {
+    width: 100%;
+  }
+}
