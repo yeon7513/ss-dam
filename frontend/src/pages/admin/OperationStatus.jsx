@@ -12,40 +12,7 @@ import TopSellers from "./operation-status/top-sellers/TopSellers.jsx";
 import styles from "./OperationStatus.module.scss";
 
 
-// 우수 판매자 샘플 데이터
-// 이번 달 / 지난달 같은 기간의 판매 금액
-const sampleTopSellers = [
-  {
-    sellerId: "seller01",
-    sellerName: "초록상점",
-    salesAmount: 1200000,
-    previousSalesAmount: 1000000,
-  },
-  {
-    sellerId: "seller02",
-    sellerName: "다시쓰는가게",
-    salesAmount: 800000,
-    previousSalesAmount: 750000,
-  },
-  {
-    sellerId: "seller03",
-    sellerName: "지구마켓",
-    salesAmount: 645000,
-    previousSalesAmount: 700000,
-  },
-  {
-    sellerId: "seller04",
-    sellerName: "나눔상점",
-    salesAmount: 590000,
-    previousSalesAmount: 590000,
-  },
-  {
-    sellerId: "seller05",
-    sellerName: "새싹마켓",
-    salesAmount: 342000,
-    previousSalesAmount: 0,
-  },
-];
+
 
 // 대시보드 상단 요약카드 4개
 // 전체 회원 수 -> 오늘 날짜 조회 기간으로 보내면 백엔드가 오늘까지의 누적 회원 수 반환
@@ -153,12 +120,16 @@ const OperationStatus = () => {
   const [regionLoading, setRegionLoading] = useState(true);
   const [regionError, setRegionError] = useState("");
 
+
   // 새로고침 버튼을 누르면 지역별 참여도도 다시 조회
   const [regionRefreshKey, setRegionRefreshKey] = useState(0);
 
-  // 하단 카드 데이터 — API 연결 전에는 샘플 사용
-  // 아직 데이터를 변경하지 않으므로 setter는 생략
-  const [topSellersData] = useState(sampleTopSellers);
+  // 우수 판매자 실제 조회 데이터
+  const [topSellersData, setTopSellersData] = useState([]);
+  const [sellerLoading, setSellerLoading] = useState(true);
+  const [sellerError, setSellerError] = useState("");
+  const [sellerRefreshKey, setSellerRefreshKey] = useState(0);
+
 
   // 전체 회원 수 조회 오류
   const [summaryError, setSummaryError] = useState("");
@@ -198,6 +169,9 @@ useEffect(() => {
 
     // 지역별 참여도 새로고침
     setRegionRefreshKey((value) => value + 1);
+
+    // 우수 판매자 카드 새로고침
+    setSellerRefreshKey((value) => value + 1);
 
     try {
       const data = await fetchTotalMemberSummary();
@@ -259,6 +233,58 @@ useEffect(() => {
     return () => controller.abort();
   }, [regionRefreshKey]);
 
+  useEffect(() => {
+  const controller = new AbortController();
+
+  async function loadTopSellers() {
+    setSellerLoading(true);
+    setSellerError("");
+
+    try {
+      const response = await fetch("/api/admin/stats/sellers/top5", {
+        signal: controller.signal,
+      });
+
+      if (!response.ok) {
+        throw new Error(`우수 판매자 조회 실패 (${response.status})`);
+      }
+
+      const result = await response.json();
+
+      if (!result.success || !Array.isArray(result.data)) {
+        throw new Error(
+          result.message || "우수 판매자 응답을 확인해주세요.",
+        );
+      }
+
+      if (controller.signal.aborted) return;
+
+      // 백엔드 DTO 필드를 기존 TopSellers 컴포넌트 입력 형태로 변환
+      const sellers = result.data.map((seller) => ({
+        sellerId: String(seller.memberProfile?.id ?? seller.sellerName),
+        sellerName: seller.sellerName,
+        salesAmount: seller.totalSalesAmount,
+        previousSalesAmount: seller.previousSalesAmount,
+        changeRate: seller.salesChangeRate,
+      }));
+
+      setTopSellersData(sellers);
+    } catch (error) {
+      if (!controller.signal.aborted) {
+        setSellerError(error.message);
+      }
+    } finally {
+      if (!controller.signal.aborted) {
+        setSellerLoading(false);
+      }
+    }
+  }
+
+  loadTopSellers();
+
+  return () => controller.abort();
+}, [sellerRefreshKey]);
+
   return (
     <div className={styles.dashboardBody}>
       {/* 대시보드 헤더 영역 */}
@@ -300,7 +326,11 @@ useEffect(() => {
         />
 
         {/* 우수 판매자 영역 */}
-        <TopSellers topSellersData={topSellersData} />
+        <TopSellers
+          topSellersData={topSellersData}
+          loading={sellerLoading}
+          error={sellerError}
+        />
       </div>
     </div>
   );

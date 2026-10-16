@@ -2,6 +2,7 @@ package com.ss_dam.admin.stats.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
@@ -325,7 +326,68 @@ public class StatsServiceImpl implements StatsService {
 
         return rankings;
     }
-   
+
+    // 대시보드 - 우수 판매자 통계 
+    @Override
+    public List<SellerRanking> getMonthlyTopSellers() {
+        LocalDate today = LocalDate.now(ZoneId.of("Asia/Seoul"));
+
+        // 이번 달 1일 ~ 오늘까지
+        LocalDate currentStartDate = today.withDayOfMonth(1);
+        LocalDate currentEndDate = today.plusDays(1); // 종료일 미포함
+
+        // 지난달 1일 ~ 지난달의 오늘과 같은 날짜까지
+        YearMonth previousMonth = YearMonth.from(today).minusMonths(1);
+        int previousLastDay = Math.min(
+            today.getDayOfMonth(),
+            previousMonth.lengthOfMonth()
+        );
+
+        LocalDate previousStartDate = previousMonth.atDay(1);
+        LocalDate previousEndDate = previousMonth.atDay(previousLastDay).plusDays(1);
+
+        LocalDateTime currentStart = currentStartDate.atStartOfDay();
+        LocalDateTime currentEnd = currentEndDate.atStartOfDay();
+        LocalDateTime previousStart = previousStartDate.atStartOfDay();
+        LocalDateTime previousEnd = previousEndDate.atStartOfDay();
+
+        // 이번 달 금액 순으로 조회한 뒤 TOP 5 선정
+        List<SellerRanking> currentRankings =
+            statsDao.findSellerRanking(currentStart, currentEnd);
+
+        List<SellerRanking> topFive = currentRankings.stream()
+            .limit(5)
+            .toList();
+
+        // 전월 같은 기간 실적을 판매자 ID별로 모음
+        List<SellerRanking> previousRankings =
+            statsDao.findSellerRanking(previousStart, previousEnd);
+
+        Map<String, Long> previousSalesBySeller = new HashMap<>();
+
+        for (SellerRanking seller : previousRankings) {
+            previousSalesBySeller.put(
+                seller.getMemberProfile().getId(),
+                seller.getTotalSalesAmount()
+            );
+        }
+
+        // TOP 5 판매자에게 전월 금액과 증감률 설정
+        for (SellerRanking seller : topFive) {
+            String sellerId = seller.getMemberProfile().getId();
+
+            long previousAmount =
+                previousSalesBySeller.getOrDefault(sellerId, 0L);
+
+            seller.setPreviousSalesAmount(previousAmount);
+            seller.setSalesChangeRate(
+                calculateChangeRate(seller.getTotalSalesAmount(), previousAmount)
+            );
+        }
+
+        return topFive;
+    }
+    
 
     
 
