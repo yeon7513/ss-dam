@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import cn from "classnames";
 import { Link } from "react-router-dom";
-import styles from "./ChallengeQuickMenu.module.scss";
 import { formatImagePath } from "../../../utils/formatImagePath";
+import styles from "./ChallengeQuickMenu.module.scss";
 
-// 날짜 문자열("2026-06-01 00:00:00")을 "2026.06.01" 형식으로 가공하는 함수
+/* 날짜 변환 유틸 함수 */
 const formatDate = (dateStr) => {
   if (!dateStr) return "";
   return dateStr.split(" ")[0].replace(/-/g, ".");
@@ -20,6 +20,7 @@ const ChallengeQuickMenu = () => {
         const response = await fetch("/api/challenge/popular");
 
         if (!response.ok) {
+          // 챌린지 목록 조회 실패 시 경고 메시지를 출력함.
           console.warn("챌린지 목록 조회 실패 (HTTP 상태): ", response.status);
           return;
         }
@@ -34,6 +35,7 @@ const ChallengeQuickMenu = () => {
           setPopular(result.data.slice(0, 3));
         }
       } catch (error) {
+        // 서버 통신 오류 발생 시 에러 메시지를 출력함.
         console.error("서버 통신 에러: ", error);
       }
     };
@@ -49,8 +51,6 @@ const ChallengeQuickMenu = () => {
     { item: top3, rank: 3, isCenter: false },
   ];
 
-  console.log(popular);
-
   return (
     /* 챌린지 퀵 메뉴 영역 */
     <section className={styles.quickMenus}>
@@ -65,6 +65,7 @@ const ChallengeQuickMenu = () => {
         {cardList.map(
           ({ item, rank, isCenter }) =>
             item && (
+              /* 카드 항목 */
               <Link
                 key={item.code}
                 to={`/challenge/${item.code}`}
@@ -73,13 +74,13 @@ const ChallengeQuickMenu = () => {
                   isCenter ? styles.centerCard : styles.sideCard,
                 )}
               >
-                {/* 썸네일 박스 */}
+                {/* 썸네일 박스 영역 */}
                 <div className={styles.thumbnailBox}>
                   {item.imageUrl ? (
                     <img
+                      className={styles.thumbnailImg}
                       src={formatImagePath(item.imageUrl)}
                       alt={item.title}
-                      className={styles.thumbnailImg}
                     />
                   ) : (
                     <span className={styles.thumbnailIcon}>👑</span>
@@ -91,9 +92,9 @@ const ChallengeQuickMenu = () => {
                 {/* 정보 영역 */}
                 <div className={styles.infoBox}>
                   <span className={styles.rank}>{rank}</span>
+                  {/* 텍스트 그룹 영역 */}
                   <div className={styles.textGroup}>
                     <strong className={styles.cardTitle}>{item.title}</strong>
-                    {/* 챌린지 기간 표시 (startDate ~ endDate) */}
                     <span className={styles.category}>
                       {item.startDate && item.endDate
                         ? `${formatDate(item.startDate)} ~ ${formatDate(
