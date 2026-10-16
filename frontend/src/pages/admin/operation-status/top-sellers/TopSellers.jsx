@@ -14,11 +14,6 @@ const COLORS = [
 
 const formatMoney = (amount) => `${amount.toLocaleString('ko-KR')}원`;
 
-function calculateChangeRate(current, previous) {
-  if (previous === 0) return null;
-  return ((current - previous) / previous) * 100;
-}
-
 function formatChangeRate(rate) {
   if (rate == null) return '비교 실적 없음';
 
@@ -26,7 +21,11 @@ function formatChangeRate(rate) {
   return `${rounded > 0 ? '+' : ''}${rounded.toFixed(1)}%`;
 }
 
-export default function TopSellers({ topSellersData = [] }) {
+export default function TopSellers({
+    topSellersData = [],
+    loading = false,
+    error = "",
+  }) {
   const sellers = [...topSellersData]
     .filter((seller) => seller.salesAmount > 0)
     .sort(
@@ -90,14 +89,18 @@ export default function TopSellers({ topSellersData = [] }) {
 
   return (
     <Card className={styles.bottomCard}>
-      <div className={styles.cardHeader}>
-        <h3>우수 판매자</h3>
-        <span>이번 달 · 거래 완료 금액 TOP 5</span>
-      </div>
+        <div className={styles.cardHeader}>
+          <h3>우수 판매자</h3>
+          <span>이번 달 · 거래 완료 금액 TOP 5</span>
+        </div>
 
-      {sellers.length === 0 ? (
-        <p className={styles.empty}>판매 실적이 없습니다.</p>
-      ) : (
+        {loading ? (
+          <p className={styles.empty}>우수 판매자를 불러오는 중입니다.</p>
+        ) : error ? (
+          <p className={styles.empty} role="alert">{error}</p>
+        ) : sellers.length === 0 ? (
+          <p className={styles.empty}>판매 실적이 없습니다.</p>
+        ) : (
         <div className={styles.sellerFlex}>
           <div className={styles.donutWrap}>
             <Doughnut
@@ -112,10 +115,7 @@ export default function TopSellers({ topSellersData = [] }) {
           <div className={styles.listWrap}>
             <ul className={styles.sellerList}>
               {sellers.map((seller, index) => {
-                const rate = calculateChangeRate(
-                  seller.salesAmount,
-                  seller.previousSalesAmount,
-                );
+                const rate = seller.changeRate;
 
                 const rateClass =
                   rate == null || rate === 0

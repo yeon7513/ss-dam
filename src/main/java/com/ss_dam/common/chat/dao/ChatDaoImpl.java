@@ -52,6 +52,11 @@ public class ChatDaoImpl implements ChatDao {
     return sql.selectOne("chatView.findReceiverCodeByRoomId", params);
   }
 
+  @Override
+  public ChatRoomRequest findChatRoomByRoomId(String roomId) {
+    return sql.selectOne("chatView.findChatRoomByRoomId", roomId);
+  }
+
   // 신규 채팅방 저장
   @Override
   public void registerChatRoom(ChatRoomRequest chatRoomRequest) {
