@@ -51,7 +51,7 @@
     AND i.type = 'profile'
     AND i.delete_yn = 0
   </select>
-
+ 
   <select id="findAdminForLogin" resultType="AdminProfile">
     SELECT
     CODE AS code,
@@ -96,23 +96,28 @@
   </insert>
 
   <select id="findMemberId" resultType="MemberProfile">
-    SELECT id
-    FROM MEMBER_ACCOUNT
-    WHERE NAME = #{name} and PHONE = #{phone}
+      SELECT id
+      FROM MEMBER_ACCOUNT
+      WHERE NAME = #{name}
+        AND PHONE = #{phone}
+        AND DELETE_YN = 0
   </select>
 
   <select id="findMemberPw" resultType="Long">
-    SELECT code
-    FROM MEMBER_ACCOUNT
-    WHERE iD = #{id} AND NAME = #{name} AND PHONE = #{phone}
+      SELECT code
+      FROM MEMBER_ACCOUNT
+      WHERE ID = #{id}
+        AND NAME = #{name}
+        AND PHONE = #{phone}
+        AND DELETE_YN = 0
   </select>
 
   <update id="changePassword">
-    UPDATE MEMBER_ACCOUNT
-    SET password = #{password}
-    WHERE code = #{code}
+      UPDATE MEMBER_ACCOUNT
+      SET password = #{password}
+      WHERE code = #{code}
+        AND DELETE_YN = 0
   </update>
-
   <!-- 수정·탈퇴 대상 확인 -->
   <select id="findMemberCodeForUpdate" resultType="long">
       SELECT CODE
