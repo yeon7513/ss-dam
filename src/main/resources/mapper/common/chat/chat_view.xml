@@ -44,22 +44,12 @@
   </resultMap>
 
 
-  <sql id="ChatRoomSearchFilter">
-    <where>
-      <if test="keyword != null and keyword.trim() != ''">
-        cl.message LIKE CONCAT('%', #{keyword}, '%')
-      </if>
-    </where>
-  </sql>
-
-
   <!-- 참여한 채팅방 전체 개수 -->
   <select id="loadChatRoomsTotalCount" resultType="Float">
     SELECT count(*)
     FROM CHAT_ROOM AS cr
-    LEFT JOIN CHAT_LOG AS cl
-    ON cl.room_code = cr.code
-    <include refid="ChatRoomSearchFilter" />
+    WHERE cr.REQUESTER_CODE = #{memberCode}
+    OR cr.RESPONDER_CODE = #{memberCode}
   </select>
 
   <!-- 참여한 채팅방 목록 조회 -->
@@ -88,10 +78,17 @@
     END
     <!-- 마지막 메시지 추출 조인 -->
     LEFT JOIN (
-    SELECT log.room_code, log.message, log.created_at
+    SELECT
+    log.room_code,
+    log.message,
+    log.created_at,
+    ROW_NUMBER() OVER (
+    PARTITION BY log.room_code
+    ORDER BY log.created_at DESC, log.code DESC
+    ) AS rn
     FROM CHAT_LOG AS log
-    ORDER BY log.created_at DESC LIMIT 1
-    ) AS cl ON cl.room_code = cr.code
+    ) AS cl
+    ON cl.room_code = cr.code AND cl.rn = 1
     <!-- 현재 로그인한 회원이 참여한 채팅방만 -->
     WHERE cr.requester_code = #{memberCode} OR cr.responder_code = #{memberCode}
   </select>

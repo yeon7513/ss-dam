@@ -1,13 +1,5 @@
 package com.ss_dam.common.chat.service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.ss_dam.auth.member.service.MemberService;
 import com.ss_dam.common.chat.dao.ChatDao;
 import com.ss_dam.common.chat.model.filter.ChatRoomSearchFilter;
@@ -18,19 +10,23 @@ import com.ss_dam.common.chat.model.response.ChatMessageView;
 import com.ss_dam.common.chat.model.response.ChatRoomView;
 import com.ss_dam.common.pager.PageResult;
 import com.ss_dam.market.service.UserProductService;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class ChatServiceImpl implements ChatService {
 
-  private ChatDao chatDao;
-  private MemberService memberService;
-  private UserProductService userProductService;
+  private final ChatDao chatDao;
+  private final MemberService memberService;
+  private final UserProductService userProductService;
 
-  public ChatServiceImpl (
-    ChatDao chatDao,
-    MemberService memberService,
-    UserProductService userProductService
-  ) {
+  public ChatServiceImpl(ChatDao chatDao, MemberService memberService,
+      UserProductService userProductService) {
     this.chatDao = chatDao;
     this.memberService = memberService;
     this.userProductService = userProductService;
@@ -99,7 +95,7 @@ public class ChatServiceImpl implements ChatService {
     params.put("keyword", filter.getKeyword());
 
     List<ChatRoomView> chatRooms = chatDao.loadChatRoomsByMemberCode(params);
-    float total = chatDao.loadChatRoomsTotalCount(filter);
+    float total = chatDao.loadChatRoomsTotalCount(memberCode);
 
     return PageResult.of(chatRooms, filter, total);
   }

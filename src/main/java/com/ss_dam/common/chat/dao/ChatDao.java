@@ -1,6 +1,5 @@
 package com.ss_dam.common.chat.dao;
 
-import com.ss_dam.common.chat.model.filter.ChatRoomSearchFilter;
 import com.ss_dam.common.chat.model.request.ChatMessageCreate;
 import com.ss_dam.common.chat.model.request.ChatRoomRequest;
 import com.ss_dam.common.chat.model.response.ChatDetailView;
@@ -26,7 +25,7 @@ public interface ChatDao {
 
   List<ChatRoomView> loadChatRoomsByMemberCode(Map<String, Object> params);
 
-  float loadChatRoomsTotalCount(ChatRoomSearchFilter filter);
+  float loadChatRoomsTotalCount(Long memberCode);
 
   Long findReceiverCodeByRoomId(Map<String, Object> params);
 }
