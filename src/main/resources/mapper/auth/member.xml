@@ -36,20 +36,22 @@
   </insert>
 
   <select id="findMemberForLogin" resultType="MemberProfile">
-    SELECT
-    MA.CODE AS code,
-    MA.ID AS id,
-    MA.PASSWORD AS password,
-    MA.NAME AS name,
-    'ROLE_MEMBER' AS role,
-    MA.RATING AS rating,
-    i.path AS profile_image
-    FROM MEMBER_ACCOUNT AS MA
-    <!-- 교체 전 이미지가 함께 조회되는 것을 막음-->
-    LEFT JOIN IMAGES i
-    ON MA.code = i.target_code
-    AND i.type = 'profile'
-    AND i.delete_yn = 0
+      SELECT
+          MA.CODE AS code,
+          MA.ID AS id,
+          MA.PASSWORD AS password,
+          MA.NAME AS name,
+          'ROLE_MEMBER' AS role,
+          MA.RATING AS rating,
+          i.path AS profile_image
+      FROM MEMBER_ACCOUNT AS MA
+      LEFT JOIN IMAGES i
+          ON MA.code = i.target_code
+          AND i.type = 'profile'
+          AND i.delete_yn = 0
+      WHERE MA.ID = #{id}
+        AND MA.PASSWORD = #{password}
+        AND MA.DELETE_YN = 0
   </select>
  
   <select id="findAdminForLogin" resultType="AdminProfile">

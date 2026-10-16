@@ -43,11 +43,11 @@ export const ADMIN_MENU = [
 // 마이페이지 사이드바 (path가 ""이면 "준비 중" 알림. 라우트 분리 결정 전까지 임시 매핑)
 export const MYPAGE_MENU = [
   { category: "참여 현황", path: "/mypage/dashboard" },
-  {
+    {
     category: "내 정보",
     subMenus: [
       { name: "정보 변경", path: "/mypage/edit_profile" },
-      { name: "회원 탈퇴", path: "" },
+      { name: "회원 탈퇴", path: "/mypage/withdraw" },
     ],
   },
   {

@@ -299,7 +299,7 @@ function MyPage() {
     const alertCount = 9; // 더미: 알림 데이터가 정해지면 연결
 
     return (
-        <main className={styles.wrap}>
+        <main className={cn(styles.wrap, ["/mypage/edit_profile", "/mypage/withdraw"].includes(pathname.replace(/\/$/, "")) && styles.editLayout)}>
             <div className={styles.sideNavWrap}>
                 <Sidebar className={styles.nav} isFixed={false}>
                     {/* 프로필 + 설정/알림 */}

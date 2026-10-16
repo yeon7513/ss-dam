@@ -30,8 +30,8 @@ import Info from "./pages/auth/sign-up/Info";
 import SignUp from "./pages/auth/sign-up/SignUp";
 import Terms from "./pages/auth/sign-up/Terms";
 import Verify from "./pages/auth/sign-up/Verify";
-import Challenge from "./pages/challenge/challenge/Challenge.jsx";
 import ChallengeDetail from "./pages/challenge/challenge-detail/ChallengeDetail.jsx";
+import Challenge from "./pages/challenge/challenge/Challenge.jsx";
 import ChallengeRanking from "./pages/challenge/ChallengeRanking";
 import Chat from "./pages/chat/Chat.jsx";
 import Error from "./pages/error/Error.jsx";
@@ -48,6 +48,7 @@ import Deal from "./pages/my-page/deal/Deal";
 import EditProfile from "./pages/my-page/edit_profile/EditProfile";
 import MyPage from "./pages/my-page/MyPage.jsx";
 import Points from "./pages/my-page/points/Points";
+import Withdraw from "./pages/my-page/withdraw/Withdraw.jsx";
 import SupportDetail from "./pages/support/SupportDetail";
 import Supports from "./pages/support/Supports";
 import AdminRoute from "./routes/AdminRoute.jsx";
@@ -120,6 +121,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/mypage" element={<MyPage />}>
             <Route path="edit_profile" element={<EditProfile />} />
+            <Route path="withdraw" element={<Withdraw />} />
             <Route path="deal" element={<Deal />} />
             <Route path="points" element={<Points />} />
           </Route>
