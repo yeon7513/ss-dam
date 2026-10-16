@@ -20,20 +20,50 @@ const ChallengeDetail = () => {
   }, [code]);
 
   useEffect(() => {
-    const fetchMainDetail = async (code) => {
-      if (!code) return;
-      try {
-        const response = await fetch(`/api/challenge/${code}`);
-        const result = await response.json();
+    const fetchMainDetail = async (targetCode) => {
+      if (!targetCode) return;
 
-        if (response.ok && result.success) {
-          setMainDetail(result.data);
-        } else {
-          setMainDetail(null);
+      // 1차 시도: 단건 상세 조회 API 호출
+      try {
+        const response = await fetch(`/api/challenge/${targetCode}`);
+        if (response.ok) {
+          const result = await response.json();
+          if (result.success && result.data) {
+            setMainDetail(result.data);
+            return;
+          }
         }
       } catch (error) {
-        // 메인 상세 정보 조회 중 오류가 발생함.
-        console.error("메인 상세 정보 조회 오류", error);
+        console.warn(
+          "단건 상세 API 실패, 전체 목록 조회로 우회 시도합니다.",
+          error,
+        );
+      }
+
+      // 2차 시도 (우회 로직): 단건 API가 500 에러일 경우, 정상 작동하는 전체 목록 API에서 조회
+      try {
+        const listResponse = await fetch("/api/challenge");
+        const listResult = await listResponse.json();
+
+        if (
+          listResponse.ok &&
+          listResult.success &&
+          Array.isArray(listResult.data)
+        ) {
+          // 배열에서 현재 code와 일치하는 챌린지 데이터 추출
+          const matchedChallenge = listResult.data.find(
+            (item) => String(item.code) === String(targetCode),
+          );
+
+          if (matchedChallenge) {
+            setMainDetail(matchedChallenge);
+            return;
+          }
+        }
+        setMainDetail(null);
+      } catch (error) {
+        console.error("우회 목록 조회 오류:", error);
+        setMainDetail(null);
       }
     };
 
@@ -55,7 +85,7 @@ const ChallengeDetail = () => {
       <div className={styles.container}>
         {/* 브레드크럼 영역 */}
         <div className={styles.breadcrumb}>
-          <ChallengeBreadcrumb title={mainDetail?.title} />
+          <ChallengeBreadcrumb detail={mainDetail} />
         </div>
 
         {/* 챌린지 콘텐츠 영역 */}

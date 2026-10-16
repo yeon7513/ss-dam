@@ -3,7 +3,7 @@ import styles from "./TextInput.module.scss";
 
 function TextInput({
   className,
-  label = "",
+  label,
   type = "text",
   name,
   onChange,
