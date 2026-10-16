@@ -11,7 +11,7 @@ import com.ss_dam.common.chat.model.response.ChatMessageView;
 import com.ss_dam.common.chat.model.response.ChatRoomInfo;
 import com.ss_dam.common.chat.model.response.ChatRoomView;
 import com.ss_dam.common.pager.PageResult;
-import com.ss_dam.market.model.response.UserProductView;
+import com.ss_dam.market.model.response.ProductDetail;
 import com.ss_dam.market.service.UserProductService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -108,7 +108,11 @@ public class ChatServiceImpl implements ChatService {
     ChatRoomInfo info =
         loadChatRoomInfo(otherMemberCode, chatRoom.getType(), chatRoom.getTargetCode());
 
+    System.out.println("info: " + info);
+
     chatDetailView.setInfo(info);
+
+    System.out.println("chatDetailView에 저장된 info: " + chatDetailView.getInfo());
 
     return chatDetailView;
   }
@@ -163,10 +167,19 @@ public class ChatServiceImpl implements ChatService {
     info.setOtherMemberProfile(memberProfile);
 
     if (type.equals("DEAL") && targetCode != null) {
-      UserProductView product =
+
+      System.out.println("상품 상세 조회 시작");
+
+      ProductDetail product =
           userProductService.findProductDetailByProdCode(targetCode, memberProfile);
+
+      System.out.println("조회된 product: " + product);
+
       info.setProductInfo(product);
+
+      System.out.println("설정 후 productInfo: " + info.getProductInfo());
     } else {
+      System.out.println("상품 조회 조건 불충족");
       info.setProductInfo(null);
     }
 

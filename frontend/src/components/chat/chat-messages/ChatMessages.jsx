@@ -2,6 +2,8 @@ import React, { useEffect, useRef } from "react";
 import ChatBubble from "./chat-bubble/ChatBubble.jsx";
 import TextInput from "../../forms/text-input/TextInput.jsx";
 import styles from "./ChatMessages.module.scss";
+import cn from "classnames";
+import { IoShieldCheckmark } from "react-icons/io5";
 
 function ChatMessages({ messages, onSend }) {
   // 스크롤 ref
@@ -56,13 +58,30 @@ function ChatMessages({ messages, onSend }) {
 
   return (
     <div className={styles.content}>
-      <div className={styles.messageItems}>
-        {messages?.map((msg, idx) => (
-          <ChatBubble key={idx} message={msg} />
-        ))}
-        {/* 스크롤용 더미 div */}
-        <div ref={messagesRef} />
-      </div>
+      {messages.length === 0 ? (
+        <div className={cn(styles.messageItems, styles.noMessage)}>
+          <IoShieldCheckmark className={styles.icon} />
+          <div className={styles.notice}>
+            <strong className={styles.noticeTitle}>
+              안전한 채팅을 위한 안내
+            </strong>
+            <p className={styles.noticeMessage}>
+              서로 존중하는 말투로 대화해 주세요.
+            </p>
+            <p className={styles.noticeWarning}>
+              욕설, 비방, 사기 등 부적절한 행위는 서비스 이용에 제한을 받을 수 있습니다.
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div className={styles.messageItems}>
+          {messages?.map((msg, idx) => (
+            <ChatBubble key={idx} message={msg} />
+          ))}
+          {/* 스크롤용 더미 div */}
+          <div ref={messagesRef} />
+        </div>
+      )}
       <div className={styles.textInput}>
         <TextInput type="text" name="message" onKeyDown={handleSendChat} />
       </div>

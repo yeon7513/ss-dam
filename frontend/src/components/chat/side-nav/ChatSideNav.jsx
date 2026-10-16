@@ -14,7 +14,7 @@ function ChatSideNav({ chatRooms, pager, activeRoomId, onClickChatRoom }) {
   return (
     <Sidebar isFixed={false} className={styles.sideNav}>
       {/* 상단 메뉴 링크 영역 */}
-      <li>
+      <li className={styles.links}>
         {/* 로고 영역 */}
         <h1 className={styles.logoText}>
           <Link to="/" target="_blank">
@@ -29,12 +29,12 @@ function ChatSideNav({ chatRooms, pager, activeRoomId, onClickChatRoom }) {
       </li>
 
       {/* 검색 상자 영역 */}
-      <li>
+      <li className={styles.search}>
         <SearchBox />
       </li>
 
       {/* 채팅방 목록 영역 */}
-      <li>
+      <li className={styles.chatRooms}>
         <ChatRoom
           rooms={chatRooms}
           pager={pager}
