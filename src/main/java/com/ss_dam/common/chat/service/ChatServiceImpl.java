@@ -1,5 +1,6 @@
 package com.ss_dam.common.chat.service;
 
+import com.ss_dam.auth.login.model.response.MemberProfile;
 import com.ss_dam.auth.member.service.MemberService;
 import com.ss_dam.common.chat.dao.ChatDao;
 import com.ss_dam.common.chat.model.filter.ChatRoomSearchFilter;
@@ -7,8 +8,10 @@ import com.ss_dam.common.chat.model.request.ChatMessageCreate;
 import com.ss_dam.common.chat.model.request.ChatRoomRequest;
 import com.ss_dam.common.chat.model.response.ChatDetailView;
 import com.ss_dam.common.chat.model.response.ChatMessageView;
+import com.ss_dam.common.chat.model.response.ChatRoomInfo;
 import com.ss_dam.common.chat.model.response.ChatRoomView;
 import com.ss_dam.common.pager.PageResult;
+import com.ss_dam.market.model.response.UserProductView;
 import com.ss_dam.market.service.UserProductService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,11 +79,38 @@ public class ChatServiceImpl implements ChatService {
   // 과거 채팅 내역 조회
   @Override
   public ChatDetailView loadChatMessages(String roomId, Long memberCode) {
+
+    // 채팅방 조회 -> 존재하는지
+    ChatRoomRequest chatRoom = findChatRoomByRoomId(roomId);
+
+    // 채팅방 접근 권한 체크
+    // -> 본인이 참여한 채티방이 맞는지
+    if (!memberCode.equals(chatRoom.getRequesterCode()) && !memberCode.equals(
+        chatRoom.getResponderCode())) {
+      throw new IllegalArgumentException("채팅방 접근 권한이 없습니다.");
+    }
+
+    // 상대방 PK 추출
+    Long otherMemberCode;
+
+    if (memberCode.equals(chatRoom.getRequesterCode())) {
+      otherMemberCode = chatRoom.getRequesterCode();
+    } else {
+      otherMemberCode = chatRoom.getResponderCode();
+    }
+
     Map<String, Object> params = new HashMap<>();
     params.put("roomId", roomId);
     params.put("memberCode", memberCode);
 
-    return chatDao.loadChatMessages(params);
+    ChatDetailView chatDetailView = chatDao.loadChatMessages(params);
+
+    ChatRoomInfo info =
+        loadChatRoomInfo(otherMemberCode, chatRoom.getType(), chatRoom.getTargetCode());
+
+    chatDetailView.setInfo(info);
+
+    return chatDetailView;
   }
 
   // 참여중인 채팅방 목록 조회
@@ -119,22 +149,28 @@ public class ChatServiceImpl implements ChatService {
     return chatDao.findRoomCodeByRoomId(roomId);
   }
 
-  //  // 채팅방에 대한 상세 정보 불러오기 -> 안쓸것같기도한디..
-  //  private ChatRoomInfo loadChatRoomInfo(Long MemberCode, String type, Long targetCode) {
-  //    ChatRoomInfo info = new ChatRoomInfo();
-  //
-  //    MemberProfile memberProfile = memberService.searchProfileByMemberCode(MemberCode);
-  //    info.setOtherMemberProfile(memberProfile);
-  //
-  //    if (type.equals("DEAL") && targetCode != null) {
-  //      UserProductView product =
-  //          userProductService.findProductDetailByProdCode(targetCode, MemberCode);
-  //      info.setProductInfo(product);
-  //    } else {
-  //      info.setProductInfo(null);
-  //    }
-  //
-  //    return info;
-  //  }
+  private ChatRoomRequest findChatRoomByRoomId(String roomId) {
+    return chatDao.findChatRoomByRoomId(roomId);
+  }
+
+  // 채팅방에 대한 상세 정보 불러오기
+  private ChatRoomInfo loadChatRoomInfo(Long memberCode, String type, Long targetCode) {
+    ChatRoomInfo info = new ChatRoomInfo();
+
+    System.out.println("targetCode: " + targetCode);
+
+    MemberProfile memberProfile = memberService.searchProfileByMemberCode(memberCode);
+    info.setOtherMemberProfile(memberProfile);
+
+    if (type.equals("DEAL") && targetCode != null) {
+      UserProductView product =
+          userProductService.findProductDetailByProdCode(targetCode, memberProfile);
+      info.setProductInfo(product);
+    } else {
+      info.setProductInfo(null);
+    }
+
+    return info;
+  }
 
 }

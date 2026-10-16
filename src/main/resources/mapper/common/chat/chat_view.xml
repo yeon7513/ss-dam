@@ -105,6 +105,12 @@
     )
   </select>
 
+  <select id="findChatRoomByRoomId" resultType="ChatRoomRequest">
+    SELECT room_id, type, target_code, requester_code, responder_code
+    FROM CHAT_ROOM
+    WHERE room_id = #{roomId}
+  </select>
+
   <!-- 채팅방 상세 내역 조회 (과거 메시지 포함) -->
   <select id="loadChatMessages" resultMap="ChatDetailViewResultMap">
     SELECT

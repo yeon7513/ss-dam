@@ -9,45 +9,45 @@
   <select id="searchChallenges"
           parameterType="String"
           resultType="Challenge">
-      SELECT
-          c.*,
-          (
-              SELECT i.PATH
-              FROM IMAGES i
-              WHERE i.TARGET_CODE = c.CODE
-                AND i.TYPE = 'challenge'
-                AND i.DELETE_YN = 0
-              ORDER BY i.ORDER_SEQ ASC, i.PATH ASC
-              LIMIT 1
-          ) AS imageUrl
-      FROM CHALLENGE c
-      WHERE c.DELETE_YN = false
+    SELECT
+    c.*,
+    (
+    SELECT i.PATH
+    FROM IMAGES i
+    WHERE i.TARGET_CODE = c.CODE
+    AND i.TYPE = 'challenge'
+    AND i.DELETE_YN = 0
+    ORDER BY i.ORDER_SEQ ASC, i.PATH ASC
+    LIMIT 1
+    ) AS imageUrl
+    FROM CHALLENGE c
+    WHERE c.DELETE_YN = false
 
-      <if test="progressStatus != null and progressStatus != ''">
-          AND c.PROGRESS_STATUS = #{progressStatus}
-      </if>
+    <if test="progressStatus != null and progressStatus != ''">
+      AND c.PROGRESS_STATUS = #{progressStatus}
+    </if>
 
-      ORDER BY c.CREATED_AT DESC
+    ORDER BY c.CREATED_AT DESC
   </select>
 
   <!-- 상세 조회 -->
   <select id="searchChallengeByCode"
           parameterType="long"
           resultType="Challenge">
-      SELECT
-          c.*,
-          (
-              SELECT i.PATH
-              FROM IMAGES i
-              WHERE i.TARGET_CODE = c.CODE
-                AND i.TYPE = 'challenge'
-                AND i.DELETE_YN = 0
-              ORDER BY i.ORDER_SEQ ASC, i.PATH ASC
-              LIMIT 1
-          ) AS imageUrl
-      FROM CHALLENGE c
-      WHERE c.CODE = #{code}
-        AND c.DELETE_YN = false
+    SELECT
+    c.*,
+    (
+    SELECT i.PATH
+    FROM IMAGES i
+    WHERE i.TARGET_CODE = c.CODE
+    AND i.TYPE = 'challenge'
+    AND i.DELETE_YN = 0
+    ORDER BY i.ORDER_SEQ ASC, i.PATH ASC
+    LIMIT 1
+    ) AS imageUrl
+    FROM CHALLENGE c
+    WHERE c.CODE = #{code}
+    AND c.DELETE_YN = false
   </select>
   <!-- 등록 -->
   <insert id="registerChallenge" parameterType="Challenge">
@@ -138,11 +138,13 @@
     c.CREATED_AT,
     c.UPDATED_AT,
     c.DELETE_YN,
+    i.PATH AS imageUrl,
     COUNT(ce.MEM_CODE) AS participantCount
     <!-- 리눅스 서버에 DB가 올라가 있기 때문에 테이블명은 대문자로 -->
     FROM CHALLENGE c
     LEFT JOIN CHALLENGE_ENTRY ce
     ON c.CODE = ce.CHAL_CODE
+    LEFT JOIN IMAGES i ON c.code = i.target_code AND i.type = 'challenge'
     WHERE c.DELETE_YN = false
     GROUP BY
     c.CODE,
@@ -209,12 +211,12 @@
     AND STATUS = 'JOINED') AS participantCount,
     c.GOAL AS goal,
     (SELECT COUNT(*)
-    FROM FEED f    
-      WHERE f.CHAL_CODE = c.CODE
-      <if test="memCode != 0 and memCode != null">
-        AND f.MEM_CODE = #{memCode}
-      </if>
-      AND f.DELETE_YN = false) AS proofCount,    
+    FROM FEED f
+    WHERE f.CHAL_CODE = c.CODE
+    <if test="memCode != 0 and memCode != null">
+      AND f.MEM_CODE = #{memCode}
+    </if>
+    AND f.DELETE_YN = false) AS proofCount,
     (DATEDIFF(c.END_DATE, c.START_DATE) + 1) AS totalProofCount,
     c.POINT_EARNED as pointEarn,
     EXISTS(
@@ -327,11 +329,11 @@
     <!--    AND DELETE_YN = 0-->
     )
   </select>
-  
+
   <select id="getChallengeRewardPoint" parameterType="long" resultType="int">
-  	SELECT POINT_EARNED
-  	FROM CHALLENGE
-  	WHERE CODE = #{code}
+    SELECT POINT_EARNED
+    FROM CHALLENGE
+    WHERE CODE = #{code}
   </select>
 
 </mapper>

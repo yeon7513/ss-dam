@@ -1,6 +1,5 @@
 package com.ss_dam.common.chat.model.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ss_dam.auth.login.model.response.MemberProfile;
 import com.ss_dam.market.model.response.UserProductView;
 
@@ -12,7 +11,7 @@ public class ChatRoomInfo {
   private MemberProfile otherMemberProfile;
 
   // 거래글일 경우 요약 정보 (type == DEAL일 때만 사용)
-  @JsonInclude(JsonInclude.Include.NON_NULL)
+  //  @JsonInclude(JsonInclude.Include.NON_NULL)
   private UserProductView productInfo;
 
 

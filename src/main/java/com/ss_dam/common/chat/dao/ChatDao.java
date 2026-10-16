@@ -28,4 +28,6 @@ public interface ChatDao {
   float loadChatRoomsTotalCount(Long memberCode);
 
   Long findReceiverCodeByRoomId(Map<String, Object> params);
+
+  ChatRoomRequest findChatRoomByRoomId(String roomId);
 }
