@@ -1,157 +1,107 @@
 @use "../../../scss/variables.scss" as v;
 @use "../../../scss/mixin.scss" as mix;
 
+/* 챌린지 정보 카드 영역 */
 .cardWrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  @include mix.flex(column, flex-start, stretch);
+  gap: 1.25rem;
   width: 100%;
 }
 
 .cardContainer {
   width: 100%;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  background-color: #ffffff;
+  border: 1px solid v.$grayscale-20;
+
+  background-color: v.$color-white;
+
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
+/* 카드 헤더 영역 */
 .cardHeader {
-  background-color: #f3f9f5;
-  padding: 16px 20px;
-  border-bottom: 1px solid #edf4f0;
+  padding: 1rem 1.2rem;
+  border-bottom: 1px solid v.$grayscale-20;
+  background-color: v.$grayscale-5;
 
   h3 {
-    margin: 0;
-    font-size: 16px;
+    font-size: 1.3rem;
     font-weight: 700;
-    color: #1b5e20;
+    color: v.$grayscale-90;
   }
 }
 
+/* 카드 본문 영역 */
 .cardBody {
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
+  @include mix.flex(column, flex-start, stretch);
+  gap: 1rem;
+  padding: 1.2rem;
 }
 
+/* 로딩 표시 영역 */
+.loadingText {
+  padding: 1rem;
+  font-size: 1rem;
+  color: v.$grayscale-70;
+  text-align: center;
+}
+
+/* 정보 항목 영역 */
 .infoRow {
-  display: flex;
-  align-items: center;
-  gap: 14px;
+  @include mix.flex(row, flex-start, center);
+  gap: 0.7rem;
 }
 
+/* 아이콘 상자 영역 */
 .iconBox {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background-color: #f0f7f2;
-  color: #2e7d32;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @include mix.flex(row, center, center);
   flex-shrink: 0;
+  width: 3.5rem;
+  height: 3.5rem;
+  font-size: 1.3rem;
+
+  border-radius: 50%;
+  background-color: v.$grayscale-5;
+  color: v.$grayscale-90;
 }
 
+/* 정보 내용 영역 */
 .infoContent {
-  display: flex;
-  flex-direction: column;
+  @include mix.flex(column, flex-start, stretch);
 
   .label {
-    font-size: 13px;
-    color: #2e7d32;
-    font-weight: 600;
-    margin-bottom: 2px;
+    margin-bottom: 0.2rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: v.$primary-50;
   }
 
   .value {
-    font-size: 14px;
-    color: #333333;
+    font-size: 0.9rem;
     font-weight: 500;
+    color: v.$grayscale-90;
   }
 }
 
-/* Buttons */
+/* 챌린지참여하기 버튼 영역 */
 .btnGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 6px;
+  @include mix.flex(column, flex-start, stretch);
 }
 
-.joinBtn {
-  width: 100%;
-  padding: 14px 0;
-  border: none;
-  border-radius: 8px;
-  background-color: #2e7d32;
-  color: #ffffff;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background-color: #216325;
-  }
-
-  &:disabled,
-  &.joined {
-    background-color: #e0e0e0;
-    color: #888888;
-    cursor: not-allowed;
-  }
-}
-
-.likeBtn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  width: 100%;
-  padding: 12px 0;
-  border: 1px solid #2e7d32;
-  border-radius: 8px;
-  background-color: #ffffff;
-  color: #2e7d32;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background-color: #f0f7f2;
-  }
-}
-
+/* 유의사항 카드 영역 */
 .noticeCard {
-  padding: 18px;
-  border: 1px solid #edf2ef;
-  border-radius: 10px;
-  background-color: #fafcfb;
+  padding: 1.2rem;
+  border: 1px solid v.$grayscale-20;
 
   h4 {
-    margin: 0 0 10px 0;
-    font-size: 14px;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
     font-weight: 700;
-    color: #2e7d32;
+    color: v.$primary-50;
   }
 
   ul {
-    margin: 0;
-    padding-left: 18px;
-    color: #666666;
-    font-size: 13px;
+    font-size: 0.9rem;
+    color: v.$grayscale-90;
     line-height: 1.6;
-  }
-
-  li {
-    margin-bottom: 4px;
-
-    &:last-child {
-      margin-bottom: 0;
-    }
   }
 }
