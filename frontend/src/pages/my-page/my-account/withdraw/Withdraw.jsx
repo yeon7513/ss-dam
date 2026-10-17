@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { deleteMember } from "../../../api/memberAccount.js";
-import { useAuth } from "../../../context/AuthContext.jsx";
+import { deleteMember } from "../../../../api/memberAccount.js";
+import { useAuth } from "../../../../context/AuthContext.jsx";
 import styles from "../MemberAccount.module.scss";
 
 export default function Withdraw() {

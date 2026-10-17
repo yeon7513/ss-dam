@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import DaumPostcodeEmbed from "react-daum-postcode";
 import { useNavigate } from "react-router-dom";
 
-import { updateMember } from "../../../api/memberAccount.js";
-import placeholder from "../../../assets/images/placeholder.png";
-import { useAuth } from "../../../context/AuthContext.jsx";
+import { updateMember } from "../../../../api/memberAccount.js";
+import placeholder from "../../../../assets/images/placeholder.png";
+import { useAuth } from "../../../../context/AuthContext.jsx";
 import styles from "../MemberAccount.module.scss";
 
 export default function EditProfile() {
@@ -103,8 +103,8 @@ export default function EditProfile() {
         password,
         phone: normalizedPhone,
         address: [address.trim(), detailAddress.trim()]
-          .filter(Boolean)
-          .join(" "),
+        .filter(Boolean)
+        .join(" "),
         file,
       });
 
