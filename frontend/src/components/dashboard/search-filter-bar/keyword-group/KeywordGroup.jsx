@@ -1,6 +1,5 @@
-import React from 'react';
-import TextInput from "../../../forms/text-input/TextInput.jsx";
 import { LuSearch } from "react-icons/lu";
+import TextInput from "../../../forms/text-input/TextInput.jsx";
 import styles from "./KeywordGroup.module.scss";
 
 function KeywordGroup({ draftFilters, setDraftFilters, onSearch }) {
@@ -27,15 +26,14 @@ function KeywordGroup({ draftFilters, setDraftFilters, onSearch }) {
 
   return (
     <div className={styles.keywordGroup}>
-      <label htmlFor="keyword">키워드</label>
       <TextInput
         name="keyword"
         onKeyUp={(e) => handleSearchKeyword(e)}
         icon={<LuSearch className={styles.searchIcon} />}
         placeholder="검색어를 입력하세요."
+        aria-label="검색어 입력"
       />
     </div>
-
   );
 }
 

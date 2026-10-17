@@ -1,0 +1,86 @@
+@use "../../../scss/variables.scss" as v;
+
+.tabs {
+  margin-bottom: 1rem;
+}
+
+/* 공통 DataTable 커스텀 */
+table.myChallengeTable {
+  min-width: 760px;
+  table-layout: fixed;
+
+  th,
+  td {
+    text-align: center;
+  }
+
+  // 참여일 | 챌린지명 | 기간 | 진행 상태 | 내 상태 | 인증 | 획득 그루
+  th:nth-child(1) { width: 90px; }
+  th:nth-child(3) { width: 160px; }
+  th:nth-child(4) { width: 80px; }
+  th:nth-child(5) { width: 90px; }
+  th:nth-child(6) { width: 70px; }
+  th:nth-child(7) { width: 100px; }
+
+  td:nth-child(2) {
+    text-align: left;
+  }
+}
+
+.date {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: v.$grayscale-90;
+}
+
+.title {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-weight: 600;
+  color: v.$grayscale-90;
+
+  &:hover {
+    color: v.$primary-40;
+    text-decoration: underline;
+  }
+}
+
+.period {
+  font-size: 0.75rem;
+  color: v.$grayscale-60;
+  white-space: nowrap;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.125rem 0.5rem;
+  border-radius: 999px;
+  background-color: v.$grayscale-10;
+  font-size: 0.6875rem;
+}
+
+/* 내 참여 상태 뱃지 */
+.statusBadge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.joined {
+  background-color: v.$primary-5;
+  color: v.$primary-50;
+}
+
+.completed {
+  background-color: v.$primary-40;
+  color: v.$color-white;
+}
+
+.canceled {
+  background-color: v.$grayscale-10;
+  color: v.$grayscale-60;
+}

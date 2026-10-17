@@ -56,3 +56,18 @@ export const formatDateTime = (dateString) => {
     hour12: false,
   });
 };
+
+// "2026-04-07 12:30:00" -> "26.04.07" (마이페이지 목록 날짜 표시용)
+export const formatShortDate = (value) => {
+  if (!value) return "-";
+
+  const date = new Date(String(value).replace(" ", "T"));
+  if (Number.isNaN(date.getTime())) {
+    return String(value).slice(2, 10).replaceAll("-", ".");
+  }
+
+  const yy = String(date.getFullYear()).slice(2);
+  const mm = String(date.getMonth() + 1).padStart(2, "0");
+  const dd = String(date.getDate()).padStart(2, "0");
+  return `${yy}.${mm}.${dd}`;
+};

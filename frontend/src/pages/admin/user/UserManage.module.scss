@@ -53,4 +53,11 @@
   .header {
     margin-bottom: 20px;
   }
+
+  // 로딩·에러·빈 목록 안내
+.state {
+  padding: 60px 0;
+  text-align: center;
+  color: v.$grayscale-50;
+}
 }

@@ -8,28 +8,55 @@
   > form {
     @include mix.flex($jc: flex-start);
     flex-wrap: wrap;
-    column-gap: 3rem;
-    row-gap: 1rem;
+    align-items: center;
+    column-gap: 0.75rem;
+    row-gap: 1.25rem;
 
-    label {
-      flex: none;
-      font-weight: 600;
+    // 날짜·드롭다운·검색창 높이 통일
+    select,
+    input[type="date"],
+    input[type="text"] {
+      height: 3rem;
     }
-
   }
 
+  // 1줄: 탭은 한 줄 전체 사용
+  .header {
+    flex: 0 0 100%;
+  }
+
+  // 2줄: 날짜
+  .dateGroup {
+    flex: none;
+  }
+
+  // 2줄: 드롭다운들
   .selectGroups {
     @include mix.flex($jc: flex-start);
+    flex: none;
     flex-wrap: wrap;
-    gap: 2rem;
+    gap: 0.75rem;
   }
 
+  // 2줄: 라디오
   .radioGroup {
-    label {
-      font-weight: 400;
-    }
+    @include mix.flex($jc: flex-start);
+    flex: none;
+    gap: 0.75rem;
   }
 
+  // 2줄: 키워드 검색창은 남은 공간 전부
+  .keyword {
+    flex: 1 1 15rem;
+    min-width: 15rem;
+  }
+
+  // 3줄: 태그 입력은 한 줄 전체
+  .tagGroup {
+    flex: 0 0 100%;
+  }
+
+  
   .footer {
     @include mix.flex;
     gap: 0.5rem;

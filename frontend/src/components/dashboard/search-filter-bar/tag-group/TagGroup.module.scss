@@ -1,0 +1,92 @@
+@use "../../../../scss/variables.scss" as v;
+@use "../../../../scss/mixin.scss" as mix;
+
+.tagGroup {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+
+  width: 100%;
+  height: 3rem;
+  padding: 0 0.8rem;
+
+  border: 1.5px solid v.$point-20;
+  background-color: v.$color-white;
+  transition: background-color 0.2s ease;
+
+  &:focus-within {
+    background-color: v.$point-5;
+  }
+
+  &:has(input:disabled) {
+    background-color: v.$grayscale-10;
+  }
+}
+
+// SearchFilterBar의 input 공통 높이(3rem)보다 우선하도록 테두리·배경 제거
+.tagGroup .tagInput {
+  flex: 1;
+  min-width: 12rem;
+  height: 100%;
+
+  font-size: 0.9rem;
+  color: v.$grayscale-90;
+
+  border: 0;
+  outline: none;
+  background: transparent;
+
+  &::placeholder {
+    color: v.$grayscale-50;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+.tags {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 6px;
+
+  max-width: 65%;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: v.$point-60;
+
+  border: 1px solid v.$point-20;
+  border-radius: 100px;
+  background-color: v.$point-5;
+}
+
+.removeBtn {
+  display: flex;
+  align-items: center;
+  padding: 0;
+
+  font-size: 1rem;
+  color: v.$point-60;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: v.$dan-color;
+  }
+}

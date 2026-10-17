@@ -401,10 +401,11 @@ export default function ReportDetailModal({
                   />
                 </label>
 
-                {/* 로그인 관리자 및 처리 버튼 */}
+                 {/* 로그인 관리자 및 처리 버튼 */}
                 <footer className={styles.actions}>
                   <span>
-                    {user?.name ?? user?.id} / {user?.role}
+                    {/* role은 객체 -> 화면에는 한글 라벨 표시 */}
+                    {user?.name ?? user?.id} / {user?.role?.label ?? "-"}
                   </span>
 
                   {detail.status === "PENDING" && (

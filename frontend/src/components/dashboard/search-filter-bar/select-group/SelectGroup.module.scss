@@ -1,11 +1,10 @@
 @use "../../../../scss/variables.scss" as v;
 @use "../../../../scss/mixin.scss" as mix;
 
-
 .select {
   select {
     width: fit-content;
-    min-width: 10rem;
-    margin-top: 0.5rem;
+    min-width: 9rem;
+    border: 1.5px solid v.$point-20; // 날짜·검색창과 테두리 통일
   }
 }

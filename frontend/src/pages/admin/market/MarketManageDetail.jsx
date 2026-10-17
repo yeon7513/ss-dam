@@ -1,8 +1,8 @@
-import { INFO_COLUMNS } from "../../../constants/MarketManage.constants";
 import DataTable from "../../../components/common/data-table/DataTable";
-import { useMarketManageDetail } from "./useMarketManageDetail";
-import styles from "./MarketManageDetail.module.scss";
+import { INFO_COLUMNS } from "../../../constants/admin-market/MarketManage.constants.jsx";
 import ImageBox from "./../../../components/common/image-box/ImageBox";
+import styles from "./MarketManageDetail.module.scss";
+import { useMarketManageDetail } from "./useMarketManageDetail";
 
 export default function MarketManageDetail() {
   const {
