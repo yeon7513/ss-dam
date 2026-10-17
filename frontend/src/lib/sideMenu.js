@@ -54,7 +54,7 @@ export const MYPAGE_MENU = [
   {
     category: "챌린지",
     subMenus: [
-      { name: "참여한 챌린지", path: "" },
+      { name: "참여한 챌린지", path: "/mypage/challenges" },
       { name: "내 랭킹 조회", path: "" },
     ],
   },

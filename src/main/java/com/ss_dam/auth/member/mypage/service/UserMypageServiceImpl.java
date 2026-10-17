@@ -1,5 +1,9 @@
 package com.ss_dam.auth.member.mypage.service;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,9 +11,12 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.ss_dam.auth.member.Member;
 import com.ss_dam.auth.member.mypage.dao.UserMypageDao;
+import com.ss_dam.auth.member.mypage.model.filter.MypageChallengeSearchFilter;
+import com.ss_dam.auth.member.mypage.model.response.MypageChallengeView;
 import com.ss_dam.auth.member.mypage.model.response.MypageProfileView;
 import com.ss_dam.auth.member.rating.enums.MemberRating;
 import com.ss_dam.auth.member.rating.service.MemberRatingService;
+import com.ss_dam.common.pager.PageResult;
 
 @Service
 @Transactional(readOnly = true)
@@ -104,4 +111,35 @@ public class UserMypageServiceImpl implements UserMypageService {
 
     return profile;
   }
+
+    // 허용하는 참여 상태 탭 값
+  private static final Set<String> ENTRY_STATUSES =
+      Set.of("JOINED", "COMPLETED", "CANCELED");
+
+  // 참여한 챌린지 목록
+  @Override
+  public PageResult<MypageChallengeView> getMyChallenges(
+      MypageChallengeSearchFilter filter,
+      Long memberCode
+  ) {
+    // 클라이언트가 보낸 memCode는 무시하고 세션 값으로 덮어씀
+    filter.setMemCode(memberCode);
+
+    // 정해진 상태값이 아니면 전체 조회로 처리
+    if (filter.getStatus() == null || !ENTRY_STATUSES.contains(filter.getStatus())) {
+      filter.setStatus(null);
+    }
+
+    List<MypageChallengeView> challenges = mypageDao.searchMyChallenges(filter);
+    float total = mypageDao.countMyChallenges(filter);
+
+    return PageResult.of(challenges, filter, total);
+  }
+
+  // 참여한 챌린지 요약
+  @Override
+  public Map<String, Object> getMyChallengeSummary(Long memberCode) {
+    return mypageDao.searchMyChallengeSummary(memberCode);
+  }
+  
 }

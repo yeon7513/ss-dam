@@ -71,4 +71,73 @@
   WHERE ranked.memberCode = #{memberCode}
 </select>
 
+<!-- ================================================== -->
+<!-- 마이페이지 - 참여한 챌린지 -->
+<!-- CHALLENGE_ENTRY에 DELETE_YN이 없는 DB도 있어서 참여 테이블은 STATUS로만 구분 -->
+
+<!-- 공통 검색 조건 -->
+<sql id="MyChallengeFilter">
+  WHERE ce.MEM_CODE = #{memCode}
+    AND c.DELETE_YN = 0
+    <!-- 참여 상태 탭 -->
+    <if test="status != null and status != ''">
+      AND ce.STATUS = #{status}
+    </if>
+    <!-- 챌린지 제목 검색 -->
+    <if test="keyword != null and keyword.trim() != ''">
+      AND c.TITLE LIKE CONCAT('%', #{keyword}, '%')
+    </if>
+</sql>
+
+<!-- 참여한 챌린지 목록 -->
+<select id="searchMyChallenges"
+        resultType="com.ss_dam.auth.member.mypage.model.response.MypageChallengeView">
+  SELECT
+    ce.CODE AS code,
+    c.CODE AS chal_code,
+    c.TITLE AS title,
+    DATE_FORMAT(c.START_DATE, '%Y-%m-%d') AS start_date,
+    DATE_FORMAT(c.END_DATE, '%Y-%m-%d') AS end_date,
+    c.PROGRESS_STATUS AS progress_status,
+    ce.STATUS AS entry_status,
+    DATE_FORMAT(ce.JOINED_AT, '%Y-%m-%d %H:%i:%s') AS joined_at,
+    <!-- 이 챌린지에 내가 올린 인증 피드 수 -->
+    (
+      SELECT COUNT(*)
+      FROM FEED f
+      WHERE f.CHAL_CODE = c.CODE
+        AND f.MEM_CODE = ce.MEM_CODE
+        AND f.STATUS = 'active'
+        AND f.DELETE_YN = 0
+    ) AS proof_count,
+    <!-- 완료한 경우에만 획득 그루 표시 -->
+    IF(ce.STATUS = 'COMPLETED', IFNULL(c.POINT_EARNED, 0), 0) AS point_earned
+  FROM CHALLENGE_ENTRY ce
+  JOIN CHALLENGE c ON c.CODE = ce.CHAL_CODE
+  <include refid="MyChallengeFilter" />
+  ORDER BY ce.JOINED_AT DESC, ce.CODE DESC
+  LIMIT #{offset}, #{perPage}
+</select>
+
+<!-- 참여한 챌린지 전체 개수 -->
+<select id="countMyChallenges" resultType="Float">
+  SELECT COUNT(*)
+  FROM CHALLENGE_ENTRY ce
+  JOIN CHALLENGE c ON c.CODE = ce.CHAL_CODE
+  <include refid="MyChallengeFilter" />
+</select>
+
+<!-- 참여한 챌린지 요약 -->
+<select id="searchMyChallengeSummary" parameterType="map" resultType="map">
+  SELECT
+    COUNT(*) AS totalCount,
+    IFNULL(SUM(ce.STATUS = 'JOINED'), 0) AS joinedCount,
+    IFNULL(SUM(ce.STATUS = 'COMPLETED' AND ce.CANCELED_AT IS NULL), 0) AS completedCount,
+    IFNULL(SUM(IF(ce.STATUS = 'COMPLETED' AND ce.CANCELED_AT IS NULL, IFNULL(c.POINT_EARNED, 0), 0)), 0) AS totalPoint
+  FROM CHALLENGE_ENTRY ce
+  JOIN CHALLENGE c ON c.CODE = ce.CHAL_CODE
+  WHERE ce.MEM_CODE = #{memberCode}
+    AND c.DELETE_YN = 0
+</select>
+
 </mapper>
