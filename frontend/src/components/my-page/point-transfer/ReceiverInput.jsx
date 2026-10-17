@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styles from "../../../pages/my-page/points/point-transfer/PointTransfer.module.scss";
 import { CgAsterisk } from "react-icons/cg";
 import TextInput from "../../forms/text-input/TextInput.jsx";
@@ -12,33 +12,40 @@ function ReceiverInput({
   label,
   id,
   isRequired = true,
-  setTransferInfo,
   isPayment = false,
+  isCheckedId,
+  setIsCheckedId,
+  setTransferInfo,
 }) {
-  const [receiverId, setReceiverId] = useState("");
-  const [isCheckedId, setIsCheckedId] = useState(false);
   const { user } = useAuth();
 
   const textInputLabel = isRequired
     ? <>{label} <CgAsterisk className={styles.requiredIcon} /></>
     : label;
 
+
   // 받는 회원 아이디 체크
   const handleCheckId = async () => {
     try {
-      if (receiverId === user.id) {
+      if (id === user.id) {
         alert("자기 자신에게 송금할 수 없습니다.");
+
+        setTransferInfo((prev) => ({
+          ...prev,
+          receiverId: "",
+        }));
+
         return;
       }
 
-      if (!receiverId) {
+      if (!id) {
         alert("받는 회원의 아이디를 입력하세요.");
         return;
       }
 
       // 임시로 회원가입 시 사용한 아이디 중복 체크를 사용함.
       // -> 얘는 탈퇴 또는 정지된 회원은 걸러주지 않기 때문에 나중에 바꿔야할 듯?
-      const result = await checkDuplicateId(receiverId);
+      const result = await checkDuplicateId(id);
 
       if (result.data) {
         setIsCheckedId(true);
@@ -56,11 +63,7 @@ function ReceiverInput({
   }
 
   const handleChangeId = (e) => {
-    const { value } = e.target;
-
     setIsCheckedId(false);
-    setReceiverId(value);
-
     handleSetField(e, setTransferInfo);
   }
 

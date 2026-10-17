@@ -1,5 +1,6 @@
 package com.ss_dam.point.service;
 
+import com.ss_dam.auth.login.model.response.AuthProfile;
 import com.ss_dam.auth.member.rating.service.MemberRatingService;
 import com.ss_dam.point.dao.UserPointDao;
 import com.ss_dam.point.enums.PointReason;
@@ -11,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @Service
 public class UserPointServiceImpl implements UserPointService {
@@ -54,13 +57,15 @@ public class UserPointServiceImpl implements UserPointService {
     return false;
   }
 
-  // 포인트 송금 - 결제 시
+  // 포인트 송금 - 거래글에 대한 결제 시
   @Transactional
   @Override
   public boolean paymentPoint(PaymentPoint paymentPoint) {
-    int payAmount = paymentPoint.getPoint();
+    int payAmount = paymentPoint.getAmount();
     Long buyerCode = paymentPoint.getBuyerCode();
     int buyBeforePoint = pointDao.getPointBalance(buyerCode);
+    Long sellerCode = pointDao.findSellerCodeByProdCode(paymentPoint.getProdCode());
+    paymentPoint.setSellerCode(sellerCode);
 
     if (buyBeforePoint < payAmount) {
       throw new RuntimeException("구매자의 포인트 잔액이 부족합니다.");
@@ -82,9 +87,11 @@ public class UserPointServiceImpl implements UserPointService {
     buyerLog.setType(PointType.USED);
     buyerLog.setAmount(payAmount);
     buyerLog.setReason(PointReason.MARKET_PURCHASE);
+    buyerLog.setProdCode(paymentPoint.getProdCode());
     pointDao.chargePointLog(buyerLog);
 
-    Long sellerCode = paymentPoint.getSellerCode();
+
+    // 판매자 포인트 적립 및 로그 기록
     int sellBeforePoint = pointDao.getPointBalance(sellerCode);
 
     // 적립 후 잔액 = 기존 잔액 + 적립 금액
@@ -105,6 +112,7 @@ public class UserPointServiceImpl implements UserPointService {
     sellerLog.setType(PointType.SAVED);
     sellerLog.setAmount(payAmount);
     sellerLog.setReason(PointReason.MARKET_SALES);
+    sellerLog.setProdCode(paymentPoint.getProdCode());
     pointDao.chargePointLog(sellerLog);
 
     return true;
@@ -202,6 +210,13 @@ public class UserPointServiceImpl implements UserPointService {
       return true;
     }
     return false;
+  }
+
+  @Override
+  public List<PointLog> loadPointHistory(AuthProfile loginUser) {
+    Long memCode = loginUser.getCode();
+
+    return pointDao.loadPointHistory(memCode);
   }
 
 }
