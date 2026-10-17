@@ -1,8 +1,7 @@
 package com.ss_dam.common.chat.model.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ss_dam.auth.login.model.response.MemberProfile;
-import com.ss_dam.market.model.response.UserProductView;
+import com.ss_dam.market.model.response.ProductDetail;
 
 public class ChatRoomInfo {
   // 채팅방 타입 (거래/1:1/관리자)
@@ -12,8 +11,8 @@ public class ChatRoomInfo {
   private MemberProfile otherMemberProfile;
 
   // 거래글일 경우 요약 정보 (type == DEAL일 때만 사용)
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  private UserProductView productInfo;
+  //  @JsonInclude(JsonInclude.Include.NON_NULL)
+  private ProductDetail productInfo;
 
 
   // GETTER, SETTER
@@ -25,11 +24,11 @@ public class ChatRoomInfo {
     this.otherMemberProfile = otherMemberProfile;
   }
 
-  public UserProductView getProductInfo() {
+  public ProductDetail getProductInfo() {
     return productInfo;
   }
 
-  public void setProductInfo(UserProductView productInfo) {
+  public void setProductInfo(ProductDetail productInfo) {
     this.productInfo = productInfo;
   }
 

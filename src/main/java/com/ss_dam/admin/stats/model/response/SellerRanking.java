@@ -14,6 +14,9 @@ public class SellerRanking {
   private long totalSalesAmount; // 조회 기간에 완료한 거래 금액의 합계 (원)
   private Double salesChangeRate; // 이전 기간 대비 거래 금액 증감률 (20.0 = 20% 증가, 이전 금액이 0이면 null)
 
+  private String sellerName;
+  private long previousSalesAmount;
+
   //GETTER & SETTER
 
   public int getRank() {
@@ -54,6 +57,22 @@ public class SellerRanking {
 
   public void setSalesChangeRate(Double salesChangeRate) {
     this.salesChangeRate = salesChangeRate;
+  }
+
+  public String getSellerName() {
+      return sellerName;
+  }
+
+  public void setSellerName(String sellerName) {
+      this.sellerName = sellerName;
+  }
+
+  public long getPreviousSalesAmount() {
+      return previousSalesAmount;
+  }
+
+  public void setPreviousSalesAmount(long previousSalesAmount) {
+      this.previousSalesAmount = previousSalesAmount;
   }
 
 

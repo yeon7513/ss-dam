@@ -24,7 +24,7 @@
     width: 100%;
 
     /* 상단 메뉴 링크 영역 */
-    &:first-child {
+    &.links {
       @include mix.flex(row, space-between, center);
 
       width: 100%;
@@ -50,7 +50,7 @@
     }
 
     /* 검색 상자 영역 */
-    &:nth-child(2) {
+    &.search {
       @include mix.flex;
 
       width: 100%;
@@ -98,7 +98,7 @@
     }
 
     /* 채팅방 목록 영역 */
-    &:last-child {
+    &.chatRooms {
       flex: 1;
 
       min-height: 0;

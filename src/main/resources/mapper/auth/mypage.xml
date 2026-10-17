@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mypage">
+
+<!-- 참여 현황 - 멤버 프로필 -->
+<!-- 기존 회원 데이터와 프로필 이미지를 조회하고, COMPLETED 상태인 참여 기록을 세어주는 방식-->
+  <select id="searchProfile"
+          parameterType="map"
+          resultType="com.ss_dam.auth.member.Member">
+    SELECT
+      m.CODE,
+      m.NAME,
+      m.ID,
+      m.RATING,
+      m.POINT,
+      DATE_FORMAT(m.CREATED_AT, '%Y.%m.%d') AS createdAt,
+      (
+        SELECT i.PATH
+        FROM IMAGES i
+        WHERE i.TARGET_CODE = m.CODE
+          AND i.TYPE = 'profile'
+          AND i.DELETE_YN = 0
+        ORDER BY i.ORDER_SEQ ASC, i.PATH ASC
+        LIMIT 1
+      ) AS path
+    FROM MEMBER_ACCOUNT m
+    WHERE m.CODE = #{memberCode}
+      AND m.DELETE_YN = 0
+  </select>
+
+  <select id="countCompletedChallenges"
+          parameterType="map"
+          resultType="long">
+    SELECT COUNT(DISTINCT ce.CHAL_CODE)
+    FROM CHALLENGE_ENTRY ce
+    WHERE ce.MEM_CODE = #{memberCode}
+      AND ce.STATUS = 'COMPLETED'
+      AND ce.CANCELED_AT IS NULL
+      AND ce.DELETE_YN = 0
+  </select>
+
+<!-- 챌린지 랭킹 : 전체 유저 대상 완료한 챌린지 수 기준, 공동 순위 적용-->
+<!-- 전체 회원의 순위를 먼저 계산한 뒤 내 회원 번호로 조회-->
+  <select id="searchChallengeRanking"
+        parameterType="map"
+        resultType="long">
+  SELECT ranked.ranking
+  FROM (
+    SELECT
+      m.CODE AS memberCode,
+      RANK() OVER (
+        ORDER BY COALESCE(completed.completedCount, 0) DESC
+      ) AS ranking
+    FROM MEMBER_ACCOUNT m
+    LEFT JOIN (
+      SELECT
+        ce.MEM_CODE,
+        COUNT(DISTINCT ce.CHAL_CODE) AS completedCount
+      FROM CHALLENGE_ENTRY ce
+      WHERE ce.STATUS = 'COMPLETED'
+        AND ce.CANCELED_AT IS NULL
+        AND ce.DELETE_YN = 0
+      GROUP BY ce.MEM_CODE
+    ) completed
+      ON completed.MEM_CODE = m.CODE
+    WHERE m.DELETE_YN = 0
+  ) ranked
+  WHERE ranked.memberCode = #{memberCode}
+</select>
+
+</mapper>

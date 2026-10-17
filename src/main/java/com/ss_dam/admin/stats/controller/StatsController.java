@@ -203,4 +203,16 @@ public class StatsController {
           ApiResponse.success("챌린지 인기 순위 조회 성공", result)
       );
   }
+
+  // 관리자 대시보드 운영현황
+  // GET /api/admin/stats/sellers/top5
+  // 우수 판매자 TOP 5
+  @GetMapping("/sellers/top5")
+  public ResponseEntity<ApiResponse<List<SellerRanking>>> getMonthlyTopSellers() {
+      List<SellerRanking> result = statsService.getMonthlyTopSellers();
+
+      return ResponseEntity.ok(
+          ApiResponse.success("월간 우수 판매자 TOP 5 조회 성공", result)
+      );
+  }
 }

@@ -4,14 +4,11 @@ import ChatMessages from "./chat-messages/ChatMessages.jsx";
 import Button from "../common/button/Button.jsx";
 
 import { useLoadData } from "../../hooks/useLoadData.js";
-import {
-  connectWebSocket,
-  disconnectWebSocket,
-  sendMessage,
-  subscribeToChatRoom,
-} from "../../utils/webSocketService.js";
+import { connectWebSocket, disconnectWebSocket, sendMessage, subscribeToChatRoom } from "../../utils/webSocketService.js";
 
 import styles from "./ChatContainer.module.scss";
+import ImageBox from "../common/image-box/ImageBox.jsx";
+import { useNavigate } from "react-router-dom";
 
 /**
  * 채팅 컨테이너 컴포넌트
@@ -21,6 +18,10 @@ function ChatContainer({ roomId }) {
   const [messages, setMessages] = useState([]);
   const [roomInfo, setRoomInfo] = useState(null);
   const [productInfo, setProductInfo] = useState(null);
+
+  console.log(productInfo);
+
+  const navigate = useNavigate();
 
   /* 웹소켓 구독 참조 설정 */
   const subscriptionRef = useRef(null);
@@ -40,9 +41,7 @@ function ChatContainer({ roomId }) {
       }
       if (chatData.info) {
         setRoomInfo(chatData.info);
-      }
-      if (chatData.productInfo) {
-        setProductInfo(chatData.productInfo);
+        setProductInfo(chatData.info.productInfo);
       }
     }
   }, [chatData]);
@@ -106,33 +105,45 @@ function ChatContainer({ roomId }) {
       {/* 상단 정보 헤더 영역 */}
       <div className={styles.header}>
         {/* 제품 대표 이미지 영역 */}
-        <img className={styles.productImage} />
+        <ImageBox
+          className={styles.productImage}
+          src={productInfo?.imagePaths[0] ?? null}
+        />
 
         {/* 게시글 정보 영역 (클릭 시 상세 이동되면 좋을 듯) */}
         <div className={styles.productWrap}>
           {/* 게시글 제목 영역 */}
           <span className={styles.productTitle}>
-            이사를 가게 되어서 가구 반값처분합니다 (!!!다시없을 기회!!!)
+            {productInfo?.title}
           </span>
 
           {/* 사용자 아이디 영역 (우측 배치) */}
           <div className={styles.userWrap}>
-            <span className={styles.userId}>ubunddu123</span>
+            <span className={styles.userId}>
+              {productInfo?.memberProfile.id}
+            </span>
           </div>
         </div>
 
         {/* 제품 가격 영역 */}
         <span className={styles.productPrice}>
-          1,500,000
+          {productInfo?.price.toLocaleString()}
           <span className={styles.point}> 그루</span>
         </span>
 
         {/* 송금 버튼 영역 */}
         <Button
           btnStyle="fill"
-          // action="danger"
           size="lg"
           className={styles.remitButton}
+          onClick={() => navigate("/mypage/point/transfer", {
+            state: {
+              receiverCode: productInfo?.memberProfile.code,
+              receiverId: productInfo?.memberProfile.id,
+              targetProductCode: productInfo?.code,
+              amount: productInfo?.price,
+            },
+          })}
         >
           송금하기
         </Button>

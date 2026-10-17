@@ -1,0 +1,152 @@
+@use "../../scss/variables.scss" as v;
+@use "../../scss/mixin.scss" as mix;
+
+/* 좌측 메뉴 | 중앙 콘텐츠 (명세서 비율 약 17 : 83) */
+.wrap {
+  @include mix.wrap;
+  align-items: flex-start;
+}
+
+/* sticky는 바깥 박스에 (부모가 flex-start라서 안쪽에 걸면 안 먹음) */
+.sideNavWrap {
+  position: sticky;
+  top: 2rem;
+  align-self: flex-start;
+  flex: 0 0 17%;
+  min-width: 15rem;
+}
+
+.container {
+  flex: 1;
+  min-width: 0;
+}
+
+/* 정보 변경·회원 탈퇴 패널을 사이드바 옆 영역의 가로·세로 중앙에 배치 */
+.editLayout {
+  align-items: stretch;
+
+  > .content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* Sidebar 기본값(250px, 100vh) 해제 후 패널 모양 */
+.nav {
+  width: auto;
+  height: fit-content;
+  min-height: fit-content;
+  overflow: hidden;
+  border: 1px solid v.$grayscale-20;
+  border-radius: 8px;
+}
+
+/* 프로필 영역 */
+.profile {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid v.$grayscale-20;
+}
+
+.utils {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: 0.5rem;
+  color: v.$grayscale-60;
+  font-size: 1rem;
+
+  a,
+  button {
+    display: inline-flex;
+
+    &:hover {
+      color: v.$primary-50;
+    }
+  }
+}
+
+.bell {
+  position: relative;
+}
+
+.dot {
+  position: absolute;
+  top: -0.5rem;
+  right: -0.5rem;
+  min-width: 1rem;
+  height: 1rem;
+  padding: 0 0.25rem;
+  border-radius: 0.5rem;
+  background-color: v.$dan-color;
+  color: v.$color-white;
+  font-size: 0.625rem;
+  font-style: normal;
+  line-height: 1rem;
+  text-align: center;
+}
+
+/* 메뉴 */
+.group {
+  border-bottom: 1px solid v.$grayscale-20;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.header {
+  @include mix.flex($jc: space-between);
+  width: 100%;
+  height: 3rem;
+  padding: 0 1.25rem;
+  color: v.$grayscale-90;
+  font-size: 0.9375rem;
+  font-weight: 700;
+
+  &:hover {
+    background-color: v.$grayscale-5;
+  }
+
+  &.active {
+    background-color: v.$grayscale-5;
+  }
+}
+
+.subMenu {
+  a {
+    @include mix.flex($jc: flex-start);
+    height: 2.75rem;
+    padding: 0 1.25rem 0 2rem; /* 상위보다 들여쓰기 */
+    color: v.$grayscale-90;
+    font-size: 0.9375rem;
+
+    &:hover {
+      background-color: v.$grayscale-5;
+    }
+
+    &.subActive {
+      background-color: v.$grayscale-5;
+      color: v.$primary-50;
+      font-weight: 600;
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .wrap {
+    flex-direction: column;
+  }
+
+  .editLayout > .content {
+    width: 100%;
+  }
+
+  .sideNavWrap {
+    position: static;
+    flex: none;
+    width: 100%;
+    min-width: 0;
+  }
+}
+

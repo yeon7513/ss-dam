@@ -322,8 +322,10 @@
     <result property="totalSalesAmount"
             column="totalSalesAmount" />
 
+    <result property="sellerName" column="sellerName" />
+
     <association property="memberProfile"
-                 javaType="com.ss_dam.auth.login.model.response.MemberProfile">
+                 javaType="MemberProfile">
 
       <id property="id" column="sellerId" />
       <result property="code" column="memberCode" />
@@ -343,6 +345,7 @@
     sales.sellerId,
     sales.completedTradeCount,
     sales.totalSalesAmount,
+    m.NAME AS sellerName,
     m.CODE AS memberCode,
     m.RATING AS memberRating,
     (

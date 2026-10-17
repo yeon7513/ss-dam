@@ -1,15 +1,18 @@
-import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
 import { IoHeartSharp } from "react-icons/io5";
+import { useNavigate, useParams } from "react-router-dom";
 
+import { Link } from "react-router-dom";
+
+import Button from "../../../components/common/button/Button.jsx";
+import Slide from "../../../components/common/slide/Slide.jsx";
 import MarketSideNav from "../../../components/market/side-nav/MarketSideNav.jsx";
 import MarketBreadcrumb from "../market-breadcrumb/MarketBreadcrumb.jsx";
-import Slide from "../../../components/common/slide/Slide.jsx";
-import Button from "../../../components/common/button/Button.jsx";
 
 import { useLoadData } from "../../../hooks/useLoadData.js";
 import { useSubmitData } from "../../../hooks/useSubmitData.js";
 import { formatCreatedAt } from "../../../utils/formatDate.js";
+
+import { useAuth } from "../../../context/AuthContext.jsx";
 
 import styles from "./ProductDetail.module.scss";
 
@@ -20,6 +23,14 @@ const ProductDetail = () => {
   /* 상품 상세 정보 조회 */
   const { data, loading, error } = useLoadData(`/api/market/products/${code}`);
   const detail = data || {};
+
+  const { user } = useAuth();
+
+  const isOwner =
+  user?.role === "ROLE_MEMBER" &&
+  user?.code != null &&
+  detail.memberProfile?.code != null &&
+  String(user.code) === String(detail.memberProfile.code);
 
   /* 카테고리 목록 조회 */
   const { data: categoriesData } = useLoadData("/api/market/categories");
@@ -157,31 +168,45 @@ const ProductDetail = () => {
               </div>
             </div>
 
-            {/* 게시글 관리 버튼 영역 */}
-            <div className={styles.actionButtons}>
-              <Button
-                btnStyle="word"
-                action="submit"
-                size="sm"
-                onClick={() => navigate(`/market/edit/${code}`)}
-              >
-                수정
-              </Button>
+            {/* 게시물 신고 - 마켓 */}
+            {!isOwner && (
+              <div className={styles.reportRow}>
+                <Link
+                  to={`/market/${code}/report`}
+                  className={styles.reportLink}
+                >
+                  게시물 신고하기
+                </Link>
+              </div>
+            )}
 
-              <Button
-                btnStyle="word"
-                action="danger"
-                size="sm"
-                onClick={handleClickDeletePost}
-              >
-                삭제
-              </Button>
-            </div>
+
+            {/* 본인 게시글에서만 수정·삭제 버튼 표시 */}
+            {isOwner && (
+              <div className={styles.actionButtons}>
+                <Button
+                  btnStyle="word"
+                  action="submit"
+                  size="sm"
+                  onClick={() => navigate(`/market/edit/${code}`)}
+                >
+                  수정
+                </Button>
+
+                <Button
+                  btnStyle="word"
+                  action="danger"
+                  size="sm"
+                  onClick={handleClickDeletePost}
+                >
+                  삭제
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>
     </main>
   );
 };
-
 export default ProductDetail;

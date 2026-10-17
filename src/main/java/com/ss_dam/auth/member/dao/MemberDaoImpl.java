@@ -37,5 +37,31 @@ public class MemberDaoImpl implements MemberDao {
   public int countById(String id) {
     return sql.selectOne("member.countById", id);
   }
+
+  // 수정·탈퇴 대상 조회 및 잠금
+  @Override
+  public Long findMemberCodeForUpdate(Long memberCode) {
+    return sql.selectOne(
+        "member.findMemberCodeForUpdate", memberCode
+    );
+  }
+
+  // 회원 정보 수정
+  @Override
+  public int updateMember(Member member) {
+    return sql.update("member.updateMember", member);
+  }
+
+  // 회원 탈퇴
+  @Override
+  public int deleteMember(Long memberCode) {
+    return sql.update("member.deleteMember", memberCode);
+  }
+
+  // 기존 프로필 이미지 논리 삭제
+  @Override
+  public int deleteProfileImages(Long memberCode) {
+    return sql.update("member.deleteProfileImages", memberCode);
+  }
   
 }

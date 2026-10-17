@@ -40,4 +40,7 @@ public interface StatsService {
         LocalDate from, LocalDate to
     );
 
+    // TOP5 우수 판매자 월간 조회
+    List<SellerRanking> getMonthlyTopSellers();
+
 }

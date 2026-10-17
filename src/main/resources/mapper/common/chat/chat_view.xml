@@ -17,7 +17,7 @@
       </collection>
 
       <!-- 거래글 정보 -->
-      <collection property="productInfo" javaType="UserProductView" columnPrefix="product_" autoMapping="true">
+      <collection property="productInfo" javaType="ProductDetail" columnPrefix="product_" autoMapping="true">
         <id property="code" column="code" />
       </collection>
     </collection>
@@ -103,6 +103,12 @@
     (requester_code = #{requesterCode} AND responder_code = #{responderCode})
     OR (requester_code = #{responderCode} AND responder_code = #{requesterCode})
     )
+  </select>
+
+  <select id="findChatRoomByRoomId" resultType="ChatRoomRequest">
+    SELECT room_id, type, target_code, requester_code, responder_code
+    FROM CHAT_ROOM
+    WHERE room_id = #{roomId}
   </select>
 
   <!-- 채팅방 상세 내역 조회 (과거 메시지 포함) -->
