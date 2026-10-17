@@ -1,4 +1,5 @@
-import React from "react";
+import { useId, useState } from "react";
+import { HiChevronDown } from "react-icons/hi";
 import { useLocation, useNavigate } from "react-router-dom";
 import Button from "../../common/button/Button.jsx";
 import { useAuth } from "../../../context/AuthContext.jsx";
@@ -7,6 +8,8 @@ import styles from "./MarketSideNav.module.scss";
 function MarketSideNav({ categories, isLoggedIn, onSearch }) {
   const navigate = useNavigate();
   const location = useLocation();
+  const menuId = useId();
+  const [expandedCategories, setExpandedCategories] = useState({});
 
   /* 인증 상태 조회 */
   const auth = useAuth();
@@ -79,19 +82,44 @@ function MarketSideNav({ categories, isLoggedIn, onSearch }) {
           const isActive =
             !isAllSelected &&
             (String(category.code) === String(selectedCategory) || isSubActive);
+          const hasChildren = category.depth?.length > 0;
+          const isExpanded = expandedCategories[category.code] ?? isActive;
+          const subMenuId = `${menuId}-${category.code}`;
 
           return (
             <li key={category.code}>
+              <div className={styles.categoryRow}>
               <button
                 className={isActive ? styles.active : ""}
                 type="button"
-                onClick={(e) => handleClickCategory(e, category.code)}
+                aria-expanded={hasChildren ? isExpanded : undefined}
+                aria-controls={hasChildren ? subMenuId : undefined}
+                onClick={(e) => {
+                  setExpandedCategories((previous) => ({ ...previous, [category.code]: !isExpanded }));
+                  handleClickCategory(e, category.code);
+                }}
               >
                 {category.name}
               </button>
+              {hasChildren && (
+                <button
+                  className={`${styles.toggle} ${isActive ? styles.active : ""}`}
+                  type="button"
+                  aria-label={`${category.name} 소분류 ${isExpanded ? "접기" : "펼치기"}`}
+                  aria-expanded={isExpanded}
+                  aria-controls={subMenuId}
+                  onClick={() => setExpandedCategories((previous) => ({
+                    ...previous,
+                    [category.code]: !isExpanded,
+                  }))}
+                >
+                  <HiChevronDown className={isExpanded ? styles.expandedArrow : ""} aria-hidden="true" />
+                </button>
+              )}
+              </div>
 
               {/* 서브 메뉴 영역 */}
-              <ul className={styles.subMenu}>
+              <ul id={subMenuId} className={styles.subMenu} hidden={!isExpanded}>
                 {category.depth?.map((sub) => (
                   <li key={sub.code}>
                     <button
