@@ -25,18 +25,18 @@
   min-width: 0;
 
   .breadcrumb {
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
   }
 
   /* 헤더 영역 */
   .headerArea {
     margin-bottom: 1.5rem;
-    padding-bottom: 19px;
+    padding-bottom: 1rem;
     border-bottom: 1px solid v.$grayscale-20;
 
     .statusBadge {
       display: inline-block;
-      margin-bottom: 0.625rem;
+      margin-bottom: 0.5rem;
       padding: 4px 12px;
       border-radius: 14px;
       font-size: 0.75rem;
