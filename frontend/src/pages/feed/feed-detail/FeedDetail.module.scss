@@ -1,56 +1,57 @@
 @use "../../../scss/variables.scss" as v;
 @use "../../../scss/mixin.scss" as mix;
 
+/* 작성 날짜 및 신고 영역 */
 .dateRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  @include mix.flex($jc: space-between, $ai: center);
   flex-wrap: wrap;
-  gap: 8px 16px;
   width: 100%;
-  margin-bottom: 12px;
+  margin-bottom: 1rem;
 }
 
-.reportLink {
-  margin-left: auto;
-  color: #777;
-  font-size: 13px;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  &:hover { color: #2e9377; }
-  &:focus-visible { outline: 2px solid #2e9377; outline-offset: 3px; }
-}
-
+/* 피드 상세 모달 */
 .feedDetail {
+  @include mix.flex($fd: column);
+  height: 85vh;
   padding: 32px;
+  outline: none;
 
+  &:focus,
+  &:focus-visible {
+    outline: none;
+  }
+
+  /* 헤더 영역 */
   .header {
     @include mix.flex($jc: space-between, $ai: flex-start);
+    flex-shrink: 0;
+    width: 100%;
     margin-bottom: 1.5rem;
 
-    // 챌린지명 & 제목
+    /* 제목 상자 */
     .titleBox {
-
+      /* 챌린지명 */
       .challengeName {
         display: block;
-        margin-bottom: 0.5rem;
         width: fit-content;
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+        font-weight: 500;
         color: v.$point-60;
-        font-weight: 700;
       }
 
+      /* 제목 */
       .title {
-        font-size: 1.5rem;
+        font-size: 1.8rem;
       }
-
     }
 
-    // 닫기 버튼
+    /* 닫기 버튼 */
     .closeModalButton {
-      opacity: 0.7;
-      background-color: v.$grayscale-90;
-      color: #fff;
+      background-color: v.$primary-50;
       border-radius: 50%;
+      opacity: 0.7;
+      color: v.$color-white;
       transition: 0.2s;
 
       &:hover {
@@ -62,59 +63,93 @@
         font-size: 2rem;
       }
     }
-
   }
 }
 
+/* 하단 컨테이너 */
 .container {
-  position: relative;
+  @include mix.flex;
+  flex: 1;
+  min-height: 0;
+  gap: 1.5rem;
   @include mix.wrap($pd: 0);
-  gap: 24px;
-  outline: 1px dotted red;
 
-  // 등록한 이미지
+  /* 이미지 슬라이드 영역 */
   .images {
-    position: sticky;
-    top: 2rem;
+    @include mix.flex($fd: column, $jc: flex-start, $ai: flex-start);
+    align-self: flex-start;
+    flex: 0 0 calc(50% - 0.75rem);
     width: 50%;
-    height: 540px;
+    height: 33.75rem;
+    max-height: 100%;
     border: 1px solid v.$grayscale-20;
   }
 }
 
-// 실제 본문 내용
+/* 피드 상세 내용 영역 */
 .content.detail {
   flex: 1;
-  padding-top: 1rem;
+  min-width: 0;
+  height: 100%;
+  padding-top: 0;
+  padding-right: 16px;
+  overflow-y: auto;
 
+  /* 본문 내용 */
   > p {
-    margin: 1rem 0 2rem;
-    outline: 1px dotted red;
+    padding: 32px 0;
+    font-size: 1.1rem;
   }
 
+  /* 해시태그 목록 */
   .hashtags {
     @include mix.flex($jc: flex-start);
-    gap: 0.5rem;
     flex-wrap: wrap;
+    gap: 0.5rem;
+
+    > * {
+      font-size: 0.9rem;
+    }
   }
 
+  /* 제어 버튼 그룹 */
   .controlButtonGroup {
     @include mix.flex($jc: flex-end);
-    gap: 0.5rem;
   }
 }
 
-// 댓글
+/* 피드 메타 정보 */
+.meta {
+  /* 피드 통계 정보 */
+  .statsGroup {
+    @include mix.flex($jc: flex-start, $ai: center);
+    gap: 0.3rem;
+    margin-bottom: 1rem;
+
+    > span {
+      @include mix.flex($jc: flex-start, $ai: center);
+      gap: 0.3rem;
+      font-size: 0.9rem;
+      color: v.$grayscale-70;
+
+      > svg {
+        font-size: 1rem;
+      }
+    }
+  }
+}
+
+/* 댓글 영역 */
 .content.comment {
   margin-top: 3rem;
 
-  // 댓글 등록
+  /* 댓글 작성 영역 */
   .postComment {
-    @include mix.flex($jc: start);
+    @include mix.flex($jc: flex-start);
     gap: 0.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0;
 
-    // 입력 필드
+    /* 입력 필드 */
     .field {
       flex: 1;
 
@@ -123,9 +158,9 @@
       }
     }
 
-    // 댓글 등록 버튼
+    /* 댓글 등록 버튼 */
     .registerButton {
-      width: 100px; // rem으로 바꿀 것!!
+      width: 6.25rem;
     }
   }
 }

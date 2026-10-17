@@ -5,7 +5,7 @@
 .wrap {
   @include mix.wrap;
   display: grid;
-  grid-template-columns: 19rem 1fr 20rem;
+  grid-template-columns: 20rem 1fr 20rem;
   align-items: flex-start; /* sticky 동작을 위해 필수 유지 */
   gap: 2rem;
 

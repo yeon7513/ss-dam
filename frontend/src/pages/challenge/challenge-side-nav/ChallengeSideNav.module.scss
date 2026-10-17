@@ -3,47 +3,44 @@
 
 .wrap {
   position: relative;
-  width: 20%; // FeedSideNav와 같은 폭
 }
 
 .challengeNav {
-  position: sticky; // 스크롤해도 따라오게
-  top: 2rem;
   width: auto; // Sidebar 기본 250px 해제
   height: fit-content;
   min-height: fit-content; // Sidebar 기본 100vh 해제
-  padding: 1.25rem;
+  padding: 1.2rem;
   border: 1px solid v.$grayscale-20;
 
   @include mix.flex($fd: column, $ai: flex-start);
-  gap: 1.25rem;
+  gap: 1rem;
 
   .header {
-    width: 100%;
-    padding-bottom: 1.25rem;
+    width: 100%; // 아래 구분선 길이 조절하는 너비임.
+    padding-bottom: 1rem;
     border-bottom: 1px solid v.$grayscale-20;
 
     h3 {
-      font-size: 1.25rem;
-      font-weight: 600;
+      font-size: 1.3rem;
+      font-weight: 700;
     }
   }
 
   .list {
-    width: 100%;
+    width: 100%; // 호버 시 배경색 조절하는 너비임.
 
     > ul {
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 0.5rem;
     }
   }
 
   .item {
     @include mix.flex($jc: flex-start);
     gap: 0.75rem;
-    padding: 0.75rem;
-    border-radius: 8px;
+    padding: 0.7rem;
+    border-radius: 0.3rem;
 
     &:hover {
       background-color: v.$point-5;
@@ -51,9 +48,9 @@
   }
 
   .thumb {
-    flex: 0 0 3.5rem;
-    height: 3.5rem;
-    border-radius: 8px;
+    flex: 0 0 4rem;
+    height: 4rem;
+    border-radius: 0.3rem;
     overflow: hidden;
   }
 
@@ -61,27 +58,30 @@
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
-    min-width: 0;
+    //min-width: 0;
   }
 
   .rank {
-    color: v.$primary-50;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     font-weight: 700;
+    color: v.$primary-50;
   }
   .title {
     @include mix.textLine(1);
-    color: v.$grayscale-100;
-    font-weight: 600;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: v.$grayscale-90;
   }
   .count {
-    color: v.$grayscale-50;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: v.$grayscale-60;
   }
   .empty {
-    padding: 2rem 0;
+    padding: 1.5rem 0;
+    font-size: 1rem;
     text-align: center;
-    color: v.$grayscale-50;
+    color: v.$grayscale-70;
   }
 }
 

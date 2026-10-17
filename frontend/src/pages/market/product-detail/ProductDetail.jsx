@@ -142,70 +142,70 @@ const ProductDetail = () => {
           {/* 상품 상세 정보 영역 */}
           <div className={styles.productDetails}>
             <div className={styles.detailMain}>
-            {/* 상단 헤더 영역 */}
-            <div className={styles.headerRow}>
-              {/* 제목 정보 영역 */}
-              <div className={styles.titleSection}>
-                {/* 상품 제목 영역 */}
-                <div className={styles.title}>
-                  <h2>{detail.title}</h2>
+              {/* 상단 헤더 영역 */}
+              <div className={styles.headerRow}>
+                {/* 제목 정보 영역 */}
+                <div className={styles.titleSection}>
+                  {/* 상품 제목 영역 */}
+                  <div className={styles.title}>
+                    <h2>{detail.title}</h2>
+                  </div>
+
+                  {/* 작성일시 영역 */}
+                  <div className={styles.dateInfo}>
+                    <span>{formatCreatedAt(detail.createdAt)}</span>
+                  </div>
                 </div>
 
-                {/* 작성일시 영역 */}
-                <div className={styles.dateInfo}>
-                  <span>{formatCreatedAt(detail.createdAt)}</span>
+                {/* 거래 신청 버튼 영역 */}
+                <div className={styles.chatButton}>
+                  <Button
+                    btnStyle="fill"
+                    action="submit"
+                    onClick={handleTradeRequest}
+                  >
+                    채팅으로 거래 신청
+                  </Button>
                 </div>
               </div>
 
-              {/* 거래 신청 버튼 영역 */}
-              <div className={styles.chatButton}>
-                <Button
-                  btnStyle="fill"
-                  action="submit"
-                  onClick={handleTradeRequest}
-                >
-                  채팅으로 거래 신청
-                </Button>
+              {/* 본문 내용 영역 */}
+              <ProductDescription key={code} content={detail.content} />
+
+              {/* 하단 메타 정보 영역 */}
+              <div className={styles.metaRow}>
+                {/* 반응 정보 영역 */}
+                <ul>
+                  <li>
+                    Pick <IoHeartSharp />
+                    {detail.countPick}
+                  </li>
+                  <li>채팅 {detail.countChatRoom}</li>
+                  <li>조회수 {detail.hitcount}</li>
+                </ul>
+
+                {/* 가격 정보 영역 */}
+                <div className={styles.priceInfo}>
+                  <h3>
+                    {detail.price?.toLocaleString()} <span>그루</span>
+                  </h3>
+                </div>
               </div>
-            </div>
-
-            {/* 본문 내용 영역 */}
-            <ProductDescription key={code} content={detail.content} />
-
-            {/* 하단 메타 정보 영역 */}
-            <div className={styles.metaRow}>
-              {/* 반응 정보 영역 */}
-              <ul>
-                <li>
-                  Pick <IoHeartSharp />
-                  {detail.countPick}
-                </li>
-                <li>채팅 {detail.countChatRoom}</li>
-                <li>조회수 {detail.hitcount}</li>
-              </ul>
-
-              {/* 가격 정보 영역 */}
-              <div className={styles.priceInfo}>
-                <h3>
-                  {detail.price?.toLocaleString()} <span>그루</span>
-                </h3>
-              </div>
-            </div>
-
             </div>
 
             {/* 게시글 신고 - 마켓 */}
             {!isOwner && (
               <div className={styles.reportRow}>
-                <Link
+                <Button
+                  btnStyle="word"
+                  action="danger"
                   to={`/market/${code}/report`}
                   className={styles.reportLink}
                 >
                   게시글 신고하기
-                </Link>
+                </Button>
               </div>
             )}
-
 
             {/* 본인 게시글에서만 수정·삭제 버튼 표시 */}
             {isOwner && (

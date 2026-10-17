@@ -47,7 +47,9 @@ const Challenge = () => {
 
   return (
     <main className={styles.wrap}>
-      <ChallengeSideNav challenges={popularData || []} />
+      <aside className={styles.sideNavWrap}>
+        <ChallengeSideNav challenges={popularData || []} />
+      </aside>
 
       <div className={styles.container}>
         <div className={styles.filterBar}>

@@ -1,5 +1,5 @@
-@use '../../../scss/variables' as v;
-@use '../../../scss/mixin' as mix;
+@use "../../../scss/variables" as v;
+@use "../../../scss/mixin" as mix;
 
 // 공통
 .profileImage {
@@ -25,7 +25,6 @@
     font-size: 0.75rem;
     color: v.$point-60;
   }
-
 }
 
 .more {
@@ -71,7 +70,6 @@
   }
 }
 
-
 // 미니멀 버전
 .minimalProfile {
   @include mix.flex;
@@ -85,5 +83,4 @@
   .name {
     @include mix.flex;
   }
-
 }
