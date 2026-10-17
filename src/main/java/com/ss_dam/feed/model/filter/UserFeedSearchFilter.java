@@ -17,6 +17,9 @@ public class UserFeedSearchFilter extends PageQuery {
   private Boolean myFeedsOnly; // 내가 작성한 피드만
   private Boolean myLikesOnly; // 내가 '좋아요'한 피드만
 
+  // 로그인한 회원 번호 (서버에서 세션 값으로 세팅, 개수 조회 쿼리용)
+  private Long memCode;
+
   public String getSortTarget() {
     return sortTarget;
   }
@@ -55,6 +58,14 @@ public class UserFeedSearchFilter extends PageQuery {
 
   public void setMyLikesOnly(Boolean myLikesOnly) {
     this.myLikesOnly = myLikesOnly;
+  }
+
+   public Long getMemCode() {
+    return memCode;
+  }
+
+  public void setMemCode(Long memCode) {
+    this.memCode = memCode;
   }
 
 }

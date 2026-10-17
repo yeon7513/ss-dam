@@ -1,5 +1,8 @@
 package com.ss_dam.feed.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import com.ss_dam.common.pager.PageQuery;
 import com.ss_dam.feed.model.core.FeedHashtag;
 import com.ss_dam.feed.model.request.FeedCreate;
@@ -7,9 +10,6 @@ import com.ss_dam.feed.model.request.FeedUpdate;
 import com.ss_dam.feed.model.response.FeedDetail;
 import com.ss_dam.feed.model.response.FeedEditView;
 import com.ss_dam.feed.model.response.UserFeedView;
-
-import java.util.List;
-import java.util.Map;
 
 public interface UserFeedDao {
   List<UserFeedView> loadFeeds(Map<String, Object> params);
@@ -33,4 +33,6 @@ public interface UserFeedDao {
   int countFeedsByChallenge(int chalCode, int memCode);
 
   void registerFeedHitcountLog(Map<String, Object> params);
+
+  Map<String, Object> loadMyFeedSummary(Long memberCode);
 }

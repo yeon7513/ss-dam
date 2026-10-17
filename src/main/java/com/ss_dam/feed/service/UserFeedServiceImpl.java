@@ -1,5 +1,18 @@
 package com.ss_dam.feed.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+
 import com.ss_dam.auth.login.enums.AuthRole;
 import com.ss_dam.auth.login.model.response.AuthProfile;
 import com.ss_dam.challenge.dao.UserChallengeDao;
@@ -15,14 +28,6 @@ import com.ss_dam.feed.model.request.FeedUpdate;
 import com.ss_dam.feed.model.response.FeedDetail;
 import com.ss_dam.feed.model.response.FeedEditView;
 import com.ss_dam.feed.model.response.UserFeedView;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.util.*;
 
 @Service
 public class UserFeedServiceImpl implements UserFeedService {
@@ -43,9 +48,19 @@ public class UserFeedServiceImpl implements UserFeedService {
     this.userChallengeDao = userChallengeDao;
   }
 
-  // 피드 목록 조회
+  // 전체 피드 목록 조회 (내 피드 / 좋아요한 피드 필터 포함)
   @Override
   public PageResult<UserFeedView> loadFeeds(UserFeedSearchFilter filter, Long memberCode) {
+    // 비로그인 상태에서는 "내 피드", "좋아요 피드" 필터를 사용할 수 없음
+    if (memberCode == null) {
+      filter.setMyFeedsOnly(false);
+      filter.setMyLikesOnly(false);
+    }
+
+    // 개수 조회 쿼리(filter 사용)에서도 memCode를 쓸 수 있도록 세팅
+    // -> 클라이언트가 보낸 memCode는 무시하고 세션 값으로 덮어씀
+    filter.setMemCode(memberCode);
+
     Map<String, Object> params = new HashMap<>();
 
     params.put("memCode", memberCode);
@@ -54,6 +69,9 @@ public class UserFeedServiceImpl implements UserFeedService {
     params.put("chalCode", filter.getChalCode());
     params.put("keyword", filter.getKeyword());
     params.put("sortTarget", filter.getSortTarget());
+    params.put("tagName", filter.getTagName());
+    params.put("myFeedsOnly", filter.getMyFeedsOnly());
+    params.put("myLikesOnly", filter.getMyLikesOnly());
 
     List<UserFeedView> feeds = userFeedDao.loadFeeds(params);
     float total = userFeedDao.loadFeedsTotalCount(filter);
@@ -61,6 +79,11 @@ public class UserFeedServiceImpl implements UserFeedService {
     return PageResult.of(feeds, filter, total);
   }
 
+  // 내가 작성한 피드 요약 (총 등록 건수, 총 좋아요, 총 조회수)
+  @Override
+  public Map<String, Object> loadMyFeedSummary(Long memberCode) {
+    return userFeedDao.loadMyFeedSummary(memberCode);
+  }
 
   // 피드 단일 상세 조회 -> 아무나 볼 수 있는 단순 게시글
   @Transactional

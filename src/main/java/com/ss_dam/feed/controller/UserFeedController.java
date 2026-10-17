@@ -1,5 +1,17 @@
 package com.ss_dam.feed.controller;
 
+import java.util.Map;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.ss_dam.auth.login.model.response.AuthProfile;
 import com.ss_dam.common.ApiResponse;
 import com.ss_dam.common.pager.PageResult;
@@ -11,10 +23,8 @@ import com.ss_dam.feed.model.response.FeedDetail;
 import com.ss_dam.feed.model.response.FeedEditView;
 import com.ss_dam.feed.model.response.UserFeedView;
 import com.ss_dam.feed.service.UserFeedService;
+
 import jakarta.servlet.http.HttpSession;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 
 // @RestController 어노테이션 붙이면
@@ -147,6 +157,17 @@ public class UserFeedController {
     userFeedService.deleteFeed(feedCode, loginUser);
 
     return ResponseEntity.ok(ApiResponse.success("피드 삭제 완료", null));
+  }
+
+  // 내가 작성한 피드 요약 (마이페이지)
+  @GetMapping("/my/summary")
+  ResponseEntity<ApiResponse<Map<String, Object>>> loadMyFeedSummary(HttpSession session) {
+
+    AuthProfile loginUser = authValidator.requireLogin(session);
+
+    Map<String, Object> summary = userFeedService.loadMyFeedSummary(loginUser.getCode());
+
+    return ResponseEntity.ok(ApiResponse.success("내 피드 요약 조회 성공", summary));
   }
 
 }

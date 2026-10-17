@@ -1,0 +1,148 @@
+@use "../../../scss/variables.scss" as v;
+
+.wrap {
+  width: 100%;
+}
+
+.pageTitle {
+  margin-bottom: 1.25rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: v.$grayscale-90;
+}
+
+/* 상단: 검색 + 요약 */
+.topBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.searchBox {
+  flex: 1 1 240px;
+  justify-content: flex-start;
+
+  > div {
+    width: 100%;
+  }
+}
+
+.summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    min-width: 8.5rem;
+    height: 2.75rem;
+    padding: 0 1rem;
+    border-radius: 999px;
+    background-color: v.$grayscale-10;
+  }
+
+  span {
+    font-size: 0.75rem;
+    color: v.$grayscale-60;
+  }
+
+  strong {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: v.$grayscale-90;
+  }
+}
+
+/* 목록 영역 */
+.board {
+  padding: 1rem;
+  border: 1px solid v.$grayscale-20;
+  border-radius: 8px;
+  background-color: v.$color-white;
+}
+
+.state {
+  padding: 3rem 0;
+  text-align: center;
+  color: v.$grayscale-60;
+}
+
+/* 공통 DataTable 커스텀 (마이페이지 폭에 맞게 최소 너비 축소) */
+table.myFeedTable {
+  min-width: 640px;
+  table-layout: fixed;
+
+  th,
+  td {
+    text-align: center;
+  }
+
+  // 작성일 | 제목 | 챌린지 | 조회수 | 댓글 | 좋아요
+  th:nth-child(1) { width: 90px; }
+  th:nth-child(3) { width: 110px; }
+  th:nth-child(4) { width: 80px; }
+  th:nth-child(5) { width: 130px; }
+  th:nth-child(6) { width: 80px; }
+
+  td:nth-child(2) {
+    text-align: left;
+  }
+}
+
+.date {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: v.$grayscale-90;
+}
+
+.title {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: left;
+  color: v.$grayscale-90;
+
+  &:hover {
+    color: v.$primary-40;
+    text-decoration: underline;
+  }
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.125rem 0.5rem;
+  border-radius: 999px;
+  background-color: v.$grayscale-10;
+  font-size: 0.6875rem;
+}
+
+.commentLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: v.$grayscale-60;
+  text-decoration: underline;
+
+  &:hover {
+    color: v.$primary-40;
+  }
+}
+
+.commentCount {
+  min-width: 1rem;
+  height: 1rem;
+  padding: 0 0.25rem;
+  border-radius: 0.5rem;
+  background-color: v.$grayscale-60;
+  color: v.$color-white;
+  font-size: 0.625rem;
+  font-style: normal;
+  line-height: 1rem;
+}
