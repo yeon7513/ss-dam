@@ -1,5 +1,16 @@
 package com.ss_dam.market.service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+
 import com.ss_dam.auth.login.enums.AuthRole;
 import com.ss_dam.auth.login.model.response.AuthProfile;
 import com.ss_dam.common.image.service.ImageService;
@@ -13,16 +24,6 @@ import com.ss_dam.market.model.response.ProductEditView;
 import com.ss_dam.market.model.response.UserProductView;
 import com.ss_dam.point.enums.PointReason;
 import com.ss_dam.point.service.UserPointService;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 @Service
 public class UserProductServiceImpl implements UserProductService {
@@ -101,11 +102,12 @@ public class UserProductServiceImpl implements UserProductService {
   }
 
 
-  // 거래글 수정
+    // 거래글 수정
   @Transactional
   @Override
   public void updateProductPost(ProductUpdate productUpdate, AuthProfile loginUser) {
 
+    productUpdate.setMemCode(loginUser.getCode());
     productUpdate.setUpdatedBy(loginUser.getId());
 
     userProductDao.updateProductPost(productUpdate);
@@ -117,23 +119,21 @@ public class UserProductServiceImpl implements UserProductService {
     List<String> imagePaths = productUpdate.getImagePaths();
     List<Integer> oldImageOrders = productUpdate.getOldImageOrders();
 
-
     // 이미지 수정
     imageService.updateImages(prodCode, "market", images, newImageOrders, imagePaths,
         oldImageOrders);
-
   }
 
-  // 거래글 삭제
+  // 게시글 삭제 (본인 글만 삭제 가능)
   @Override
   public void deleteProductPost(Long prodCode, AuthProfile loginUser) {
     Map<String, Object> params = new HashMap<>();
     params.put("prodCode", prodCode);
+    params.put("memCode", loginUser.getCode());
     params.put("updatedBy", loginUser.getId());
 
     userProductDao.deleteProductPost(params);
   }
-
   // 게시글 등록
   @Transactional
   @Override
