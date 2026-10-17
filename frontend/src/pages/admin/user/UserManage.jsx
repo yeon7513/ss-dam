@@ -1,188 +1,103 @@
-import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // 공통 UI 컴포넌트
-import MemberCard from "../../../components/dashboard/member-card/MemberCard";
 import Pagination from "../../../components/common/pagination/Pagination";
-import TabMenus from "../../../components/common/tab-menus/TabMenus";
-import UserManageFilters from "./UserManageFilters";
+import MemberCard from "../../../components/dashboard/member-card/MemberCard";
+import SearchFilterBar from "../../../components/dashboard/search-filter-bar/SearchFilterBar.jsx";
+import PanelHeader from "../../../layout/admin/panel-header/PanelHeader.jsx";
+
+// 공통 훅 & 유틸
+import { useLoadData } from "../../../hooks/useLoadData.js";
+import { useSearchQuery } from "../../../hooks/useSearchQuery.js";
+import { buildQueryString } from "../../../utils/buildQueryString.js";
+
+// 상수
+import {
+  ADMIN_USER_INITIAL_FILTERS,
+  ADMIN_USER_SELECT_OPTIONS,
+  ADMIN_USER_STATUS_TABS,
+} from "../../../constants/admin-user/UserManage.constants.js";
 
 // 이 페이지에서 사용하는 스타일
 import styles from "./UserManage.module.scss";
-import PanelHeader from "../../../layout/admin/panel-header/PanelHeader.jsx";
-import { useNavigate } from "react-router-dom";
-
-// status 탭
-// NORMAL, SUSPENDED, SLEEP, WITHDRAW
-const STATUS_TABS = [
-  { value: "", label: "전체 상태" },
-  { value: "NORMAL", label: "일반" },
-  { value: "SUSPENDED", label: "정지" },
-  { value: "SLEEP", label: "휴면" },
-  { value: "WITHDRAWN", label: "탈퇴" },
-];
 
 export default function UserManage() {
-  // 다른 페이지로 이동할 때 사용하는 함수
   const navigate = useNavigate();
 
-  // 조회한 회원 목록
-  const [members, setMembers] = useState([]);
+  // 검색 조건 <-> 주소줄 쿼리스트링 동기화
+  const { searchFilter, queryString, handleSearch, handleChangePages } =
+    useSearchQuery(ADMIN_USER_INITIAL_FILTERS);
 
-  // 서버에서 받은 페이지네이션 정보
-  const [pager, setPager] = useState(null);
-
-  // 데이터 조회 중인지 나타내는 상태
-  const [loading, setLoading] = useState(false);
-  const [loadError, setLoadError] = useState("");
-
-  // 서버에 전달할 조회 조건
-  const [searchParams, setSearchParams] = useState({
-    page: 1, // 현재 페이지
-    perPage: 10, // 페이지 당 회원수
-    status: "", // 회원 상태 필터
-    search: "", // 검색 대상 필드
-    keyword: "", // 검색어
-    joinedFrom: "",
-    joinedTo: "",
-    activityStatus: "",
-    regionCode: "",
-    rating: "",
+  // SearchFilterBar 공통 날짜 이름(fromDate, toDate)을
+  // 회원 API 파라미터 이름(joinedFrom, joinedTo)으로 변환
+  const apiQueryString = buildQueryString({
+    ...searchFilter,
+    joinedFrom: searchFilter.fromDate,
+    joinedTo: searchFilter.toDate,
+    fromDate: "",
+    toDate: "",
   });
 
-  /*회원 목록 조회 함수*/
-  // useCallback으로 함수 참조를 유지
-  // searchParams가 변경되면 새 함수를 생성
-  const fetchMembers = useCallback(async () => {
-    //조회 시작 -> 로딩 상태 활성화
-    setLoading(true);
-    setLoadError("");
+  // 회원 목록 조회
+  const { data, loading, error, refetch } = useLoadData(
+    `/api/admin/members${apiQueryString}`,
+  );
 
-    //조회 조건을 URL 쿼리 문자열로 변환
-    const query = new URLSearchParams();
+  const members = data?.content || [];
+  const pager = data?.pager || null;
 
-    Object.keys(searchParams).forEach((key) => {
-      // 값이 truthy인 조건만 쿼리에 추가
-      // 현재 초기값에서는 빈 문자열은 빠지고 page, perPage만 포함됨
-      // 주의: 숫자 0이나 boolean false도 제외되는 조건임
-      if (searchParams[key]) {
-        query.append(key, searchParams[key]);
-      }
-    });
-
-    try {
-      // 예: /api/admin/products?page=1&perPage=10
-      const response = await fetch(`/api/admin/members?${query.toString()}`);
-
-      // HTTP 응답이 성공 상태(200~299)가 아니면 catch로 이동
-      if (!response.ok) {
-        throw new Error(`회원 목록을 불러오지 못했습니다. (HTTP ${response.status}) 서버 상태를 확인한 후 새로고침해주세요.`);
-      }
-
-      // 서버의 JSON 응답을 자바스크립트 객체로 변환
-      const result = await response.json();
-
-      if (!result.success || !Array.isArray(result.data?.content)) {
-        throw new Error(result.message || "회원 목록 응답을 확인할 수 없습니다. 다시 시도해주세요.");
-      }
-
-      setMembers(result.data.content);
-      setPager(result.data.pager);
-    } catch (error) {
-      // 요청 실패나 JSON 처리 중 발생한 오류를 콘솔에 출력
-      console.error("Fetch Error", error);
-      setLoadError(error instanceof TypeError
-        ? "서버에 연결할 수 없습니다. 서버 상태를 확인한 후 새로고침해주세요."
-        : error.message || "회원 목록을 불러오지 못했습니다. 다시 시도해주세요.");
-    } finally {
-      // 성공·실패와 관계없이 로딩 종료
-      setLoading(false);
-    }
-  }, [searchParams]);
-
-  // 첫 화면 진입 시 상품 조회
-  // 이후 searchParams가 바뀌어 fetchProducts가 새로 생성되면 다시 조회
-  useEffect(() => {
-    fetchMembers();
-  }, [fetchMembers]);
-
-  // 상태 탭 선택 시 실행
+  // 상태 탭 변경
   const handleTabChange = (statusValue) => {
-    setSearchParams((prev) => ({
-      ...prev,
-      status: statusValue,
-      page: 1,
-    }));
-  };
-
-  // SearchBox에서 검색을 제출하면 실행
-  // searchData는 SearchBox가 전달하는 검색 조건 객체
-  const handleSearchSubmit = (searchData) => {
-    setSearchParams((prev) => ({
-      ...prev, // 기존 조건 유지
-      ...searchData, // 전달받은 검색 조건으로 덮어쓰기
-      page: 1, // 새 검색은 첫 페이지부터 시작
-    }));
-  };
-
-  // 페이지네이션에서 페이지를 선택하면 실행
-  const handlePageChange = (newPage) => {
-    setSearchParams((prev) => ({
-      ...prev,
-      page: newPage, // 검색 조건은 유지하고 페이지만 변경
-    }));
-  };
-
-  const handleFilterChange = (name, value) => {
-    setSearchParams((prev) => ({
-      ...prev,
-      [name]: value,
-      page: 1,
-    }));
+    handleSearch({ status: statusValue });
   };
 
   return (
     <div className={styles.container}>
       {/* 제목 + 새로고침 + 현재 시각 */}
       <div className={styles.header}>
-        <PanelHeader
-          title="관리자 회원 관리"
-          onRefresh={fetchMembers}
-        />
+        <PanelHeader title="관리자 회원 관리" onRefresh={refetch} />
       </div>
 
-      {/* 회원 상태 탭 */}
-      <TabMenus
-        className={styles.tabs}
-        tabs={STATUS_TABS}
-        activeStatus={searchParams.status}
-        onTabChange={handleTabChange}
-      />
-
-      {/* 날짜·드롭다운·검색창 */}
-      <UserManageFilters
-        filters={searchParams}
-        onFilterChange={handleFilterChange}
-        onSearch={handleSearchSubmit}
+      {/* 공통 검색 필터 (탭 + 가입일 + 셀렉트 + 키워드) */}
+      {/* key: 탭 변경·필터 삭제 등으로 쿼리가 바뀌면 내부 draft 상태를 새로 맞춤 */}
+      <SearchFilterBar
+        key={queryString}
+        initFilter={ADMIN_USER_INITIAL_FILTERS}
+        searchFilter={searchFilter}
+        tabMenu={{
+          tabs: ADMIN_USER_STATUS_TABS,
+          activeStatus: searchFilter.status,
+          onTabChange: handleTabChange,
+        }}
+        selectGroups={ADMIN_USER_SELECT_OPTIONS}
+        onSearch={handleSearch}
       />
 
       {/* 회원 카드 목록 */}
       {loading ? (
-        <p>회원 목록을 불러오는 중입니다.</p>
-      ) : loadError ? (
-        <p role="alert">{loadError}</p>
+        <p className={styles.state}>회원 목록을 불러오는 중입니다.</p>
+      ) : error ? (
+        <p className={styles.state} role="alert">
+          {error?.message || "회원 목록을 불러오지 못했습니다. 다시 시도해주세요."}
+        </p>
       ) : members.length === 0 ? (
-        <p>조회된 회원이 없습니다.</p>
+        <p className={styles.state}>조회된 회원이 없습니다.</p>
       ) : (
         <div className={styles.memberGrid}>
           {members.map((member) => (
-            <MemberCard key={member.code} member={member}
-                        onClickDetail={() => navigate(`/admin/user_manage/${member.code}`)} />
+            <MemberCard
+              key={member.code}
+              member={member}
+              onClickDetail={() => navigate(`/admin/user_manage/${member.code}`)}
+            />
           ))}
         </div>
       )}
 
       {/* 페이지 이동 */}
-      {!loading && !loadError && <Pagination pager={pager} onChangePage={handlePageChange} />}
+      {!loading && !error && pager && (
+        <Pagination pager={pager} onChangePage={handleChangePages} />
+      )}
     </div>
   );
 }

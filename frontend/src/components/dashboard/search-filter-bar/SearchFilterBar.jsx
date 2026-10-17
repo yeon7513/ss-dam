@@ -1,22 +1,25 @@
-import React, { useMemo, useState } from 'react';
-import DateGroup from "./date-group/DateGroup.jsx";
-import ActiveFilters from "./active-filters/ActiveFilters.jsx";
 import cn from "classnames";
-import styles from "./SearchFilterBar.module.scss";
-import TabMenus from "../../common/tab-menus/TabMenus.jsx";
+import { useMemo, useState } from 'react';
 import Button from "../../common/button/Button.jsx";
-import KeywordGroup from "./keyword-group/KeywordGroup.jsx";
 import Card from "../../common/card/Card.jsx";
-import SelectGroup from "./select-group/SelectGroup.jsx";
+import TabMenus from "../../common/tab-menus/TabMenus.jsx";
+import ActiveFilters from "./active-filters/ActiveFilters.jsx";
+import DateGroup from "./date-group/DateGroup.jsx";
+import KeywordGroup from "./keyword-group/KeywordGroup.jsx";
 import RadioGroup from "./radio-group/RadioGroup.jsx";
+import styles from "./SearchFilterBar.module.scss";
+import SelectGroup from "./select-group/SelectGroup.jsx";
+import TagGroup from "./tag-group/TagGroup.jsx";
 
 
 /**
  * 공통 관리자용 검색 필터 섹션 컴포넌트 명세
  * -> 객체 모양은 각 Config 이름 컨트롤+클릭으로 확인하세요~!
+ * -> 레이아웃: 1줄 탭 / 2줄 날짜·셀렉트·라디오(박스형)·키워드 / 3줄 태그 입력
+ * -> 셀렉트는 그룹 label이 드롭다운 기본 문구로 들어감 (선택 필터 칩에도 label 사용)
+ * -> initFilter와 같은 값(기본값)은 선택 필터 칩에 표시하지 않음
  * @param {Object} props
  * @param {string} [props.className] - 외부 스타일 클래스
- * @param {string} [props.datePickLabel] - 날짜 검색 라벨
  * @param {Object} [props.initFilter] - 검색 초기화 시 사용할 디폴트 필터 객체 (상수)
  * @param {Object} [props.searchFilter] - useSearchQuery 훅에서 만든 쿼리스트링을 파싱한 객체
  * @param {SearchFilterTabMenuConfig} [props.tabMenu] - 탭 메뉴 설정 객체
@@ -24,18 +27,19 @@ import RadioGroup from "./radio-group/RadioGroup.jsx";
  * @param {SearchFilterSelectGroupsConfig} [props.selectGroups] - 셀렉트 설정 객체
  * @param {SearchFilterRadioGroupsConfig} [props.radioGroups] - 라디오 설정 객체
  * @param {SearchFilterCheckboxGroupsConfig} [props.checkboxGroups] - 체크박스 버튼 설정 객체
+ * @param {Array<{label: string, name: string, placeholder?: string, maxCount?: number}>} [props.tagGroups] - 태그 입력 설정 배열
  * @param {Function} [onSearch] useSearchQuery 훅에 전달해 검색을 수행하는 handleSearch 함수
  */
 
 function SearchFilterBar({
   className,
-  datePickLabel = "조회 기간",
   initFilter,
   searchFilter,
   tabMenu,
   selectGroups,
   radioGroups,
   checkboxGroups,
+  tagGroups,
   ctaButton,
   onSearch,
 }) {
@@ -57,6 +61,7 @@ function SearchFilterBar({
       ...(selectGroups || []),
       ...(radioGroups || []),
       ...(checkboxGroups || []),
+      ...(tagGroups || []),
     ];
 
     allGroups.forEach((group) => {
@@ -78,7 +83,13 @@ function SearchFilterBar({
     });
 
     return map;
-  }, [selectGroups, radioGroups, checkboxGroups]);
+  }, [selectGroups, radioGroups, checkboxGroups, tagGroups]);
+
+  // 해당 키의 기본값 (initFilter 기준, 없으면 "")
+  const getDefaultValue = (key) => {
+    if (initFilter && key in initFilter) return initFilter[key];
+    return key === "deleted" ? null : "";
+  };
 
 
   // 유효한 선택 필터 목록 추출
@@ -110,27 +121,35 @@ function SearchFilterBar({
         return;
       }
 
-      if (value !== "" && value !== null && value !== undefined && value !== 'all') {
-        // 해당 필터의 메타 정보 가져오기
-        const meta = filterMetaMap[key];
+      // 빈 값은 제외
+      if (value === "" || value === null || value === undefined || value === 'all') {
+        return;
+      }
 
-        if (meta) {
-          const groupLabel = meta.groupLabel; // 한글 라벨
-          const optionName = meta.optionNames[value] || value; // 한글 값
+      // 기본값과 같으면 제외 (예: 기본 정렬)
+      if (String(getDefaultValue(key) ?? "") === String(value)) {
+        return;
+      }
 
-          // 최종적으로 "키: 값" 형태로 active 배열에 push
-          active.push({
-            key: key,
-            label: `${groupLabel}: ${optionName}`,
-          });
-        }
+      // 해당 필터의 메타 정보 가져오기
+      const meta = filterMetaMap[key];
+
+      if (meta) {
+        const groupLabel = meta.groupLabel; // 한글 라벨
+        const optionName = meta.optionNames[value] || value; // 한글 값
+
+        // 최종적으로 "키: 값" 형태로 active 배열에 push
+        active.push({
+          key: key,
+          label: `${groupLabel}: ${optionName}`,
+        });
       }
     });
 
     return active;
   };
 
-  // 특정 필터 개별 삭제 핸들러
+  // 특정 필터 개별 삭제 핸들러 -> 기본값으로 되돌림
   const handleDeleteFilter = (key) => {
     if (key === "dateRange") {
       const resetDates = {
@@ -146,7 +165,7 @@ function SearchFilterBar({
 
     const updatedFilters = {
       ...draftFilters,
-      [key]: key === "deleted" ? null : "",
+      [key]: getDefaultValue(key),
     };
 
     setDraftFilters(updatedFilters);
@@ -164,23 +183,20 @@ function SearchFilterBar({
     <Card className={cn(styles.searchFilterBar, className)}>
       {/* 검색 필터 섹션 */}
       <form onSubmit={handleSubmitSearch}>
-        {/* 탭 메뉴 */}
+        {/* 1줄: 탭 메뉴 */}
         {tabMenu && (
           <div className={styles.header}>
-            {/* 탭 메뉴 */}
-            {tabMenu && (
-              <TabMenus
-                tabs={tabMenu.tabs}
-                activeStatus={tabMenu.activeStatus || ""}
-                onTabChange={tabMenu.onTabChange}
-              />
-            )}
+            <TabMenus
+              tabs={tabMenu.tabs}
+              activeStatus={tabMenu.activeStatus || ""}
+              onTabChange={tabMenu.onTabChange}
+            />
           </div>
         )}
 
-        {/* 날짜 검색*/}
+        {/* 2줄: 날짜 · 셀렉트 · 라디오 · 키워드 */}
+        {/* 날짜 검색 */}
         <div className={styles.dateGroup}>
-          <label htmlFor="fromDate">{datePickLabel}</label>
           <DateGroup
             draftFilters={draftFilters}
             setDraftFilters={setDraftFilters}
@@ -188,16 +204,15 @@ function SearchFilterBar({
           />
         </div>
 
-        {/* 셀렉트 그룹 */}
+        {/* 셀렉트 그룹 (그룹 label이 드롭다운 기본 문구) */}
         {selectGroups && (
           <div className={styles.selectGroups}>
             {selectGroups.map((group, idx) => (
               <SelectGroup
                 key={idx}
-                label={group.label}
                 name={group.name}
                 selectOptions={group.options}
-                placeholder={group.placeholder}
+                placeholder={group.label}
                 draftFilters={draftFilters}
                 setDraftFilters={setDraftFilters}
                 onSearch={onSearch}
@@ -214,7 +229,7 @@ function SearchFilterBar({
           </div>
         )}
 
-        {/* 라디오 그룹 */}
+        {/* 라디오 그룹 (박스형) */}
         {radioGroups && (
           <div className={styles.radioGroup}>
             {radioGroups.map((group, idx) => (
@@ -231,12 +246,28 @@ function SearchFilterBar({
           </div>
         )}
 
-        {/* 키워드 검색 */}
-        <KeywordGroup
-          draftFilters={draftFilters}
-          setDraftFilters={setDraftFilters}
-          onSearch={onSearch}
-        />
+        {/* 키워드 검색 (남은 공간 전부 사용) */}
+        <div className={styles.keyword}>
+          <KeywordGroup
+            draftFilters={draftFilters}
+            setDraftFilters={setDraftFilters}
+            onSearch={onSearch}
+          />
+        </div>
+
+        {/* 3줄: 태그 입력 그룹 (한 줄 전체) */}
+        {tagGroups && tagGroups.map((group, idx) => (
+          <div key={idx} className={styles.tagGroup}>
+            <TagGroup
+              name={group.name}
+              placeholder={group.placeholder}
+              maxCount={group.maxCount}
+              draftFilters={draftFilters}
+              setDraftFilters={setDraftFilters}
+              onSearch={onSearch}
+            />
+          </div>
+        ))}
       </form>
 
       {/* 선택된 검색 옵션 */}

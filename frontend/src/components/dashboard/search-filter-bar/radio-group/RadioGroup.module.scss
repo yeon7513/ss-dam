@@ -1,20 +1,58 @@
 @use "../../../../scss/variables.scss" as v;
 @use "../../../../scss/mixin.scss" as mix;
 
-.radioRabel {
-  flex: none;
-  font-weight: 600;
-}
+// 박스형 라디오 (날짜·드롭다운·검색창과 같은 높이)
+.segment {
+  display: inline-flex;
+  align-items: stretch;
 
+  height: 3rem;
+  padding: 3px;
+  box-sizing: border-box;
 
-.radioContents {
-  @include mix.flex();
-  gap: 1rem;
-  margin-top: 0.5rem;
-  height: 48px;
+  border: 1.5px solid v.$point-20;
+  background-color: v.$color-white;
 }
 
 .radioItem {
-  @include mix.flex();
-  gap: 0.3rem;
+  display: flex;
+
+  // 기본 라디오 동그라미 숨김
+  input[type="radio"] {
+    position: absolute;
+    width: 0;
+    height: 0;
+    opacity: 0;
+  }
+
+  label {
+    @include mix.flex;
+    height: 100%;
+    padding: 0 1rem;
+
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: v.$grayscale-90;
+    white-space: nowrap;
+
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: v.$grayscale-5;
+    }
+  }
+
+  // 선택된 옵션
+  input[type="radio"]:checked + label {
+    font-weight: 700;
+    color: v.$point-60;
+    background-color: v.$point-5;
+  }
+
+  // 키보드 포커스 표시
+  input[type="radio"]:focus-visible + label {
+    outline: 2px solid v.$point-20;
+    outline-offset: -2px;
+  }
 }
