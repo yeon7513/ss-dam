@@ -1,12 +1,24 @@
 import { useCallback, useEffect, useState } from "react";
+import {
+  FiAward,
+  FiCalendar,
+  FiCheckCircle,
+  FiTarget,
+  FiUsers,
+} from "react-icons/fi";
+
+import Button from "../../../components/common/button/Button.jsx";
+
 import styles from "./ChallengeInfoCard.module.scss";
 
+// 기본 유의사항 목록을 정의함.
 const DEFAULT_NOTICE = [
   "인증은 하루 1회만 인정됩니다.",
   "타인의 사진 도용시 참여가 제한될 수 있습니다.",
   "부정 인증 적발 시 포인트가 회수됩니다.",
 ];
 
+/* 정보 항목 컴포넌트 */
 const InfoItem = ({ icon, label, value }) => (
   <div className={styles.infoRow}>
     <div className={styles.iconBox}>{icon}</div>
@@ -16,6 +28,8 @@ const InfoItem = ({ icon, label, value }) => (
     </div>
   </div>
 );
+
+/* 챌린지 정보 카드 컴포넌트 */
 const ChallengeInfoCard = ({
   code,
   onJoinSuccess,
@@ -24,6 +38,7 @@ const ChallengeInfoCard = ({
   const [infoData, setInfoData] = useState(null);
   const [joining, setJoining] = useState(false);
 
+  /* 챌린지 정보 조회 로직 */
   const fetchInfoData = useCallback(async () => {
     if (!code) return;
 
@@ -50,13 +65,13 @@ const ChallengeInfoCard = ({
     return (
       <div className={styles.cardWrapper}>
         <div className={styles.cardContainer}>
+          {/* 카드 헤더 영역 */}
           <div className={styles.cardHeader}>
             <h3>챌린지 정보</h3>
           </div>
+          {/* 카드 본문 영역 */}
           <div className={styles.cardBody}>
-            <p style={{ padding: "20px", textAlign: "center", color: "#888" }}>
-              정보를 불러오는 중...
-            </p>
+            <p className={styles.loadingText}>정보를 불러오는 중...</p>
           </div>
         </div>
       </div>
@@ -67,32 +82,33 @@ const ChallengeInfoCard = ({
 
   const infoItems = [
     {
-      icon: "★",
+      icon: <FiCalendar />,
       label: "진행 기간",
       value: `${infoData.startDate} ~ ${infoData.endDate} (${infoData.daysLeft ?? 0}일 남음)`,
     },
     {
-      icon: "★",
+      icon: <FiUsers />,
       label: "참여 인원",
       value: `${infoData.participantCount ?? 0}명 참여중`,
     },
     {
-      icon: "★",
+      icon: <FiTarget />,
       label: "목표",
       value: `${infoData.goal ?? "매일 인증 실천"}`,
     },
     {
-      icon: "★",
+      icon: <FiCheckCircle />,
       label: "인증 횟수",
       value: `${infoData.proofCount ?? 0}회 / ${infoData.totalProofCount ?? 0}회`,
     },
     {
-      icon: "★",
+      icon: <FiAward />,
       label: "획득 포인트",
       value: `${infoData.pointEarn ?? 0}`,
     },
   ];
 
+  /* 챌린지 참여 신청 로직 */
   const handleJoin = async () => {
     if (isUserJoined) {
       alert("이미 참여 중인 챌린지입니다.");
@@ -124,12 +140,15 @@ const ChallengeInfoCard = ({
   };
 
   return (
+    /* 챌린지 정보 카드 영역 */
     <div className={styles.cardWrapper}>
       <div className={styles.cardContainer}>
+        {/* 카드 헤더 영역 */}
         <div className={styles.cardHeader}>
           <h3>챌린지 정보</h3>
         </div>
 
+        {/* 카드 본문 영역 */}
         <div className={styles.cardBody}>
           {infoItems.map((item, index) => (
             <InfoItem
@@ -140,22 +159,25 @@ const ChallengeInfoCard = ({
             />
           ))}
 
+          {/* 참여 신청 버튼 영역 */}
           <div className={styles.btnGroup}>
-            <button
-              className={`${styles.joinBtn} ${infoData.isJoined ? styles.joined : ""}`}
-              onClick={handleJoin}
+            <Button
+              btnStyle="fill"
+              action="submit"
               disabled={joining || isUserJoined}
+              onClick={handleJoin}
             >
               {isUserJoined
                 ? "참여 완료"
                 : joining
-                  ? "처리 중"
+                  ? "대기중"
                   : "챌린지 참여하기"}
-            </button>
+            </Button>
           </div>
         </div>
       </div>
 
+      {/* 유의사항 카드 영역 */}
       <div className={styles.noticeCard}>
         <h4>유의사항</h4>
         <ul>

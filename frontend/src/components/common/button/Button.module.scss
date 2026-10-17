@@ -134,4 +134,14 @@
   &.fullWidth {
     width: 100%;
   }
+
+  &:disabled,
+  &.fill:disabled,
+  &.outline:disabled,
+  &.word:disabled {
+    border-color: transparent;
+    background-color: v.$grayscale-20;
+    color: v.$grayscale-70;
+    cursor: not-allowed;
+  }
 }
