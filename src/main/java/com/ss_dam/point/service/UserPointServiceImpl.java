@@ -133,7 +133,7 @@ public class UserPointServiceImpl implements UserPointService {
 	}
 
 	@Override
-	public boolean rewardPoint(Long memCode, int amount, String reason) {
+	public boolean rewardPoint(Long memCode, int amount, String reason, Long prodCode) {
 
 		int beforePoint = pointDao.getPointBalance(memCode);
 		int afterPoint = beforePoint + amount;
@@ -153,6 +153,7 @@ public class UserPointServiceImpl implements UserPointService {
 			pointLog.setType("SAVED");
 			pointLog.setAmount(amount);
 			pointLog.setReason(reason);
+			pointLog.setProdCode(prodCode);
 
 			pointDao.chargePointLog(pointLog);
 
@@ -164,7 +165,7 @@ public class UserPointServiceImpl implements UserPointService {
 
 	@Transactional
 	@Override
-	public boolean deductPoint(Long memCode, int amount, String reason) {
+	public boolean deductPoint(Long memCode, int amount, String reason, Long prodCode) {
 		int beforePoint = pointDao.getPointBalance(memCode);
 
 		if (beforePoint < amount) {
@@ -187,6 +188,7 @@ public class UserPointServiceImpl implements UserPointService {
 			pointLog.setType("USED");
 			pointLog.setAmount(amount);
 			pointLog.setReason(reason);
+			pointLog.setProdCode(prodCode);
 
 			pointDao.chargePointLog(pointLog);
 
@@ -194,4 +196,17 @@ public class UserPointServiceImpl implements UserPointService {
 		}
 		return false;
 	}
+
+	@Override
+	public boolean rewardPoint(Long memCode, int amount, String reason) {
+		
+		return rewardPoint(memCode, amount, reason, null);
+	}
+
+	@Override
+	public boolean deductPoint(Long buyerCode, int price, String string) {
+		
+		return deductPoint(buyerCode, price, string, null);
+	}
+	
 }
