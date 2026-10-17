@@ -1,5 +1,16 @@
 package com.ss_dam.market.service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+
 import com.ss_dam.auth.login.enums.AuthRole;
 import com.ss_dam.auth.login.model.response.AuthProfile;
 import com.ss_dam.common.image.service.ImageService;
@@ -11,24 +22,19 @@ import com.ss_dam.market.model.request.ProductUpdate;
 import com.ss_dam.market.model.response.ProductDetail;
 import com.ss_dam.market.model.response.ProductEditView;
 import com.ss_dam.market.model.response.UserProductView;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import com.ss_dam.point.service.UserPointService;
 
 @Service
 public class UserProductServiceImpl implements UserProductService {
 
   private final UserProductDao userProductDao;
   private final ImageService imageService;
+  private final UserPointService userPointService;
 
-  public UserProductServiceImpl(UserProductDao userProductDao, ImageService imageService) {
+  public UserProductServiceImpl(UserProductDao userProductDao, ImageService imageService, UserPointService userPointService) {
     this.userProductDao = userProductDao;
     this.imageService = imageService;
+    this.userPointService = userPointService;
   }
 
   // 목록 조회
@@ -144,5 +150,109 @@ public class UserProductServiceImpl implements UserProductService {
     }
 
     return newProductPostCode;
+  }
+  
+  @Transactional
+  @Override
+  public void purchaseProduct(Long prodCode, AuthProfile loginUser) {
+	  Long buyerCode = loginUser.getCode();
+	  
+	  Map<String, Object> params = new HashMap<>();
+	  
+	  params.put("prodCode", prodCode);
+	  params.put("memCode", buyerCode);
+	  
+	  ProductDetail product = userProductDao.findProductDetailByProdCode(params);
+	  
+//	  System.out.println("=== dealStatus 값: " + product.getDealStatus() + 
+//              " | 타입: " + (product.getDealStatus() != null ? product.getDealStatus().getClass().getName() : "null") + " ===");
+	  
+	  if(product == null) {
+		  throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 거래글입니다");
+	  }
+	  
+	  if(Objects.equals(product.getMemberProfile().getCode(), buyerCode)) {
+		  throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "본인이 등록한 상품은 구매할 수 없습니다");
+	  }
+	  
+	  if(!"ON_SALE".equals(String.valueOf(product.getDealStatus()))) {
+		  throw new ResponseStatusException(HttpStatus.CONFLICT, "거래 가능한 상태가 아닙니다");		  
+	  }
+	  
+	  userPointService.deductPoint(buyerCode, product.getPrice(), "MARKET_ESCROW", prodCode);
+	  
+	  Map<String, Object> updateParams = new HashMap<>();
+	  
+	  updateParams.put("prodCode", prodCode);
+	  updateParams.put("buyerCode", buyerCode);
+	  updateParams.put("dealStatus", "IN_PROGRESS");
+	  
+	  userProductDao.updateProductDealStatus(updateParams);
+  }
+  
+  @Transactional
+  @Override
+  public void completeProductTrade(Long prodCode, AuthProfile loginUser) {
+	  
+	  Long sellerCode = loginUser.getCode();
+	  
+	  Map<String, Object> params = new HashMap<>();
+	  
+	  params.put("prodCode", prodCode);
+	  params.put("memCode", sellerCode);
+	  
+	  ProductDetail product = userProductDao.findProductDetailByProdCode(params);
+	  
+	  if(product == null) {
+		  throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 거래글입니다");		  
+	  }
+	  
+	  if(!Objects.equals(product.getMemberProfile().getCode(), sellerCode )) {
+		  throw new ResponseStatusException(HttpStatus.FORBIDDEN, "판매자만 판매 완료 처리를 할 수 있습니다");
+	  }
+	  
+	  if(!"IN_PROGRESS".equals(String.valueOf(product.getDealStatus()))) {
+		  throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "거래 진행 중인 상품만 완료할 수 있습니다");
+	  }
+	  
+	  userPointService.rewardPoint(sellerCode, product.getPrice(), "MARKET_SALES", prodCode);
+	  
+	  Map<String, Object> updateParams = new HashMap<>();
+	  
+	  updateParams.put("prodCode", prodCode);
+	  updateParams.put("dealStatus", "SOLD");
+	  updateParams.put("buyerCode", product.getBuyerCode());
+	  
+	  userProductDao.updateProductDealStatus(updateParams);
+  }
+  
+  @Transactional
+  @Override
+  public void cancelProductTrade(Long prodCode, AuthProfile loginUser) {
+	  Long userCode = loginUser.getCode();
+	  
+	  Map<String, Object> params = new HashMap<>();
+	  params.put("prodCode", prodCode);
+	  params.put("memCode", userCode);
+	  
+	  ProductDetail product = userProductDao.findProductDetailByProdCode(params);
+	  
+	  if(product == null) {
+		  throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 거래글입니다");
+	  }
+	  
+	  if(!"IN_PROGRESS".equals(String.valueOf(product.getDealStatus()))) {
+		  throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "취소할 수 없는 거래 상태입니다");
+	  }
+	  
+	  userPointService.rewardPoint(product.getBuyerCode(), product.getPrice(), "MARKET_REFUND", prodCode);
+	  
+	  Map<String, Object> updateParams = new HashMap<>();
+	  
+	  updateParams.put("prodCode", prodCode);
+	  updateParams.put("buyerCode", null);
+	  updateParams.put("dealStatus", "ON_SALE");
+	  
+	  userProductDao.updateProductDealStatus(updateParams);
   }
 }
