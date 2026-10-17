@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import styles from "../../../pages/my-page/points/point-transfer/PointTransfer.module.scss";
 import { CgAsterisk } from "react-icons/cg";
 import TextInput from "../../forms/text-input/TextInput.jsx";
@@ -19,15 +19,18 @@ function ReceiverInput({
 }) {
   const { user } = useAuth();
 
-  const textInputLabel = isRequired
-    ? <>{label} <CgAsterisk className={styles.requiredIcon} /></>
-    : label;
-
+  const textInputLabel = isRequired ? (
+    <>
+      {label} <CgAsterisk className={styles.requiredIcon} />
+    </>
+  ) : (
+    label
+  );
 
   // 받는 회원 아이디 체크
   const handleCheckId = async () => {
     try {
-      if (id === user.id) {
+      if (id === user?.id) {
         alert("자기 자신에게 송금할 수 없습니다.");
 
         setTransferInfo((prev) => ({
@@ -54,18 +57,17 @@ function ReceiverInput({
         setIsCheckedId(false);
         alert("존재하지 않는 회원입니다.");
       }
-
     } catch (error) {
       console.error("아이디 확인 오류: ", error);
       setIsCheckedId(false);
       alert("아이디 확인 중 오류가 발생했습니다.");
     }
-  }
+  };
 
   const handleChangeId = (e) => {
     setIsCheckedId(false);
     handleSetField(e, setTransferInfo);
-  }
+  };
 
   return (
     <div className={styles.receiverUser}>
@@ -79,16 +81,16 @@ function ReceiverInput({
           placeholder="그루를 받을 회원의 아이디를 입력하세요."
           onChange={(e) => handleChangeId(e)}
         />
-        <Button
-          type="button"
-          disabled={isCheckedId}
-          onClick={handleCheckId}
-        >
-          아이디 확인
-        </Button>
+        {!isPayment && (
+          <Button type="button" disabled={isCheckedId} onClick={handleCheckId}>
+            아이디 확인
+          </Button>
+        )}
       </div>
       {isCheckedId && (
-        <span><FaCircleCheck /> 아이디 확인 완료</span>
+        <span>
+          <FaCircleCheck /> 아이디 확인 완료
+        </span>
       )}
     </div>
   );

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import TextInput from "../../forms/text-input/TextInput.jsx";
 import { CgAsterisk } from "react-icons/cg";
 import styles from "./PointTransferComponents.module.scss";
@@ -12,14 +12,22 @@ function AmountInput({
   setTransferInfo,
   pointBalance,
 }) {
-
-  const textInputLabel = isRequired
-    ? <>{label} <CgAsterisk className={styles.requiredIcon} /></>
-    : label;
+  const textInputLabel = isRequired ? (
+    <>
+      {label} <CgAsterisk className={styles.requiredIcon} />
+    </>
+  ) : (
+    label
+  );
 
   // 유효한 포인트 값인지 검증
   const handleChangeAmount = (e) => {
     const { value } = e.target;
+
+    if (value === "") {
+      handleSetField(e, setTransferInfo);
+      return;
+    }
 
     if (Number(value) === 0) {
       return;
@@ -38,8 +46,13 @@ function AmountInput({
       return;
     }
 
+    if (pointBalance !== undefined && Number(value) > Number(pointBalance)) {
+      alert("보유하고 계신 포인트 이상은 입력할 수 없습니다");
+      return;
+    }
+
     handleSetField(e, setTransferInfo);
-  }
+  };
 
   return (
     <div className={styles.amountPoint}>
@@ -54,7 +67,7 @@ function AmountInput({
       />
       <div>
         <span>송금 가능 그루</span>
-        <span>{pointBalance?.toLocaleString()}그루</span>
+        <span>{pointBalance ? pointBalance.toLocaleString() : 0}그루</span>
       </div>
     </div>
   );
