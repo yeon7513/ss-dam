@@ -1,19 +1,20 @@
 package com.ss_dam.point.service;
 
+import com.ss_dam.point.enums.PointReason;
 import com.ss_dam.point.model.PaymentPoint;
 import com.ss_dam.point.model.Point;
 
 public interface UserPointService {
 
-	int getPointBalance(Long code);
+  int getPointBalance(Long code);
 
-	boolean chargePoint(Point point);
+  boolean chargePoint(Point point);
 
-	boolean paymentPoint(PaymentPoint point);
+  boolean paymentPoint(PaymentPoint point);
 
-	boolean exchangePoint(Point point);
-	
-	boolean rewardPoint(Long memCode, int amount, String reason);
-	
-	boolean deductPoint(Long memCode, int amount, String reason);
+  boolean exchangePoint(Point point);
+
+  boolean rewardPoint(Long memCode, int amount, PointReason reason);
+
+  boolean deductPoint(Long memCode, int amount, PointReason reason);
 }
