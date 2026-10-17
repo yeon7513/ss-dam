@@ -35,7 +35,7 @@ function PointRemittance({ targetProductCode }) {
     <div className={styles.pointRemittance}>
       <AmountInput
         label="송금할 포인트"
-        amount={productInfo?.price || ""}
+        amount={productInfo?.price || transferInfo.amount}
         setTransferInfo={setTransferInfo}
         isPayment={!!targetProductCode}
         pointBalance={pointBalance}
@@ -43,7 +43,7 @@ function PointRemittance({ targetProductCode }) {
 
       <ReceiverInput
         label="받는 회원"
-        id={productInfo?.memberProfile.id || ""}
+        id={productInfo?.memberProfile.id || transferInfo.receiverId}
         setTransferInfo={setTransferInfo}
         isPayment={!!targetProductCode}
       />
