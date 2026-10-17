@@ -7,6 +7,8 @@ import Button from "../../../components/common/button/Button.jsx";
 import Slide from "../../../components/common/slide/Slide.jsx";
 import MarketSideNav from "../../../components/market/side-nav/MarketSideNav.jsx";
 import MarketBreadcrumb from "../market-breadcrumb/MarketBreadcrumb.jsx";
+import SellerInfo from "../../../components/market/seller-info/SellerInfo.jsx";
+import ProductDescription from "./ProductDescription.jsx";
 
 import { useLoadData } from "../../../hooks/useLoadData.js";
 import { useSubmitData } from "../../../hooks/useSubmitData.js";
@@ -111,13 +113,17 @@ const ProductDetail = () => {
 
         {/* 상품 콘텐츠 영역 */}
         <div className={styles.contents}>
-          {/* 상품 이미지 영역 */}
-          <div className={styles.productImages}>
-            <Slide images={detail.imagePaths} />
+          {/* 상품 이미지와 판매자 정보 */}
+          <div className={styles.imageColumn}>
+            <div className={styles.productImages}>
+              <Slide images={detail.imagePaths} />
+            </div>
+            <SellerInfo memberProfile={detail.memberProfile} />
           </div>
 
           {/* 상품 상세 정보 영역 */}
           <div className={styles.productDetails}>
+            <div className={styles.detailMain}>
             {/* 상단 헤더 영역 */}
             <div className={styles.headerRow}>
               {/* 제목 정보 영역 */}
@@ -146,7 +152,7 @@ const ProductDetail = () => {
             </div>
 
             {/* 본문 내용 영역 */}
-            <p>{detail.content}</p>
+            <ProductDescription key={code} content={detail.content} />
 
             {/* 하단 메타 정보 영역 */}
             <div className={styles.metaRow}>
@@ -168,14 +174,16 @@ const ProductDetail = () => {
               </div>
             </div>
 
-            {/* 게시물 신고 - 마켓 */}
+            </div>
+
+            {/* 게시글 신고 - 마켓 */}
             {!isOwner && (
               <div className={styles.reportRow}>
                 <Link
                   to={`/market/${code}/report`}
                   className={styles.reportLink}
                 >
-                  게시물 신고하기
+                  게시글 신고하기
                 </Link>
               </div>
             )}

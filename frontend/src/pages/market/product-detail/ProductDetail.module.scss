@@ -18,15 +18,23 @@
 
 /* 상품 콘텐츠 영역 */
 .contents {
-  @include mix.flex($ai: stretch);
+  @include mix.flex($ai: flex-start);
   gap: 2rem;
   width: 100%;
   margin-bottom: 2rem;
 }
 
 /* 상품 이미지 영역 */
-.productImages {
+.imageColumn {
   width: 30rem;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.productImages {
+  width: 100%;
   height: 25rem;
   overflow: hidden;
   border-radius: 0.3rem; // 이미지 모서리를 둥글게 처리함.
@@ -34,15 +42,23 @@
 
 /* 상품 상세 정보 영역 */
 .productDetails {
-  position: relative; // 버튼 위치의 기준점을 설정함.
   flex: 1;
-  padding-bottom: 80px; // 하단 버튼과의 중첩을 방지하는 여백을 지정함.
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+
+  .detailMain {
+    min-height: 25rem;
+    display: flex;
+    flex-direction: column;
+  }
 
   /* 상단 헤더 영역 */
   .headerRow {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 16px;
     margin-bottom: 1.5rem;
     padding-bottom: 19px;
     border-bottom: 1px solid v.$grayscale-20; // 하단 구분선 스타일을 지정함.
@@ -75,9 +91,8 @@
   }
 
   /* 본문 내용 영역 */
-  p {
-    min-height: 7.5rem; // 본문의 최소 높이를 확보함.
-    margin-bottom: 1.5rem;
+  .descriptionText {
+    margin: 0;
     color: v.$grayscale-90;
     font-size: 1rem;
     line-height: 1.6;
@@ -87,7 +102,10 @@
 
   /* 하단 메타 정보 영역 */
   .metaRow {
+    margin-top: auto;
     display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
     justify-content: space-between;
     align-items: center;
 
@@ -133,17 +151,16 @@
   /* 게시글 관리 버튼 영역 */
   .actionButtons {
     display: flex;
-    position: absolute;
-    bottom: 0;
-    right: 0;
+    justify-content: flex-end;
+    margin-top: 12px;
     align-items: center;
     gap: 0.2rem;
   }
 
-  /* 게시물 신고하기 - 마켓 */
+  /* 게시글 신고하기 - 마켓 */
   .reportRow {
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-start;
     margin-top: 12px;
   }
 
@@ -157,4 +174,35 @@
       color: #c0392b;
     }
   }
+}
+
+.description { margin-bottom: 24px; }
+.collapsed {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 8;
+  overflow: hidden;
+}
+.descriptionToggle {
+  display: block;
+  margin-left: auto;
+  margin-top: 8px;
+  padding: 4px 0;
+  border: 0;
+  background: transparent;
+  color: #777;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  &:focus-visible { outline: 2px solid #2e9377; outline-offset: 3px; }
+}
+
+@media (max-width: 768px) {
+  .contents { flex-direction: column; }
+  .imageColumn { width: 100%; }
+  .productDetails { width: 100%; min-height: 0; }
+  .productDetails .detailMain { min-height: 0; }
+  .productDetails .headerRow { flex-wrap: wrap; }
 }
