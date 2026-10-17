@@ -5,11 +5,14 @@ import com.ss_dam.common.ApiResponse;
 import com.ss_dam.common.validator.auth.AuthValidator;
 import com.ss_dam.point.model.PaymentPoint;
 import com.ss_dam.point.model.Point;
+import com.ss_dam.point.model.PointLog;
 import com.ss_dam.point.service.UserPointService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/point")
@@ -22,6 +25,16 @@ public class UserPointController {
     this.pointService = pointService;
     this.authValidator = authValidator;
   }
+
+  @GetMapping("/history")
+  public ResponseEntity<ApiResponse<List<PointLog>>> loadPointHistory(HttpSession session) {
+    AuthProfile loginUser = authValidator.requireLogin(session);
+
+    List<PointLog> pointLog = pointService.loadPointHistory(loginUser);
+
+    return ResponseEntity.ok(ApiResponse.success("적립 및 사용 내역 조회 성공", pointLog));
+  }
+
 
   // 잔액 조회
   @GetMapping("/balance") //보유 포인트 조회 로직
@@ -64,7 +77,7 @@ public class UserPointController {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.fail("거래에 실패했습니다"));
     }
 
-    return ResponseEntity.ok(ApiResponse.success("거래에 성공했습니다", null));
+    return ResponseEntity.ok(ApiResponse.success("거래에 성공했습니다", true));
   }
 
   // 환전 (출금)
