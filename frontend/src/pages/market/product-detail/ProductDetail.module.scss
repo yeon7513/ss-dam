@@ -139,4 +139,22 @@
     align-items: center;
     gap: 0.2rem;
   }
+
+  /* 게시물 신고하기 - 마켓 */
+  .reportRow {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 12px;
+  }
+
+  .reportLink {
+    color: #777;
+    font-size: 13px;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+
+    &:hover {
+      color: #c0392b;
+    }
+  }
 }

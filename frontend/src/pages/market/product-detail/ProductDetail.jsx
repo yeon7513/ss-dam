@@ -1,6 +1,8 @@
 import { IoHeartSharp } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { Link } from "react-router-dom";
+
 import Button from "../../../components/common/button/Button.jsx";
 import Slide from "../../../components/common/slide/Slide.jsx";
 import MarketSideNav from "../../../components/market/side-nav/MarketSideNav.jsx";
@@ -165,6 +167,19 @@ const ProductDetail = () => {
                 </h3>
               </div>
             </div>
+
+            {/* 게시물 신고 - 마켓 */}
+            {!isOwner && (
+              <div className={styles.reportRow}>
+                <Link
+                  to={`/market/${code}/report`}
+                  className={styles.reportLink}
+                >
+                  게시물 신고하기
+                </Link>
+              </div>
+            )}
+
 
             {/* 본인 게시글에서만 수정·삭제 버튼 표시 */}
             {isOwner && (
