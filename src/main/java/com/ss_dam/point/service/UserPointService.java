@@ -14,12 +14,18 @@ public interface UserPointService {
 
   boolean exchangePoint(Point point);
 
-  boolean rewardPoint(Long memCode, int amount, PointReason reason);
-
   boolean rewardPoint(Long memCode, int amount, PointReason reason, Long prodCode);
 
-  boolean deductPoint(Long memCode, int amount, PointReason reason);
-
   boolean deductPoint(Long memCode, int amount, PointReason reason, Long prodCode);
+  
+  default boolean rewardPoint(Long memCode, int amount, PointReason reason) {
+	  
+	  return rewardPoint(memCode, amount, reason);
+  }
+  
+  default boolean deductPoint(Long memCode, int amount, PointReason reason) {
+	  
+	  return deductPoint(memCode, amount, reason);
+  }
 
 }
