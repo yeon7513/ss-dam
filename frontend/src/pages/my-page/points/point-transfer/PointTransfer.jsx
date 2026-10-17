@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useLocation } from "react-router-dom";
 import styles from "./PointTransfer.module.scss";
-import PointRemittance from "../../../../components/my-page/point-transfer/PointRemittance.jsx";
-import PointWithdrawal from "../../../../components/my-page/point-transfer/PointWithdrawal.jsx";
+import PointRemittance from "./remittance/PointRemittance.jsx";
+import PointWithdrawal from "./withdrawal/PointWithdrawal.jsx";
 
 function PointTransfer() {
   const [activeTab, setActiveTab] = useState("remittance");
-  const { state: receiveInfo } = useLocation();
+  const { state } = useLocation();
+  const targetProductCode = state?.targetProductCode;
 
   return (
     <div className={styles.pointTransfer}>
@@ -27,7 +28,7 @@ function PointTransfer() {
 
       <div className={styles.contents}>
         {activeTab === "remittance" ? (
-          <PointRemittance receiveInfo={receiveInfo} />
+          <PointRemittance targetProductCode={targetProductCode} />
         ) : (
           <PointWithdrawal />
         )}

@@ -138,10 +138,7 @@ function ChatContainer({ roomId }) {
           className={styles.remitButton}
           onClick={() => navigate("/mypage/point/transfer", {
             state: {
-              receiverCode: productInfo?.memberProfile.code,
-              receiverId: productInfo?.memberProfile.id,
               targetProductCode: productInfo?.code,
-              amount: productInfo?.price,
             },
           })}
         >

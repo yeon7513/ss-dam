@@ -1,31 +1,31 @@
 package com.ss_dam.point.model;
 
 public class PaymentPoint {
-    private int point;
-    private Long seller_code;
-    private Long buyer_code;
+  private int point; // 거래할 포인트
+  private Long sellerCode; // 판매자
+  private Long buyerCode; // 구매자
 
-    public int getPoint() {
-        return point;
-    }
+  public int getPoint() {
+    return point;
+  }
 
-    public void setPoint(int point) {
-        this.point = point;
-    }
+  public void setPoint(int point) {
+    this.point = point;
+  }
 
-    public Long getSeller_code() {
-        return seller_code;
-    }
+  public Long getSellerCode() {
+    return sellerCode;
+  }
 
-    public void setSeller_code(Long seller_code) {
-        this.seller_code = seller_code;
-    }
+  public void setSellerCode(Long sellerCode) {
+    this.sellerCode = sellerCode;
+  }
 
-    public Long getBuyer_code() {
-        return buyer_code;
-    }
+  public Long getBuyerCode() {
+    return buyerCode;
+  }
 
-    public void setBuyer_code(Long buyer_code) {
-        this.buyer_code = buyer_code;
-    }
+  public void setBuyerCode(Long buyerCode) {
+    this.buyerCode = buyerCode;
+  }
 }
