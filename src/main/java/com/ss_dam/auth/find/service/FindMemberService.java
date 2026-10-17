@@ -11,4 +11,6 @@ public interface FindMemberService {
   Long findMemberPw(FindMember findMember);
 
   boolean changePw(ChangePassword changePassword);
+
+  boolean checkPassword(Long code, String password);
 }

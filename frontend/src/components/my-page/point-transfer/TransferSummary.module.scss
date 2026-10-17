@@ -1,0 +1,47 @@
+@use "../../../scss/variables.scss" as v;
+@use "../../../scss/mixin.scss" as mix;
+
+/* 연초록 송금 요약 박스 */
+.transferSummary {
+  background-color: v.$primary-5; // #cfe8dc
+  border: 1px solid v.$primary-20; // #88c5a7
+  border-radius: 12px;
+  padding: 16px 20px;
+  @include mix.flex(column, flex-start, stretch);
+  gap: 10px;
+  font-family: v.$font-main;
+
+  .row {
+    @include mix.flex(row, space-between, center);
+    font-size: 14px;
+    color: v.$grayscale-90; // #404241
+
+    .value {
+      font-weight: 600;
+      color: v.$grayscale-100;
+
+      &.deduct {
+        color: v.$dan-color; // #e53835
+      }
+    }
+  }
+
+  .divider {
+    height: 1px;
+    background-color: v.$primary-20;
+    margin: 2px 0;
+  }
+
+  .totalRow {
+    @include mix.flex(row, space-between, center);
+    font-size: 15px;
+    font-weight: 700;
+    color: v.$grayscale-100;
+
+    .totalValue {
+      color: v.$primary-40; // #399e6d
+      font-size: 16px;
+      font-weight: 800;
+    }
+  }
+}

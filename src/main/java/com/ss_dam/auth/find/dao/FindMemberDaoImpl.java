@@ -1,18 +1,19 @@
 package com.ss_dam.auth.find.dao;
 
-import org.apache.ibatis.session.SqlSession;
-import org.springframework.stereotype.Repository;
-
 import com.ss_dam.auth.find.model.ChangePassword;
 import com.ss_dam.auth.find.model.FindMember;
 import com.ss_dam.auth.login.model.response.MemberProfile;
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.stereotype.Repository;
+
+import java.util.Map;
 
 @Repository
 public class FindMemberDaoImpl implements FindMemberDao {
 
   private final SqlSession sql;
 
-  public FindMemberDaoImpl (SqlSession sql) {
+  public FindMemberDaoImpl(SqlSession sql) {
     this.sql = sql;
   }
 
@@ -29,5 +30,10 @@ public class FindMemberDaoImpl implements FindMemberDao {
   @Override
   public int changePassword(ChangePassword changePassword) {
     return sql.update("member.changePassword", changePassword);
+  }
+
+  @Override
+  public int checkPassword(Map<String, Object> params) {
+    return sql.selectOne("member.checkPassword", params);
   }
 }

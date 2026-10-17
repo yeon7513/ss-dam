@@ -1,2 +1,145 @@
 @use "../../../scss/variables.scss" as v;
 @use "../../../scss/mixin.scss" as mix;
+
+.pointHistory {
+  width: 100%;
+  color: #333;
+  font-size: 14px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+
+  h2 {
+    margin: 0;
+    color: #222;
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 8px 0 0;
+    color: #888;
+    font-size: 13px;
+  }
+}
+
+.count {
+  flex-shrink: 0;
+  color: #0d7c66;
+  font-weight: 600;
+}
+
+.tableWrap {
+  width: 100%;
+  overflow-x: auto;
+  border-top: 2px solid #25355d;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+  text-align: center;
+
+  thead {
+    background-color: #f7f8fa;
+
+    th {
+      padding: 16px 12px;
+      border-bottom: 1px solid #e5e7eb;
+      color: #555;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+  }
+
+  tbody {
+    tr {
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: #f8faf9;
+      }
+
+      &:not(:last-child) {
+        border-bottom: 1px solid #eee;
+      }
+    }
+
+    td {
+      padding: 17px 12px;
+      color: #555;
+      white-space: nowrap;
+    }
+  }
+}
+
+.dateColumn {
+  color: #777;
+  font-size: 13px;
+}
+
+.reasonColumn {
+  font-weight: 500;
+}
+
+.amountColumn {
+  text-align: right;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.pointBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.saved {
+  background-color: #e7f5ef;
+  color: #0d7c66;
+}
+
+.used {
+  background-color: #fff0ed;
+  color: #d45b46;
+}
+
+.savedAmount {
+  color: #0d7c66 !important;
+}
+
+.usedAmount {
+  color: #d45b46 !important;
+}
+
+.empty {
+  height: 180px;
+  color: #999 !important;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .header {
+    align-items: flex-start;
+
+    h2 {
+      font-size: 19px;
+    }
+  }
+
+  .tableWrap {
+    overflow-x: auto;
+  }
+}

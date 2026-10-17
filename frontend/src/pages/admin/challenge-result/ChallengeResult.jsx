@@ -1,206 +1,103 @@
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useMemo } from "react";
+import { Link } from "react-router-dom";
+import { formatImagePath } from "../../../utils/formatImagePath";
 
-import Pagination from '../../../components/common/pagination/Pagination';
-import { formatImagePath } from '../../../utils/formatImagePath';
-
-import styles from './ChallengeResult.module.scss';
-import ChallengeResultFilters from './ChallengeResultFilters';
+// 공통 UI 컴포넌트
+import Pagination from "../../../components/common/pagination/Pagination";
+import SearchFilterBar from "../../../components/dashboard/search-filter-bar/SearchFilterBar.jsx";
 import PanelHeader from "../../../layout/admin/panel-header/PanelHeader.jsx";
 
-const INITIAL_FILTERS = {
-  fromDate: '',
-  toDate: '',
-  categoryCode: '',
-  sort: 'LATEST',
-  keyword: '',
-};
+// 공통 훅
+import { useLoadData } from "../../../hooks/useLoadData.js";
+import { useSearchQuery } from "../../../hooks/useSearchQuery.js";
 
-const INITIAL_QUERY = {
-  ...INITIAL_FILTERS,
-  page: 1,
-  perPage: 10,
-  perGroup: 5,
-};
+// 상수
+import {
+  ADMIN_CHALLENGE_RESULT_CHALLENGE_SELECT,
+  ADMIN_CHALLENGE_RESULT_INITIAL_FILTERS,
+  ADMIN_CHALLENGE_RESULT_SORT_SELECT,
+} from "../../../constants/admin-challenge/ChallengeResult.constants.js";
+
+import styles from "./ChallengeResult.module.scss";
 
 function formatDate(value) {
-  return value ? String(value).slice(0, 10) : '-';
+  return value ? String(value).slice(0, 10) : "-";
 }
 
 function formatNumber(value) {
-  return value == null ? '-' : Number(value).toLocaleString('ko-KR');
+  return value == null ? "-" : Number(value).toLocaleString("ko-KR");
 }
 
 function formatRate(value) {
-  if (value == null) return '-';
+  if (value == null) return "-";
 
-  return `${Number(value).toLocaleString('ko-KR', {
+  return `${Number(value).toLocaleString("ko-KR", {
     maximumFractionDigits: 1,
   })}%`;
 }
 
 function paymentLabel(value) {
-  if (value === true) return '포인트 지급 완료';
-  if (value === false) return '포인트 지급 미완료';
+  if (value === true) return "포인트 지급 완료";
+  if (value === false) return "포인트 지급 미완료";
 
-  return '포인트 지급 여부 확인 불가';
+  return "포인트 지급 여부 확인 불가";
 }
 
-export default function ChallengeResult({ categories = [] }) {
-  // 입력 중인 검색 조건
-  const [filters, setFilters] = useState({ ...INITIAL_FILTERS });
+export default function ChallengeResult() {
+  // 검색 조건 <-> 주소줄 쿼리스트링 동기화
+  const { searchFilter, queryString, handleSearch, handleChangePages } =
+    useSearchQuery(ADMIN_CHALLENGE_RESULT_INITIAL_FILTERS);
 
-  // 실제 조회에 적용된 검색 조건
-  const [query, setQuery] = useState({ ...INITIAL_QUERY });
-  const [refreshKey, setRefreshKey] = useState(0);
+  // 종료 챌린지 목록 조회 (백엔드 파라미터 이름이 공통 필터와 같아서 그대로 전송)
+  const { data, loading, error, refetch } = useLoadData(
+    `/api/admin/challenge/result${queryString}`,
+  );
 
-  const [challenges, setChallenges] = useState([]);
-  const [pager, setPager] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [lastUpdated, setLastUpdated] = useState('');
+  // 챌린지 선택 옵션용 - 종료된 챌린지 목록
+  const { data: endedChallengeData } = useLoadData(
+    "/api/admin/challenge?progressStatus=ENDED&perPage=100",
+  );
 
-  useEffect(() => {
-    const controller = new AbortController();
-    let active = true;
+  // 셀렉트 그룹 조립: 챌린지(API) + 정렬(상수)
+  const selectGroups = useMemo(() => {
+    const list = Array.isArray(endedChallengeData)
+      ? endedChallengeData
+      : endedChallengeData?.content || [];
 
-    async function loadChallenges() {
-      setLoading(true);
-      setError('');
+    return [
+      {
+        ...ADMIN_CHALLENGE_RESULT_CHALLENGE_SELECT,
+        options: list.map((item) => ({
+          code: String(item.code),
+          name: item.title,
+        })),
+      },
+      ADMIN_CHALLENGE_RESULT_SORT_SELECT,
+    ];
+  }, [endedChallengeData]);
 
-      const params = new URLSearchParams();
-
-      Object.entries(query).forEach(([key, value]) => {
-        if (value !== '' && value !== null && value !== undefined) {
-          params.set(key, String(value));
-        }
-      });
-
-      try {
-        const response = await fetch(
-          `/api/admin/challenge/result?${params.toString()}`,
-          {
-            credentials: 'include',
-            signal: controller.signal,
-          },
-        );
-
-        const result = await response.json();
-
-        if (!response.ok || !result.success) {
-          throw new Error(
-            result.message || `종료 챌린지 조회 실패 (HTTP ${response.status})`,
-          );
-        }
-
-        if (
-          !Array.isArray(result.data?.content) ||
-          !result.data?.pager ||
-          !Array.isArray(result.data.pager.list)
-        ) {
-          throw new Error('목록 응답 형식이 올바르지 않습니다.');
-        }
-
-        if (!active) return;
-
-        setChallenges(result.data.content);
-        setPager(result.data.pager);
-
-        setLastUpdated(
-          `${new Date().toLocaleString('ko-KR', {
-            timeZone: 'Asia/Seoul',
-          })} 조회`,
-        );
-      } catch (err) {
-        if (!active || err.name === 'AbortError') return;
-
-        setChallenges([]);
-        setPager(null);
-        setError(err.message || '종료 챌린지를 불러오지 못했습니다.');
-      } finally {
-        if (active) {
-          setLoading(false);
-        }
-      }
-    }
-
-    loadChallenges();
-
-    // 이전 요청의 응답이 최신 결과를 덮어쓰지 않도록 방지
-    return () => {
-      active = false;
-      controller.abort();
-    };
-  }, [query, refreshKey]);
-
-  const handleFilterChange = (name, value) => {
-    setFilters((previous) => ({
-      ...previous,
-      [name]: value,
-    }));
-  };
-
-  const handleSearch = () => {
-    setQuery({
-      ...INITIAL_QUERY,
-      ...filters,
-      keyword: filters.keyword.trim(),
-      page: 1,
-    });
-  };
-
-  const handleReset = () => {
-    setFilters({ ...INITIAL_FILTERS });
-    setQuery({ ...INITIAL_QUERY });
-  };
-
-  const handleRefresh = () => {
-    if (loading) return;
-
-    setRefreshKey((previous) => previous + 1);
-  };
-
-  const handlePageChange = (page) => {
-    if (
-      loading ||
-      !pager ||
-      page < 1 ||
-      page > pager.last ||
-      page === query.page
-    ) {
-      return;
-    }
-
-    // 입력 중인 조건이 아닌, 적용된 조건으로 페이지 이동
-    setQuery((previous) => ({
-      ...previous,
-      page,
-    }));
-  };
+  const challenges = data?.content || [];
+  const pager = data?.pager || null;
 
   return (
     <div className={styles.container}>
-      <PanelHeader
-        title="종료 데이터 분석"
-        lastUpdated={lastUpdated}
-        isSpinning={loading}
-        handleRefresh={handleRefresh}
-      />
+      <PanelHeader title="종료 데이터 분석" onRefresh={refetch} />
 
-      <ChallengeResultFilters
-        filters={filters}
-        categories={categories}
-        loading={loading}
-        onChange={handleFilterChange}
+      {/* 공통 검색 필터 (기간 + 챌린지 + 정렬 + 검색) */}
+      {/* 기간: 선택한 기간과 진행 기간이 겹치는 챌린지를 조회 */}
+      <SearchFilterBar
+        key={queryString}
+        initFilter={ADMIN_CHALLENGE_RESULT_INITIAL_FILTERS}
+        searchFilter={searchFilter}
+        selectGroups={selectGroups}
         onSearch={handleSearch}
-        onReset={handleReset}
       />
 
       <div className={styles.summary}>
         {loading
-          ? '조회 중'
+          ? "조회 중"
           : error
-            ? '조회 실패'
+            ? "조회 실패"
             : `총 ${formatNumber(pager?.total ?? 0)}개`}
       </div>
 
@@ -211,8 +108,8 @@ export default function ChallengeResult({ categories = [] }) {
           </p>
         ) : error ? (
           <div className={styles.message} role="alert">
-            <p>{error}</p>
-            <button type="button" onClick={handleRefresh}>
+            <p>{error?.message || "종료 챌린지를 불러오지 못했습니다."}</p>
+            <button type="button" onClick={refetch}>
               다시 시도
             </button>
           </div>
@@ -248,25 +145,25 @@ export default function ChallengeResult({ categories = [] }) {
 
                   <p className={styles.period}>
                     {formatDate(challenge.startDate)}
-                    {' ~ '}
+                    {" ~ "}
                     {formatDate(challenge.endDate)}
                   </p>
 
                   <p className={styles.description}>
-                    {challenge.content || '등록된 설명이 없습니다.'}
+                    {challenge.content || "등록된 설명이 없습니다."}
                   </p>
 
                   <div className={styles.footer}>
                     <div className={styles.author}>
-                      <strong>{challenge.adminId || '관리자'}</strong>
-                      <span>{challenge.adminRole || ''}</span>
+                      <strong>{challenge.adminId || "관리자"}</strong>
+                      <span>{challenge.adminRole || ""}</span>
                     </div>
 
                     <div className={styles.badges}>
                       <span>{paymentLabel(challenge.rewardPaid)}</span>
 
                       <span>
-                        평균 달성률{' '}
+                        평균 달성률{" "}
                         {formatRate(challenge.averageAchievementRate)}
                       </span>
 
@@ -284,8 +181,9 @@ export default function ChallengeResult({ categories = [] }) {
         )}
       </section>
 
+      {/* 페이지 이동 */}
       {!loading && !error && pager && pager.last > 1 && (
-        <Pagination pager={pager} onChangePage={handlePageChange} />
+        <Pagination pager={pager} onChangePage={handleChangePages} />
       )}
     </div>
   );

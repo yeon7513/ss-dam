@@ -4,28 +4,6 @@
   background: #f8f9fb;
 }
 
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.registerButton {
-  padding: 10px 16px;
-  border: 0;
-  border-radius: 4px;
-  background: #374151;
-  color: #fff;
-  font-size: 13px;
-  text-decoration: none;
-  cursor: pointer;
-
-  &:hover {
-    background: #1f2937;
-  }
-}
-
 .challengeList {
   display: flex;
   flex-direction: column;
@@ -166,16 +144,6 @@
 @media (max-width: 520px) {
   .container {
     padding: 14px;
-  }
-
-  .header {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .registerButton {
-    align-self: flex-end;
   }
 
   .thumbnail {

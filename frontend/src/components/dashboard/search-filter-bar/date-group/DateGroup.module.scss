@@ -4,10 +4,19 @@
 .dateGroup {
   @include mix.flex;
   gap: 0.25rem;
-  margin-top: 0.5rem;
-  width: 100%;
+
+  // TextInput 래퍼의 width: 100% 해제
+  > div {
+    width: auto;
+  }
 
   input[type="date"] {
     width: 10rem;
+  }
+
+  // 화살표 아이콘
+  > span {
+    @include mix.flex;
+    color: v.$grayscale-50;
   }
 }

@@ -44,12 +44,12 @@
                 </choose>
             </if>
 
-            <!-- 회원 구분: null이면 전체 -->
+            <!-- 회원 구분: null이면 전체 (MemberStatus enum 값 기준) -->
             <if test="filter.status != null">
                 <choose>
 
                     <!-- 일반 -->
-                    <when test="filter.status.name() == 'NORMAL'">
+                    <when test="filter.status.name() == 'ACTIVE'">
                         AND m.STATUS = 'ACTIVE'
                         AND m.DELETE_YN = 0
                     </when>
@@ -61,13 +61,13 @@
                     </when>
 
                     <!-- 휴면 -->
-                    <when test="filter.status.name() ==  'SLEEP'">
+                    <when test="filter.status.name() == 'SLEEP'">
                         AND m.STATUS = 'SLEEP'
                         AND m.DELETE_YN = 0
                     </when>
 
-                    <!-- 탈퇴-->
-                    <when test="filter.status.name() == 'WITHDRAWN'">
+                    <!-- 탈퇴 -->
+                    <when test="filter.status.name() == 'WITHDRAW'">
                         AND m.DELETE_YN = 1
                     </when>
 

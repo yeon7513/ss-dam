@@ -30,4 +30,17 @@
     WHERE CODE = #{code}
   </update>
 
+  <select id="findSellerCodeByProdCode" resultType="Long">
+    SELECT mem_code
+    FROM MARKET_PRODUCT
+    WHERE code = #{prodCode}
+  </select>
+
+  <select id="loadPointHistory" resultType="PointLog">
+    SELECT *
+    FROM POINT_LOG
+    WHERE MEM_CODE = ${memCode}
+    ORDER BY CREATED_AT DESC
+  </select>
+
 </mapper>

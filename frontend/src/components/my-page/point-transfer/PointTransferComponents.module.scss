@@ -1,0 +1,27 @@
+@use "../../../scss/variables.scss" as v;
+@use "../../../scss/mixin.scss" as mix;
+
+.requiredIcon {
+  color: v.$dan-color;
+  font-size: 12px;
+  margin-left: 2px;
+  vertical-align: middle;
+}
+
+/* 송금할 포인트 입력 영역 및 하단 송금 가능 그루 */
+.amountPoint {
+  @include mix.flex(column, flex-start, stretch);
+  gap: 6px;
+
+  > div:last-child {
+    @include mix.flex(row, space-between, center);
+    font-size: 13px;
+    color: v.$grayscale-70;
+    margin-top: 2px;
+
+    span:last-child {
+      font-weight: 700;
+      color: v.$primary-40;
+    }
+  }
+}

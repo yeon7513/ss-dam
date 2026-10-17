@@ -54,7 +54,7 @@ export const MYPAGE_MENU = [
   {
     category: "챌린지",
     subMenus: [
-      { name: "참여한 챌린지", path: "" },
+      { name: "참여한 챌린지", path: "/mypage/challenges" },
       { name: "내 랭킹 조회", path: "" },
     ],
   },
@@ -77,7 +77,7 @@ export const MYPAGE_MENU = [
     category: "내 정보",
     subMenus: [
       { name: "정보 변경", path: "/mypage/edit_profile" },
-      { name: "회원 탈퇴", path: "" },
+      { name: "회원 탈퇴", path: "/mypage/withdraw" },
     ],
   },
 ];

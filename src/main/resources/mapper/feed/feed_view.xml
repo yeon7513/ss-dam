@@ -66,11 +66,16 @@
       <if test="chalCode != null and chalCode != 0">
         AND f.chal_code = #{chalCode}
       </if>
-      <!-- 키워드 검색 -->
+         <!-- 키워드 검색 (제목, 내용, 해시태그) -->
       <if test="keyword != null and keyword.trim() != ''">
         AND (
         f.title LIKE CONCAT('%', #{keyword}, '%')
-        OR f.content LIKE CONCAT('%', #{keyword}, '%'))
+        OR f.content LIKE CONCAT('%', #{keyword}, '%')
+        OR f.code IN (
+          SELECT fh_kw.feed_code
+          FROM FEED_HASHTAG fh_kw
+          WHERE fh_kw.tag_name LIKE CONCAT('%', #{keyword}, '%')
+        ))
       </if>
       <!-- 해시태그별 조회 -->
       <if test="tagName != null and tagName.trim() != ''">
@@ -249,6 +254,29 @@
     AND mem_code = #{memCode}
     AND status = 'active'
     AND delete_yn = 0
+  </select>
+
+  <!-- 내가 작성한 피드 요약 (마이페이지) -->
+  <select id="loadMyFeedSummary" resultType="map">
+    SELECT
+    COUNT(*) AS totalFeeds,
+    IFNULL(SUM(cnt_like.cnt), 0) AS totalLikes,
+    IFNULL(SUM(hit_log.hit_cnt), 0) AS totalHits
+    FROM FEED f
+    LEFT JOIN (
+    SELECT fl.feed_code, count(*) AS cnt
+    FROM FEED_LIKE fl
+    WHERE fl.delete_yn = 0
+    GROUP BY fl.feed_code
+    ) AS cnt_like ON cnt_like.feed_code = f.code
+    LEFT JOIN (
+    SELECT fhl.feed_code, count(*) AS hit_cnt
+    FROM FEED_HIT_LOG fhl
+    GROUP BY fhl.feed_code
+    ) AS hit_log ON hit_log.feed_code = f.code
+    WHERE f.mem_code = #{value}
+    AND f.status = 'active'
+    AND f.delete_yn = 0
   </select>
 
 </mapper>

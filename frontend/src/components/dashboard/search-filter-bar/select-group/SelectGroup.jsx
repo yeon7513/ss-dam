@@ -1,9 +1,9 @@
-import React from 'react';
 import SelectBox from "../../../forms/select-box/SelectBox.jsx";
 import styles from "./SelectGroup.module.scss";
 
+// 라벨 없이 드롭다운만 렌더링
+// -> placeholder(그룹 이름)가 드롭다운 기본 문구 역할
 function SelectGroup({
-  label,
   name,
   selectOptions,
   placeholder,
@@ -25,7 +25,6 @@ function SelectGroup({
 
   return (
     <div className={styles.select}>
-      <label htmlFor={name}>{label}</label>
       <SelectBox
         className={styles.selectBox}
         name={name}

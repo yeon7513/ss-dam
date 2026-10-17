@@ -10,10 +10,11 @@ export const ADMIN_ACCOUNT_INITIAL_FILTERS = {
   toDate: "",
 };
 
+// 활성 상태 옵션 (계정 상세 수정 화면 ControlSection.jsx에서도 사용 -> "전체" 넣지 않음)
 export const ADMIN_ACCOUNT_STATUS_OPTIONS = [
   { code: false, name: "활성" },
   { code: true, name: "비활성" },
-]
+];
 
 export const ADMIN_ACCOUNT_DEPT_OPTIONS = [
   { code: "OPERATION", name: "운영·관리" },
@@ -26,12 +27,12 @@ export const ADMIN_ACCOUNT_ROLE_OPTIONS = [
   { code: "ROLE_STAFF", name: "스태프" },
 ];
 
-// 관리자 활성 상태
+// 관리자 활성 상태 (검색 필터용 - 맨 앞에 "전체" 추가, 박스형 라디오)
 export const ADMIN_ACCOUNT_STATUS = [
   {
     label: "상태",
     name: "deleted",
-    options: ADMIN_ACCOUNT_STATUS_OPTIONS,
+    options: [{ code: "", name: "전체" }, ...ADMIN_ACCOUNT_STATUS_OPTIONS],
   },
 ];
 
@@ -50,5 +51,3 @@ export const ADMIN_ACCOUNT_SELECT_OPTIONS = [
     options: ADMIN_ACCOUNT_ROLE_OPTIONS,
   },
 ];
-
-

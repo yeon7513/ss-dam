@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import PanelHeader from '../../../components/dashboard/panel-header/PanelHeader.jsx';
 import Pagination from '../../../components/common/pagination/Pagination';
+import PanelHeader from '../../../components/dashboard/panel-header/PanelHeader.jsx';
 import ChallengeManageFilters from '../challenge-manage/ChallengeManageFilters';
 import styles from './ChallengeManage.module.scss';
 
