@@ -43,19 +43,21 @@ import Market from "./pages/market/Market";
 import MarketPayment from "./pages/market/market-payment/MarketPayment";
 import ProductDetail from "./pages/market/product-detail/ProductDetail.jsx";
 import ProductRegister from "./pages/market/product-register/ProductRegister";
+import ProductReport from "./pages/market/product-report/ProductReport.jsx";
+import PostReport from "./pages/report/PostReport.jsx";
 import ProductUpdate from "./pages/market/product-update/ProductUpdate.jsx";
 import Deal from "./pages/my-page/deal/Deal";
 import EditProfile from "./pages/my-page/my-account/edit_profile/EditProfile";
-import MyPage from "./pages/my-page/MyPage.jsx";
-import PointCharge from "./pages/my-page/points/PointCharge.jsx";
 import Withdraw from "./pages/my-page/my-account/withdraw/Withdraw.jsx";
+import MyActivity from "./pages/my-page/my-activity/MyActivity.jsx";
+import MyPage from "./pages/my-page/MyPage.jsx";
+import PointTransfer from "./pages/my-page/points/point-transfer/PointTransfer.jsx";
+import PointCharge from "./pages/my-page/points/PointCharge.jsx";
+import PointHistory from "./pages/my-page/points/PointHistory.jsx";
 import SupportDetail from "./pages/support/SupportDetail";
 import Supports from "./pages/support/Supports";
 import AdminRoute from "./routes/AdminRoute.jsx";
 import ProtectedRoute from "./routes/ProtectedRoute.jsx";
-import PointHistory from "./pages/my-page/points/PointHistory.jsx";
-import PointTransfer from "./pages/my-page/points/point-transfer/PointTransfer.jsx";
-import MyActivity from "./pages/my-page/my-activity/MyActivity.jsx";
 
 function App() {
   return (
@@ -67,6 +69,9 @@ function App() {
         {/* 피드 */}
         <Route path="/feed">
           <Route index element={<Feed />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path=":code/report" element={<PostReport targetType="feed" />} />
+          </Route>
           {/*<Route element={<ProtectedRoute />}>*/}
           <Route path="register" element={<FeedRegister />} />
           <Route path="edit/:code" element={<FeedUpdate />} />
@@ -89,6 +94,9 @@ function App() {
           <Route path="edit/:code" element={<ProductUpdate />} />
           {/*</Route>*/}
           <Route path="payment" element={<MarketPayment />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path=":code/report" element={<ProductReport />} />
+          </Route>
         </Route>
 
         {/* 로그인 */}
@@ -122,6 +130,7 @@ function App() {
 
         {/* 일반회원 - 마이페이지 */}
         <Route element={<ProtectedRoute />}>
+          <Route path="members/:code/report" element={<PostReport targetType="user" />} />
           <Route path="/mypage" element={<MyPage />}>
             <Route index element={<MyActivity />} />
             <Route path="edit_profile" element={<EditProfile />} />

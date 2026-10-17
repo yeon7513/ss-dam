@@ -1,6 +1,26 @@
 @use "../../../scss/variables.scss" as v;
 @use "../../../scss/mixin.scss" as mix;
 
+.dateRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.reportLink {
+  margin-left: auto;
+  color: #777;
+  font-size: 13px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  &:hover { color: #2e9377; }
+  &:focus-visible { outline: 2px solid #2e9377; outline-offset: 3px; }
+}
+
 .feedDetail {
   padding: 32px;
 

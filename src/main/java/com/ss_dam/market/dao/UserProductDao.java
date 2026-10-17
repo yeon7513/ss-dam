@@ -25,5 +25,7 @@ public interface UserProductDao {
 
   void registerProductPost(ProductCreate productCreate);
 
-  void registerProductPostHitcountLog(Map<String, Object> params);
+  void registerProductPostHitcountLog(Map<String, Object> params);  
+
+  void updateProductDealStatus(Map<String, Object> updateParams);
 }

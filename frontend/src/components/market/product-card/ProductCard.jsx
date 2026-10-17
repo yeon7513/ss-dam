@@ -31,7 +31,7 @@ function ProductCard({ product }) {
     >
       {/* 프로필 카드 영역 */}
       <div className={styles.profileWrap}>
-        <ProfileCard memberProfile={product.memberProfile} />
+        <ProfileCard memberProfile={product.memberProfile} showMore={false} />
       </div>
 
       {/* 썸네일 영역 */}

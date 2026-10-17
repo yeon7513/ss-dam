@@ -1,7 +1,7 @@
 import ProfileCard from "../../../auth/profile-card/ProfileCard.jsx";
 import { formatCreatedAt } from "../../../../utils/formatDate.js";
 import styles from "./CommentItem.module.scss";
-import { HiDotsVertical } from "react-icons/hi";
+import MemberActions from "../../../auth/member-actions/MemberActions.jsx";
 import { useAuth } from "../../../../context/AuthContext.jsx";
 import LikeButton from "../../../common/button/like/LikeButton.jsx";
 import Button from "../../../common/button/Button.jsx";
@@ -27,9 +27,7 @@ const CommentItem = ({ comment, readOnly = false }) => {
             </div>
           }
         />
-        <button type="button" className={styles.more}>
-          <HiDotsVertical />
-        </button>
+        {!readOnly && <MemberActions memberProfile={comment.memberProfile} />}
       </div>
       <div className={styles.contents}>
         <p>{comment.content}</p>

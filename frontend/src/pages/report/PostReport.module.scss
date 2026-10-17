@@ -1,0 +1,76 @@
+.wrap {
+  width: 100%;
+  max-width: 420px;
+  margin: 64px auto;
+  padding: 0 24px;
+  box-sizing: border-box;
+  color: #333;
+}
+
+.title {
+  margin: 0 0 32px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.productInfo {
+  padding-bottom: 20px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #e5e8eb;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.caption { color: #747b83; font-size: 12px; }
+.productTitle { margin-top: 6px; font-size: 15px; font-weight: 600; overflow-wrap: anywhere; }
+.fields { min-width: 0; margin: 0; padding: 0; border: 0; }
+.label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  span { color: #747b83; font-size: 12px; }
+  .required { color: #2e9377; }
+}
+
+.input, .textarea {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid transparent;
+  border-bottom-color: #d9dee5;
+  border-radius: 0;
+  background: #f2f4f8;
+  color: #333;
+  font: inherit;
+  font-size: 13px;
+  &:focus-visible { outline: 2px solid #2e9377; outline-offset: 2px; }
+  &::placeholder { color: #747b83; }
+}
+
+.input { margin-bottom: 24px; }
+.textarea { min-height: 160px; resize: vertical; line-height: 1.7; }
+.count { margin-top: 6px; color: #747b83; text-align: right; font-size: 12px; }
+.guide { margin: 12px 0 24px; color: #747b83; font-size: 12px; line-height: 1.6; }
+.error { margin-bottom: 16px; color: #b33434; font-size: 13px; line-height: 1.6; }
+.submit {
+  width: 100%;
+  min-height: 46px;
+  border: 0;
+  background: #2e9377;
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  &:hover:not(:disabled) { background: #24775f; }
+  &:disabled { background: #c1c6cc; cursor: not-allowed; }
+  &:focus-visible { outline: 2px solid #24775f; outline-offset: 3px; }
+}
+.back { margin-top: 20px; text-align: center; font-size: 12px; color: #747b83; a { color: inherit; text-underline-offset: 3px; } }
+.srOnly { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+@media (max-width: 480px) {
+  .wrap { margin: 40px auto; padding: 0 20px; }
+}

@@ -9,17 +9,24 @@
   <!-- 일반 사용자용 전체 리스트 -->
   <resultMap id="UserProductViewMap" type="UserProductView" autoMapping="true">
     <id column="code" property="code" />
+    
+    <result column="title" property="title"/>
+    <result column="price" property="price"/>
+    <result column="deal_status" property="dealStatus"/>
+    <result column="buyer_code" property="buyerCode"/>    
+    <result column="created_at" property="createdAt"/>
+    <result column="updated_at" property="updatedAt"/>
 
-    <!-- 회원 프로필카드 매핑 -->
-    <collection property="memberProfile" javaType="MemberProfile" ofType="MemberProfile" autoMapping="true"
-                columnPrefix="m_">
+    <!-- 회원 프로필카드 매핑 (★ 수정: collection -> association) -->
+    <association property="memberProfile" javaType="MemberProfile" autoMapping="true" columnPrefix="m_">
       <id column="code" property="code" />
-    </collection>
+    </association>
   </resultMap>
 
   <!-- 거래글 상세 조회 -->
   <resultMap id="ProductDetailMap" type="ProductDetail" autoMapping="true" extends="UserProductViewMap">
-    <!-- 등록한 이미지 리스트 -->
+    <result column="content" property="content"/>
+    <!-- 등록한 이미지 리스트 (1:N 조인) -->
     <collection property="imagePaths" javaType="ArrayList" ofType="String">
       <result column="image_paths" />
     </collection>
@@ -28,6 +35,7 @@
   <!-- 거래글 수정용 데이터 조회 -->
   <resultMap id="ProductEditViewMap" type="ProductEditView" autoMapping="true">
     <id column="code" property="code" />
+    <result column="deal_status" property="dealStatus"/>
     <!-- 등록한 이미지 리스트 -->
     <collection property="imagePaths" javaType="ArrayList" ofType="String">
       <result column="image_paths" />
@@ -90,6 +98,7 @@
     MP.title,
     MP.price,
     MP.deal_status,
+    MP.buyer_code,
     MP.created_at,
     MP.updated_at,
     main_category.TOP_CATE_NAME AS main_category_name,
@@ -222,7 +231,7 @@
     WHERE MP.code = #{prodCode}
   </select>
 
-  <!-- 수정할 거래글 데이터 조회 -> 카테고리 부분 더 손봐야함 -->
+  <!-- 수정할 거래글 데이터 조회 -->
   <select id="findProductDetailForEdit" resultMap="ProductEditViewMap">
     SELECT
     p.code,
@@ -249,5 +258,13 @@
     WHERE p.code = #{prodCode}
     AND p.mem_code = #{memCode}
   </select>
+  
+  <update id="updateProductDealStatus">
+    UPDATE MARKET_PRODUCT
+    SET deal_status = #{dealStatus},
+        buyer_code = #{buyerCode},
+        updated_at = NOW()
+    WHERE code = #{prodCode}
+  </update>
 
 </mapper>

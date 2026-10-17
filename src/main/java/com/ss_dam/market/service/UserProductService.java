@@ -21,4 +21,10 @@ public interface UserProductService {
   void deleteProductPost(Long prodCode, AuthProfile loginUser);
 
   Long registerProductPost(ProductCreate productCreate, AuthProfile loginUser);
+
+  void purchaseProduct(Long prodCode, AuthProfile loginUser);
+
+  void completeProductTrade(Long prodCode, AuthProfile loginUser);
+
+  void cancelProductTrade(Long prodCode, AuthProfile loginUser);
 }

@@ -81,6 +81,7 @@ function CategorySelectBox({
       <SelectBox
         options={categories}
         placeholder="대분류"
+        hidePlaceholderOption
         selectedValue={parentCode}
         name="parentCategory"
         onChange={handleChangeParentCategory}
@@ -89,6 +90,7 @@ function CategorySelectBox({
       <SelectBox
         options={subCategoryOptions}
         placeholder="소분류"
+        hidePlaceholderOption
         selectedValue={subCode}
         disabled={!parentCode || subCategoryOptions.length === 0}
         name="cateCode"

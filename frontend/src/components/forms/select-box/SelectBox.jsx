@@ -10,6 +10,7 @@ function SelectBox({
   onChange,
   selectedValue, // 수정 시 이미 선택된 value
   placeholder = "선택",
+  hidePlaceholderOption = false,
   disabled = false,
 }) {
   return (
@@ -21,7 +22,7 @@ function SelectBox({
         value={selectedValue || ""} // 수정 시 사용할 선택된 옵션으로 미리 선택되게
         disabled={disabled}
       >
-        <option key="default" value="">
+        <option key="default" value="" disabled={hidePlaceholderOption} hidden={hidePlaceholderOption}>
           {placeholder}
         </option>
         {options &&

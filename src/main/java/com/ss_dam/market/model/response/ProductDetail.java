@@ -9,6 +9,8 @@ public class ProductDetail extends UserProductView {
   private String content; // 본문
 
   private List<String> imagePaths; // 등록한 이미지의 경로 (화면 렌더링용)
+  
+  private Long buyerCode;
 
   // GETTER, SETTER
   public String getContent() {
@@ -26,4 +28,14 @@ public class ProductDetail extends UserProductView {
   public void setImagePaths(List<String> imagePaths) {
     this.imagePaths = imagePaths;
   }
+
+  public Long getBuyerCode() {
+	return buyerCode;
+  }
+
+  public void setBuyerCode(Long buyerCode) {
+	this.buyerCode = buyerCode;
+  }
+
+  
 }
