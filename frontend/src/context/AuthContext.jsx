@@ -20,8 +20,9 @@ export function AuthProvider({ children }) {
       name: responseData.name,
     };
 
+    // role은 { code, label } 객체이므로 code로 비교함.
     const loggedInUser =
-      responseData.role === "ROLE_MEMBER"
+      responseData.role?.code === "ROLE_MEMBER"
         ? {
           ...baseData,
           rating: responseData.rating,
@@ -171,6 +172,7 @@ export function AuthProvider({ children }) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
 

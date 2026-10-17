@@ -1,5 +1,7 @@
 package com.ss_dam.feed.service;
 
+import java.util.Map;
+
 import com.ss_dam.auth.login.model.response.AuthProfile;
 import com.ss_dam.common.pager.PageResult;
 import com.ss_dam.feed.model.filter.UserFeedSearchFilter;
@@ -23,4 +25,7 @@ public interface UserFeedService {
   void deleteFeed(Long feedCode, AuthProfile loginUser);
 
   int getProofCount(int chalCode, int memCode);
+
+  // 내가 작성한 피드 요약
+  Map<String, Object> loadMyFeedSummary(Long memberCode);
 }

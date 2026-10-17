@@ -149,12 +149,19 @@
   }
 
   /* 게시글 관리 버튼 영역 */
-  .actionButtons {
+    .actionButtons {
     display: flex;
     justify-content: flex-end;
-    margin-top: 12px;
+    margin-top: 20px;
     align-items: center;
-    gap: 0.2rem;
+    gap: 0.5rem;
+
+    /* 수정·삭제 박스 버튼 크기 및 모서리 */
+    button {
+      min-width: 72px;
+      min-height: 48px;
+      padding: 0.5rem 1rem;
+    }
   }
 
   /* 게시글 신고하기 - 마켓 */

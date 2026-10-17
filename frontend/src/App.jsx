@@ -44,8 +44,8 @@ import MarketPayment from "./pages/market/market-payment/MarketPayment";
 import ProductDetail from "./pages/market/product-detail/ProductDetail.jsx";
 import ProductRegister from "./pages/market/product-register/ProductRegister";
 import ProductReport from "./pages/market/product-report/ProductReport.jsx";
-import PostReport from "./pages/report/PostReport.jsx";
 import ProductUpdate from "./pages/market/product-update/ProductUpdate.jsx";
+import Activities from "./pages/my-page/activities/Activities.jsx";
 import Deal from "./pages/my-page/deal/Deal";
 import EditProfile from "./pages/my-page/my-account/edit_profile/EditProfile";
 import Withdraw from "./pages/my-page/my-account/withdraw/Withdraw.jsx";
@@ -54,6 +54,7 @@ import MyPage from "./pages/my-page/MyPage.jsx";
 import PointTransfer from "./pages/my-page/points/point-transfer/PointTransfer.jsx";
 import PointCharge from "./pages/my-page/points/PointCharge.jsx";
 import PointHistory from "./pages/my-page/points/PointHistory.jsx";
+import PostReport from "./pages/report/PostReport.jsx";
 import SupportDetail from "./pages/support/SupportDetail";
 import Supports from "./pages/support/Supports";
 import AdminRoute from "./routes/AdminRoute.jsx";
@@ -133,6 +134,7 @@ function App() {
           <Route path="members/:code/report" element={<PostReport targetType="user" />} />
           <Route path="/mypage" element={<MyPage />}>
             <Route index element={<MyActivity />} />
+            <Route path="activities" element={<Activities />} />
             <Route path="edit_profile" element={<EditProfile />} />
             <Route path="withdraw" element={<Withdraw />} />
             <Route path="deal" element={<Deal />} />

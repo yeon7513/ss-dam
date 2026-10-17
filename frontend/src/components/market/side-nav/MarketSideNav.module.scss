@@ -43,7 +43,35 @@
 }
 
 /* 서브 메뉴 영역 */
+.categoryRow {
+  display: flex;
+  align-items: stretch;
+
+  &:hover > button {
+    background-color: v.$grayscale-5;
+  }
+
+  > button:first-child {
+    flex: 1;
+    min-width: 0;
+    padding-right: 8px;
+  }
+
+  .toggle {
+    flex: 0 0 40px;
+    width: 40px;
+    padding: 0;
+    justify-content: center;
+
+    svg { color: #888; font-size: 20px; transition: transform 0.2s; }
+    .expandedArrow { transform: rotate(180deg); }
+  }
+
+  button:focus-visible { outline: 2px solid v.$point-60; outline-offset: -2px; }
+}
+
 .subMenu {
+  &[hidden] { display: none; }
   margin: 0;
   padding: 0;
 

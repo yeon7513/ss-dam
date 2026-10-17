@@ -1,175 +1,143 @@
 @use "../../../scss/variables.scss" as v;
 @use "../../../scss/mixin.scss" as mix;
 
-/* 전체 영역 */
+/* 전체 3열 그리드 레이아웃 */
 .wrap {
   @include mix.wrap;
-}
-
-/* 사이드바 영역 */
-.sideNavWrap {
-  position: sticky;
-  top: 1.25rem;
-  align-self: flex-start;
-  flex: 0 0 18.75rem;
-
-  width: 18.75rem;
-}
-
-/* 메인 컨테이너 영역 */
-.container {
-  flex: 1;
-  min-width: 0;
-}
-
-/* 브레드크럼 영역 */
-.breadcrumb {
-  margin-bottom: 2rem;
-}
-
-/* 챌린지 콘텐츠 영역 */
-.contents {
-  display: flex;
-  align-items: flex-start;
-
-  width: 100%;
-  margin-bottom: 2rem;
+  display: grid;
+  grid-template-columns: 19rem 1fr 20rem;
+  align-items: flex-start; /* sticky 동작을 위해 필수 유지 */
   gap: 2rem;
+
+  @media screen and (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
 }
 
-/* 메인 상세 정보 영역 */
+/* 1열 사이드바 영역 */
+.sidebarWrap {
+  position: sticky;
+  top: 1rem;
+}
+
+/* 2열 메인 콘텐츠 영역 */
 .mainContent {
-  flex: 1;
   min-width: 0;
-}
 
-/* 상단 헤더 영역 */
-.headerArea {
-  margin-bottom: 1.5rem;
-  padding-bottom: 19px;
-  border-bottom: 1px solid v.$grayscale-20;
-}
-
-/* 헤더 상단 영역 */
-.headerTop {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  margin-bottom: 0.625rem;
-}
-
-/* 상태 배지 영역 */
-.statusBadge {
-  display: inline-block;
-
-  padding: 4px 12px;
-  border-radius: 14px;
-
-  background-color: v.$primary-40;
-
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: v.$color-white;
-}
-
-/* 제목 영역 */
-.title {
-  margin: 0 0 0.5rem;
-
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: v.$grayscale-90;
-
-  word-break: keep-all;
-}
-
-/* 부제목 영역 */
-.subTitle {
-  margin: 0 0 1rem;
-
-  font-size: 0.9375rem;
-  color: v.$grayscale-50;
-}
-
-/* 카테고리 태그 영역 */
-.categoryTags {
-  display: flex;
-  gap: 0.5rem;
-}
-
-/* 태그 항목 */
-.tag {
-  padding: 5px 12px;
-  border-radius: 6px;
-
-  background-color: v.$grayscale-5;
-
-  font-size: 0.8125rem;
-  color: v.$grayscale-90;
-}
-
-/* 메인 배너 영역 */
-.bannerContainer {
-  width: 100%;
-  height: 15.9375rem;
-  margin-bottom: 2rem;
-  border-radius: 10px;
-
-  overflow: hidden;
-}
-
-/* 배너 이미지 */
-.bannerImg {
-  width: 100%;
-  height: 100%;
-
-  object-fit: cover;
-}
-
-/* 그래픽 히어로 영역 */
-.hero {
-  position: relative;
-
-  width: 100%;
-  height: 15.9375rem;
-  border: 1px solid v.$primary-40;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-/* 소개 섹션 영역 */
-.introSection {
-  margin-top: 0.625rem;
-
-  .sectionTitle {
-    margin: 0 0 1rem;
-
-    font-size: 1.125rem;
-    font-weight: 700;
-    color: v.$primary-40;
+  .breadcrumb {
+    margin-bottom: 1.5rem;
   }
 
-  .sectionBody {
-    p {
-      margin: 0.5rem 0;
+  /* 헤더 영역 */
+  .headerArea {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid v.$grayscale-20;
 
-      font-size: 1rem;
-      line-height: 1.6;
+    .statusBadge {
+      display: inline-block;
+      margin-bottom: 0.5rem;
+      padding: 4px 12px;
+      border-radius: 14px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: v.$color-white;
+      background-color: v.$primary-40;
+    }
+
+    .title {
+      margin: 0 0 0.5rem;
+      font-size: 1.5rem;
+      font-weight: 700;
       color: v.$grayscale-90;
+      word-break: keep-all;
+    }
 
+    .subTitle {
+      margin: 0 0 1rem;
+      font-size: 0.9375rem;
+      color: v.$grayscale-50;
+    }
+
+    .categoryTags {
+      display: flex;
+      gap: 0.5rem;
+
+      .tag {
+        padding: 5px 12px;
+        border-radius: 6px;
+        font-size: 0.8125rem;
+        color: v.$grayscale-90;
+        background-color: v.$grayscale-5;
+      }
+    }
+  }
+
+  /* 메인 배너 영역 */
+  .bannerContainer {
+    width: 100%;
+    height: 15.9375rem;
+    margin-bottom: 2rem;
+    border: 1px solid v.$grayscale-20;
+    border-radius: 0.3rem;
+    overflow: hidden;
+
+    .bannerImg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* 이미지 없음 대체 영역 */
+    .noImage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      gap: 0.5rem;
+      background-color: v.$grayscale-5;
+
+      .warningIcon {
+        font-size: 2.5rem;
+        color: v.$grayscale-70;
+      }
+
+      span {
+        font-size: 1rem;
+        color: v.$grayscale-70;
+      }
+    }
+  }
+
+  /* 소개 섹션 영역 */
+  .introSection {
+    //margin-bottom: 1000rem; // sticky 확인용
+
+    .sectionTitle {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: v.$grayscale-90;
+    }
+
+    .introText {
+      margin-top: 0.5rem;
+      font-size: 1rem;
+      line-height: 1.5;
+      color: v.$grayscale-90;
       white-space: pre-wrap;
       word-break: break-all;
     }
   }
 }
 
-/* 우측 카드 컬럼 영역 */
+/* 3열 우측 카드 영역 */
 .rightColumn {
+  position: sticky;
+  top: 1rem;
   display: flex;
   flex-direction: column;
-  flex-shrink: 0;
+  min-width: 0;
   gap: 1.25rem;
-
-  width: 20rem;
 }

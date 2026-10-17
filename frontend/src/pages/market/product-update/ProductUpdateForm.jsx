@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import Editor from "../../../components/common/editor/Editor.jsx";
+import RadioInput from "../../../components/forms/radio-input/RadioInput.jsx";
+import TextInput from "../../../components/forms/text-input/TextInput.jsx";
 import CategorySelectBox from "../../../components/market/category-select-box/CategorySelectBox.jsx";
 import { useSubmitData } from "../../../hooks/useSubmitData.js";
-import { createFormData } from "../../../utils/createFormData.js";
-import { useNavigate } from "react-router-dom";
-import TextInput from "../../../components/forms/text-input/TextInput.jsx";
 import { handleSetField } from "../../../utils/changeHandler.js";
-import RadioInput from "../../../components/forms/radio-input/RadioInput.jsx";
+import { createFormData } from "../../../utils/createFormData.js";
 import styles from "./ProductUpdate.module.scss";
 
 const DEAL_STATUS = [
@@ -16,18 +16,33 @@ const DEAL_STATUS = [
 ]
 
 function ProductUpdateForm({ initPost, categories }) {
-  const [updatedPost, setUpdatedPost] = useState(initPost);
+  // 카테고리를 다시 선택하지 않아도 기존 소분류가 cateCode로 전송되도록 초기값 설정
+  const [updatedPost, setUpdatedPost] = useState({
+    ...initPost,
+    cateCode: initPost?.subCategoryCode,
+  });
   const navigate = useNavigate();
 
-  console.log("updatedPost: ", updatedPost);
-  console.log(updatedPost?.code);
-
   // 수정 완료 전송 핸들러
-  const { handleSubmit } = useSubmitData(`/api/market/products/${updatedPost?.code}`, "PUT");
+  const { handleSubmit } = useSubmitData(`/api/market/products/${initPost?.code}`, "PUT");
 
   const handleSubmitUpdatedPost = async (resultData) => {
+    // 필수값 검증
+    if (!resultData.cateCode) {
+      alert("카테고리를 선택해 주세요.");
+      return;
+    }
+    if (!resultData.title?.trim()) {
+      alert("제목을 입력해 주세요.");
+      return;
+    }
+
     try {
-      const formData = createFormData(resultData);
+      // 화면 표시용 필드는 전송에서 제외
+      // eslint-disable-next-line no-unused-vars
+      const { mainCategoryCode, subCategoryCode, ...sendData } = resultData;
+
+      const formData = createFormData(sendData);
       const { success } = await handleSubmit(formData);
 
       if (success) {
@@ -37,7 +52,7 @@ function ProductUpdateForm({ initPost, categories }) {
         alert("거래글 수정에 실패했습니다.");
       }
     } catch (err) {
-      alert("거래글 수정 중 오류가 발생했습니다.");
+      alert(err?.message || "거래글 수정 중 오류가 발생했습니다.");
       console.error(err);
     }
   }
@@ -52,8 +67,8 @@ function ProductUpdateForm({ initPost, categories }) {
           <CategorySelectBox
             categories={categories}
             setPost={setUpdatedPost}
-            initParentCode={updatedPost?.mainCategoryCode}
-            initSubCode={updatedPost?.subCategoryCode}
+            initParentCode={initPost?.mainCategoryCode}
+            initSubCode={initPost?.subCategoryCode}
           />
         }
         onSubmit={handleSubmitUpdatedPost}
@@ -67,14 +82,14 @@ function ProductUpdateForm({ initPost, categories }) {
               id="price"
               type="text"
               name="price"
-              value={updatedPost?.price}
+              value={updatedPost?.price ?? ""}
               onChange={(e) => handleSetField(e, setUpdatedPost)}
             />
           </div>
           <div className={styles.dealStatus}>
-            {DEAL_STATUS.map((status, idx) => (
+            {DEAL_STATUS.map((status) => (
               <RadioInput
-                key={idx}
+                key={status.value}
                 id={status.value}
                 name={status.name}
                 label={status.label}

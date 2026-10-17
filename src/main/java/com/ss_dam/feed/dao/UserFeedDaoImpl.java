@@ -1,5 +1,12 @@
 package com.ss_dam.feed.dao;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.stereotype.Repository;
+
 import com.ss_dam.common.pager.PageQuery;
 import com.ss_dam.feed.model.core.FeedHashtag;
 import com.ss_dam.feed.model.request.FeedCreate;
@@ -7,12 +14,6 @@ import com.ss_dam.feed.model.request.FeedUpdate;
 import com.ss_dam.feed.model.response.FeedDetail;
 import com.ss_dam.feed.model.response.FeedEditView;
 import com.ss_dam.feed.model.response.UserFeedView;
-import org.apache.ibatis.session.SqlSession;
-import org.springframework.stereotype.Repository;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Repository
 public class UserFeedDaoImpl implements UserFeedDao {
@@ -85,5 +86,10 @@ public class UserFeedDaoImpl implements UserFeedDao {
     System.out.println("hitcount log: " + params);
 
     sql.insert("feedCommand.registerFeedHitcountLog", params);
+  }
+
+  @Override
+  public Map<String, Object> loadMyFeedSummary(Long memberCode) {
+    return sql.selectOne("feedView.loadMyFeedSummary", memberCode);
   }
 }

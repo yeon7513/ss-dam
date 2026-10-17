@@ -1,5 +1,5 @@
 import cn from "classnames";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FiBell, FiChevronDown, FiChevronUp, FiSettings } from "react-icons/fi";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import ProfileCard from "../../components/auth/profile-card/ProfileCard.jsx";
@@ -8,11 +8,17 @@ import Sidebar from "../../layout/default/sidebar/Sidebar.jsx";
 import { MYPAGE_MENU } from "../../lib/sideMenu.js";
 import styles from "./MyPage.module.scss";
 
+// 화면 중앙 정렬 + 중앙 스크롤을 적용할 페이지
+const CENTER_PAGES = ["/mypage/edit_profile", "/mypage/withdraw"];
 
 /* ---------- 마이페이지 (왼쪽 메뉴 + 본문) ---------- */
 function MyPage() {
   const { user } = useAuth();
   const { pathname } = useLocation();
+  const contentRef = useRef(null);
+
+  // 정보 변경·회원 탈퇴 페이지 여부
+  const isCenterPage = CENTER_PAGES.includes(pathname);
 
   // 하위 메뉴가 있는 카테고리는 기본으로 펼침
   const [open, setOpen] = useState(() =>
@@ -28,10 +34,25 @@ function MyPage() {
       ? pathname === item.path
       : item.subMenus?.some((s) => s.path && pathname === s.path);
 
+  // 정보 변경·회원 탈퇴로 이동하면 패널이 화면 중앙에 오도록 스크롤
+  useEffect(() => {
+    if (!isCenterPage) return;
+
+    // 새 페이지가 그려진 뒤에 스크롤해야 위치가 정확함
+    const frame = requestAnimationFrame(() => {
+      contentRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [pathname, isCenterPage]);
+
   const alertCount = 9; // 더미: 알림 데이터가 정해지면 연결
 
   return (
-    <main className={styles.wrap}>
+    <main className={cn(styles.wrap, isCenterPage && styles.editLayout)}>
       <div className={styles.sideNavWrap}>
         <Sidebar className={styles.nav} isFixed={false}>
           {/* 프로필 + 설정/알림 */}
@@ -116,7 +137,10 @@ function MyPage() {
         </Sidebar>
       </div>
 
-      <div className={styles.container}>
+      <div
+        ref={contentRef}
+        className={cn(styles.container, isCenterPage && styles.content)}
+      >
         <Outlet />
       </div>
     </main>

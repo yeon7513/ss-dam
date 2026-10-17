@@ -29,6 +29,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    // 화면 높이 기준으로 세로 중앙이 잡히도록 최소 높이 지정
+    min-height: calc(100vh - 10rem);
   }
 }
 

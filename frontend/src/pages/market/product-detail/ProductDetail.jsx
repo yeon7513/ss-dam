@@ -5,9 +5,9 @@ import { Link } from "react-router-dom";
 
 import Button from "../../../components/common/button/Button.jsx";
 import Slide from "../../../components/common/slide/Slide.jsx";
+import SellerInfo from "../../../components/market/seller-info/SellerInfo.jsx";
 import MarketSideNav from "../../../components/market/side-nav/MarketSideNav.jsx";
 import MarketBreadcrumb from "../market-breadcrumb/MarketBreadcrumb.jsx";
-import SellerInfo from "../../../components/market/seller-info/SellerInfo.jsx";
 import ProductDescription from "./ProductDescription.jsx";
 
 import { useLoadData } from "../../../hooks/useLoadData.js";
@@ -26,13 +26,15 @@ const ProductDetail = () => {
   const { data, loading, error } = useLoadData(`/api/market/products/${code}`);
   const detail = data || {};
 
-  const { user } = useAuth();
+  /* 로그인 사용자 정보 (훅은 반드시 컴포넌트 안에서 호출) */
+  const { user, authFetch } = useAuth();
 
+  // role은 { code, label } 객체로 내려오므로 code로 비교함.
   const isOwner =
-  user?.role === "ROLE_MEMBER" &&
-  user?.code != null &&
-  detail.memberProfile?.code != null &&
-  String(user.code) === String(detail.memberProfile.code);
+    user?.role?.code === "ROLE_MEMBER" &&
+    user?.code != null &&
+    detail.memberProfile?.code != null &&
+    String(user.code) === String(detail.memberProfile.code);
 
   /* 카테고리 목록 조회 */
   const { data: categoriesData } = useLoadData("/api/market/categories");
@@ -50,9 +52,25 @@ const ProductDetail = () => {
   };
 
   /* 거래글 삭제 처리 */
-  const handleClickDeletePost = () => {
-    // 거래글 삭제 기능을 실행함.
-    console.log("거래글 삭제");
+  const handleClickDeletePost = async () => {
+    if (!window.confirm("거래글을 삭제하시겠습니까?")) return;
+
+    try {
+      const response = await authFetch(`/api/market/products/${code}`, {
+        method: "DELETE",
+      });
+      const result = await response.json();
+
+      if (!response.ok) {
+        alert(result?.message || "거래글 삭제에 실패했습니다.");
+        return;
+      }
+
+      alert("거래글이 삭제되었습니다.");
+      navigate("/market");
+    } catch (err) {
+      console.error("거래글 삭제 오류: ", err);
+    }
   };
 
   /* 거래 신청 처리 */
@@ -193,7 +211,7 @@ const ProductDetail = () => {
             {isOwner && (
               <div className={styles.actionButtons}>
                 <Button
-                  btnStyle="word"
+                  btnStyle="fill"
                   action="submit"
                   size="sm"
                   onClick={() => navigate(`/market/edit/${code}`)}
@@ -202,7 +220,7 @@ const ProductDetail = () => {
                 </Button>
 
                 <Button
-                  btnStyle="word"
+                  btnStyle="fill"
                   action="danger"
                   size="sm"
                   onClick={handleClickDeletePost}
