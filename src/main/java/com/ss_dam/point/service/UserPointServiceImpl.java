@@ -204,15 +204,4 @@ public class UserPointServiceImpl implements UserPointService {
     return false;
   }
 
-  @Override
-  public boolean rewardPoint(Long memCode, int amount, PointReason reason) {
-
-    return rewardPoint(memCode, amount, reason, null);
-  }
-
-  @Override
-  public boolean deductPoint(Long buyerCode, int price, PointReason reason) {
-
-    return deductPoint(buyerCode, price, reason, null);
-  }
 }
