@@ -1,0 +1,32 @@
+.box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 18px;
+  margin: 0;
+  border: 1px solid #e5e8eb;
+  border-radius: 8px;
+  background: #fff;
+}
+.avatar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  overflow: hidden;
+  border-radius: 50%;
+  background: #eef1f5;
+  color: #a2adbb;
+  font-size: 19px;
+  img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+}
+.name { min-width: 0; color: #253343; font-size: 15px; font-weight: 600; overflow-wrap: anywhere; }
+.rating {
+  display: inline-flex;
+  flex-shrink: 0;
+  color: #2e9377;
+  svg { width: 22px; height: 22px; }
+}

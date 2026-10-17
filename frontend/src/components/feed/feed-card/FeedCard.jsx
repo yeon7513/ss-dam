@@ -6,14 +6,18 @@ import styles from "./FeedCard.module.scss";
 import ImageBox from "../../common/image-box/ImageBox.jsx";
 import { formatCreatedAt } from "../../../utils/formatDate.js";
 import { FaEye } from "react-icons/fa6";
+import { Link } from "react-router-dom";
+import { useAuth } from "../../../context/AuthContext.jsx";
 
 function FeedCard({ feed, onClickDetail }) {
-  console.log(feed);
+  const { user } = useAuth();
+  const isOwner = user?.code != null && feed.memberProfile?.code != null &&
+    String(user.code) === String(feed.memberProfile.code);
 
   return (
     <Card className={styles.feed} onClick={() => onClickDetail?.(feed.code)}>
       {/* 프로필 카드 */}
-      <ProfileCard memberProfile={feed.memberProfile} />
+      <ProfileCard memberProfile={feed.memberProfile} showMemberActions />
 
       {/* 썸네일 */}
       <div className={styles.thumbnail}>
@@ -66,8 +70,17 @@ function FeedCard({ feed, onClickDetail }) {
           </div>
 
           {/* 작성일 */}
-          <div>
+          <div className={styles.dateRow}>
             <span>{formatCreatedAt(feed.createdAt)}</span>
+            {!isOwner && (
+              <Link
+                className={styles.reportLink}
+                to={`/feed/${feed.code}/report`}
+                onClick={(event) => event.stopPropagation()}
+              >
+                게시글 신고하기
+              </Link>
+            )}
           </div>
         </div>
       </div>

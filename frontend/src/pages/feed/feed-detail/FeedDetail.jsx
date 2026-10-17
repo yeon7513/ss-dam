@@ -7,7 +7,8 @@ import styles from "./FeedDetail.module.scss";
 import Slide from "../../../components/common/slide/Slide.jsx";
 import cn from "classnames";
 import { useLoadData } from "../../../hooks/useLoadData.js";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../../context/AuthContext.jsx";
 import { useSubmitData } from "../../../hooks/useSubmitData.js";
 import Comments from "../../../components/feed/comment/Comments.jsx";
 import CloseButton from "../../../components/common/button/close/CloseButton.jsx";
@@ -15,10 +16,13 @@ import { FaEye } from "react-icons/fa6";
 
 const FeedDetail = ({ code, onClose }) => {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const { data, loading, error } = useLoadData(`/api/feeds/${code}`);
 
   const detail = data || {};
+  const isOwner = user?.code != null && detail.memberProfile?.code != null &&
+    String(user.code) === String(detail.memberProfile.code);
 
   // 피드 삭제 요청 훅
   const { handleSubmit: handleSubmitDeleteFeed } = useSubmitData(
@@ -77,7 +81,7 @@ const FeedDetail = ({ code, onClose }) => {
         {/* 피드 상세 */}
         <div className={cn(styles.content, styles.detail)}>
           {/* 작성자 프로필 */}
-          <ProfileCard memberProfile={detail.memberProfile} />
+          <ProfileCard memberProfile={detail.memberProfile} showMemberActions />
 
           {/* 본문 내용 */}
           <p>{detail.content}</p>
@@ -109,7 +113,14 @@ const FeedDetail = ({ code, onClose }) => {
 
           {/* 피드 정보 (날짜, 좋아요 수, 댓글 수 등) */}
           <div className={styles.meta}>
-            <span>{formatCreatedAt(detail.createdAt)}</span>
+            <div className={styles.dateRow}>
+              <span>{formatCreatedAt(detail.createdAt)}</span>
+              {!isOwner && (
+                <Link className={styles.reportLink} to={`/feed/${code}/report`}>
+                  게시글 신고하기
+                </Link>
+              )}
+            </div>
             <div>
               <span className={styles.hitcount}>
                 <FaEye />

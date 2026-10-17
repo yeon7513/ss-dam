@@ -59,6 +59,12 @@ public class UserProductDaoImpl implements UserProductDao {
   @Override
   public void registerProductPostHitcountLog(Map<String, Object> params) {
     sql.insert("productCommand.registerProductPostHitcountLog", params);
+  }  
+
+  @Override
+  public void updateProductDealStatus(Map<String, Object> updateParams) {
+	sql.update("userProductView.updateProductDealStatus", updateParams);
+	
   }
 
 }

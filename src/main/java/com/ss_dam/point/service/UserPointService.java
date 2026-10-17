@@ -16,5 +16,10 @@ public interface UserPointService {
 
   boolean rewardPoint(Long memCode, int amount, PointReason reason);
 
+  boolean rewardPoint(Long memCode, int amount, PointReason reason, Long prodCode);
+
   boolean deductPoint(Long memCode, int amount, PointReason reason);
+
+  boolean deductPoint(Long memCode, int amount, PointReason reason, Long prodCode);
+
 }

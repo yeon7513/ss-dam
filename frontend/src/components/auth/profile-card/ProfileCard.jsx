@@ -3,6 +3,7 @@ import placeholder from "../../../assets/images/placeholder.png";
 import ImageBox from "../../common/image-box/ImageBox.jsx";
 import styles from "./ProfileCard.module.scss";
 import cn from "classnames";
+import MemberActions from "../member-actions/MemberActions.jsx";
 
 // isMinimal -> 간단하게 표시
 // isVertical -> 세로 버전
@@ -15,6 +16,7 @@ function ProfileCard({
   badge,
   onMoreClick,
   moreText,
+  showMemberActions = false,
 }) {
   if (!memberProfile) return <div>사용자 정보가 없습니다.</div>;
 
@@ -47,9 +49,11 @@ function ProfileCard({
 
       {!isMinimal && !isVertical && showMore && (
         <div className={styles.more}>
+          {showMemberActions ? <MemberActions memberProfile={memberProfile} /> : (
           <button type="button" onClick={onMoreClick}>
             {moreText || <HiDotsHorizontal />}
           </button>
+          )}
         </div>
       )}
     </div>

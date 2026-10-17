@@ -139,9 +139,9 @@ public class UserPointServiceImpl implements UserPointService {
   }
 
   // 포인트 지급 - 챌린지 리워드
-  @Override
   @Transactional
-  public boolean rewardPoint(Long memCode, int amount, PointReason reason) {
+  @Override
+  public boolean rewardPoint(Long memCode, int amount, PointReason reason, Long prodCode) {
 
     int beforePoint = pointDao.getPointBalance(memCode);
     int afterPoint = beforePoint + amount;
@@ -159,7 +159,8 @@ public class UserPointServiceImpl implements UserPointService {
       pointLog.setMemCode(memCode);
       pointLog.setType(PointType.SAVED);
       pointLog.setAmount(amount);
-      pointLog.setReason(reason);
+      pointLog.setReason(PointReason.CHALLENGE_REWARD);
+      pointLog.setProdCode(prodCode);
 
       pointDao.chargePointLog(pointLog);
 
@@ -171,7 +172,7 @@ public class UserPointServiceImpl implements UserPointService {
 
   @Transactional
   @Override
-  public boolean deductPoint(Long memCode, int amount, PointReason reason) {
+  public boolean deductPoint(Long memCode, int amount, PointReason reason, Long prodCode) {
     int beforePoint = pointDao.getPointBalance(memCode);
 
     if (beforePoint < amount) {
@@ -193,12 +194,25 @@ public class UserPointServiceImpl implements UserPointService {
       pointLog.setMemCode(memCode);
       pointLog.setType(PointType.USED);
       pointLog.setAmount(amount);
-      pointLog.setReason(reason);
+      pointLog.setReason(PointReason.POINT_ESCROW);
+      pointLog.setProdCode(prodCode);
 
       pointDao.chargePointLog(pointLog);
 
       return true;
     }
     return false;
+  }
+
+  @Override
+  public boolean rewardPoint(Long memCode, int amount, PointReason reason) {
+
+    return rewardPoint(memCode, amount, reason, null);
+  }
+
+  @Override
+  public boolean deductPoint(Long buyerCode, int price, PointReason reason) {
+
+    return deductPoint(buyerCode, price, reason, null);
   }
 }

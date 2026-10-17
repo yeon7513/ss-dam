@@ -75,6 +75,8 @@
 
 .info {
   @include mix.flex($jc: space-between);
+  flex-wrap: wrap;
+  gap: 12px;
   padding-top: 1rem;
   border-top: 1px solid v.$grayscale-20;
   font-size: 0.875rem;
@@ -108,4 +110,22 @@
       }
     }
   }
+}
+
+.dateRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  flex: 1 1 100%;
+}
+
+.reportLink {
+  margin-left: auto;
+  color: v.$grayscale-50;
+  font-size: 13px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  &:hover { color: v.$point-70; }
+  &:focus-visible { outline: 2px solid v.$point-70; outline-offset: 3px; }
 }
