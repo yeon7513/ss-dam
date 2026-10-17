@@ -1,2 +1,144 @@
 @use "../../../../scss/variables.scss" as v;
 @use "../../../../scss/mixin.scss" as mix;
+
+.recentActivity {
+  margin-top: 1rem;
+  width: 100%;
+  background-color: #fff;
+}
+
+.title {
+  margin: 0 0 20px;
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  > li {
+    display: grid;
+    grid-template-columns:
+      55px
+      80px
+      90px
+      110px
+      minmax(120px, 1fr)
+      145px;
+    align-items: center;
+    gap: 12px;
+    min-width: 750px;
+    padding: 14px 12px;
+    border-bottom: 1px solid #edf0f4;
+    box-sizing: border-box;
+
+    &:not(.head):hover {
+      background-color: #f8fafc;
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  // 테이블 헤더
+  .head {
+    padding-top: 13px;
+    padding-bottom: 13px;
+    border-top: 1px solid #e8ebf0;
+    border-bottom: 1px solid #e0e5ed;
+    background-color: #f7f8fa;
+    color: #687185;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+  }
+}
+
+.code {
+  color: #687185;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+  min-width: 54px;
+  padding: 5px 9px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+.type {
+  background-color: #edf1f8;
+  color: #43577c;
+}
+
+.process {
+  background-color: #f0f1f4;
+  color: #606a7b;
+}
+
+.delete {
+  background-color: #fff0ed;
+  color: #d45b46;
+}
+
+.restore {
+  background-color: #e7f5ef;
+  color: #0d7c66;
+}
+
+.earlyEnd {
+  background-color: #fff5df;
+  color: #a66b00;
+}
+
+.memo {
+  overflow: hidden;
+  color: #626b7a;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.items > li > span:last-child {
+  color: #9298a5;
+  font-size: 12px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+// 데이터가 없을 때 사용할 경우
+.noActivity {
+  padding: 40px 16px;
+  color: #999;
+  font-size: 14px;
+  text-align: center;
+}
+
+// 작은 화면에서는 가로 스크롤
+.tableWrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+@media (max-width: 768px) {
+  .recentActivity {
+    padding: 16px;
+  }
+
+  .title {
+    font-size: 16px;
+  }
+}

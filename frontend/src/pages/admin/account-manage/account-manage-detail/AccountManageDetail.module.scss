@@ -6,6 +6,12 @@
   flex-direction: column;
   width: 60%;
 
+  h4 {
+    margin-bottom: 1rem;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
   // 초기 안내 화면
   &.notice {
     @include mix.flex($fd: column, $ai: center);
@@ -21,42 +27,11 @@
     }
   }
 
-  .basicInfo {
+  .basic {
     @include mix.flex($jc: space-between, $ai: flex-start);
-    outline: 1px dotted red;
   }
 
-  .subInfo {
-    outline: 1px dotted blue;
-  }
-}
-
-
-.profile {
-  flex: 1;
-
-  .number {
-    font-size: 20px;
-    font-weight: 500;
-  }
-
-  .info {
-
-  }
-}
-
-
-.control {
-  flex: 1;
-}
-
-
-.subInfo {
-  .supervisor {
-
-  }
-
-  .recentActivity {
-
+  .information {
+    flex: 1;
   }
 }

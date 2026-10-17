@@ -1,14 +1,11 @@
 package com.ss_dam.common.validator.auth;
 
+import com.ss_dam.auth.login.enums.AuthRole;
 import com.ss_dam.auth.login.model.response.AuthProfile;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
-
-
-// 인터셉터 구현 되면 파일 삭제 
-
 
 @Component
 public class AdminAuthValidator {
@@ -23,22 +20,18 @@ public class AdminAuthValidator {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다.");
     }
 
-    String role = loginUser.getRole().getCode();
-
-    if (!"ROLE_SUPER".equals(role) && !"ROLE_MANAGER".equals(role) && !"ROLE_STAFF".equals(role)) {
-
+    if (loginUser.getRole() == AuthRole.ROLE_MEMBER) {
       throw new ResponseStatusException(HttpStatus.FORBIDDEN, "관리자만 사용할 수 있습니다.");
     }
+
     return loginUser;
   }
 
   // 회원 관리 권한 확인: SUPER·MANAGER만 허용
   public AuthProfile requireMemberManager(HttpSession session) {
-
     AuthProfile admin = requireAdmin(session);
 
-    if (!"ROLE_SUPER".equals(admin.getRole()) && !"ROLE_MANAGER".equals(admin.getRole())) {
-
+    if (admin.getRole() != AuthRole.ROLE_SUPER && admin.getRole() != AuthRole.ROLE_MANAGER) {
       throw new ResponseStatusException(HttpStatus.FORBIDDEN, "회원 관리 권한이 없습니다.");
     }
 
@@ -48,6 +41,4 @@ public class AdminAuthValidator {
 
     return admin;
   }
-
-
 }

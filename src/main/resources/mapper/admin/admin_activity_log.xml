@@ -5,223 +5,242 @@
 
 <mapper namespace="adminActivityLog">
 
-    <!-- 관리자 처리 이력 응답 매핑 -->
-    <resultMap id="adminActivityMap"
-           type="AdminActivity">
+  <!-- 관리자 처리 이력 응답 매핑 -->
+  <resultMap id="adminActivityMap"
+             type="AdminActivity">
 
-        <id column="CODE" property="code"/>
-        <result column="ADMIN_ID" property="empId"/>
-        <result column="ADMIN_NAME" property="adminName"/>
-        <result column="ADMIN_DEPT" property="adminDept"/>
-        <result column="TARGET_TYPE" property="targetType"/>
-        <result column="TARGET_CODE" property="targetCode"/>
-        <result column="PROCESS_TYPE" property="processType"/>
-        <result column="MEMO" property="memo"/>
-        <result column="CREATED_AT" property="createdAt"/>
-        <result column="REPORT_CODE" property="reportCode"/>
+    <id column="CODE" property="code" />
+    <result column="ADMIN_ID" property="empId" />
+    <result column="ADMIN_NAME" property="adminName" />
+    <result column="ADMIN_DEPT" property="adminDept" />
+    <result column="TARGET_TYPE" property="targetType" />
+    <result column="TARGET_CODE" property="targetCode" />
+    <result column="PROCESS_TYPE" property="processType" />
+    <result column="MEMO" property="memo" />
+    <result column="CREATED_AT" property="createdAt" />
+    <result column="REPORT_CODE" property="reportCode" />
 
-    </resultMap>
+  </resultMap>
 
-        <!-- 전체 관리자 활동 이력 검색 조건 -->
-    <sql id="activityLogConditions">
-        <where>
-            <if test="targetType != null">
-                AND l.TARGET_TYPE = #{targetType}
-            </if>
+  <!-- 전체 관리자 활동 이력 검색 조건 -->
+  <sql id="activityLogConditions">
+    <where>
+      <if test="targetType != null">
+        AND l.TARGET_TYPE = #{targetType}
+      </if>
 
-            <if test="processType != null">
-                AND l.PROCESS_TYPE = #{processType}
-            </if>
+      <if test="processType != null">
+        AND l.PROCESS_TYPE = #{processType}
+      </if>
 
-            <if test="admCode != null">
-                AND l.ADM_CODE = #{admCode}
-            </if>
+      <if test="admCode != null">
+        AND l.ADM_CODE = #{admCode}
+      </if>
 
-            <if test="targetCode != null">
-                AND l.TARGET_CODE = #{targetCode}
-            </if>
+      <if test="targetCode != null">
+        AND l.TARGET_CODE = #{targetCode}
+      </if>
 
-            <if test="reportCode != null">
-                AND l.REPORT_CODE = #{reportCode}
-            </if>
+      <if test="reportCode != null">
+        AND l.REPORT_CODE = #{reportCode}
+      </if>
 
-            <if test="fromAt != null">
-                AND l.CREATED_AT &gt;= #{fromAt}
-            </if>
+      <if test="fromAt != null">
+        AND l.CREATED_AT &gt;= #{fromAt}
+      </if>
 
-            <if test="toExclusive != null">
-                AND l.CREATED_AT &lt; #{toExclusive}
-            </if>
+      <if test="toExclusive != null">
+        AND l.CREATED_AT &lt; #{toExclusive}
+      </if>
 
-            <if test="keywordPattern != null">
-                AND (
-                    a.EMP_ID LIKE #{keywordPattern} ESCAPE '!'
-                    OR l.MEMO LIKE #{keywordPattern} ESCAPE '!'
-                )
-            </if>
-        </where>
-    </sql>
-
-    <!-- 전체 관리자 활동 이력 건수 -->
-    <select id="countActivityLogs"
-            parameterType="map"
-            resultType="long">
-
-        SELECT COUNT(*)
-        FROM ADMIN_ACTIVITY_LOG l
-        LEFT JOIN ADMIN_ACCOUNT a
-            ON a.CODE = l.ADM_CODE
-
-        <include refid="activityLogConditions"/>
-    </select>
-
-    <!-- 전체 관리자 활동 이력 목록 -->
-    <select id="loadActivityLogs"
-            parameterType="map"
-            resultMap="adminActivityMap">
-
-          SELECT
-            l.CODE,
-            a.EMP_ID AS ADMIN_ID,
-            a.NAME AS ADMIN_NAME,
-            a.DEPT AS ADMIN_DEPT,
-            l.TARGET_TYPE,
-            l.TARGET_CODE,
-            l.PROCESS_TYPE,
-            l.MEMO,
-            l.CREATED_AT,
-            l.REPORT_CODE
-        FROM ADMIN_ACTIVITY_LOG l
-        LEFT JOIN ADMIN_ACCOUNT a
-            ON a.CODE = l.ADM_CODE
-
-        <include refid="activityLogConditions"/>
-
-        ORDER BY l.CREATED_AT DESC, l.CODE DESC
-        LIMIT #{perPage} OFFSET #{offset}
-    </select>
-
-    <!-- 회원 정지·해제 이력 공통 조건 -->
-    <sql id="memberLogConditions">
-
-        WHERE l.TARGET_TYPE = 'member'
-          AND l.TARGET_CODE = #{memberCode}
-          AND l.PROCESS_TYPE IN ('RESTRICT', 'RELEASE')
-
-    </sql>
-
-    <!-- 회원 정지·해제 이력 전체 건수 -->
-    <select id="countMemberLogs"
-            parameterType="map"
-            resultType="int">
-
-        SELECT COUNT(*)
-        FROM ADMIN_ACTIVITY_LOG l
-
-        <include refid="memberLogConditions"/>
-
-    </select>
-
-    <!-- 회원 정지·해제 이력 목록 -->
-    <select id="loadMemberLogs"
-            parameterType="map"
-            resultMap="adminActivityMap">
-
-        SELECT
-            l.CODE,
-            a.EMP_ID AS ADMIN_ID,
-            l.TARGET_TYPE,
-            l.TARGET_CODE,
-            l.PROCESS_TYPE,
-            l.MEMO,
-            l.CREATED_AT
-            a.NAME AS ADMIN_NAME,
-            a.DEPT AS ADMIN_DEPT,
-            l.REPORT_CODE
-
-        FROM ADMIN_ACTIVITY_LOG l
-
-        LEFT JOIN ADMIN_ACCOUNT a
-            ON a.CODE = l.ADM_CODE
-
-        <include refid="memberLogConditions"/>
-
-        ORDER BY l.CREATED_AT DESC, l.CODE DESC
-        LIMIT #{perPage} OFFSET #{offset}
-
-    </select>
-
-    <!-- 챌린지 처리 이력 공통 조건 -->
-    <sql id="challengeLogConditions">
-
-        WHERE l.TARGET_TYPE = 'challenge'
-          AND l.TARGET_CODE = #{code}
-
-    </sql>
-
-    <!-- 챌린지 처리 이력 전체 건수 -->
-    <select id="countChallengeLogs"
-            parameterType="map"
-            resultType="long">
-
-        SELECT COUNT(*)
-        FROM ADMIN_ACTIVITY_LOG l
-
-        <include refid="challengeLogConditions"/>
-
-    </select>
-
-    <!-- 챌린지 처리 이력 목록 -->
-    <select id="loadChallengeLogs"
-            parameterType="map"
-            resultMap="adminActivityMap">
-
-        SELECT
-            l.CODE,
-            a.EMP_ID AS ADMIN_ID,
-            l.TARGET_TYPE,
-            l.TARGET_CODE,
-            l.PROCESS_TYPE,
-            l.MEMO,
-            l.CREATED_AT
-            a.NAME AS ADMIN_NAME,
-            a.DEPT AS ADMIN_DEPT,
-            l.REPORT_CODE
-
-        FROM ADMIN_ACTIVITY_LOG l
-
-        LEFT JOIN ADMIN_ACCOUNT a
-            ON a.CODE = l.ADM_CODE
-
-        <include refid="challengeLogConditions"/>
-
-        ORDER BY l.CREATED_AT DESC, l.CODE DESC
-        LIMIT #{perPage} OFFSET #{offset}
-
-    </select>
-
-       <!-- 관리자 처리 이력 저장 -->
-    <insert id="insertActivityLog" parameterType="map">
-
-        INSERT INTO ADMIN_ACTIVITY_LOG (
-            ADM_CODE,
-            TARGET_TYPE,
-            TARGET_CODE,
-            PROCESS_TYPE,
-            MEMO,
-            CREATED_AT,
-            REPORT_CODE
+      <if test="keywordPattern != null">
+        AND (
+        a.EMP_ID LIKE #{keywordPattern} ESCAPE '!'
+        OR l.MEMO LIKE #{keywordPattern} ESCAPE '!'
         )
-        VALUES (
-            #{adminCode},
-            #{targetType},
-            #{targetCode},
-            #{processType},
-            #{memo},
-            #{createdAt},
-            #{reportCode, jdbcType=INTEGER}
-        )
+      </if>
+    </where>
+  </sql>
 
-    </insert>
+  <!-- 전체 관리자 활동 이력 건수 -->
+  <select id="countActivityLogs"
+          parameterType="map"
+          resultType="long">
+
+    SELECT COUNT(*)
+    FROM ADMIN_ACTIVITY_LOG l
+    LEFT JOIN ADMIN_ACCOUNT a
+    ON a.CODE = l.ADM_CODE
+
+    <include refid="activityLogConditions" />
+  </select>
+
+  <!-- 전체 관리자 활동 이력 목록 -->
+  <select id="loadActivityLogs"
+          parameterType="map"
+          resultMap="adminActivityMap">
+
+    SELECT
+    l.CODE,
+    a.EMP_ID AS ADMIN_ID,
+    a.NAME AS ADMIN_NAME,
+    a.DEPT AS ADMIN_DEPT,
+    l.TARGET_TYPE,
+    l.TARGET_CODE,
+    l.PROCESS_TYPE,
+    l.MEMO,
+    l.CREATED_AT,
+    l.REPORT_CODE
+    FROM ADMIN_ACTIVITY_LOG l
+    LEFT JOIN ADMIN_ACCOUNT a
+    ON a.CODE = l.ADM_CODE
+
+    <include refid="activityLogConditions" />
+
+    ORDER BY l.CREATED_AT DESC, l.CODE DESC
+    LIMIT #{perPage} OFFSET #{offset}
+  </select>
+
+  <!-- 회원 정지·해제 이력 공통 조건 -->
+  <sql id="memberLogConditions">
+
+    WHERE l.TARGET_TYPE = 'member'
+    AND l.TARGET_CODE = #{memberCode}
+    AND l.PROCESS_TYPE IN ('RESTRICT', 'RELEASE')
+
+  </sql>
+
+  <!-- 회원 정지·해제 이력 전체 건수 -->
+  <select id="countMemberLogs"
+          parameterType="map"
+          resultType="int">
+
+    SELECT COUNT(*)
+    FROM ADMIN_ACTIVITY_LOG l
+
+    <include refid="memberLogConditions" />
+
+  </select>
+
+  <!-- 회원 정지·해제 이력 목록 -->
+  <select id="loadMemberLogs"
+          parameterType="map"
+          resultMap="adminActivityMap">
+
+    SELECT
+    l.CODE,
+    a.EMP_ID AS ADMIN_ID,
+    l.TARGET_TYPE,
+    l.TARGET_CODE,
+    l.PROCESS_TYPE,
+    l.MEMO,
+    l.CREATED_AT
+    a.NAME AS ADMIN_NAME,
+    a.DEPT AS ADMIN_DEPT,
+    l.REPORT_CODE
+
+    FROM ADMIN_ACTIVITY_LOG l
+
+    LEFT JOIN ADMIN_ACCOUNT a
+    ON a.CODE = l.ADM_CODE
+
+    <include refid="memberLogConditions" />
+
+    ORDER BY l.CREATED_AT DESC, l.CODE DESC
+    LIMIT #{perPage} OFFSET #{offset}
+
+  </select>
+
+  <!-- 챌린지 처리 이력 공통 조건 -->
+  <sql id="challengeLogConditions">
+
+    WHERE l.TARGET_TYPE = 'challenge'
+    AND l.TARGET_CODE = #{code}
+
+  </sql>
+
+  <!-- 챌린지 처리 이력 전체 건수 -->
+  <select id="countChallengeLogs"
+          parameterType="map"
+          resultType="long">
+
+    SELECT COUNT(*)
+    FROM ADMIN_ACTIVITY_LOG l
+
+    <include refid="challengeLogConditions" />
+
+  </select>
+
+  <!-- 챌린지 처리 이력 목록 -->
+  <select id="loadChallengeLogs"
+          parameterType="map"
+          resultMap="adminActivityMap">
+
+    SELECT
+    l.CODE,
+    a.EMP_ID AS ADMIN_ID,
+    l.TARGET_TYPE,
+    l.TARGET_CODE,
+    l.PROCESS_TYPE,
+    l.MEMO,
+    l.CREATED_AT
+    a.NAME AS ADMIN_NAME,
+    a.DEPT AS ADMIN_DEPT,
+    l.REPORT_CODE
+
+    FROM ADMIN_ACTIVITY_LOG l
+
+    LEFT JOIN ADMIN_ACCOUNT a
+    ON a.CODE = l.ADM_CODE
+
+    <include refid="challengeLogConditions" />
+
+    ORDER BY l.CREATED_AT DESC, l.CODE DESC
+    LIMIT #{perPage} OFFSET #{offset}
+
+  </select>
+
+  <!-- 관리자 처리 이력 저장 -->
+  <insert id="insertActivityLog" parameterType="map">
+
+    INSERT INTO ADMIN_ACTIVITY_LOG (
+    ADM_CODE,
+    TARGET_TYPE,
+    TARGET_CODE,
+    PROCESS_TYPE,
+    MEMO,
+    CREATED_AT,
+    REPORT_CODE
+    )
+    VALUES (
+    #{adminCode},
+    #{targetType},
+    #{targetCode},
+    #{processType},
+    #{memo},
+    #{createdAt},
+    #{reportCode, jdbcType=INTEGER}
+    )
+
+  </insert>
+
+
+  <select id="loadActivityLogsByAdminCode" resultMap="adminActivityMap">
+    SELECT *
+    FROM (
+    SELECT
+    l.CODE,
+    l.TARGET_TYPE,
+    l.TARGET_CODE,
+    l.PROCESS_TYPE,
+    l.MEMO,
+    l.CREATED_AT
+    FROM ADMIN_ACTIVITY_LOG l
+    WHERE l.ADM_CODE = #{targetCode}
+    ORDER BY l.CREATED_AT DESC, l.CODE DESC
+    LIMIT #{perPage} OFFSET #{offset}
+    ) AS l
+    ORDER BY l.CREATED_AT DESC, l.CODE DESC
+  </select>
 
 </mapper>

@@ -1,2 +1,32 @@
 @use "../../../../scss/variables.scss" as v;
 @use "../../../../scss/mixin.scss" as mix;
+
+.subInfo {
+  margin-top: 1rem;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.dept {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dept > div {
+  display: grid;
+  grid-template-columns: 100px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.label {
+  font-weight: 500;
+}
+
+.dept > div > span:last-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}

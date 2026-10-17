@@ -39,7 +39,8 @@
   <select id="loadPointHistory" resultType="PointLog">
     SELECT *
     FROM POINT_LOG
-    WHERE MEM_CODE = ${memCode};
+    WHERE MEM_CODE = ${memCode}
+    ORDER BY CREATED_AT DESC
   </select>
 
 </mapper>

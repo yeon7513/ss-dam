@@ -41,11 +41,9 @@ function AccountManageDetail({ detail, onUpdateAccount }) {
     );
   }
 
-  console.log(detail);
-
   return (
     <Card className={styles.detail}>
-      <div>
+      <div className={styles.basic}>
         {/* 정보 */}
         <div className={styles.information}>
           <BasicInfoSection basicInfo={detail} />

@@ -1,2 +1,73 @@
 @use "../../../../scss/variables.scss" as v;
 @use "../../../../scss/mixin.scss" as mix;
+
+.control {
+  flex: 1;
+  width: 100%;
+
+  .label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+}
+
+.selectGroup {
+  @include mix.flex($jc: space-between, $ai: center);
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  width: 100%;
+
+  .changeDept, .changeRole {
+    flex: 1;
+    width: 100%;
+
+    .dept, .role {
+      width: 100%;
+
+      select {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.changeStatus {
+
+  .radioGroup {
+    flex: 1;
+    @include mix.flex($jc: flex-start);
+    gap: 2rem;
+  }
+
+  .radioItem {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    input[type="radio"] {
+      width: 14px;
+      height: 14px;
+      margin: 0;
+      accent-color: v.$point-60;
+      cursor: pointer;
+    }
+
+    label {
+      cursor: pointer;
+    }
+  }
+}
+
+.contents {
+  display: flex;
+  justify-content: space-between;
+}
+
+.submit {
+  justify-content: right;
+
+  button {
+    width: 120px;
+  }
+}
