@@ -77,7 +77,7 @@ export const MYPAGE_MENU = [
     category: "내 정보",
     subMenus: [
       { name: "정보 변경", path: "/mypage/edit_profile" },
-      { name: "회원 탈퇴", path: "" },
+      { name: "회원 탈퇴", path: "/mypage/withdraw" },
     ],
   },
 ];
