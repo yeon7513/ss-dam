@@ -199,7 +199,7 @@ const ProductDetail = () => {
                 <Button
                   btnStyle="word"
                   action="danger"
-                  to={`/market/${code}/report`}
+                  onClick={() => navigate(`/market/${code}/report`)}
                   className={styles.reportLink}
                 >
                   게시글 신고하기

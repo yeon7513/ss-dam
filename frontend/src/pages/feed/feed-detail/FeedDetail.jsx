@@ -39,6 +39,8 @@ const FeedDetail = ({ code, onClose }) => {
 
   /* 피드 삭제 핸들러 */
   const handleDeleteFeed = async () => {
+    if (!isOwner) return;
+
     const memCode = detail.memberProfile?.code;
 
     if (confirm("삭제된 피드는 복구되지 않습니다. 정말 삭제하시겠습니까?")) {
@@ -102,12 +104,13 @@ const FeedDetail = ({ code, onClose }) => {
           </div>
 
           {/* 제어 버튼 그룹 */}
+          {isOwner && (
           <ul className={styles.controlButtonGroup}>
             <li>
               <Button
                 btnStyle="word"
                 action="submit"
-                onClick={() => navigate(`edit/${code}`)}
+                onClick={() => navigate(`/feed/edit/${code}`)}
               >
                 수정
               </Button>
@@ -122,6 +125,7 @@ const FeedDetail = ({ code, onClose }) => {
               </Button>
             </li>
           </ul>
+          )}
 
           {/* 피드 메타 정보 */}
           <div className={styles.meta}>
@@ -132,7 +136,7 @@ const FeedDetail = ({ code, onClose }) => {
                 <Button
                   btnStyle="word"
                   action="danger"
-                  to={`/feed/${code}/report`}
+                  onClick={() => navigate(`/feed/${code}/report`)}
                   className={styles.reportButton}
                 >
                   게시글 신고하기
