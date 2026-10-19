@@ -6,6 +6,7 @@ import ProfileCard from "../../components/auth/profile-card/ProfileCard.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
 import Sidebar from "../../layout/default/sidebar/Sidebar.jsx";
 import { MYPAGE_MENU } from "../../lib/sideMenu.js";
+import { formatImagePath } from "../../utils/formatImagePath.js";
 import styles from "./MyPage.module.scss";
 
 // 화면 중앙 정렬 + 중앙 스크롤을 적용할 페이지
@@ -58,7 +59,7 @@ function MyPage() {
           {/* 프로필 + 설정/알림 */}
           <li className={styles.profile}>
             <ProfileCard
-              memberProfile={user && { ...user, path: user.profileImage }}
+              memberProfile={user && { ...user, path: formatImagePath(user.profileImage) }}
               isMinimal
               badge={
                 <span className={styles.utils}>
