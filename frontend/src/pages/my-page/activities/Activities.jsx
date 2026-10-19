@@ -169,7 +169,7 @@ const Activities = () => {
 
         {!loading && !error && (
           <DataTable
-            className={styles.myFeedTable}
+            className={`${styles.myPageTable} ${styles.myFeedTable}`}
             columns={columns}
             data={rows}
             totalCount={pager?.total}

@@ -64,5 +64,24 @@ public class UserMypageDaoImpl implements UserMypageDao {
         Map.of("memberCode", memberCode)
     );
   }
-  
+  @Override
+  public List<Map<String, Object>> searchMySales(Map<String, Object> params) {
+    return sql.selectList("mypage.searchMySales", params);
+  }
+
+  @Override
+  public float countMySales(Map<String, Object> params) {
+    return sql.selectOne("mypage.countMySales", params);
+  }
+
+  @Override
+  public Map<String, Object> searchMySalesSummary(Long memberCode) {
+    return sql.selectOne("mypage.searchMySalesSummary", memberCode);
+  }
+
+  @Override
+  public Map<String, Object> searchLikedFeedSummary(Long memberCode) {
+    return sql.selectOne("mypage.searchLikedFeedSummary", memberCode);
+  }
+
 }

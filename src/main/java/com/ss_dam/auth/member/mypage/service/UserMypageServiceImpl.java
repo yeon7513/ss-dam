@@ -1,5 +1,6 @@
 package com.ss_dam.auth.member.mypage.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,6 +18,7 @@ import com.ss_dam.auth.member.mypage.model.response.MypageProfileView;
 import com.ss_dam.auth.member.rating.enums.MemberRating;
 import com.ss_dam.auth.member.rating.service.MemberRatingService;
 import com.ss_dam.common.pager.PageResult;
+import com.ss_dam.common.pager.PageQuery;
 
 @Service
 @Transactional(readOnly = true)
@@ -141,5 +143,26 @@ public class UserMypageServiceImpl implements UserMypageService {
   public Map<String, Object> getMyChallengeSummary(Long memberCode) {
     return mypageDao.searchMyChallengeSummary(memberCode);
   }
-  
+  @Override
+  public PageResult<Map<String, Object>> getMySales(PageQuery query, Long memberCode) {
+    query.setPage(Math.max(1, query.getPage()));
+    query.setPerPage(Math.max(1, Math.min(100, query.getPerPage())));
+    Map<String, Object> params = new HashMap<>();
+    params.put("memberCode", memberCode);
+    params.put("keyword", query.getKeyword());
+    params.put("offset", query.getOffset());
+    params.put("perPage", query.getPerPage());
+    return PageResult.of(mypageDao.searchMySales(params), query, mypageDao.countMySales(params));
+  }
+
+  @Override
+  public Map<String, Object> getMySalesSummary(Long memberCode) {
+    return mypageDao.searchMySalesSummary(memberCode);
+  }
+
+  @Override
+  public Map<String, Object> getLikedFeedSummary(Long memberCode) {
+    return mypageDao.searchLikedFeedSummary(memberCode);
+  }
+
 }

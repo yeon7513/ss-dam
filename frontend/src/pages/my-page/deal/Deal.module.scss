@@ -1,0 +1,19 @@
+@use "../../../scss/variables.scss" as v;
+
+table.table {
+  min-width: 700px;
+  table-layout: fixed;
+
+  th, td { text-align: center; }
+  th:nth-child(1) { width: 90px; }
+  th:nth-child(3) { width: 120px; }
+  th:nth-child(4) { width: 90px; }
+  th:nth-child(5) { width: 140px; }
+  th:nth-child(6) { width: 75px; }
+  td:nth-child(2) { text-align: left; }
+}
+
+.sold {
+  background-color: v.$grayscale-60;
+  color: v.$color-white;
+}

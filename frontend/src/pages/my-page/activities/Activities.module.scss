@@ -29,6 +29,12 @@
   }
 }
 
+.topBar .searchBox input[type="text"] {
+  border-radius: 999px;
+  padding-left: 1.25rem;
+  padding-right: 2.75rem;
+}
+
 .summary {
   display: flex;
   flex-wrap: wrap;
@@ -73,6 +79,30 @@
 }
 
 /* 공통 DataTable 커스텀 (마이페이지 폭에 맞게 최소 너비 축소) */
+table.myPageTable {
+  font-family: inherit;
+  line-height: 1.5;
+
+  th {
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    padding: 13px 12px;
+  }
+
+  td {
+    font-size: 13px;
+    font-weight: 400;
+    text-align: center;
+    padding: 15px 12px;
+    color: #252b33;
+  }
+
+  td:nth-child(2) {
+    text-align: left;
+  }
+}
+
 table.myFeedTable {
   min-width: 640px;
   table-layout: fixed;
@@ -101,6 +131,9 @@ table.myFeedTable {
 }
 
 .title {
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 500;
   display: block;
   width: 100%;
   overflow: hidden;
@@ -124,6 +157,7 @@ table.myFeedTable {
 }
 
 .commentLink {
+  font: inherit;
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;

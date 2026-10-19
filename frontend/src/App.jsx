@@ -48,6 +48,7 @@ import ProductUpdate from "./pages/market/product-update/ProductUpdate.jsx";
 import Activities from "./pages/my-page/activities/Activities.jsx";
 import MyChallenges from "./pages/my-page/challenges/MyChallenges.jsx";
 import Deal from "./pages/my-page/deal/Deal";
+import LikedFeeds from "./pages/my-page/liked-feeds/LikedFeeds.jsx";
 import EditProfile from "./pages/my-page/my-account/edit_profile/EditProfile";
 import Withdraw from "./pages/my-page/my-account/withdraw/Withdraw.jsx";
 import MyActivity from "./pages/my-page/my-activity/MyActivity.jsx";
@@ -136,6 +137,7 @@ function App() {
           <Route path="/mypage" element={<MyPage />}>
             <Route index element={<MyActivity />} />
             <Route path="activities" element={<Activities />} />
+            <Route path="liked-feeds" element={<LikedFeeds />} />
             <Route path="challenges" element={<MyChallenges />} />
             <Route path="edit_profile" element={<EditProfile />} />
             <Route path="withdraw" element={<Withdraw />} />

@@ -140,4 +140,54 @@
     AND c.DELETE_YN = 0
 </select>
 
+<!-- 판매 관리는 요청한 회원의 세션 번호로만 조회한다. -->
+<sql id="MySalesWhere">
+  WHERE p.mem_code = #{memberCode} AND p.delete_yn = 0
+  <if test="keyword != null and keyword.trim() != ''">
+    AND (p.title LIKE CONCAT('%', #{keyword}, '%')
+      OR p.content LIKE CONCAT('%', #{keyword}, '%'))
+  </if>
+</sql>
+
+<select id="countMySales" resultType="Float">
+  SELECT COUNT(*) FROM MARKET_PRODUCT p
+  <include refid="MySalesWhere" />
+</select>
+
+<select id="searchMySales" resultType="map">
+  SELECT p.code, p.title, p.price, p.deal_status AS dealStatus,
+    DATE_FORMAT(p.created_at, '%Y-%m-%d %H:%i:%s') AS createdAt,
+    (SELECT COUNT(*) FROM MARKET_PROD_PICK pick
+      WHERE pick.prod_code = p.code AND pick.delete_yn = 0) AS countPick,
+    (SELECT COUNT(*) FROM CHAT_ROOM cr
+      WHERE cr.type = 'deal' AND cr.target_code = p.code
+        AND (cr.requester_code = #{memberCode} OR cr.responder_code = #{memberCode})) AS countChatRoom
+  FROM MARKET_PRODUCT p
+  <include refid="MySalesWhere" />
+  ORDER BY p.created_at DESC, p.code DESC
+  LIMIT #{offset}, #{perPage}
+</select>
+
+<select id="searchMySalesSummary" resultType="map">
+  SELECT COUNT(*) AS totalProducts,
+    COALESCE(SUM(CASE WHEN p.deal_status = 'SOLD' THEN p.price ELSE 0 END), 0) AS totalAmount,
+    COALESCE(SUM((SELECT COUNT(*) FROM CHAT_ROOM cr
+      WHERE cr.type = 'deal' AND cr.target_code = p.code
+        AND (cr.requester_code = #{value} OR cr.responder_code = #{value}))), 0) AS totalChats
+  FROM MARKET_PRODUCT p
+  WHERE p.mem_code = #{value} AND p.delete_yn = 0
+</select>
+
+<select id="searchLikedFeedSummary" resultType="map">
+  SELECT COUNT(DISTINCT f.mem_code) AS totalAuthors,
+    COUNT(*) AS totalLikes,
+    COALESCE(SUM((SELECT COUNT(*) FROM COMMENTS c
+      WHERE c.feed_code = f.code AND c.mem_code = #{value}
+        AND c.status = 'active' AND c.delete_yn = 0)), 0) AS totalComments
+  FROM FEED f
+  WHERE f.status = 'active' AND f.delete_yn = 0
+    AND EXISTS (SELECT 1 FROM FEED_LIKE fl
+      WHERE fl.feed_code = f.code AND fl.mem_code = #{value} AND fl.delete_yn = 0)
+</select>
+
 </mapper>

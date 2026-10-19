@@ -49,13 +49,13 @@ const MY_CHALLENGE_COLUMNS = [
     accessor: "dateKey",
     // 같은 날짜의 첫 행에만 날짜 표시
     render: (row) =>
-      row.isFirstOfDate ? <strong className={styles.date}>{row.dateKey}</strong> : null,
+      row.isFirstOfDate ? <strong className={layout.date}>{row.dateKey}</strong> : null,
   },
   {
     header: "챌린지명",
     accessor: "title",
     render: (row) => (
-      <Link to={`/challenge/${row.chalCode}`} className={styles.title} title={row.title}>
+      <Link to={`/challenge/${row.chalCode}`} className={layout.title} title={row.title}>
         {row.title}
       </Link>
     ),
@@ -80,7 +80,7 @@ const MY_CHALLENGE_COLUMNS = [
     render: (row) => {
       const status = ENTRY_STATUS[row.entryStatus];
       return status ? (
-        <span className={cn(styles.statusBadge, status.className)}>{status.label}</span>
+        <span className={cn(layout.badge, status.className)}>{status.label}</span>
       ) : (
         "-"
       );
@@ -89,7 +89,7 @@ const MY_CHALLENGE_COLUMNS = [
   {
     header: "인증",
     accessor: "proofCount",
-    render: (row) => <span className={styles.badge}>{formatNumber(row.proofCount)}회</span>,
+    render: (row) => <span className={layout.badge}>{formatNumber(row.proofCount)}회</span>,
   },
   {
     header: "획득 그루",
@@ -193,7 +193,7 @@ const MyChallenges = () => {
 
         {!loading && !error && (
           <DataTable
-            className={styles.myChallengeTable}
+            className={cn(layout.myPageTable, styles.myChallengeTable)}
             columns={MY_CHALLENGE_COLUMNS}
             data={rows}
             totalCount={pager?.total}

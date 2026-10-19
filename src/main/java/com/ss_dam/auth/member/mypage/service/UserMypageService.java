@@ -1,6 +1,7 @@
 package com.ss_dam.auth.member.mypage.service;
 
 import java.util.Map;
+import com.ss_dam.common.pager.PageQuery;
 
 import com.ss_dam.auth.member.mypage.model.filter.MypageChallengeSearchFilter;
 import com.ss_dam.auth.member.mypage.model.response.MypageChallengeView;
@@ -16,4 +17,10 @@ public interface UserMypageService {
 
   // 참여한 챌린지 요약
   Map<String, Object> getMyChallengeSummary(Long memberCode);
+
+  PageResult<Map<String, Object>> getMySales(PageQuery query, Long memberCode);
+
+  Map<String, Object> getMySalesSummary(Long memberCode);
+
+  Map<String, Object> getLikedFeedSummary(Long memberCode);
 }

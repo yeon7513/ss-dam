@@ -62,7 +62,7 @@ export const MYPAGE_MENU = [
     category: "피드",
     subMenus: [
       { name: "내가 쓴 피드", path: "/mypage/activities" },
-      { name: "좋아요 피드", path: "" },
+      { name: "좋아요 피드", path: "/mypage/liked-feeds" },
       { name: "댓글 모아보기", path: "" },
     ],
   },

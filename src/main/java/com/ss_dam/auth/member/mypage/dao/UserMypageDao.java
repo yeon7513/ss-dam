@@ -23,4 +23,12 @@ public interface UserMypageDao {
 
   // 참여한 챌린지 요약 (총 참여, 진행 중, 완료, 획득 그루)
   Map<String, Object> searchMyChallengeSummary(Long memberCode);
+
+  List<Map<String, Object>> searchMySales(Map<String, Object> params);
+
+  float countMySales(Map<String, Object> params);
+
+  Map<String, Object> searchMySalesSummary(Long memberCode);
+
+  Map<String, Object> searchLikedFeedSummary(Long memberCode);
 }

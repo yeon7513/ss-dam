@@ -95,6 +95,7 @@
         SELECT fl.feed_code
         FROM FEED_LIKE fl
         WHERE fl.mem_code = #{memCode}
+        AND fl.delete_yn = 0
         )
       </if>
     </where>
