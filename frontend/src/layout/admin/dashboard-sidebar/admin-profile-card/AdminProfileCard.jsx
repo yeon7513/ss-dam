@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import Button from "../../../../components/common/button/Button.jsx";
 import { useAuth } from "../../../../context/AuthContext.jsx";
 import { useNavigate } from "react-router-dom";
@@ -33,7 +33,7 @@ function AdminProfileCard() {
   const handleChangePassword = (e) => {
     const newPassword = e.target.value;
 
-    setUpdateInfo(prev => ({
+    setUpdateInfo((prev) => ({
       ...prev,
       password: newPassword,
     }));
@@ -43,7 +43,7 @@ function AdminProfileCard() {
   const handleChangePhone = (e) => {
     const newPhoneNumber = formatPhoneNumber(e, setInputError);
 
-    setUpdateInfo(prev => ({
+    setUpdateInfo((prev) => ({
       ...prev,
       phone: newPhoneNumber,
     }));
@@ -62,19 +62,21 @@ function AdminProfileCard() {
   };
 
   const handleCancelUpdate = () => {
-    if (confirm("수정을 취소하시겠습니까?\n취소하면 수정한 내용은 저장되지 않습니다.")) {
+    if (
+      confirm(
+        "수정을 취소하시겠습니까?\n취소하면 수정한 내용은 저장되지 않습니다.",
+      )
+    ) {
       setIsModalOpen(false);
     }
-  }
+  };
 
   // 로그인하지 않았을 경우
   // -> 따로 막을거지만.. 혹시 모르니까!
   if (!isLoggedIn) {
     return (
       <div className={styles.profile}>
-        <p className={styles.noProfile}>
-          로그인 정보를 찾을 수 없습니다.
-        </p>
+        <p className={styles.noProfile}>로그인 정보를 찾을 수 없습니다.</p>
         <Button
           btnStyle="word"
           action="submit"
@@ -91,10 +93,12 @@ function AdminProfileCard() {
     <div className={styles.profile}>
       <ul className={styles.info}>
         <li>
-          <span className={styles.name}>{user.name}</span>
-          <span className={styles.id}>({user.id})</span>
+          <span className={styles.name}>{user?.name}</span>
+          <span className={styles.id}>({user?.id})</span>
         </li>
-        <li className={styles.badge}>{user.dept.label} / {user.role.label}</li>
+        <li className={styles.badge}>
+          {user.dept.label} / {user.role.label}
+        </li>
         <li className={styles.control}>
           <Button
             btnStyle="word"
@@ -131,12 +135,7 @@ function AdminProfileCard() {
               disabled
             />
             <div className={styles.item}>
-              <TextInput
-                label="이름"
-                name="name"
-                value={user.name}
-                disabled
-              />
+              <TextInput label="이름" name="name" value={user.name} disabled />
               <span className={cn(styles.notice, styles.help)}>
                 <CgAsterisk /> 이름 변경은 최고관리자에게 문의하세요.
               </span>
@@ -165,7 +164,6 @@ function AdminProfileCard() {
               </span>
             )}
           </div>
-
         </div>
         <div className={styles.footer}>
           <Button
