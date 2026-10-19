@@ -114,7 +114,7 @@ public class UserFeedServiceImpl implements UserFeedService {
     // -> Objects.equals(a, b)는 주소 비교(==)를 먼저 실행해서 최적화한 뒤,
     // -> 주소가 다르면 Null 안전성(a != null)을 챙기면서
     // -> 내부 equals()를 통해 최종적으로 "값 비교"를 수행해 주는 가장 안전한 메서드라고 함.
-    // -->  인텔리제이가 이렇게 바꾸라고 난리쳐서 찾아봄..
+    // --> 인텔리제이가 이렇게 바꾸라고 난리쳐서 찾아봄..
     // ---> 비로그인 사용자라면, memberCode가 null이니 예외가 발생할 수 있어서 그런가봄~
 
     // 조회 로그 추가
@@ -125,7 +125,6 @@ public class UserFeedServiceImpl implements UserFeedService {
 
     return feedDetail;
   }
-
 
   // 피드 등록
   @Transactional(isolation = Isolation.READ_COMMITTED)
@@ -154,18 +153,17 @@ public class UserFeedServiceImpl implements UserFeedService {
     }
 
     // 이미지 등록
-    if (feedCreate.getImages() == null || feedCreate.getImages().isEmpty()) {
+    if (feedCreate.getImages() != null || !feedCreate.getImages().isEmpty()) {
       imageService.uploadImages(feedCreate.getImages(), "feed", newFeedCode);
     }
 
     // 해시태그 등록
-    if (feedCreate.getHashtags() == null || feedCreate.getHashtags().isEmpty()) {
+    if (feedCreate.getHashtags() != null || !feedCreate.getHashtags().isEmpty()) {
       registerHashtags(feedCreate.getHashtags(), newFeedCode);
     }
 
     return newFeedCode;
   }
-
 
   // 수정할 피드 조회 -> 사용자가 작성한 피드만 조회
   @Override
@@ -176,7 +174,6 @@ public class UserFeedServiceImpl implements UserFeedService {
 
     return userFeedDao.findFeedDetailForEdit(params);
   }
-
 
   // 피드 수정 -> 피드 포함, 해시태그, 이미지
   @Transactional
@@ -253,7 +250,6 @@ public class UserFeedServiceImpl implements UserFeedService {
   private void deleteHashtags(Long feedCode) {
     userFeedDao.deleteHashtags(feedCode);
   }
-
 
   @Override
   public int getProofCount(int chalCode, int memCode) {

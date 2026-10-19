@@ -14,8 +14,8 @@
 
   <!-- 피드 등록 -->
   <insert id="registerFeed">
-    INSERT INTO FEED (chal_code, mem_code, title, content, hitcount, status, created_by, created_at, delete_yn)
-    VALUES (#{chalCode}, #{memCode}, #{title}, #{content}, 0, 'ACTIVE', #{createdBy}, NOW(), 0)
+    INSERT INTO FEED (chal_code, mem_code, title, content, status, created_by, created_at, delete_yn)
+    VALUES (#{chalCode}, #{memCode}, #{title}, #{content}, 'ACTIVE', #{createdBy}, NOW(), 0)
 
     <selectKey keyProperty="code" resultType="long" order="AFTER">
       SELECT LAST_INSERT_ID()

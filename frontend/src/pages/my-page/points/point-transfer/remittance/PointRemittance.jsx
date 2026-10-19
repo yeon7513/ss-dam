@@ -85,12 +85,12 @@ function PointRemittance({ targetProductCode }) {
 
       const passwordCheck = await response.json();
 
-      console.log("passwordCheck: ", passwordCheck);
+      // console.log("passwordCheck: ", passwordCheck);
 
-      if (!passwordCheck) {
-        alert("비밀번호를 정확하게 입력해 주세요.");
-        return;
-      }
+      // if (!passwordCheck) {
+      //   alert("비밀번호를 정확하게 입력해 주세요.");
+      //   return;
+      // }
 
       console.log("비밀번호 검증까지 통과!");
 
