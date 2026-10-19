@@ -4,7 +4,7 @@ import styles from "../../pages/admin/market/MarketManage.module.scss";
 export const ADMIN_MARKET_INITIAL_FILTERS = {
   page: 1,
   perPage: 10,
-  status: "",
+  status: "ACTIVE",
   deleteYn: "",
   fromDate: "",
   toDate: "",
@@ -16,7 +16,7 @@ export const ADMIN_MARKET_INITIAL_FILTERS = {
 
 // 노출 상태 탭
 export const ADMIN_MARKET_STATUS_TABS = [
-  { value: "", label: "전체 상태" },
+  // { value: "", label: "전체 상태" },
   { value: "ACTIVE", label: "활성" },
   { value: "PRIVATE", label: "비공개" },
   { value: "BLINDED", label: "블라인드" },
@@ -74,17 +74,17 @@ export const ADMIN_MARKET_SELECT_OPTIONS = [
 ];
 
 // 활성화 여부 (박스형 라디오 - 관리자 계정 관리와 동일)
-export const ADMIN_MARKET_DELETE_YN = [
-  {
-    label: "활성화 여부",
-    name: "deleteYn",
-    options: [
-      { code: "", name: "전체" },
-      { code: "0", name: "활성화" },
-      { code: "1", name: "비활성" },
-    ],
-  },
-];
+// export const ADMIN_MARKET_DELETE_YN = [
+//   {
+//     label: "활성화 여부",
+//     name: "deleteYn",
+//     options: [
+//       { code: "", name: "전체" },
+//       { code: "0", name: "활성화" },
+//       { code: "1", name: "비활성" },
+//     ],
+//   },
+// ];
 
 // 상품 목록 테이블 컬럼 (DataTable)
 export const getProductColumns = (navigate) => [
@@ -104,7 +104,9 @@ export const getProductColumns = (navigate) => [
   {
     header: "카테고리",
     render: (item) =>
-      [item.mainCategoryName, item.subCategoryName].filter(Boolean).join(" > ") || "-",
+      [item.mainCategoryName, item.subCategoryName]
+        .filter(Boolean)
+        .join(" > ") || "-",
   },
   {
     header: "가격",
@@ -117,8 +119,11 @@ export const getProductColumns = (navigate) => [
   {
     header: "거래 상태",
     render: (item) =>
-      ADMIN_MARKET_DEAL_STATUS_OPTIONS.find((opt) => opt.code === item.dealStatus)?.name
-      ?? item.dealStatus ?? "-",
+      ADMIN_MARKET_DEAL_STATUS_OPTIONS.find(
+        (opt) => opt.code === item.dealStatus,
+      )?.name ??
+      item.dealStatus ??
+      "-",
   },
   { header: "노출 상태", accessor: "status" },
   {

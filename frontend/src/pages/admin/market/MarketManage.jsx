@@ -14,7 +14,7 @@ import { useSearchQuery } from "../../../hooks/useSearchQuery.js";
 // 상수
 import {
   ADMIN_MARKET_CATEGORY_SELECT,
-  ADMIN_MARKET_DELETE_YN,
+  // ADMIN_MARKET_DELETE_YN,
   ADMIN_MARKET_INITIAL_FILTERS,
   ADMIN_MARKET_SELECT_OPTIONS,
   ADMIN_MARKET_STATUS_TABS,
@@ -78,7 +78,7 @@ export default function MarketManage() {
           onTabChange: handleTabChange,
         }}
         selectGroups={selectGroups}
-        radioGroups={ADMIN_MARKET_DELETE_YN}
+        // radioGroups={ADMIN_MARKET_DELETE_YN}
         onSearch={handleSearch}
       />
 
