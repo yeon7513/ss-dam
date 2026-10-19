@@ -1,3 +1,5 @@
+@use "../../../scss/challenge-status";
+
 .container {
   min-width: 0;
   padding: 24px;
@@ -76,12 +78,7 @@
 }
 
 .status {
-  flex-shrink: 0;
-  padding: 4px 8px;
-  border-radius: 4px;
-  background: #eef1f5;
-  color: #667183;
-  font-size: 12px;
+  @include challenge-status.badge;
 }
 
 .period {

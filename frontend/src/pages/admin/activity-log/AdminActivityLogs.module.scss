@@ -1,14 +1,11 @@
+@use "../../../scss/mixin.scss" as mix;
+
 .page {
+  @include mix.admin-list-spacing;
   min-width: 0;
   min-height: 70vh;
-  padding: 24px;
-  background: #f7f8fa;
   color: #252b33;
   font-size: 14px;
-}
-
-.header {
-  margin-bottom: 8px;
 }
 
 /* 활동 로그 표 카드 (마켓 거래와 동일한 여백) */
@@ -42,6 +39,7 @@
   background: #f0f2f7;
   color: #505b6a;
   font-size: 12px;
+
 }
 
 /* 처리 사유 및 대상 정보 */
@@ -93,10 +91,6 @@
 }
 
 @media (max-width: 768px) {
-  .page {
-    padding: 16px;
-  }
-
   .tableCard {
     padding: 1.25rem 1rem 1.5rem;
   }

@@ -1,0 +1,28 @@
+@mixin badge {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 4px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 999px;
+  background: #eef1f4;
+  color: #66707a;
+  font-size: 11px;
+  line-height: 1.4;
+  white-space: nowrap;
+
+  &[data-status="WAITING"] {
+    border-color: #d6a23e;
+    color: #916619;
+  }
+
+  &[data-status="IN_PROGRESS"] {
+    border-color: #45a889;
+    color: #247d60;
+  }
+
+  &[data-status="ENDED"] {
+    border-color: #8796b0;
+    color: #596b89;
+  }
+}

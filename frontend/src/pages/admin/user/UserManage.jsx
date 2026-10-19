@@ -54,9 +54,7 @@ export default function UserManage() {
   return (
     <div className={styles.container}>
       {/* 제목 + 새로고침 + 현재 시각 */}
-      <div className={styles.header}>
-        <PanelHeader title="관리자 회원 관리" onRefresh={refetch} />
-      </div>
+      <PanelHeader title="관리자 회원 관리" onRefresh={refetch} />
 
       {/* 공통 검색 필터 (탭 + 가입일 + 셀렉트 + 키워드) */}
       {/* key: 탭 변경·필터 삭제 등으로 쿼리가 바뀌면 내부 draft 상태를 새로 맞춤 */}

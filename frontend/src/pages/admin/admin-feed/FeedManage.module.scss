@@ -3,9 +3,7 @@
 
 /* 공통 대시보드 레이아웃 뼈대 */
 .dashboardBody {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  @include mix.admin-list-spacing;
 }
 
 /* 피드 카드 목록 컨테이너 */

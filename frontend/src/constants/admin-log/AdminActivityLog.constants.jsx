@@ -65,7 +65,7 @@ export const getProcessOptions = (targetType) => {
   return Object.entries(ADMIN_LOG_PROCESS_TYPES_BY_TARGET).flatMap(([type, codes]) =>
     codes.map((code) => ({
       code: `${type}:${code}`,
-      name: `${ADMIN_LOG_TARGET_LABELS[type]} - ${getProcessLabel(type, code)}`,
+      name: `[${ADMIN_LOG_TARGET_LABELS[type]}] ${getProcessLabel(type, code)}`,
     })),
   );
 };

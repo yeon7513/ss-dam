@@ -75,7 +75,6 @@ export default function AdminActivityLogs() {
       <PanelHeader
         title="관리자 활동 로그"
         onRefresh={refetch}
-        className={styles.header}
       />
 
       {/* 공통 검색 필터 (유형 탭 + 기간 + 처리 유형 + 검색) */}

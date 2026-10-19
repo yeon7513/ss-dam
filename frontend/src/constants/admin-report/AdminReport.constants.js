@@ -30,7 +30,7 @@ export const ADMIN_REPORT_SELECT_OPTIONS = [
   {
     label: "신고 대상",
     name: "targetType",
-    options: toOptions(TARGETS),
+    options: toOptions(TARGETS).filter(({ code }) => code !== "user"),
   },
   {
     label: "신고 사유",

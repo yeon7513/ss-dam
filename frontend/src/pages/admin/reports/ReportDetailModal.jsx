@@ -277,7 +277,7 @@ export default function ReportDetailModal({
         <>
           {/* 신고 상태 및 대상 유형 */}
           <div className={styles.badges}>
-            <span>
+            <span data-status={detail.status}>
               {STATUSES[detail.status] ?? detail.status}
             </span>
             <span>

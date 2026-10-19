@@ -1,19 +1,14 @@
 /* frontend/src/pages/admin/reports/AdminReports.module.scss */
+@use "../../../scss/mixin.scss" as mix;
 
 /* 페이지 */
 .page {
+  @include mix.admin-list-spacing;
   box-sizing: border-box;
   min-width: 0;
   min-height: 70vh;
-  padding: 24px;
-  background: #f7f8fa;
   color: #252b33;
   font-size: 14px;
-}
-
-/* 공통 헤더 여백 */
-.header {
-  margin-bottom: 24px;
 }
 
 /* 신고 카드 목록 */
@@ -59,6 +54,16 @@
     background: #edf0f5;
     color: #505b6a;
     font-size: 12px;
+
+    &[data-status="PENDING"] {
+      border: 1px solid #d6a23e;
+      color: #916619;
+    }
+
+    &[data-status="IN_REVIEW"] {
+      border: 1px solid #45a889;
+      color: #247d60;
+    }
   }
 }
 
@@ -265,6 +270,12 @@
     outline: 2px solid #4263a0;
     outline-offset: 3px;
   }
+
+  .field textarea:focus {
+    outline: none;
+    box-shadow: none;
+    border-color: #cbd2dc;
+  }
 }
 
 /* 오류 메시지 */
@@ -296,14 +307,6 @@
 }
 
 @media (max-width: 600px) {
-  .page {
-    padding: 14px;
-  }
-
-  .header {
-    margin-bottom: 20px;
-  }
-
   .grid {
     grid-template-columns: 1fr;
   }

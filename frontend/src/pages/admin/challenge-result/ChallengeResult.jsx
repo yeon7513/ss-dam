@@ -139,7 +139,7 @@ export default function ChallengeResult() {
 
                 <div className={styles.cardContent}>
                   <div className={styles.titleRow}>
-                    <span className={styles.status}>종료</span>
+                    <span className={styles.status} data-status="ENDED">종료</span>
                     <h2>{challenge.title}</h2>
                   </div>
 

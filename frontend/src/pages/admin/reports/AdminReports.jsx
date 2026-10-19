@@ -80,7 +80,6 @@ export default function AdminReports() {
       <PanelHeader
         title="미처리 신고"
         onRefresh={refetch}
-        className={styles.header}
       />
 
       {/* 공통 검색 필터 (처리 상태 탭 + 신고 기간 + 대상·사유 + 검색) */}
@@ -119,7 +118,7 @@ export default function AdminReports() {
             {reports.map((report) => (
               <Card key={report.code} className={styles.card}>
                 <div className={styles.badges}>
-                  <span>{STATUSES[report.status] ?? report.status}</span>
+                  <span data-status={report.status}>{STATUSES[report.status] ?? report.status}</span>
                   <span>{TARGETS[report.targetType] ?? report.targetType}</span>
                 </div>
 

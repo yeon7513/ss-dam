@@ -75,7 +75,6 @@ function AccountManage() {
       />
 
       {/* 검색 필터 & 관리자 등록 */}
-      <div>
         <SearchFilterBar
           ctaButton={{
             onClick: () => navigate("account_register"),
@@ -87,7 +86,6 @@ function AccountManage() {
           searchFilter={searchFilter}
           onSearch={handleSearch}
         />
-      </div>
 
       <div className={styles.container}>
         <div className={styles.accounts}>

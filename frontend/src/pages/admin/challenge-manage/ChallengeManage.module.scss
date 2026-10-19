@@ -1,3 +1,5 @@
+@use "../../../scss/challenge-status";
+
 .container {
   min-width: 0;
   padding: 28px;
@@ -71,12 +73,7 @@
 }
 
 .status {
-  flex-shrink: 0;
-  padding: 4px 8px;
-  border-radius: 12px;
-  background: #eef1f4;
-  color: #66707a;
-  font-size: 11px;
+  @include challenge-status.badge;
 }
 
 .cardContent > p {

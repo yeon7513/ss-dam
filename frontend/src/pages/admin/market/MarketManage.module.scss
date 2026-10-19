@@ -2,9 +2,7 @@
 @use "../../../scss/mixin.scss" as mix;
 
 .container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  @include mix.admin-list-spacing;
 }
 
 /* 상품 목록 카드 (표 기준 위아래 여백 확보) */

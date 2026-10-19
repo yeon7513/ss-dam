@@ -84,7 +84,7 @@ export default function ChallengeManage() {
 
               <div className={styles.cardContent}>
                 <div className={styles.titleRow}>
-                  <span className={styles.status}>
+                  <span className={styles.status} data-status={challenge.progressStatus}>
                     {toOptionName(ADMIN_CHALLENGE_PROGRESS_OPTIONS, challenge.progressStatus)}
                   </span>
                   <h2>{challenge.title}</h2>
@@ -100,7 +100,9 @@ export default function ChallengeManage() {
                   <span>참여자 {challenge.participantCount ?? 0}명</span>
                   <span>달성률 {challenge.achievementRate ?? 0}%</span>
                   <span>
-                    {toOptionName(ADMIN_CHALLENGE_POST_STATUS_OPTIONS, challenge.postStatus)}
+                    {challenge.postStatus === "BLINDED"
+                      ? "비공개"
+                      : toOptionName(ADMIN_CHALLENGE_POST_STATUS_OPTIONS, challenge.postStatus)}
                   </span>
                 </div>
               </div>

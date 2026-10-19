@@ -16,6 +16,29 @@
   align-items: $ai;
 }
 
+// 관리자 목록: 기존 회원 관리 화면의 제목 여백을 공통으로 사용
+@mixin admin-list-spacing {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  > :first-child {
+    margin-bottom: 4px;
+  }
+
+  > :nth-child(2) {
+    margin-top: 0;
+  }
+
+  @media (max-width: 640px) {
+    padding: 1rem;
+
+    > :first-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
 // 전체를 감싸는 wrap 클래스 스타일
 @mixin wrap($gap: 32px, $pd: 5rem 0, $fd: row) {
   display: flex;
