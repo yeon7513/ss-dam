@@ -15,7 +15,7 @@ function Comments({ targetCode, readOnly = false }) {
     perPage: 5,
   });
 
-  const { data, loding, error } = useLoadData(
+  const { data, loading, error, refetch } = useLoadData(
     `/api/comments/${targetCode}${queryParams}`,
   );
   const [comments, setComments] = useState(data?.content || []);
@@ -35,12 +35,25 @@ function Comments({ targetCode, readOnly = false }) {
     setComments(data?.content);
   }, [data?.content]);
 
-  if (loding) {
+  const handleUpdateComment = (updated) => {
+    setComments((previous) => previous.map((comment) => comment.code === updated.code ? updated : comment));
+  };
+
+  const handleDeleteComment = (code) => {
+    setComments((previous) => previous.filter((comment) => comment.code !== code));
+    if (comments.length === 1 && currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    } else {
+      refetch();
+    }
+  };
+
+  if (loading) {
     return <div>댓글 정보를 불러오는 중입니다.</div>;
   }
 
   if (error) {
-    return <div>댓글 정보를 불러오는 데 실패했습니다. {error}</div>;
+    return <div role="alert">댓글 정보를 불러오는 데 실패했습니다. {error.message}</div>;
   }
 
   return (
@@ -57,7 +70,8 @@ function Comments({ targetCode, readOnly = false }) {
       <div className={styles.comments}>
         {comments.length > 0 ? (
           comments.map((comment) => (
-            <Comment key={comment.code} comment={comment} readOnly={readOnly} />
+            <Comment key={comment.code} comment={comment} readOnly={readOnly}
+              onUpdate={handleUpdateComment} onDelete={handleDeleteComment} />
           ))
         ) : (
           <div>등록된 댓글이 없습니다.</div>

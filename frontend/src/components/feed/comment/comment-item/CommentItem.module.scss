@@ -1,6 +1,29 @@
 @use "../../../../scss/variables.scss" as v;
 @use "../../../../scss/mixin.scss" as mix;
 
+.editForm {
+  margin: 0.8rem 1rem;
+
+  textarea {
+    width: 100%;
+    min-height: 5rem;
+    padding: 0.75rem;
+    border: 1px solid v.$grayscale-20;
+    border-radius: 8px;
+    font: inherit;
+    resize: vertical;
+  }
+
+  > div {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+.error {
+  color: #c23939;
+}
+
 .comment {
   padding: 1rem 0;
 
