@@ -1,2 +1,188 @@
 @use "../../../scss/variables.scss" as v;
 @use "../../../scss/mixin.scss" as mix;
+
+.chargeWrapper { max-width: 440px; }
+
+form.chargeCard {
+  gap: 12px;
+  padding: 24px;
+  border: 1px solid #c9c9c9;
+  border-radius: 10px;
+  box-shadow: none;
+}
+
+.brand {
+  margin: 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #999;
+  color: v.$grayscale-100;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.termsHeader,
+.agreementRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 11px;
+}
+
+.termsHeader {
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid v.$grayscale-20;
+  h4 { margin: 0; font-size: 12px; font-weight: 500; }
+}
+
+.checkboxLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  cursor: pointer;
+
+  input { width: 11px; height: 11px; margin: 0; accent-color: v.$primary-40; flex-shrink: 0; }
+}
+
+.personalAgreements {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 6px;
+
+  label { flex-wrap: wrap; font-size: 10px; }
+}
+
+.termsDivider {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-top: 10px;
+
+  &::before,
+  &::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #d8dde4;
+  }
+}
+
+.termsToggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  flex-shrink: 0;
+  margin: 0;
+  padding: 3px 9px;
+  border: 0;
+  border-radius: 20px;
+  background: v.$grayscale-5;
+  color: v.$grayscale-90;
+  font-size: 10px;
+  cursor: pointer;
+
+  svg { flex-shrink: 0; }
+}
+
+.arrowUp { transform: rotate(180deg); }
+
+.termsContent,
+.previewNotice {
+  color: v.$grayscale-70;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.termsContent { margin-top: 10px; padding: 12px; background: v.$grayscale-5; border-radius: 8px; }
+.previewNotice { margin: 0; }
+
+.paymentSection {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+
+  legend { float: left; width: 100%; margin-bottom: 8px; padding: 0; font-size: 11px; font-weight: 500; }
+
+  & + .paymentSection {
+    padding-top: 12px;
+    border-top: 1px solid #d8dde4;
+  }
+}
+
+.easyPayments,
+.cardPayments { display: grid; clear: both; gap: 6px; }
+.easyPayments { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.easyPayments { column-gap: 20px; }
+.cardPayments { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+.paymentOption,
+.otherCards {
+  box-sizing: border-box;
+  min-width: 0;
+  width: 100%;
+  min-height: 26px;
+  border: 1px solid #d8dde4;
+  border-radius: 0;
+  background: v.$color-white;
+  color: v.$grayscale-70;
+  font: inherit;
+  font-size: 12px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.paymentOption {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 2px;
+
+  input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  &:focus-within { outline: 2px solid v.$primary-40; outline-offset: 2px; }
+  &:hover { border-color: v.$primary-40; }
+  &.selected { border-color: v.$primary-40; background: v.$primary-5; color: v.$primary-50; font-weight: 600; }
+}
+
+.otherCards { grid-column: span 1; padding: 0 2px; }
+.actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 6px 18px 0; }
+
+.cancelButton,
+.nextButton {
+  min-height: 34px;
+  padding: 7px 16px;
+  border: 0;
+  border-radius: 0;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cancelButton { background: v.$color-white; border: 1px solid v.$grayscale-20; color: v.$grayscale-70; }
+.nextButton {
+  background: v.$primary-40;
+  color: v.$color-white;
+  &:hover:not(:disabled) { background: v.$primary-50; }
+  &:disabled { background: v.$grayscale-50; cursor: not-allowed; }
+}
+
+div.completeModal {
+  box-sizing: border-box;
+  width: 360px;
+  max-width: 100%;
+  padding: 40px 24px;
+  text-align: center;
+
+  h2 { margin-bottom: 16px; font-size: 20px; font-weight: 700; }
+  p { margin-bottom: 24px; color: v.$grayscale-70; font-size: 12px; line-height: 1.6; }
+}
+
+@media (max-width: 360px) {
+  .cardPayments { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .personalAgreements { grid-template-columns: minmax(0, 1fr); }
+}

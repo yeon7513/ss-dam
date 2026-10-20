@@ -13,16 +13,40 @@ import org.springframework.web.server.ResponseStatusException;
 import com.ss_dam.auth.member.Member;
 import com.ss_dam.auth.member.mypage.dao.UserMypageDao;
 import com.ss_dam.auth.member.mypage.model.filter.MypageChallengeSearchFilter;
+import com.ss_dam.auth.member.mypage.model.response.MyChallengeProgressView;
+import com.ss_dam.auth.member.mypage.model.response.MyRankingView;
 import com.ss_dam.auth.member.mypage.model.response.MypageChallengeView;
 import com.ss_dam.auth.member.mypage.model.response.MypageProfileView;
 import com.ss_dam.auth.member.rating.enums.MemberRating;
 import com.ss_dam.auth.member.rating.service.MemberRatingService;
-import com.ss_dam.common.pager.PageResult;
 import com.ss_dam.common.pager.PageQuery;
+import com.ss_dam.common.pager.PageResult;
 
 @Service
 @Transactional(readOnly = true)
 public class UserMypageServiceImpl implements UserMypageService {
+
+  @Override
+  public PageResult<Map<String, Object>> getMyPurchases(PageQuery query, Long memberCode) {
+    query.setPage(Math.max(1, query.getPage()));
+    query.setPerPage(Math.max(1, Math.min(100, query.getPerPage())));
+    query.setPerGroup(Math.max(1, Math.min(10, query.getPerGroup())));
+
+    Map<String, Object> params = new HashMap<>();
+    params.put("memberCode", memberCode);
+    params.put("keyword", query.getKeyword() == null ? "" : query.getKeyword().trim());
+    long total = mypageDao.countMyPurchases(params);
+    long lastPage = Math.max(1L, (total + query.getPerPage() - 1) / query.getPerPage());
+    query.setPage((int) Math.min(query.getPage(), lastPage));
+    params.put("offset", query.getOffset());
+    params.put("perPage", query.getPerPage());
+    return PageResult.of(mypageDao.searchMyPurchases(params), query, (float) total);
+  }
+
+  @Override
+  public Map<String, Object> getMyPurchasesSummary(Long memberCode) {
+    return mypageDao.searchMyPurchasesSummary(Map.of("memberCode", memberCode));
+  }
 
   private final UserMypageDao mypageDao;
   private final MemberRatingService memberRatingService;
@@ -72,6 +96,7 @@ public class UserMypageServiceImpl implements UserMypageService {
     profile.setProfileImage(member.getPath());
     profile.setJoinedAt(member.getCreatedAt());
     profile.setPoint(member.getPoint());
+    profile.setTotalEarnedPoint(mypageDao.searchTotalEarnedPoint(memberCode));
     profile.setChallengeRanking(challengeRanking);
     profile.setCompletedChallengeCount(completedCount);
 
@@ -163,6 +188,109 @@ public class UserMypageServiceImpl implements UserMypageService {
   @Override
   public Map<String, Object> getLikedFeedSummary(Long memberCode) {
     return mypageDao.searchLikedFeedSummary(memberCode);
+  }
+
+  // 챌린지 - 내 랭킹 조회
+  @Override
+  public List<MyChallengeProgressView> getRecentChallengeProgress(
+      Long memberCode
+  ) {
+    return mypageDao.searchRecentChallengeProgress(memberCode);
+  }
+
+  @Override
+  public MyRankingView getMyScoreRanking(Long memberCode) {
+    MyRankingView ranking =
+        mypageDao.searchMyScoreRanking(memberCode);
+
+    if (ranking == null) {
+      throw new ResponseStatusException(
+          HttpStatus.NOT_FOUND,
+          "회원 랭킹 정보를 찾을 수 없습니다."
+      );
+    }
+
+    setRankingRatingName(ranking);
+
+    return ranking;
+  }
+
+  @Override
+  public PageResult<MyRankingView> getScoreRankings(
+      PageQuery query,
+      Long memberCode
+  ) {
+    // 페이지 요청값 제한
+    query.setPage(Math.max(1, query.getPage()));
+    query.setPerPage(Math.max(1, Math.min(100, query.getPerPage())));
+    query.setPerGroup(Math.max(1, Math.min(10, query.getPerGroup())));
+
+    long total = mypageDao.countRankingMembers();
+
+    // 마지막 페이지를 초과하면 마지막 페이지로 보정
+    long lastPage = Math.max(
+        1L,
+        (total + query.getPerPage() - 1) / query.getPerPage()
+    );
+
+    query.setPage((int) Math.min(query.getPage(), lastPage));
+
+    Map<String, Object> params = new HashMap<>();
+    params.put("memberCode", memberCode);
+    params.put("offset", query.getOffset());
+    params.put("perPage", query.getPerPage());
+
+    List<MyRankingView> rankings =
+        mypageDao.searchScoreRankings(params);
+
+    rankings.forEach(this::setRankingRatingName);
+
+    // 기존 공통 PageResult의 total 매개변수 타입에 맞춤
+    return PageResult.of(rankings, query, (float) total);
+  }
+
+  private void setRankingRatingName(MyRankingView ranking) {
+    MemberRating rating =
+        MemberRating.fromScore(ranking.getRatingScore());
+
+    ranking.setRatingName(rating.getLabel());
+  }
+
+  // 마이페이지 - 댓글
+  @Override
+  public PageResult<Map<String, Object>> getMyComments(
+      PageQuery query,
+      Long memberCode
+  ) {
+    query.setPage(Math.max(1, query.getPage()));
+    query.setPerPage(Math.max(1, Math.min(100, query.getPerPage())));
+    query.setPerGroup(Math.max(1, Math.min(10, query.getPerGroup())));
+
+    Map<String, Object> params = new HashMap<>();
+
+    // 회원 번호는 로그인 세션에서 전달받은 값만 사용
+    params.put("memberCode", memberCode);
+    params.put(
+        "keyword",
+        query.getKeyword() == null ? "" : query.getKeyword().trim()
+    );
+
+    long total = mypageDao.countMyComments(params);
+
+    // 존재하지 않는 페이지 요청 시 마지막 페이지로 보정
+    long lastPage = Math.max(
+        1L,
+        (total + query.getPerPage() - 1) / query.getPerPage()
+    );
+    query.setPage((int) Math.min(query.getPage(), lastPage));
+
+    params.put("offset", query.getOffset());
+    params.put("perPage", query.getPerPage());
+
+    List<Map<String, Object>> comments =
+        mypageDao.searchMyComments(params);
+
+    return PageResult.of(comments, query, (float) total);
   }
 
 }

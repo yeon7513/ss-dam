@@ -47,7 +47,9 @@ import ProductReport from "./pages/market/product-report/ProductReport.jsx";
 import ProductUpdate from "./pages/market/product-update/ProductUpdate.jsx";
 import Activities from "./pages/my-page/activities/Activities.jsx";
 import MyChallenges from "./pages/my-page/challenges/MyChallenges.jsx";
+import MyComments from "./pages/my-page/comments/MyComments.jsx";
 import Deal from "./pages/my-page/deal/Deal";
+import Purchases from "./pages/my-page/purchases/Purchases.jsx";
 import LikedFeeds from "./pages/my-page/liked-feeds/LikedFeeds.jsx";
 import EditProfile from "./pages/my-page/my-account/edit_profile/EditProfile";
 import Withdraw from "./pages/my-page/my-account/withdraw/Withdraw.jsx";
@@ -56,6 +58,7 @@ import MyPage from "./pages/my-page/MyPage.jsx";
 import PointTransfer from "./pages/my-page/points/point-transfer/PointTransfer.jsx";
 import PointCharge from "./pages/my-page/points/PointCharge.jsx";
 import PointHistory from "./pages/my-page/points/PointHistory.jsx";
+import MyRanking from "./pages/my-page/ranking/MyRanking.jsx";
 import PostReport from "./pages/report/PostReport.jsx";
 import SupportDetail from "./pages/support/SupportDetail";
 import Supports from "./pages/support/Supports";
@@ -139,9 +142,12 @@ function App() {
             <Route path="activities" element={<Activities />} />
             <Route path="liked-feeds" element={<LikedFeeds />} />
             <Route path="challenges" element={<MyChallenges />} />
+            <Route path="ranking" element={<MyRanking />} />
+            <Route path="comments" element={<MyComments />} />
             <Route path="edit_profile" element={<EditProfile />} />
             <Route path="withdraw" element={<Withdraw />} />
             <Route path="deal" element={<Deal />} />
+            <Route path="purchases" element={<Purchases />} />
             <Route path="point/charge" element={<PointCharge />} />
             <Route path="point/history" element={<PointHistory />} />
             <Route path="point/transfer" element={<PointTransfer />} />

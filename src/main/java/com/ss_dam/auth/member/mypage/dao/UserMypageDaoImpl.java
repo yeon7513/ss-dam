@@ -8,10 +8,27 @@ import org.springframework.stereotype.Repository;
 
 import com.ss_dam.auth.member.Member;
 import com.ss_dam.auth.member.mypage.model.filter.MypageChallengeSearchFilter;
+import com.ss_dam.auth.member.mypage.model.response.MyChallengeProgressView;
+import com.ss_dam.auth.member.mypage.model.response.MyRankingView;
 import com.ss_dam.auth.member.mypage.model.response.MypageChallengeView;
 
 @Repository
 public class UserMypageDaoImpl implements UserMypageDao {
+
+  @Override
+  public List<Map<String, Object>> searchMyPurchases(Map<String, Object> params) {
+    return sql.selectList("mypage.searchMyPurchases", params);
+  }
+
+  @Override
+  public long countMyPurchases(Map<String, Object> params) {
+    return sql.selectOne("mypage.countMyPurchases", params);
+  }
+
+  @Override
+  public Map<String, Object> searchMyPurchasesSummary(Map<String, Object> params) {
+    return sql.selectOne("mypage.searchMyPurchasesSummary", params);
+  }
 
   private final SqlSession sql;
 
@@ -20,6 +37,14 @@ public class UserMypageDaoImpl implements UserMypageDao {
   }
 
   // 참여 현황 - 멤버 프로필 부분
+  @Override
+  public long searchTotalEarnedPoint(Long memberCode) {
+    return sql.selectOne(
+        "mypage.searchTotalEarnedPoint",
+        Map.of("memberCode", memberCode)
+    );
+  }
+
   @Override
   public Member searchProfile(Long memberCode) {
     return sql.selectOne(
@@ -82,6 +107,49 @@ public class UserMypageDaoImpl implements UserMypageDao {
   @Override
   public Map<String, Object> searchLikedFeedSummary(Long memberCode) {
     return sql.selectOne("mypage.searchLikedFeedSummary", memberCode);
+  }
+
+  // 챌린지 - 내 랭킹 조회
+  @Override
+  public List<MyChallengeProgressView> searchRecentChallengeProgress(
+      Long memberCode
+  ) {
+    return sql.selectList(
+        "mypage.searchRecentChallengeProgress",
+        Map.of("memberCode", memberCode)
+    );
+  }
+
+  @Override
+  public MyRankingView searchMyScoreRanking(Long memberCode) {
+    return sql.selectOne(
+        "mypage.searchMyScoreRanking",
+        Map.of("memberCode", memberCode)
+    );
+  }
+
+  @Override
+  public List<MyRankingView> searchScoreRankings(
+      Map<String, Object> params
+  ) {
+    return sql.selectList("mypage.searchScoreRankings", params);
+  }
+
+  @Override
+  public long countRankingMembers() {
+    return sql.selectOne("mypage.countRankingMembers");
+  }
+
+  @Override
+  public List<Map<String, Object>> searchMyComments(
+      Map<String, Object> params
+  ) {
+    return sql.selectList("mypage.searchMyComments", params);
+  }
+
+  @Override
+  public long countMyComments(Map<String, Object> params) {
+    return sql.selectOne("mypage.countMyComments", params);
   }
 
 }

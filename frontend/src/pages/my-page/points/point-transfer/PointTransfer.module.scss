@@ -159,3 +159,90 @@
 .passwordCheck {
   width: 100%;
 }
+
+/* 출금 폼: 송금 카드와 입력 컴포넌트 스타일 재사용 */
+.balanceRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: v.$grayscale-60;
+
+  strong {
+    color: v.$grayscale-100;
+    font-size: 13px;
+  }
+}
+
+.withdrawalAccount {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+
+  legend {
+    margin-bottom: 8px;
+    padding: 0;
+    font-size: 14px;
+    font-weight: 700;
+  }
+}
+
+.accountRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  align-items: start;
+  gap: 8px;
+
+  > * {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+.withdrawalPasswordToggle {
+  display: flex;
+  align-items: center;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: v.$grayscale-60;
+  cursor: pointer;
+}
+
+.fieldError {
+  margin: 6px 0 0;
+  color: v.$dan-color;
+  font-size: 12px;
+}
+
+.withdrawalNotice {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: v.$grayscale-60;
+}
+
+.submit.withdrawalActions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+
+  .withdrawalCancel {
+    background: v.$color-white;
+    border: 1px solid v.$grayscale-20;
+    color: v.$grayscale-60;
+
+    &:hover {
+      background: v.$grayscale-10;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .pointTransfer { padding: 24px 0; }
+  .pointRemittance { padding: 24px 16px; }
+  .accountRow { grid-template-columns: minmax(0, 1fr); }
+}

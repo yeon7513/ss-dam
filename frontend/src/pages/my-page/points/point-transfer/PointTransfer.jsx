@@ -20,20 +20,20 @@ function PointTransfer() {
           >
             송금하기
           </button>
-          {/* <button
+          <button
             type="button"
             className={activeTab === "withdrawal" ? styles.activeTab : ""}
             onClick={() => setActiveTab("withdrawal")}
           >
             출금하기
-          </button> */}
+          </button>
         </div>
 
         <div className={styles.contents}>
           {activeTab === "remittance" ? (
             <PointRemittance targetProductCode={targetProductCode} />
           ) : (
-            <PointWithdrawal />
+            <PointWithdrawal onCancel={() => setActiveTab("remittance")} />
           )}
         </div>
       </div>

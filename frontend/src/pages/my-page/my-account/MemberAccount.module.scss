@@ -42,6 +42,11 @@
   grid-template-columns: minmax(180px, 280px) minmax(0, 1fr);
   gap: 28px;
   align-items: start;
+
+  > .actions {
+    grid-column: 2;
+    margin-top: 0;
+  }
 }
 
 .profile {
@@ -50,6 +55,7 @@
   align-items: center;
   gap: 16px;
   margin-top: 12px;
+  align-self: stretch;
 
   img {
     width: 100%;
@@ -61,6 +67,15 @@
 
 .profile .fileInput {
   display: none;
+}
+
+.profileHelp {
+  margin: auto 0 8px;
+  padding-top: 8px;
+  color: #737b84;
+  font-size: 12px;
+  line-height: 1.7;
+  text-align: center;
 }
 
 .formBody {
@@ -233,11 +248,19 @@
 
   .editGrid {
     grid-template-columns: 1fr;
+
+    > .actions {
+      grid-column: 1;
+    }
   }
 
   .profile {
     width: 200px;
     margin: 0 auto;
+  }
+
+  .profileHelp {
+    margin-top: 0;
   }
 
   .noticeGrid {

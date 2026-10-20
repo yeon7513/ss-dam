@@ -10,6 +10,7 @@ public class MypageProfileView {
   private String joinedAt;               // 가입일
   private int rating;                    // 회원 등급
   private int point;                     // 보유 그루
+  private long totalEarnedPoint;         // 챌린지 보상 + 판매 수익 누적 적립액
   private Long challengeRanking;         // 챌린지 순위
   private long completedChallengeCount;  // 완료한 챌린지 수
 
@@ -67,6 +68,14 @@ public class MypageProfileView {
 
   public void setPoint(int point) {
     this.point = point;
+  }
+
+  public long getTotalEarnedPoint() {
+    return totalEarnedPoint;
+  }
+
+  public void setTotalEarnedPoint(long totalEarnedPoint) {
+    this.totalEarnedPoint = totalEarnedPoint;
   }
 
   public Long getChallengeRanking() {

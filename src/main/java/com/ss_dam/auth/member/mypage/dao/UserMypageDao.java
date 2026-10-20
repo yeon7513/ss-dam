@@ -5,11 +5,15 @@ import java.util.Map;
 
 import com.ss_dam.auth.member.Member;
 import com.ss_dam.auth.member.mypage.model.filter.MypageChallengeSearchFilter;
+import com.ss_dam.auth.member.mypage.model.response.MyChallengeProgressView;
+import com.ss_dam.auth.member.mypage.model.response.MyRankingView;
 import com.ss_dam.auth.member.mypage.model.response.MypageChallengeView;
 
 public interface UserMypageDao {
 
   Member searchProfile(Long memberCode);
+
+  long searchTotalEarnedPoint(Long memberCode);
 
   long countCompletedChallenges(Long memberCode);
 
@@ -30,5 +34,25 @@ public interface UserMypageDao {
 
   Map<String, Object> searchMySalesSummary(Long memberCode);
 
+  List<Map<String, Object>> searchMyPurchases(Map<String, Object> params);
+
+  long countMyPurchases(Map<String, Object> params);
+
+  Map<String, Object> searchMyPurchasesSummary(Map<String, Object> params);
+
   Map<String, Object> searchLikedFeedSummary(Long memberCode);
+
+  // 챌린지 - 내 랭킹 조회
+  List<MyChallengeProgressView> searchRecentChallengeProgress(Long memberCode);
+
+  MyRankingView searchMyScoreRanking(Long memberCode);
+
+  List<MyRankingView> searchScoreRankings(Map<String, Object> params);
+
+  long countRankingMembers();
+
+  // 내가 작성한 댓글
+  List<Map<String, Object>> searchMyComments(Map<String, Object> params);
+
+  long countMyComments(Map<String, Object> params);
 }

@@ -147,6 +147,11 @@ export default function EditProfile() {
               >
                 프로필 사진 변경
               </button>
+              <p className={styles.profileHelp}>
+                - JPG, PNG 파일을 사용할 수 있습니다.<br />
+                - 파일 크기는 5MB 이하로 선택해주세요.<br />
+                - 사진 선택 후 ‘변경’을 누르면 저장됩니다.
+              </p>
             </div>
 
             <div className={styles.formBody}>
@@ -195,7 +200,6 @@ export default function EditProfile() {
                     본인 인증
                   </button>
                 </div>
-                <small>본인인증은 준비 중입니다.</small>
               </div>
 
               <div className={styles.field}>
@@ -238,6 +242,8 @@ export default function EditProfile() {
                 </p>
               )}
 
+            </div>
+
               <div className={styles.actions}>
                 <button
                   type="button"
@@ -250,7 +256,6 @@ export default function EditProfile() {
                   {saving ? "저장 중..." : "변경"}
                 </button>
               </div>
-            </div>
           </div>
         </fieldset>
       </form>

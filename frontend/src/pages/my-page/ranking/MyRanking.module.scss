@@ -1,0 +1,273 @@
+.page {
+  padding: 24px;
+}
+
+.pageTitle {
+  margin: 0 0 20px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.topGrid {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1.1fr)
+    minmax(0, 1fr)
+    minmax(0, 0.9fr);
+  align-items: stretch;
+  gap: 16px;
+
+  > * {
+    min-width: 0;
+  }
+}
+
+.profilePanel,
+.challengePanel {
+  padding: 20px;
+  border: 1px solid #e2e5e8;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.profilePanel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.imageWrap {
+  width: 100%;
+  flex: 1;
+  min-height: 220px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #f3f5f7;
+
+  .profileImage {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 220px;
+    max-height: 340px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: inherit;
+  }
+}
+
+.profileInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.name {
+  font-size: 20px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  color: #278568;
+
+  svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+}
+
+.nextRating {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.challengePanel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.panelHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  span {
+    font-size: 12px;
+    color: #6b7280;
+  }
+}
+
+.chartPlaceholder {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-height: 240px;
+  margin-top: 16px;
+  padding: 16px;
+  border: 1px dashed #d1d5db;
+  border-radius: 8px;
+  color: #6b7280;
+  font-size: 13px;
+  text-align: center;
+}
+
+.summaryPanel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  align-content: start;
+
+  // 공통 StatCard의 기본 높이와 패딩을 이 화면에서 조정
+  > div {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    min-height: 96px;
+    padding: 16px;
+  }
+}
+
+.state {
+  padding: 48px 24px;
+  text-align: center;
+  color: #6b7280;
+}
+
+// 순위·회원은 왼쪽 정렬, 나머지 세 열은 같은 너비로 중앙 정렬
+.rankingTable {
+  table-layout: fixed;
+
+  th:nth-child(-n + 2),
+  td:nth-child(-n + 2) {
+    text-align: left;
+  }
+
+  th:nth-child(n + 3),
+  td:nth-child(n + 3) {
+    text-align: center;
+  }
+
+  th:nth-child(1) { width: 8%; }
+  th:nth-child(2) { width: 26%; }
+  th:nth-child(3) { width: 22%; }
+  th:nth-child(4) { width: 22%; }
+  th:nth-child(5) { width: 22%; }
+}
+
+.rankingMember {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+
+  img {
+    flex-shrink: 0;
+  }
+
+  span {
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 1100px) {
+  .topGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .summaryPanel {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding: 16px;
+  }
+
+  .topGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .summaryPanel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.participationChart {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-top: 16px;
+  min-width: 0;
+}
+
+.colorScale {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.colorGradient {
+  flex: 1;
+  max-width: 80px;
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(
+    to right,
+    hsl(215, 10%, 90%),
+    hsl(215, 10%, 40%)
+  );
+}
+
+.chartArea {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  min-height: 240px;
+  padding: 12px 0;
+}
+
+.chartCanvas {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  max-width: 240px;
+  height: 240px;
+
+  canvas {
+    display: block;
+    max-width: 100%;
+  }
+}
+
+.chartHint {
+  margin: 8px 0 0;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #6b7280;
+}
+

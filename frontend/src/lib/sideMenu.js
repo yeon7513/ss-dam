@@ -55,7 +55,7 @@ export const MYPAGE_MENU = [
     category: "챌린지",
     subMenus: [
       { name: "참여한 챌린지", path: "/mypage/challenges" },
-      { name: "내 랭킹 조회", path: "" },
+      { name: "내 랭킹 조회", path: "/mypage/ranking" },
     ],
   },
   {
@@ -63,14 +63,14 @@ export const MYPAGE_MENU = [
     subMenus: [
       { name: "내가 쓴 피드", path: "/mypage/activities" },
       { name: "좋아요 피드", path: "/mypage/liked-feeds" },
-      { name: "댓글 모아보기", path: "" },
+      { name: "댓글 모아보기", path: "/mypage/comments" },
     ],
   },
   {
     category: "거래",
     subMenus: [
       { name: "판매 관리", path: "/mypage/deal" },
-      { name: "구매 내역", path: "" },
+      { name: "구매 내역", path: "/mypage/purchases" },
     ],
   },
   {

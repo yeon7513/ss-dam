@@ -6,6 +6,15 @@
 <mapper namespace="mypage">
 
 <!-- 참여 현황 - 멤버 프로필 -->
+<!-- 충전·송금은 제외하고 챌린지 보상과 판매 수익의 실제 적립액을 합산 -->
+  <select id="searchTotalEarnedPoint" parameterType="map" resultType="long">
+    SELECT COALESCE(SUM(AMOUNT), 0)
+    FROM POINT_LOG
+    WHERE MEM_CODE = #{memberCode}
+      AND TYPE = 'SAVED'
+      AND REASON IN ('CHALLENGE_REWARD', 'MARKET_SALES')
+  </select>
+
 <!-- 기존 회원 데이터와 프로필 이미지를 조회하고, COMPLETED 상태인 참여 기록을 세어주는 방식-->
   <select id="searchProfile"
           parameterType="map"
@@ -39,12 +48,11 @@
     WHERE ce.MEM_CODE = #{memberCode}
       AND ce.STATUS = 'COMPLETED'
       AND ce.CANCELED_AT IS NULL
-      AND ce.DELETE_YN = 0
   </select>
 
 <!-- 챌린지 랭킹 : 전체 유저 대상 완료한 챌린지 수 기준, 공동 순위 적용-->
 <!-- 전체 회원의 순위를 먼저 계산한 뒤 내 회원 번호로 조회-->
-  <select id="searchChallengeRanking"
+ <select id="searchChallengeRanking"
         parameterType="map"
         resultType="long">
   SELECT ranked.ranking
@@ -62,7 +70,6 @@
       FROM CHALLENGE_ENTRY ce
       WHERE ce.STATUS = 'COMPLETED'
         AND ce.CANCELED_AT IS NULL
-        AND ce.DELETE_YN = 0
       GROUP BY ce.MEM_CODE
     ) completed
       ON completed.MEM_CODE = m.CODE
@@ -178,6 +185,63 @@
   WHERE p.mem_code = #{value} AND p.delete_yn = 0
 </select>
 
+<!-- 구매 신청 시 저장한 구매자 번호로만 조회한다. 취소 건은 buyer_code가 해제된다. -->
+<sql id="MyPurchasesWhere">
+  WHERE p.buyer_code = #{memberCode}
+    AND p.delete_yn = 0
+    AND p.deal_status IN ('IN_PROGRESS', 'SOLD')
+  <if test="keyword != null and keyword.trim() != ''">
+    AND (p.title LIKE CONCAT('%', #{keyword}, '%')
+      OR p.content LIKE CONCAT('%', #{keyword}, '%'))
+  </if>
+</sql>
+
+<!-- 상품 수정일 대신 실제 결제 시점·금액을 우선 사용, 과거 기록은 상품 값으로 보완 -->
+<sql id="MyPurchasesFrom">
+  FROM MARKET_PRODUCT p
+  LEFT JOIN POINT_LOG payment ON payment.CODE = (
+    SELECT MAX(pl.CODE)
+    FROM POINT_LOG pl
+    WHERE pl.PROD_CODE = p.CODE
+      AND pl.MEM_CODE = #{memberCode}
+      AND pl.TYPE = 'USED'
+      AND pl.REASON IN ('POINT_ESCROW', 'MARKET_PURCHASE')
+  )
+</sql>
+
+<select id="countMyPurchases" parameterType="map" resultType="long">
+  SELECT COUNT(*) FROM MARKET_PRODUCT p
+  <include refid="MyPurchasesWhere" />
+</select>
+
+<select id="searchMyPurchases" parameterType="map" resultType="map">
+  SELECT p.code, p.title, COALESCE(payment.AMOUNT, p.price) AS price,
+    p.deal_status AS dealStatus,
+    DATE_FORMAT(COALESCE(payment.CREATED_AT, p.updated_at, p.created_at), '%Y-%m-%d %H:%i:%s') AS purchasedAt,
+    (SELECT COUNT(*) FROM MARKET_PROD_PICK pick
+      WHERE pick.prod_code = p.code AND pick.delete_yn = 0) AS countPick,
+    (SELECT cr.room_id FROM CHAT_ROOM cr
+      WHERE cr.type = 'deal' AND cr.target_code = p.code
+        AND ((cr.requester_code = #{memberCode} AND cr.responder_code = p.mem_code)
+          OR (cr.responder_code = #{memberCode} AND cr.requester_code = p.mem_code))
+      ORDER BY cr.created_at DESC, cr.code DESC LIMIT 1) AS roomId
+  <include refid="MyPurchasesFrom" />
+  <include refid="MyPurchasesWhere" />
+  ORDER BY COALESCE(payment.CREATED_AT, p.updated_at, p.created_at) DESC, p.code DESC
+  LIMIT #{offset}, #{perPage}
+</select>
+
+<select id="searchMyPurchasesSummary" parameterType="map" resultType="map">
+  SELECT COUNT(*) AS totalProducts,
+    COALESCE(SUM(CASE WHEN p.deal_status = 'SOLD'
+      THEN COALESCE(payment.AMOUNT, p.price) ELSE 0 END), 0) AS totalAmount,
+    (SELECT COUNT(*) FROM MARKET_PRODUCT activity
+      WHERE activity.delete_yn = 0 AND activity.deal_status = 'SOLD'
+        AND (activity.mem_code = #{memberCode} OR activity.buyer_code = #{memberCode})) AS totalActivity
+  <include refid="MyPurchasesFrom" />
+  <include refid="MyPurchasesWhere" />
+</select>
+
 <select id="searchLikedFeedSummary" resultType="map">
   SELECT COUNT(DISTINCT f.mem_code) AS totalAuthors,
     COUNT(*) AS totalLikes,
@@ -189,5 +253,314 @@
     AND EXISTS (SELECT 1 FROM FEED_LIKE fl
       WHERE fl.feed_code = f.code AND fl.mem_code = #{value} AND fl.delete_yn = 0)
 </select>
+
+<!-- 챌린지 - 내 랭킹 조회 -->
+<!-- 차트용 응답 매핑 -->
+<resultMap id="myChallengeProgressMap"
+    type="com.ss_dam.auth.member.mypage.model.response.MyChallengeProgressView">
+
+  <id column="chal_code" property="chalCode" />
+  <result column="title" property="title" />
+  <result column="proof_count" property="proofCount" />
+  <result column="proof_days" property="proofDays" />
+  <result column="goal_days" property="goalDays" />
+  <result column="achievement_rate" property="achievementRate" />
+</resultMap>
+
+<!-- 내 최근 참여 챌린지 최대 5개의 개인 실적 -->
+<select id="searchRecentChallengeProgress"
+    parameterType="map"
+    resultMap="myChallengeProgressMap">
+
+  WITH recent_challenges AS (
+    SELECT
+      c.CODE AS chal_code,
+      c.TITLE AS title,
+      c.START_DATE AS start_date,
+      c.END_DATE AS end_date,
+
+      MAX(ce.JOINED_AT) AS joined_at,
+      MAX(ce.CODE) AS entry_code,
+
+      CASE
+        WHEN c.END_DATE &gt; c.START_DATE
+        THEN DATEDIFF(
+          DATE(DATE_SUB(c.END_DATE, INTERVAL 1 SECOND)),
+          DATE(c.START_DATE)
+        ) + 1
+        ELSE 0
+      END AS goal_days
+
+    FROM CHALLENGE_ENTRY ce
+    JOIN CHALLENGE c
+      ON c.CODE = ce.CHAL_CODE
+
+    WHERE ce.MEM_CODE = #{memberCode}
+      AND ce.STATUS IN ('JOINED', 'COMPLETED')
+      AND ce.CANCELED_AT IS NULL
+      AND c.DELETE_YN = 0
+
+    GROUP BY
+      c.CODE,
+      c.TITLE,
+      c.START_DATE,
+      c.END_DATE
+
+    ORDER BY joined_at DESC, entry_code DESC, chal_code DESC
+    LIMIT 5
+  ),
+
+  proof_stats AS (
+    SELECT
+      rc.chal_code,
+      COUNT(f.CODE) AS proof_count,
+      COUNT(DISTINCT DATE(f.CREATED_AT)) AS proof_days
+
+    FROM recent_challenges rc
+
+    LEFT JOIN FEED f
+      ON f.CHAL_CODE = rc.chal_code
+      AND f.MEM_CODE = #{memberCode}
+      AND f.DELETE_YN = 0
+      AND f.STATUS = 'active'
+      AND f.CREATED_AT &gt;= rc.joined_at
+      AND f.CREATED_AT &gt;= rc.start_date
+      AND f.CREATED_AT &lt; rc.end_date
+      AND f.CREATED_AT &lt;= CURRENT_TIMESTAMP
+
+    GROUP BY rc.chal_code
+  )
+
+  SELECT
+    rc.chal_code,
+    rc.title,
+    ps.proof_count,
+    ps.proof_days,
+    rc.goal_days,
+
+    COALESCE(
+      ROUND(
+        LEAST(
+          100.0,
+          100.0 * ps.proof_days / NULLIF(rc.goal_days, 0)
+        ),
+        1
+      ),
+      0
+    ) AS achievement_rate
+
+  FROM recent_challenges rc
+  JOIN proof_stats ps
+    ON ps.chal_code = rc.chal_code
+
+  ORDER BY
+    rc.joined_at DESC,
+    rc.entry_code DESC,
+    rc.chal_code DESC
+</select>
+
+<resultMap id="myRankingMap"
+    type="com.ss_dam.auth.member.mypage.model.response.MyRankingView">
+
+  <id column="code" property="code" />
+  <result column="name" property="name" />
+  <result column="profile_image" property="profileImage" />
+  <result column="ranking" property="ranking" />
+  <result column="rating_score" property="ratingScore" />
+  <result column="completed_count" property="completedChallengeCount" />
+  <result column="mine" property="mine" />
+</resultMap>
+
+<!-- 내 순위와 전체 목록에서 동일한 계산 사용 -->
+<sql id="memberRankingCtes">
+  WITH point_scores AS (
+    SELECT
+      pl.MEM_CODE,
+
+      COALESCE(
+        SUM(
+          CASE
+            WHEN pl.REASON = 'CHALLENGE_REWARD' THEN pl.AMOUNT
+            ELSE 0
+          END
+        ),
+        0
+      )
+      +
+      FLOOR(
+        COALESCE(
+          SUM(
+            CASE
+              WHEN pl.REASON = 'MARKET_SALES' THEN pl.AMOUNT
+              ELSE 0
+            END
+          ),
+          0
+        ) / 10
+      ) AS rating_score
+
+    FROM POINT_LOG pl
+
+    WHERE pl.TYPE = 'SAVED'
+      AND pl.REASON IN ('CHALLENGE_REWARD', 'MARKET_SALES')
+
+    GROUP BY pl.MEM_CODE
+  ),
+
+    completed_challenges AS (
+    SELECT
+      ce.MEM_CODE,
+      COUNT(DISTINCT ce.CHAL_CODE) AS completed_count
+
+    FROM CHALLENGE_ENTRY ce
+
+    WHERE ce.STATUS = 'COMPLETED'
+      AND ce.CANCELED_AT IS NULL
+
+    GROUP BY ce.MEM_CODE
+  ),
+
+  member_scores AS (
+    SELECT
+      m.CODE AS code,
+      m.NAME AS name,
+      COALESCE(ps.rating_score, 0) AS rating_score,
+      COALESCE(cc.completed_count, 0) AS completed_count
+
+    FROM MEMBER_ACCOUNT m
+
+    LEFT JOIN point_scores ps
+      ON ps.MEM_CODE = m.CODE
+
+    LEFT JOIN completed_challenges cc
+      ON cc.MEM_CODE = m.CODE
+
+    WHERE m.DELETE_YN = 0
+  ),
+
+  ranked_members AS (
+    SELECT
+      ms.*,
+      RANK() OVER (
+        ORDER BY ms.rating_score DESC
+      ) AS ranking
+
+    FROM member_scores ms
+  )
+</sql>
+
+<!-- 공통 응답 컬럼 -->
+<sql id="memberRankingColumns">
+  r.code,
+  r.name,
+  r.rating_score,
+  r.completed_count,
+  r.ranking,
+
+  CASE
+    WHEN r.code = #{memberCode} THEN 1
+    ELSE 0
+  END AS mine,
+
+  (
+    SELECT i.PATH
+    FROM IMAGES i
+    WHERE i.TARGET_CODE = r.code
+      AND i.TYPE = 'profile'
+      AND i.DELETE_YN = 0
+    ORDER BY i.ORDER_SEQ ASC, i.PATH ASC
+    LIMIT 1
+  ) AS profile_image
+</sql>
+
+<!-- 점수 기준 내 전체 순위 -->
+<select id="searchMyScoreRanking"
+    parameterType="map"
+    resultMap="myRankingMap">
+
+  <include refid="memberRankingCtes" />
+
+  SELECT
+    <include refid="memberRankingColumns" />
+
+  FROM ranked_members r
+  WHERE r.code = #{memberCode}
+</select>
+
+<!-- 점수 기준 전체 회원 랭킹 목록 -->
+<select id="searchScoreRankings"
+    parameterType="map"
+    resultMap="myRankingMap">
+
+  <include refid="memberRankingCtes" />
+
+  SELECT
+    <include refid="memberRankingColumns" />
+
+  FROM ranked_members r
+
+  ORDER BY r.rating_score DESC, r.code ASC
+  LIMIT #{offset}, #{perPage}
+</select>
+
+<!-- 페이지네이션용 회원 수 -->
+<select id="countRankingMembers" resultType="long">
+  SELECT COUNT(*)
+  FROM MEMBER_ACCOUNT
+  WHERE DELETE_YN = 0
+</select>
+
+<!-- 챌린지 - 내 랭킹 조회 END -->
+
+<!-- 마이페이지 - 내가 작성한 댓글 공통 조건 -->
+<sql id="MyCommentWhere">
+  WHERE c.MEM_CODE = #{memberCode}
+    AND c.STATUS = 'active'
+    AND c.DELETE_YN = 0
+    AND f.STATUS = 'active'
+    AND f.DELETE_YN = 0
+
+  <if test="keyword != null and keyword.trim() != ''">
+    AND (
+      c.CONTENT LIKE CONCAT('%', #{keyword}, '%')
+      OR f.TITLE LIKE CONCAT('%', #{keyword}, '%')
+    )
+  </if>
+</sql>
+
+<!-- 내가 작성한 댓글 목록 -->
+<select id="searchMyComments"
+        parameterType="map"
+        resultType="map">
+  SELECT
+    c.CODE AS code,
+    c.FEED_CODE AS feedCode,
+    c.CONTENT AS content,
+    f.TITLE AS feedTitle,
+    DATE_FORMAT(c.CREATED_AT, '%Y-%m-%d %H:%i:%s') AS createdAt
+
+  FROM COMMENTS c
+  JOIN FEED f
+    ON f.CODE = c.FEED_CODE
+
+  <include refid="MyCommentWhere" />
+
+  ORDER BY c.CREATED_AT DESC, c.CODE DESC
+  LIMIT #{offset}, #{perPage}
+</select>
+
+<!-- 검색 조건에 맞는 내 댓글 수 -->
+<select id="countMyComments"
+        parameterType="map"
+        resultType="long">
+  SELECT COUNT(*)
+
+  FROM COMMENTS c
+  JOIN FEED f
+    ON f.CODE = c.FEED_CODE
+
+  <include refid="MyCommentWhere" />
+</select>
+<!-- 마이페이지 - 내가 작성한 댓글 공통 조건 END -->
 
 </mapper>
