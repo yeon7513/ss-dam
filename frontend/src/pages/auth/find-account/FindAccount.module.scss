@@ -1,3 +1,80 @@
 @use "../../../scss/variables.scss" as v;
 @use "../../../scss/mixin.scss" as mix;
 
+/* 로그인·회원가입과 동일한 상단 여백 및 중앙 배치 */
+.page {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 96px 32px;
+}
+
+.container { width: 100%; max-width: 26rem; }
+
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-bottom: 32px;
+  border-bottom: 1px solid v.$grayscale-20;
+
+  a {
+    padding: 14px 4px;
+    border-bottom: 2px solid transparent;
+    color: v.$grayscale-70;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .activeTab { border-color: v.$primary-40; color: v.$primary-50; }
+}
+
+.content {
+  h2 { margin-bottom: 16px; text-align: center; font-size: 2rem; font-weight: 700; }
+  form { width: 100%; }
+}
+
+.description { margin-bottom: 32px; text-align: center; color: v.$grayscale-70; font-size: 14px; line-height: 1.6; }
+.fields { display: flex; flex-direction: column; gap: 20px; min-width: 0; margin: 0; padding: 0; border: 0; }
+.input {
+  label { display: block; margin-bottom: 8px; font-size: 1rem; font-weight: 400; }
+  input { padding-right: 44px; }
+}
+
+.passwordToggle { display: flex; align-items: center; border: 0; padding: 0; background: transparent; color: v.$grayscale-70; cursor: pointer; }
+.passwordHint { margin-top: -12px; color: v.$grayscale-70; font-size: 12px; line-height: 1.6; }
+.error { color: v.$dan-color; font-size: 13px; line-height: 1.6; }
+
+.result {
+  margin-bottom: 24px;
+  padding: 28px 16px;
+  background: v.$grayscale-5;
+  border: 1px solid v.$grayscale-20;
+  border-radius: 8px;
+  text-align: center;
+
+  p { color: v.$grayscale-90; font-size: 14px; }
+  strong { display: block; margin-top: 16px; color: v.$primary-50; font-size: 24px; overflow-wrap: anywhere; }
+}
+
+.primaryLink,
+.secondaryLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+}
+.primaryLink { color: v.$color-white; background: v.$primary-40; &:hover { background: v.$primary-50; } }
+.secondaryLink { border: 1px solid v.$primary-40; color: v.$primary-50; }
+.textButton { display: block; margin: 16px auto 0; border: 0; background: none; color: v.$grayscale-70; text-decoration: underline; cursor: pointer; }
+.bottomLinks { display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 24px; color: v.$grayscale-70; font-size: 14px; a:hover { color: v.$primary-50; text-decoration: underline; } }
+
+@media (max-width: 480px) {
+  .page { padding: 56px 20px; }
+  .content h2 { font-size: 26px; }
+}
+

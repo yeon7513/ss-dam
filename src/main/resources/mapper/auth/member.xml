@@ -101,7 +101,9 @@
     SELECT id
     FROM MEMBER_ACCOUNT
     WHERE NAME = #{name}
-    AND PHONE = #{phone}
+    <!-- 기존 데이터(010-1234-5678)와 신규 데이터(01012345678)를 동일하게 비교 -->
+    AND REPLACE(REPLACE(TRIM(PHONE), '-', ''), ' ', '')
+      = REPLACE(REPLACE(TRIM(#{phone}), '-', ''), ' ', '')
     AND DELETE_YN = 0
   </select>
 
@@ -110,7 +112,8 @@
     FROM MEMBER_ACCOUNT
     WHERE ID = #{id}
     AND NAME = #{name}
-    AND PHONE = #{phone}
+    AND REPLACE(REPLACE(TRIM(PHONE), '-', ''), ' ', '')
+      = REPLACE(REPLACE(TRIM(#{phone}), '-', ''), ' ', '')
     AND DELETE_YN = 0
   </select>
 
